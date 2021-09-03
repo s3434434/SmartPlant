@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SmartPlant.Models
 {
@@ -19,12 +16,12 @@ namespace SmartPlant.Models
 
         //Integer value? measure in lux?
         public int LightIntensity { get; set; }
-        
+
         //percentage value ? use integer if less precision is fine.
         public decimal Moisture { get; set; }
 
         //timestamp for when these values were recorded
         public DateTime TimeStamp { get; set; }
-        
+
     }
 }
