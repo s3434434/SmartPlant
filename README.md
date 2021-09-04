@@ -3,4 +3,4 @@ API
 
 rough example of layout
 
-![alt text](https://github.com/s3434434/SmartPlant/blob/master/dbthingexample.png?raw=true)
+![alt text](https://i.imgur.com/Kpu1YoR.png)
