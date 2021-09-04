@@ -10,7 +10,7 @@ using SmartPlant.Data;
 namespace SmartPlant.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20210904024023_initialCreate")]
+    [Migration("20210904083208_initialCreate")]
     partial class initialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,7 +26,7 @@ namespace SmartPlant.Migrations
                     b.Property<string>("PlantID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("OwnerID")
+                    b.Property<string>("userID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

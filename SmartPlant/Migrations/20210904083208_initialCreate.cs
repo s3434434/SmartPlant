@@ -12,7 +12,7 @@ namespace SmartPlant.Migrations
                 columns: table => new
                 {
                     PlantID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    OwnerID = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    userID = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -24,7 +24,7 @@ namespace SmartPlant.Migrations
                     b.Property<string>("PlantID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("OwnerID")
+                    b.Property<string>("userID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

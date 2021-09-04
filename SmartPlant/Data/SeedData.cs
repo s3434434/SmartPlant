@@ -20,32 +20,32 @@ namespace SmartPlant.Data
             context.Plants.AddRange(
                 new Plant
                 {
-                    OwnerID = "owner1",
+                    userID = "user1",
                     PlantID = "plantIdOne"
                 },
                 new Plant
                 {
-                    OwnerID = "owner1",
+                    userID = "user1",
                     PlantID = "plantIdTwo"
                 },
                 new Plant
                 {
-                    OwnerID = "owner1",
+                    userID = "user1",
                     PlantID = "plantIdThree"
                 },
                 new Plant
                 {
-                    OwnerID = "156785",
+                    userID = "156785",
                     PlantID = "p209"
                 },
                 new Plant
                 {
-                    OwnerID = "156785",
+                    userID = "156785",
                     PlantID = "p315"
                 },
                 new Plant
                 {
-                    OwnerID = "79824",
+                    userID = "79824",
                     PlantID = "p9813"
                 });
 

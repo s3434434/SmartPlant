@@ -15,7 +15,7 @@ namespace SmartPlant.Models.DataManager
             _context = context;
         }
 
-        //returns all plants (ownerID, plantID)
+        //returns all plants (userID, plantID)
         public async Task<IEnumerable<Plant>> GetAll()
         {
             var plants = await _context.Plants.ToListAsync();
@@ -23,18 +23,18 @@ namespace SmartPlant.Models.DataManager
             return plants;
         }
 
-        //returns all plants belonging to a specific user (ownerID, plantID)
-        public async Task<IEnumerable<Plant>> GetAllForUser(string ownerID)
+        //returns all plants belonging to a specific user (userID, plantID)
+        public async Task<IEnumerable<Plant>> GetAllForUser(string userID)
         {
             //if user doesn't exist return error?
-            var userExists = await _context.Plants.FirstOrDefaultAsync(p => p.OwnerID == ownerID);
+            var userExists = await _context.Plants.FirstOrDefaultAsync(p => p.userID == userID);
             if (userExists is null)
             {
                 return null; 
               
             }
 
-            var plants = await _context.Plants.Where(p => p.OwnerID == ownerID).ToListAsync();
+            var plants = await _context.Plants.Where(p => p.userID == userID).ToListAsync();
 
             return plants;
         }
@@ -52,7 +52,7 @@ namespace SmartPlant.Models.DataManager
             _context.Add(plant);
             await _context.SaveChangesAsync();
 
-            var msg = $"Success\nPlant ID: {plant.PlantID}\nOwner ID: {plant.OwnerID}";
+            var msg = $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.userID}";
             return msg;
             //return plant.PlantID;
         }

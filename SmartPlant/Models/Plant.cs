@@ -12,7 +12,7 @@ namespace SmartPlant.Models
 
         //foreign key from User - toDo
         [Required]
-        public string OwnerID { get; set; }
+        public string userID { get; set; }
 
 
     }
