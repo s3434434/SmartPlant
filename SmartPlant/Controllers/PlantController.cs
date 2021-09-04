@@ -64,10 +64,6 @@ namespace SmartPlant.Controllers
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
             return Created("", result);
         }
-        //FILL OUT API CONTROLLERS BASED ON DATA MANAGER REPOS
-        //MERGE BRANCH TO MASTER
-        //ADD MIGRATION AND BUILD DATABASE
-        //TEST API WITH SWAGGER
-        //TRY IDENTITY CRAP FROM GUIDE
+
     }
 }
