@@ -27,9 +27,8 @@ namespace SmartPlant.Models.DataManager
         //returns sensor data for a specific plant
         public async Task<IEnumerable<SensorData>> GetAllForPlant(string plantID)
         {
-            //if user doesn't exist return error?
-            var plantDataExists = await _context.SensorData.FirstOrDefaultAsync(s => s.PlantID == plantID);
-            if (plantDataExists is null)
+            //if user doesn't exist return error            
+            if (!await DoesPlantExist(plantID))
             {
                 return null;
             }
@@ -83,13 +82,11 @@ namespace SmartPlant.Models.DataManager
         public async Task<string> Add(SensorData data)
         {
             //check if the plant id exists
-            var validPlant = await _context.Plants.FirstOrDefaultAsync(p => p.PlantID == data.PlantID);
-
-            if (validPlant == null)
+            
+            if (!await DoesPlantExist(data.PlantID))
             {
                 return null;
             }
-             
 
             _context.Add(data);
             await _context.SaveChangesAsync();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartPlant.Models;
+using SmartPlant.Models.API_Model;
 using SmartPlant.Models.DataManager;
 using System;
 using System.Collections.Generic;
@@ -75,8 +76,33 @@ namespace SmartPlant.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> Post([FromBody] SensorDataModel dataModel)
+        {
+            var data = new SensorData
+            {
+                PlantID = dataModel.PlantID,
+                Temp = dataModel.Temp,
+                Humidity = dataModel.Humidity,
+                LightIntensity = dataModel.LightIntensity,
+                Moisture = dataModel.Moisture,
+                TimeStampUTC = DateTime.UtcNow
+            };
+
+            var result = await _repo.Add(data);
+
+            if (result == null)
+            {
+                return BadRequest("Plant ID does not exist");
+            }
+
+            return Created("", result);
+        }
+
+        [HttpPost] //this is just for testing with custom dates
+        [Route("test")]
         public async Task<IActionResult> Post([FromBody] SensorData data)
         {
+            
             var result = await _repo.Add(data);
 
             if (result == null)
