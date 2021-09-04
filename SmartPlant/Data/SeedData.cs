@@ -73,6 +73,98 @@ namespace SmartPlant.Data
                 },
                 new SensorData
                 {
+                    PlantID = "plantIdOne",
+                    Temp = 15,
+                    Humidity = 30,
+                    LightIntensity = 22,
+                    Moisture = 35,
+                    TimeStampUTC = DateTime.ParseExact("28/08/2021 05:00:00 PM", format, null)
+                },
+                new SensorData
+                {
+                    PlantID = "plantIdOne",
+                    Temp = 18,
+                    Humidity = 16,
+                    LightIntensity = 7,
+                    Moisture = 18,
+                    TimeStampUTC = DateTime.ParseExact("29/08/2021 05:00:00 PM", format, null)
+                },
+                new SensorData
+                {
+                    PlantID = "plantIdOne",
+                    Temp = 19,
+                    Humidity = 20,
+                    LightIntensity = 10,
+                    Moisture = 15,
+                    TimeStampUTC = DateTime.ParseExact("01/09/2021 05:00:00 PM", format, null)
+                },                
+                new SensorData
+                {
+                    PlantID = "plantIdOne",
+                    Temp = 15,
+                    Humidity = 30,
+                    LightIntensity = 22,
+                    Moisture = 35,
+                    TimeStampUTC = DateTime.ParseExact("02/09/2021 05:00:00 PM", format, null)
+                },
+                new SensorData
+                {
+                    PlantID = "plantIdOne",
+                    Temp = 33,
+                    Humidity = 12,
+                    LightIntensity = 36,
+                    Moisture = 9,
+                    TimeStampUTC = DateTime.ParseExact("04/09/2021 05:00:00 PM", format, null)
+                },
+                new SensorData
+                {
+                    PlantID = "plantIdOne",
+                    Temp = 9,
+                    Humidity = 25,
+                    LightIntensity = 18,
+                    Moisture = 22,
+                    TimeStampUTC = DateTime.ParseExact("04/09/2021 06:00:00 PM", format, null)
+                },
+                new SensorData
+                {
+                    PlantID = "plantIdOne",
+                    Temp = 8,
+                    Humidity = 25,
+                    LightIntensity = 11,
+                    Moisture = 18,
+                    TimeStampUTC = DateTime.ParseExact("04/09/2021 07:00:00 PM", format, null)
+                },
+                new SensorData
+                {
+                    PlantID = "plantIdOne",
+                    Temp = 9,
+                    Humidity = 25,
+                    LightIntensity = 8,
+                    Moisture = 22,
+                    TimeStampUTC = DateTime.ParseExact("05/09/2021 06:00:00 AM", format, null)
+                },
+
+                new SensorData
+                {
+                    PlantID = "plantIdOne",
+                    Temp = 11,
+                    Humidity = 22,
+                    LightIntensity = 10,
+                    Moisture = 18,
+                    TimeStampUTC = DateTime.ParseExact("05/09/2021 07:00:00 AM", format, null)
+                },
+
+                new SensorData
+                {
+                    PlantID = "plantIdOne",
+                    Temp = 14,
+                    Humidity = 17,
+                    LightIntensity = 26,
+                    Moisture = 16,
+                    TimeStampUTC = DateTime.ParseExact("05/09/2021 08:00:00 AM", format, null)
+                },
+                new SensorData
+                {
                     PlantID = "plantIdTwo",
                     Temp = -5,
                     Humidity = 2,
@@ -147,7 +239,7 @@ namespace SmartPlant.Data
 
                 );
 
-            context.SaveChanges();
+context.SaveChanges();
         }
     }
 

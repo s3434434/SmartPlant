@@ -48,8 +48,34 @@ namespace SmartPlant.Controllers
             return Ok(data);
         }
 
+        [HttpGet]
+        [Route("{plantID}/Daily")]
+        public async Task<IActionResult> GetDaily(string plantID)
+        {
+            var data = await _repo.GetDaily(plantID);
+            if (data == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(data);
+        }
+
+        [HttpGet]
+        [Route("{plantID}/Monthly")]
+        public async Task<IActionResult> GetMonthly(string plantID)
+        {
+            var data = await _repo.GetMonthly(plantID);
+            if (data == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(data);
+        }
+
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]SensorData data)
+        public async Task<IActionResult> Post([FromBody] SensorData data)
         {
             var result = await _repo.Add(data);
 

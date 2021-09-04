@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartPlant.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,6 +39,47 @@ namespace SmartPlant.Models.DataManager
             return data;
         }
 
+        public async Task<IEnumerable<SensorData>> GetDaily(string plantID)
+        {
+
+            if (!await DoesPlantExist(plantID))
+            {
+                return null;
+            }
+
+            //this would the the date of the executing machines timezone, not the user 
+            var currentDate = DateTime.UtcNow;
+
+            var data = await _context.SensorData
+                .Where(p => p.PlantID == plantID)
+                .Where(p => p.TimeStampUTC.Year == currentDate.Year)
+                .Where(p => p.TimeStampUTC.Month == currentDate.Month)
+                .Where(p => p.TimeStampUTC.Day == currentDate.Day)
+                .ToListAsync();
+
+            return data;
+        }
+
+        public async Task<IEnumerable<SensorData>> GetMonthly(string plantID)
+        {
+
+            if (!await DoesPlantExist(plantID))
+            {
+                return null;
+            }
+
+            //this would the the date of the executing machines timezone, not the user 
+            var currentDate = DateTime.UtcNow;
+
+            var data = await _context.SensorData
+                .Where(p => p.PlantID == plantID)
+                .Where(p => p.TimeStampUTC.Year == currentDate.Year)
+                .Where(p => p.TimeStampUTC.Month == currentDate.Month)
+                .ToListAsync();
+
+            return data;
+        }
+
         public async Task<string> Add(SensorData data)
         {
             //check if the plant id exists
@@ -47,13 +89,24 @@ namespace SmartPlant.Models.DataManager
             {
                 return null;
             }
-
+             
 
             _context.Add(data);
             await _context.SaveChangesAsync();
 
             //var msg = "";
             return "added";
+        }
+
+
+        private async Task<bool> DoesPlantExist(string plantID)
+        {
+            var validPlant = await _context.Plants.FirstOrDefaultAsync(p => p.PlantID == plantID);
+            if (validPlant != null)
+            {
+                return true;
+            }
+            else return false;
         }
 
     }
