@@ -24,18 +24,36 @@ namespace SmartPlant.Models.DataManager
         }
 
         //returns sensor data for a specific plant
-        public async Task<IEnumerable<Plant>> GetAllForUser(string plantID)
+        public async Task<IEnumerable<SensorData>> GetAllForPlant(string plantID)
         {
             //if user doesn't exist return error?
-            var plantDataExists = _context.SensorData.FirstOrDefault(s => s.PlantID == plantID);
+            var plantDataExists = await _context.SensorData.FirstOrDefaultAsync(s => s.PlantID == plantID);
             if (plantDataExists is null)
             {
                 return null;
             }
 
-            var data = await _context.Plants.Where(s => s.PlantID == plantID).ToListAsync();
+            var data = await _context.SensorData.Where(s => s.PlantID == plantID).ToListAsync();
 
             return data;
+        }
+
+        public async Task<string> Add(SensorData data)
+        {
+            //check if the plant id exists
+            var validPlant = await _context.Plants.FirstOrDefaultAsync(p => p.PlantID == data.PlantID);
+
+            if (validPlant == null)
+            {
+                return null;
+            }
+
+
+            _context.Add(data);
+            await _context.SaveChangesAsync();
+
+            //var msg = "";
+            return "added";
         }
 
     }

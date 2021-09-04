@@ -27,7 +27,7 @@ namespace SmartPlant.Models.DataManager
         public async Task<IEnumerable<Plant>> GetAllForUser(string ownerID)
         {
             //if user doesn't exist return error?
-            var userExists = _context.Plants.FirstOrDefault(p => p.OwnerID == ownerID);
+            var userExists = await _context.Plants.FirstOrDefaultAsync(p => p.OwnerID == ownerID);
             if (userExists is null)
             {
                 return null; 
@@ -37,6 +37,24 @@ namespace SmartPlant.Models.DataManager
             var plants = await _context.Plants.Where(p => p.OwnerID == ownerID).ToListAsync();
 
             return plants;
+        }
+
+        //adds plant to db, returns its ID
+        public async Task<string> Add(Plant plant)
+        {
+            var exists = await _context.Plants.FirstOrDefaultAsync(p => p.PlantID == plant.PlantID);
+
+            if (exists != null) //if the plant already exists, the plant ID is a primary and therefore unique
+            {
+                return null;
+            }
+
+            _context.Add(plant);
+            await _context.SaveChangesAsync();
+
+            var msg = $"Success\nPlant ID: {plant.PlantID}\nOwner ID: {plant.OwnerID}";
+            return msg;
+            //return plant.PlantID;
         }
 
     }
