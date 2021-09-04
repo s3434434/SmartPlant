@@ -22,7 +22,7 @@ namespace SmartPlant.Controllers
         }
 
         [HttpGet]
-        //[Route("All")]
+        [Route("/api/plants")]
         public async Task<IActionResult> GetAll(){
 
             var plants = await _repo.GetAll();
@@ -37,7 +37,7 @@ namespace SmartPlant.Controllers
             }
 
         [HttpGet] //gets all plants (plantid, userid) for the user
-        [Route("User/{id}")]
+        [Route("/User/{id}/Plants")]
         public async Task<IActionResult> Get(string id)
         {
             var plants = await _repo.GetAllForUser(id);

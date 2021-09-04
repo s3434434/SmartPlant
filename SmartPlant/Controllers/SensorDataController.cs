@@ -50,7 +50,7 @@ namespace SmartPlant.Controllers
         }
 
         [HttpGet]
-        [Route("{plantID}/Daily")]
+        [Route("{plantID}/Daily")] //shows a plants sensor data based on current date
         public async Task<IActionResult> GetDaily(string plantID)
         {
             var data = await _repo.GetDaily(plantID);
@@ -63,7 +63,7 @@ namespace SmartPlant.Controllers
         }
 
         [HttpGet]
-        [Route("{plantID}/Monthly")]
+        [Route("{plantID}/Monthly")] //shows sensor data based on current month
         public async Task<IActionResult> GetMonthly(string plantID)
         {
             var data = await _repo.GetMonthly(plantID);
