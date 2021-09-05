@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 namespace SmartPlant.Controllers
 {
     [Route("api/[controller]")]
-    //[Route("api/Plant/[controller]")]
     [ApiController]
     public class SensorDataController : ControllerBase
     {
