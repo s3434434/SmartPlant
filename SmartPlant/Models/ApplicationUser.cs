@@ -10,5 +10,7 @@ namespace SmartPlant.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public virtual IEnumerable<Plant> Plants { get; set; }
     }
 }

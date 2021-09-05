@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using SmartPlant.Models;
 using System;
 using System.Collections.Generic;
@@ -17,35 +18,111 @@ namespace SmartPlant.Data
             if (context.Plants.Any())
                 return; // DB has already been seeded.
 
+            var guid = Guid.NewGuid().ToString();
+            var pwHasher = new PasswordHasher<ApplicationUser>();
+            var user = new ApplicationUser
+            {
+                Id = "user",
+                FirstName = "Default User",
+                LastName = "Default",
+                Email = "totallyrealemail@email.com",
+                EmailConfirmed = true,                
+                LockoutEnabled = false
+
+            };
+            pwHasher.HashPassword(user, "user");
+
+            var testUser = new ApplicationUser
+            {
+                Id = guid,
+                FirstName = "Default User",
+                LastName = "Default",
+                Email = "totallyrealemail@email.com",
+                EmailConfirmed = true,
+                LockoutEnabled = false
+            };
+            pwHasher.HashPassword(testUser, "user");
+
+            var admin = new ApplicationUser
+            {
+                Id = "admin",
+                FirstName = "Admin",
+                LastName = "Admin",
+                Email = "IamAdmin@Admin.Admin",
+                EmailConfirmed = true,
+                LockoutEnabled = false
+            };
+            pwHasher.HashPassword(admin, "admin");
+            context.Users.AddRange(                
+                user, testUser, admin                              
+                );
+
+            context.Roles.AddRange(
+                
+                new IdentityRole
+                {
+                    Id = "user role id",
+                    Name = "User",
+                    ConcurrencyStamp = "1",
+                    NormalizedName = "USER"
+                },
+
+                new IdentityRole{
+                Id = "admin role id",
+                    Name = "Admin",
+                    ConcurrencyStamp = "2",
+                    NormalizedName = "ADMIN"
+                }
+            );
+
+            context.UserRoles.AddRange(
+                new IdentityUserRole<string>
+                {
+                    UserId = "user",
+                    RoleId = "user role id"
+                },
+                new IdentityUserRole<string>
+                {
+                    UserId = guid,
+                    RoleId = "user role id"
+                },
+                new IdentityUserRole<string>
+                {
+                    UserId = "admin",
+                    RoleId = "admin role id"
+                }
+                );
+
             context.Plants.AddRange(
                 new Plant
                 {
-                    userID = "user1",
+                    
+                    UserID = "user",
                     PlantID = "plantIdOne"
                 },
                 new Plant
                 {
-                    userID = "user1",
+                    UserID = "user",
                     PlantID = "plantIdTwo"
                 },
                 new Plant
                 {
-                    userID = "user1",
+                    UserID = "user",
                     PlantID = "plantIdThree"
                 },
                 new Plant
                 {
-                    userID = "156785",
+                    UserID = guid,
                     PlantID = "p209"
                 },
                 new Plant
                 {
-                    userID = "156785",
+                    UserID = guid,
                     PlantID = "p315"
                 },
                 new Plant
                 {
-                    userID = "79824",
+                    UserID = guid,
                     PlantID = "p9813"
                 });
 

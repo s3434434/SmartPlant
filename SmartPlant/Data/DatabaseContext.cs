@@ -25,6 +25,11 @@ namespace SmartPlant.Data
             builder.Entity<SensorData>()
                 .Property(s => s.Test)
                 .HasPrecision(5, 2);
+
+            builder.Entity<ApplicationUser>()
+                .HasMany(x => x.Plants)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserID);
         }
 
         }

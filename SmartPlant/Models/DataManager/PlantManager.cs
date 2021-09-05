@@ -27,14 +27,14 @@ namespace SmartPlant.Models.DataManager
         public async Task<IEnumerable<Plant>> GetAllForUser(string userID)
         {
             //if user doesn't exist return error?
-            var userExists = await _context.Plants.FirstOrDefaultAsync(p => p.userID == userID);
+            var userExists = await _context.Plants.FirstOrDefaultAsync(p => p.UserID == userID);
             if (userExists is null)
             {
                 return null; 
               
             }
 
-            var plants = await _context.Plants.Where(p => p.userID == userID).ToListAsync();
+            var plants = await _context.Plants.Where(p => p.UserID == userID).ToListAsync();
 
             return plants;
         }
@@ -52,7 +52,7 @@ namespace SmartPlant.Models.DataManager
             _context.Add(plant);
             await _context.SaveChangesAsync();
 
-            var msg = $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.userID}";
+            var msg = $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}";
             return msg;
             //return plant.PlantID;
         }

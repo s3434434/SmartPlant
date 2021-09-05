@@ -33,6 +33,9 @@ namespace SmartPlant
                 //options.UseLazyLoadingProxies();
             });
 
+            //automapper
+            services.AddAutoMapper(typeof(Startup));
+
             //identity
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<DatabaseContext>();

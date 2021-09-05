@@ -11,8 +11,9 @@ namespace SmartPlant.Models
         public string PlantID { get; set; }
 
         //foreign key from User - toDo
-        [Required]
-        public string userID { get; set; }
+        [ForeignKey("User") ,Required]
+        public string UserID { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
 
     }
