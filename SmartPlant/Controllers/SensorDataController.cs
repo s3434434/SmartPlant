@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartPlant.Models;
 using SmartPlant.Models.API_Model;
@@ -16,10 +17,12 @@ namespace SmartPlant.Controllers
     public class SensorDataController : ControllerBase
     {
         private readonly SensorDataManager _repo;
+        private readonly IMapper _mapper;
 
-        public SensorDataController(SensorDataManager repo)
+        public SensorDataController(SensorDataManager repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -78,7 +81,7 @@ namespace SmartPlant.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] SensorDataModel dataModel)
         {
-            var data = new SensorData
+           /* var data = new SensorData
             {
                 PlantID = dataModel.PlantID,
                 Temp = dataModel.Temp,
@@ -86,7 +89,11 @@ namespace SmartPlant.Controllers
                 LightIntensity = dataModel.LightIntensity,
                 Moisture = dataModel.Moisture,
                 TimeStampUTC = DateTime.UtcNow
-            };
+            };*/
+
+            //use automapper to map from DTO to Model, then add current time UTC .
+            var data = _mapper.Map<SensorData>(dataModel);
+            data.TimeStampUTC = DateTime.UtcNow;
 
             var result = await _repo.Add(data);
 

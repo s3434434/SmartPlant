@@ -31,6 +31,8 @@ namespace SmartPlant
                 //options.UseLazyLoadingProxies();
             });
 
+            services.AddAutoMapper(typeof(Startup));
+
             //add DataManager Services
             services.AddScoped<PlantManager>();
             services.AddScoped<SensorDataManager>();
