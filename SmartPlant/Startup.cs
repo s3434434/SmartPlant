@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SmartPlant.Data;
+using SmartPlant.Models;
 using SmartPlant.Models.DataManager;
 
 namespace SmartPlant
@@ -31,7 +33,9 @@ namespace SmartPlant
                 //options.UseLazyLoadingProxies();
             });
 
-            services.AddAutoMapper(typeof(Startup));
+            //identity
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<DatabaseContext>();
 
             //add DataManager Services
             services.AddScoped<PlantManager>();
