@@ -18,6 +18,7 @@ namespace SmartPlant.Data
             if (context.Plants.Any())
                 return; // DB has already been seeded.
 
+            //create the users here
             var guid = Guid.NewGuid().ToString();
             var pwHasher = new PasswordHasher<ApplicationUser>();
             var user = new ApplicationUser
@@ -26,22 +27,22 @@ namespace SmartPlant.Data
                 FirstName = "Default User",
                 LastName = "Default",
                 Email = "totallyrealemail@email.com",
-                EmailConfirmed = true,                
+                EmailConfirmed = true,
                 LockoutEnabled = false
 
             };
-            pwHasher.HashPassword(user, "user");
+            user.PasswordHash = pwHasher.HashPassword(user, "user");
 
             var testUser = new ApplicationUser
             {
                 Id = guid,
                 FirstName = "Default User",
                 LastName = "Default",
-                Email = "totallyrealemail@email.com",
+                Email = "totallynotrealemail@email.com",
                 EmailConfirmed = true,
                 LockoutEnabled = false
             };
-            pwHasher.HashPassword(testUser, "user");
+            testUser.PasswordHash = pwHasher.HashPassword(testUser, "user");
 
             var admin = new ApplicationUser
             {
@@ -52,13 +53,15 @@ namespace SmartPlant.Data
                 EmailConfirmed = true,
                 LockoutEnabled = false
             };
-            pwHasher.HashPassword(admin, "admin");
-            context.Users.AddRange(                
-                user, testUser, admin                              
+            admin.PasswordHash = pwHasher.HashPassword(admin, "admin");
+
+            //add the users here
+            context.Users.AddRange(
+                user, testUser, admin
                 );
 
+            //add in the roles
             context.Roles.AddRange(
-                
                 new IdentityRole
                 {
                     Id = "user role id",
@@ -67,14 +70,15 @@ namespace SmartPlant.Data
                     NormalizedName = "USER"
                 },
 
-                new IdentityRole{
-                Id = "admin role id",
+                new IdentityRole
+                {
+                    Id = "admin role id",
                     Name = "Admin",
                     ConcurrencyStamp = "2",
                     NormalizedName = "ADMIN"
                 }
-            );
-
+                 );
+            //add those roles to the users
             context.UserRoles.AddRange(
                 new IdentityUserRole<string>
                 {
@@ -96,7 +100,7 @@ namespace SmartPlant.Data
             context.Plants.AddRange(
                 new Plant
                 {
-                    
+
                     UserID = "user",
                     PlantID = "plantIdOne"
                 },
@@ -174,7 +178,7 @@ namespace SmartPlant.Data
                     LightIntensity = 10,
                     Moisture = 15,
                     TimeStampUTC = DateTime.ParseExact("01/09/2021 05:00:00 PM", format, null)
-                },                
+                },
                 new SensorData
                 {
                     PlantID = "plantIdOne",
@@ -316,7 +320,7 @@ namespace SmartPlant.Data
 
                 );
 
-context.SaveChanges();
+            context.SaveChanges();
         }
     }
 

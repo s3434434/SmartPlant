@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace SmartPlant.Models
 {
@@ -13,6 +14,8 @@ namespace SmartPlant.Models
         //foreign key from User - toDo
         [ForeignKey("User") ,Required]
         public string UserID { get; set; }
+
+        [JsonIgnore]
         public virtual ApplicationUser User { get; set; }
 
 
