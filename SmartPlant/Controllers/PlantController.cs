@@ -47,8 +47,15 @@ namespace SmartPlant.Controllers
         [Route("/api/User/{id}/Plants")]
         //[Route("/{userID}/Plants")]?
         //[Route("/{userID}")]?
+        [Authorize]
         public async Task<IActionResult> Get(string id)
         {
+
+            var claims = User.Claims
+    .Select(c => new { c.Type, c.Value })
+    .ToList();
+            Console.WriteLine(claims);
+
             var plants = await _repo.GetAllForUser(id);
 
             if (plants == null)

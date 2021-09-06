@@ -62,7 +62,7 @@ namespace SmartPlant.Controllers
             var user = await _userManager.FindByEmailAsync(loginUser.Email);
 
             //if user doens't exist or password is incorrect
-            if (user == null || await _userManager.CheckPasswordAsync(user, loginUser.Password))
+            if (user == null || ! await _userManager.CheckPasswordAsync(user, loginUser.Password))
             {                
                 return Unauthorized(new AuthResponseDto { ErrorMessage = "Incorrect Login Details" });
             }

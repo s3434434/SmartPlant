@@ -35,9 +35,10 @@ namespace SmartPlant.JwtFeatures
         public async Task<List<Claim>> GetClaims(ApplicationUser user)
         {
             var claims = new List<Claim>
-        {
+            {
             new Claim(ClaimTypes.Name, user.Email, user.Id)
-        };
+            };
+
             //add roles
             var roles = await _userManager.GetRolesAsync(user);
             foreach (var role in roles)

@@ -32,9 +32,10 @@ namespace SmartPlant.Models.DataManager
             {
                 return null; 
               
-            }
+            }            
 
             var plants = await _context.Plants.Where(p => p.UserID == userID).ToListAsync();
+
 
             return plants;
         }
