@@ -26,6 +26,7 @@ namespace SmartPlant.Data
                 Id = "user",
                 FirstName = "Default User",
                 LastName = "Default",
+                UserName = "totallyrealemail@email.com",
                 Email = "totallyrealemail@email.com",
                 EmailConfirmed = true,
                 LockoutEnabled = false
@@ -38,7 +39,8 @@ namespace SmartPlant.Data
                 Id = guid,
                 FirstName = "Default User",
                 LastName = "Default",
-                Email = "totallynotrealemail@email.com",
+                UserName = "email@email.com",
+                Email = "email@email.com",
                 EmailConfirmed = true,
                 LockoutEnabled = false
             };
@@ -49,7 +51,8 @@ namespace SmartPlant.Data
                 Id = "admin",
                 FirstName = "Admin",
                 LastName = "Admin",
-                Email = "IamAdmin@Admin.Admin",
+                UserName = "Admin@Admin.Admin",
+                Email = "Admin@Admin.Admin",
                 EmailConfirmed = true,
                 LockoutEnabled = false
             };
@@ -65,7 +68,7 @@ namespace SmartPlant.Data
                 new IdentityRole
                 {
                     Id = "user role id",
-                    Name = "User",
+                    Name = UserRoles.User,
                     ConcurrencyStamp = "1",
                     NormalizedName = "USER"
                 },
@@ -73,7 +76,7 @@ namespace SmartPlant.Data
                 new IdentityRole
                 {
                     Id = "admin role id",
-                    Name = "Admin",
+                    Name = UserRoles.Admin,
                     ConcurrencyStamp = "2",
                     NormalizedName = "ADMIN"
                 }

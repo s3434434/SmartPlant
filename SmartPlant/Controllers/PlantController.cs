@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartPlant.Models;
 using SmartPlant.Models.DataManager;
@@ -15,10 +16,12 @@ namespace SmartPlant.Controllers
     public class PlantController : ControllerBase
     {
         private readonly PlantManager _repo;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PlantController(PlantManager repo)
+        public PlantController(PlantManager repo, UserManager<ApplicationUser> userManager)
         {
             _repo = repo;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -55,6 +58,14 @@ namespace SmartPlant.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Plant plant)
         {
+            var user = await _userManager.FindByIdAsync(plant.UserID);
+
+            if (user == null)
+            {
+                return BadRequest("User does not exist");
+            }
+
+
             var id = plant.PlantID;
             var result = await _repo.Add(plant);
 

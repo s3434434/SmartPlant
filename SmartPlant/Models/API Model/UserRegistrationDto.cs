@@ -9,7 +9,7 @@ namespace SmartPlant.Models.API_Model
     public class UserRegistrationDto
     {
         public string FirstName { get; set; }
-        public string LaseName { get; set; }
+        public string LastName { get; set; }
 
         [Required(ErrorMessage = "Email required.")]
         public string Email { get; set; }
@@ -17,7 +17,7 @@ namespace SmartPlant.Models.API_Model
         [Required(ErrorMessage = "Password required")]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Passwords do not match")]
+        [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
     }
 }
