@@ -26,21 +26,23 @@ namespace SmartPlant.Data
                 Id = "user",
                 FirstName = "Default User",
                 LastName = "Default",
-                UserName = "totallyrealemail@email.com",
-                Email = "totallyrealemail@email.com",
+                UserName = "user",
+                Email = "user",
+                NormalizedEmail = "USER",
                 EmailConfirmed = true,
                 LockoutEnabled = false
 
             };
-            user.PasswordHash = pwHasher.HashPassword(user, "user");
+            user.PasswordHash = pwHasher.HashPassword(user, "USER");
 
             var testUser = new ApplicationUser
             {
                 Id = guid,
-                FirstName = "Default User",
+                FirstName = "Default Two",
                 LastName = "Default",
                 UserName = "email@email.com",
                 Email = "email@email.com",
+                NormalizedEmail = "EMAIL@EMAIL.COM",
                 EmailConfirmed = true,
                 LockoutEnabled = false
             };
@@ -51,12 +53,13 @@ namespace SmartPlant.Data
                 Id = "admin",
                 FirstName = "Admin",
                 LastName = "Admin",
-                UserName = "Admin@Admin.Admin",
-                Email = "Admin@Admin.Admin",
+                UserName = "Admin",
+                Email = "Admin",
+                NormalizedEmail = "ADMIN",
                 EmailConfirmed = true,
                 LockoutEnabled = false
             };
-            admin.PasswordHash = pwHasher.HashPassword(admin, "admin");
+            admin.PasswordHash = pwHasher.HashPassword(admin, "ADMIN");
 
             //add the users here
             context.Users.AddRange(

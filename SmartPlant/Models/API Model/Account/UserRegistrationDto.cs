@@ -20,4 +20,11 @@ namespace SmartPlant.Models.API_Model
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
     }
+
+    public class RegistrationResponseDto 
+    {
+        public bool isSuccessfulRegistration { get; set; }
+        public IEnumerable<string> Errors { get; set; }
+    }
+
 }

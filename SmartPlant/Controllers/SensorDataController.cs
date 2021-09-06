@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SmartPlant.Data;
 using SmartPlant.Models;
 using SmartPlant.Models.API_Model;
 using SmartPlant.Models.DataManager;
@@ -11,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartPlant.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SensorDataController : ControllerBase
@@ -39,6 +42,7 @@ namespace SmartPlant.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = UserRoles.Admin)]
         [Route("{plantID}")]
         public async Task<IActionResult> GetAllForPlant(string plantID)
         {
@@ -80,15 +84,15 @@ namespace SmartPlant.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] SensorDataModel dataModel)
         {
-           /* var data = new SensorData
-            {
-                PlantID = dataModel.PlantID,
-                Temp = dataModel.Temp,
-                Humidity = dataModel.Humidity,
-                LightIntensity = dataModel.LightIntensity,
-                Moisture = dataModel.Moisture,
-                TimeStampUTC = DateTime.UtcNow
-            };*/
+            /* var data = new SensorData
+             {
+                 PlantID = dataModel.PlantID,
+                 Temp = dataModel.Temp,
+                 Humidity = dataModel.Humidity,
+                 LightIntensity = dataModel.LightIntensity,
+                 Moisture = dataModel.Moisture,
+                 TimeStampUTC = DateTime.UtcNow
+             };*/
 
             //use automapper to map from DTO to Model, then add current time UTC .
             var data = _mapper.Map<SensorData>(dataModel);
@@ -100,6 +104,10 @@ namespace SmartPlant.Controllers
             {
                 return BadRequest("Plant ID does not exist");
             }
+            if (result == "")
+            {
+                return StatusCode(429, "Please wait 5 minutes between updates");
+            }
 
             return Created("", result);
         }
@@ -108,7 +116,7 @@ namespace SmartPlant.Controllers
         [Route("test")]
         public async Task<IActionResult> Post([FromBody] SensorData data)
         {
-            
+
             var result = await _repo.Add(data);
 
             if (result == null)

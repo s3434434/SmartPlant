@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SmartPlant.Data;
 using SmartPlant.Models;
 using SmartPlant.Models.DataManager;
 using System;
@@ -11,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartPlant.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PlantController : ControllerBase
@@ -25,6 +28,7 @@ namespace SmartPlant.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/plants")]
         public async Task<IActionResult> GetAll(){
 
@@ -54,8 +58,8 @@ namespace SmartPlant.Controllers
 
             return Ok(plants); //200
         }
-            
-        [HttpPost]
+                    
+        [HttpPost] //verifies user exists, then verifies plant id doesn't already exists, adds plant        
         public async Task<IActionResult> Post([FromBody] Plant plant)
         {
             var user = await _userManager.FindByIdAsync(plant.UserID);
@@ -64,7 +68,6 @@ namespace SmartPlant.Controllers
             {
                 return BadRequest("User does not exist");
             }
-
 
             var id = plant.PlantID;
             var result = await _repo.Add(plant);
