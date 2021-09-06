@@ -17,6 +17,7 @@ admin admin
 
 
 Accounts:
+
 	[Post]
 	/api/account/register
 	Takes in param matching UserRegistrationDto.cs
@@ -69,3 +70,6 @@ Sensor Data:
 	/api/SensorData
         creates new sensor data
 	input must match the SensorDataModel class
+	
+	
+	![](https://gfycat.com/vagueacademicferret)
