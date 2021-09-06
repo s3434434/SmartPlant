@@ -11,6 +11,8 @@ rough example of layout
 
 API Methods (or just run the program in visual studio and check SwaggerUI)
 
+<a href="https://gfycat.com/vagueacademicferret">How to use a token for authorization when testing the api</a>
+
 LOGINS: username - password
 user user
 admin admin
@@ -71,5 +73,3 @@ Sensor Data:
         creates new sensor data
 	input must match the SensorDataModel class
 	
-	
-	![](https://gfycat.com/vagueacademicferret)
