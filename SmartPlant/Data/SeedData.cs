@@ -33,7 +33,7 @@ namespace SmartPlant.Data
                 LockoutEnabled = false
 
             };
-            user.PasswordHash = pwHasher.HashPassword(user, "USER");
+            user.PasswordHash = pwHasher.HashPassword(user, "user");
 
             var testUser = new ApplicationUser
             {
@@ -59,7 +59,7 @@ namespace SmartPlant.Data
                 EmailConfirmed = true,
                 LockoutEnabled = false
             };
-            admin.PasswordHash = pwHasher.HashPassword(admin, "ADMIN");
+            admin.PasswordHash = pwHasher.HashPassword(admin, "admin");
 
             //add the users here
             context.Users.AddRange(
