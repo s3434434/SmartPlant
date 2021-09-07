@@ -242,5 +242,37 @@ namespace SmartPlant.Controllers
         }
 
 
+        //this is for adding sensor data, to test the daily/monthly views, etc.
+        [HttpPost]
+        [Route("/api/Admin/ForTesting/SensorData")]
+        public async Task<IActionResult> AdminPost([FromBody] SensorDataModel dataModel)
+        {
+            //use automapper to map from DTO to Model, then add current time UTC .
+            var userID = User.Identity.Name;
+            var user = await _userManager.FindByIdAsync(userID);
+
+            if (user == null)
+            {
+                return BadRequest("User does not exist, this really shouldn't happen");
+            }
+
+            var data = _mapper.Map<SensorData>(dataModel);
+            data.TimeStampUTC = DateTime.UtcNow;
+
+            var result = await _repo.AdminAdd(data);
+
+            if (result == null)
+            {
+                return BadRequest("Plant ID does not exist");
+            }
+            if (result == "")
+            {
+                return StatusCode(429, "Please wait 5 minutes between updates");
+            }
+
+            return Created("", result);
+        }
+
+
     }
 }

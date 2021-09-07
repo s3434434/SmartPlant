@@ -26,14 +26,20 @@ namespace SmartPlant.Models.DataManager
                 return null;
             }
 
+            Console.WriteLine($"plants = {usersPlants.Count}");            
+
             var data = new List<SensorData>();
             //add all sensor data of the plants that belong to the user.
             foreach (Plant p in usersPlants)
             {
+                Console.WriteLine($"PlantID: {p.PlantID}");
+
                 data.AddRange(
-                    await _context.SensorData.Where(p => p.PlantID == p.PlantID).ToListAsync()
+                    await _context.SensorData.Where(s => s.PlantID == p.PlantID).ToListAsync()
                     );
             }
+
+            Console.WriteLine($"Data count: {data.Count}");
 
             if (!(data.Count > 0))
             {
@@ -196,6 +202,25 @@ namespace SmartPlant.Models.DataManager
         }
 
 
+        //for testing
+        public async Task<string> AdminAdd(SensorData data)
+        {
+            //check if the plant id exists
+
+            //if a plant exists with the userid and plantid combination.
+            if (!await DoesPlantExist(data.PlantID))
+            {
+                return null;
+            }
+            
+            _context.Add(data);
+            await _context.SaveChangesAsync();
+
+            //var msg = "";
+            return "added";
+        }
+
+
 
         //helper methods
         private async Task<bool> DoesPlantExist(string plantID)
@@ -211,7 +236,7 @@ namespace SmartPlant.Models.DataManager
         private async Task<bool> DoesPlantUserComboExist(string userID, string plantID)
         {
             //if a plant exists with the userid and plantid combination.
-            var plant = _context.Plants.Where(p => p.UserID == userID && p.PlantID == plantID);
+            var plant = await _context.Plants.FirstOrDefaultAsync(p => p.UserID == userID && p.PlantID == plantID);
 
             if (plant == null)
             {

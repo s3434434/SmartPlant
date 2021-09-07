@@ -116,7 +116,7 @@ namespace SmartPlant.Controllers
 
         [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
-        [Route("/api/Admin/Plants/UserID/{id}")] //gets plants for a specific user
+        [Route("/api/Admin/Plants/User/{id}")] //gets plants for a specific user
         [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> AdminGet(string id)
         {

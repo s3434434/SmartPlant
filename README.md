@@ -47,42 +47,84 @@ Plants:
 	Creates a new plant for the current logged in user.
 	Currently max of 5 per user, changeable in PlantManager.cs: line 14.
 
+
 	[Get] [Admin]
 	/api/Admin/Plants	
 	Returns all plants for all users (plantID, userID)
-
-	[Get] [Admin]
-	/api/Admin/Plants/UserID/{id}
-	Takes in a userID
-	Returns all plants belonging to the specific user
-
+	
 	[Post] [Admin]
 	api/Admin/Plants
 	Creates a new plant
 	Takes in a UserID - UserID must exist on database
-	
+
+
+	[Get] [Admin]
+	/api/Admin/Plants/User/{id}
+	Takes in a userID
+	Returns all plants belonging to the specific user
+
+		
 
 Sensor Data:
 	
 
 	[Get]
-        /api/SensorData/{plantID}
-        returns all sensor data for a plantID
-
- 	[Get]
-	/api/SensorData/{plantID}/Daily
-        returns all sensor data for a plantID whose timestampUTC matches the current day
-
-	[Get]
-        /api/SensorData/{plantID}/Monthly
-	returns all sensor data for a plantID whose timestampUTC matches the current month
-
+        /api/SensorData/
+        Returns all sensor data for all plants owned by the current user
+	
 	[Post]
 	/api/SensorData
-        creates new sensor data
+        Creates new sensor data
 	input must match the SensorDataModel class
 
-	[Get][Admin]
-        /api/SensorData/All
-	returns ALL sensor data - don't think this is needed
+	
+	[Get]
+	/api/SensorData/{plantID}
+	Returns all sensor data for a plant 
+	Must belong to the current user.
+	
+ 	[Get]
+	/api/SensorData/Daily/{plantID}
+        Returns sensor data for a plantID whose timestampUTC matches the current day
+	The plantID must belong to the user.
+
+	[Get]
+        /api/SensorData/Monthly/{plantID}
+	Returns sensor data for a plantID whose timestampUTC matches the current month
+	The plantID must belong to the user.
+	
+
+	[Get] [Admin]
+        /api/Admin/SensorData
+	Returns ALL sensor data - don't think this is needed? maybe for extra graphs/overall statisics
+	
+	[Get] [Admin]
+	/api/Admin/SensorData/{plantID}	
+	Returns all sensor data for a specific plant
+
+	[Get] [Admin]
+	/api/Admin/SensorData/Daily/{plantID}
+	Returns daily sensor data for a specific plant
+
+	[Get] [Admin]
+	/api/Admin/SensorData/Monthly/{plantID}
+	Returns monthly sensor data for a specific plant
+
+
+	[Post] [Admin] [TESTING]
+	/api/Admin/ForTesting/SensorData
+	Just used this to add sensor data to test daily/monthly 
+	
+	
+
+
+
+
+
+
+
+
+
+
+
 	
