@@ -186,10 +186,10 @@ namespace SmartPlant.Controllers
 
         [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
-        [Route("/api/Admin/SensorData")]
+        [Route("/api/Admin/SensorData")] //returns ALL sensor data for ALL plants, is this needed? maybe for extra graphs/ statistics?
         public async Task<IActionResult> AdminGetAll()
         {
-            var data = await _repo.GetAll();
+            var data = await _repo.AdminGetAll();
 
             if (data == null)
             {

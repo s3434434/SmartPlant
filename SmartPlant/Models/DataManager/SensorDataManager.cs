@@ -135,48 +135,18 @@ namespace SmartPlant.Models.DataManager
          * 
          */
 
-        public async Task<IEnumerable<SensorData>> AdminGetAll(string userID)
+        public async Task<IEnumerable<SensorData>> AdminGetAll()
         {
-            //if plant does not exist
-            var usersPlants = await _context.Plants.Where(p => p.UserID == userID).ToListAsync();
-            if (!(usersPlants.Count > 0))
-            {
-                return null;
-            }
-
-            var data = new List<SensorData>();
-            //add all sensor data of the plants that belong to the user.
-            foreach (Plant p in usersPlants)
-            {
-                data.AddRange(
-                    await _context.SensorData.Where(p => p.PlantID == p.PlantID).ToListAsync()
-                    );
-            }
-
-            if (!(data.Count > 0))
-            {
-                return null;
-            }
-            //var data = await _context.SensorData.ToListAsync();
+            var data = await _context.SensorData.ToListAsync();
 
             return data;
         }
 
         //returns sensor data for a specific plant
-        public async Task<IEnumerable<SensorData>> AdminGetAllForAPlant(string userID, string plantID)
-        {
-            //check if a plant with the userid and plantid exists
-
-            /*//if plant doesn't exist return error            this code isn't needed?
+        public async Task<IEnumerable<SensorData>> AdminGetAllForAPlant(string plantID)
+        {           
+            //if plant doesn't exist return error 
             if (!await DoesPlantExist(plantID))
-            {
-                return null;
-            }*/
-
-            //if a plant exists with the userid and plantid combination.
-            var plant = _context.Plants.Where(p => p.UserID == userID && p.PlantID == plantID);
-
-            if (plant == null)
             {
                 return null;
             }
@@ -188,7 +158,6 @@ namespace SmartPlant.Models.DataManager
 
         public async Task<IEnumerable<SensorData>> AdminGetDaily(string plantID)
         {
-
             if (!await DoesPlantExist(plantID))
             {
                 return null;
@@ -209,7 +178,6 @@ namespace SmartPlant.Models.DataManager
 
         public async Task<IEnumerable<SensorData>> AdminGetMonthly(string plantID)
         {
-
             if (!await DoesPlantExist(plantID))
             {
                 return null;
@@ -229,7 +197,7 @@ namespace SmartPlant.Models.DataManager
 
 
 
-        //helper method
+        //helper methods
         private async Task<bool> DoesPlantExist(string plantID)
         {
             var validPlant = await _context.Plants.FirstOrDefaultAsync(p => p.PlantID == plantID);
