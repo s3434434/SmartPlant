@@ -2,6 +2,7 @@
 using SmartPlant.Models;
 using SmartPlant.Models.API_Model;
 using SmartPlant.Models.API_Model.Account;
+using SmartPlant.Models.API_Model.Admin;
 
 namespace SmartPlant.MappingConfigurations
 {
@@ -20,8 +21,14 @@ namespace SmartPlant.MappingConfigurations
             CreateMap<UserRegistrationDto, ApplicationUser>()
                 .ForMember(u => u.UserName, opt => opt.MapFrom(x => x.Email));
 
-            CreateMap<UserDetailsDto, ApplicationUser>()
-                 .ForMember(u => u.UserName, opt => opt.MapFrom(x => x.Email));
+                 
+            CreateMap<ApplicationUser, UserDetailsDto>();
+
+           /* CreateMap<AdminUpdateUserDetailsDto, ApplicationUser>()
+                .ForMember(u => u.UserName, opt => opt.MapFrom(x => x.Email))
+                .ForMember(u => u.Email, opt => opt.MapFrom(x => x.Email))
+                .ForSourceMember(x => x.ID, opt => opt.DoNotValidate());*/
+                
         }
 
     }

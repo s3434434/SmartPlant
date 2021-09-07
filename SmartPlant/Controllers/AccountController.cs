@@ -8,6 +8,7 @@ using SmartPlant.JwtFeatures;
 using SmartPlant.Models;
 using SmartPlant.Models.API_Model;
 using SmartPlant.Models.API_Model.Account;
+using SmartPlant.Models.API_Model.Admin;
 using SmartPlant.Models.DataManager;
 using System;
 using System.Collections.Generic;
@@ -201,7 +202,36 @@ namespace SmartPlant.Controllers
         }
 
         //get info for a specific user 
+        [HttpGet]  
+        [Authorize(Roles = UserRoles.Admin)]
+        [Route("/api/Admin/User")]
+        public async Task<IActionResult> AdminGetUserDetails(string userID)
+        {
+            var result = await _repo.AdminGetUserDetails(userID);
+
+            return Ok(result);
+        }
+
         //set info for a specific user - based on prefilled info from get
+        [HttpPut]  //if an Admin changes a user's emails, no verification needed.
+        [Authorize(Roles = UserRoles.Admin)] 
+        [Route("/api/Admin/User")] 
+        public async Task<IActionResult> AdminUpdateDetails([FromBody]AdminUpdateUserDetailsDto DetailsDto)
+        {
+            if (DetailsDto == null)
+            {
+                return BadRequest();
+            }
+
+            var result = await _repo.AdminUpdateUserDetails(DetailsDto);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+        //change user role to admin
 
     }
 }

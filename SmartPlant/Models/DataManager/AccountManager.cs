@@ -145,9 +145,41 @@ namespace SmartPlant.Models.DataManager
             return UserListDto;
         }
 
+        public async Task<UserDetailsDto> AdminGetUserDetails(string userID)
+        {
+            var user = await _userManager.FindByIdAsync(userID);
+            if (user == null)
+            {
+                return null;
+            }
+
+            var detailsDto = _mapper.Map<UserDetailsDto>(user);
+
+            return detailsDto;
+        }
+
+        public async Task<AdminUpdateUserDetailsDto> AdminUpdateUserDetails(AdminUpdateUserDetailsDto detailsDto)
+        {
+            var user = await _userManager.FindByIdAsync(detailsDto.ID);
+            if (user == null)
+            {
+                return null;
+            }
+
+            user.FirstName = detailsDto.FirstName;
+            user.LastName = detailsDto.LastName;
+            user.Email = detailsDto.Email;
+            user.PhoneNumber = detailsDto.PhoneNumber;
+
+            await _userManager.UpdateAsync(user);
+
+            return detailsDto;
+        }
+
         //admin
         //get all users list + name / email
         //get info for a specific user 
         //set info for a specific user - based on prefilled info from get
+
     }
 }
