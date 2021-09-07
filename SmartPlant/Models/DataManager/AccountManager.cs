@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SmartPlant.Data;
 using SmartPlant.Models.API_Model.Account;
+using SmartPlant.Models.API_Model.Admin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +15,13 @@ namespace SmartPlant.Models.DataManager
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly DatabaseContext _context;
 
-        public AccountManager(UserManager<ApplicationUser> userManager, IMapper mapper)
+        public AccountManager(UserManager<ApplicationUser> userManager, IMapper mapper, DatabaseContext context)
         {
             _userManager = userManager;
             _mapper = mapper;
+            _context = context;
         }
 
         public async Task<UserDetailsDto> GetDetails(string userID)
@@ -100,7 +105,7 @@ namespace SmartPlant.Models.DataManager
         public async Task<int> UpdatePassword(string userID, UpdatePasswordDto passwordDto)
         {
             var user = await _userManager.FindByIdAsync(userID);
-            
+
             var oldPasswordMatches = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, passwordDto.OldPassword);
             if (oldPasswordMatches == 0)// 0 means it doesn't match
             {
@@ -114,6 +119,31 @@ namespace SmartPlant.Models.DataManager
             return 1;
         }
 
+
+        /* 
+         * ADMIN ROLE REQUIRED ENDPOINTS
+         *           BELOW
+         */
+
+        public async Task<List<AdminGetAllUsersDto>> AdminGetAllUsers()
+        {
+            var userList = await _userManager.Users.ToListAsync();
+
+            var UserListDto = new List<AdminGetAllUsersDto>();
+
+            foreach (ApplicationUser u in userList)
+            {
+                UserListDto.Add(
+                    new AdminGetAllUsersDto
+                    {
+                        ID = u.Id,
+                        Email = u.Email
+                    }
+                );
+            }
+
+            return UserListDto;
+        }
 
         //admin
         //get all users list + name / email

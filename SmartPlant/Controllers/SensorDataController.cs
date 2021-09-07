@@ -30,23 +30,11 @@ namespace SmartPlant.Controllers
             _userManager = userManager;
         }
 
-        /* A USER CAN VIEW THEIR ALL PLANT DATA FOR A SPECIFIC PLANT
-         * THE PLANT ID GETS PASSED THRU THE API VIA DATA FROM THE PLANTS API
-         * VERITY PLANT ID BELONGS TO USER
-         * 
-         * A USER CAN VIEW DAILY PLANT SENSOR DATA FOR A SPECIFIC PLANT
-         * 
-         * A USER CAN VIEW MONTHLY PLANT SENSOR DATA FOR A SPECIFIC PLANT
-         * 
-         * A USER CAN UPDATE SENSOR DATA FOR THEIR PLANT (SHOULD BE VIA THE ARDUINO HARDWARE)
-         * 
-         * AN ADMIN CAN VIEW ALL SENSOR DATA FOR ANY USER
-         *  ALL
-         *  DAILY
-         *  MONTHLY
-         * 
-         * AN ADMIN SHOULDN'T REALLY BE ADDING CUSTOM SENSOR DATA ? 
+        /*            (user)
+         *   ANY ROLE REQUIRED ENDPOINTS
+         *             BELOW
          */
+
 
         [HttpGet]
         [Route("/api/SensorData/")]

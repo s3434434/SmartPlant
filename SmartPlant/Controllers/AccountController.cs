@@ -79,12 +79,11 @@ namespace SmartPlant.Controllers
         }
 
 
-
-        /*            
-         *            FOR
-         *     USER ACCOUNT DETAILS
-         *           BELOW
+        /*            (user)
+         *   ANY ROLE REQUIRED ENDPOINTS
+         *             BELOW
          */
+
 
         [HttpGet]
         [Authorize]
@@ -186,6 +185,21 @@ namespace SmartPlant.Controllers
         //GET FOR ADMIN GETTING LIST OF USER IDS
         //admin
         //get all users list + name / email
+        [HttpGet]
+        [Authorize(Roles = UserRoles.Admin)]
+        [Route("/api/Admin/Users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var result = await _repo.AdminGetAllUsers();
+
+            if (result == null)
+            {
+                return NotFound("No Users Found");
+            }
+
+            return Ok(result);
+        }
+
         //get info for a specific user 
         //set info for a specific user - based on prefilled info from get
 

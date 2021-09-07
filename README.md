@@ -148,5 +148,4 @@ Sensor Data:
 
 
 
-
-	
+email for sending verification: SmartPlantTeam4@gmail.com, thisisagoodpassword, 1-1-2000

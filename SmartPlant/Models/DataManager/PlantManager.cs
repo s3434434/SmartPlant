@@ -19,14 +19,7 @@ namespace SmartPlant.Models.DataManager
             _context = context;
         }
 
-        //returns all plants (userID, plantID)
-        public async Task<IEnumerable<Plant>> GetAll()
-        {
-            var plants = await _context.Plants.ToListAsync();
-
-            return plants;
-        }
-
+        //user by both admins and normal users
         //returns all plants belonging to a specific user (userID, plantID)
         public async Task<IEnumerable<Plant>> GetAllForUser(string userID)
         {
@@ -44,6 +37,7 @@ namespace SmartPlant.Models.DataManager
             return plants;
         }
 
+        //user by both admins and normal users
         //adds plant to db, returns its ID
         public async Task<int> Add(Plant plant)
         {
@@ -60,14 +54,27 @@ namespace SmartPlant.Models.DataManager
             {
                 return -1;
             }
-
-
             _context.Add(plant);
             await _context.SaveChangesAsync();
 
             var msg = $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}";
             return 1;
             //return plant.PlantID;
+        }
+
+
+
+        /* 
+         * ADMIN ROLE REQUIRED ENDPOINTS
+         *           BELOW
+         */
+
+        //returns all plants (userID, plantID)
+        public async Task<IEnumerable<Plant>> AdminGetAll()
+        {
+            var plants = await _context.Plants.ToListAsync();
+
+            return plants;
         }
 
     }

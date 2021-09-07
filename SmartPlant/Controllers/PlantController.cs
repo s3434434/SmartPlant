@@ -32,7 +32,10 @@ namespace SmartPlant.Controllers
             _userManager = userManager;
         }
 
-
+        /*            (user)
+         *   ANY ROLE REQUIRED ENDPOINTS
+         *             BELOW
+         */
 
         [HttpGet] //gets all plants for current user
         [Route("/api/Plants")]
@@ -105,7 +108,7 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/Plants")]
         public async Task<IActionResult> AdminGetAll()
         {
-            var plants = await _repo.GetAll();
+            var plants = await _repo.AdminGetAll();
 
             if (plants == null)
             {
