@@ -23,6 +23,7 @@ Accounts:
 	[Post]
 	/api/account/register
 	Takes in param matching UserRegistrationDto.cs
+	(Email, password, confirmation password)
 	password length must be 3 char - changable in startup.cs line 42-46
 	
 	[Post]
@@ -36,25 +37,33 @@ Accounts:
 
 
 Plants:
+
+	[Get]
+	/api/Plants
+	Returns all plants belonging to the current user.	
+
+	[Post]
+	/api/Plants
+	Creates a new plant for the current logged in user.
+	Currently max of 5 per user, changeable in PlantManager.cs: line 14.
+
 	[Get] [Admin]
-	/api/plants
-	
-	Returns all plants (plantID, userID)
+	/api/Admin/Plants	
+	Returns all plants for all users (plantID, userID)
 
-	[Get] //gets all plants (plantid, userid) for the user
-	/api/User/{id}/Plants
-	Returns all plants beloning to a userID
+	[Get] [Admin]
+	/api/Admin/Plants/UserID/{id}
+	Takes in a userID
+	Returns all plants belonging to the specific user
 
-	[Post] 
-	api/Plant
+	[Post] [Admin]
+	api/Admin/Plants
 	Creates a new plant
-	Takes in PlantID, UserID - UserID must exist on database
+	Takes in a UserID - UserID must exist on database
 	
 
 Sensor Data:
-	[Get][Admin]
-        /api/SensorData/All
-	returns ALL sensor data - don't think this is needed
+	
 
 	[Get]
         /api/SensorData/{plantID}
@@ -72,4 +81,8 @@ Sensor Data:
 	/api/SensorData
         creates new sensor data
 	input must match the SensorDataModel class
+
+	[Get][Admin]
+        /api/SensorData/All
+	returns ALL sensor data - don't think this is needed
 	

@@ -25,34 +25,30 @@ namespace SmartPlant.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public PlantController(PlantManager repo, IMapper mapper ,UserManager<ApplicationUser> userManager)
+        public PlantController(PlantManager repo, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             _repo = repo;
             _mapper = mapper;
             _userManager = userManager;
         }
 
-        
 
-        [HttpGet] //gets all plants (plantid, userid) for the user
-        [Route("/api/User/{id}/Plants")]
-        //[Route("/{userID}/Plants")]?
-        //[Route("/{userID}")]?
-        public async Task<IActionResult> Get(string id)
+
+        [HttpGet] //gets all plants for current user
+        [Route("/api/Plants")]
+        public async Task<IActionResult> Get()
         {
-
             //get the ID (which was stored in claimtyupes.Name)
             //from the controllerbase ClaimsIdentity User
             //should be able to remove the id input from the method param,
             //and then this should only work with a logged in user, using their own id's
-            //admin can this old method, separate into an admin controller.
             var userID = User.Identity.Name;
-            
+
             /*//this gets the users Role (user or admin)
             var role = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
             Console.WriteLine($"userid : {userID}\nRole : {role.ElementAt(0)}");*/
 
-            var plants = await _repo.GetAllForUser(id);
+            var plants = await _repo.GetAllForUser(userID);
 
             if (plants == null)
             {
@@ -61,11 +57,11 @@ namespace SmartPlant.Controllers
 
             return Ok(plants); //200
         }
-                    
-        [HttpPost] //verifies user exists, then verifies plant id doesn't already exists, adds plant        
-        public async Task<IActionResult> Post([FromBody] AddPlantDto plantDto)
+
+        [HttpPost] //This should be used when the user chooses to add a plant. Autogenerates plant ID. UserID taken from JWT token 
+        [Route("/api/Plants")]
+        public async Task<IActionResult> Post()
         {
-            var plant = _mapper.Map<Plant>(plantDto);
             var userID = User.Identity.Name;
             var user = await _userManager.FindByIdAsync(userID);
 
@@ -75,25 +71,34 @@ namespace SmartPlant.Controllers
                 return BadRequest("User does not exist, this really shouldn't happen");
             }
 
-            plant.UserID = userID;
+            var plant = new Plant
+            {
+                PlantID = Guid.NewGuid().ToString(),
+                UserID = userID
+            };
 
             var result = await _repo.Add(plant);
 
-            if (result == null)
+            if (result == 0)
             {
                 return Conflict("Plant id exists"); //409 , 400?
             }
-
+            if (result == -1)
+            {
+                return Conflict("Max Plant Limit Hit");
+            }
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
-            return Created("", result);
+
+            //else result == 1
+            return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}");
         }
 
 
-
         /* 
-         * ADMIN REQUIRED ENDPOINTS
-         *        BELOW
+         * ADMIN ROLE REQUIRED ENDPOINTS
+         *           BELOW
          */
+
 
         [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
@@ -109,13 +114,14 @@ namespace SmartPlant.Controllers
             return Ok(plants); //200
         }
 
-        [HttpGet] 
-        [Route("/api/Admin/User/{id}/Plants")]
+        [HttpGet]
+        [Authorize(Roles = UserRoles.Admin)]
+        [Route("/api/Admin/Plants/UserID/{id}")] //gets plants for a specific user
         [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> AdminGet(string id)
         {
 
-           
+
 
             var plants = await _repo.GetAllForUser(id);
 
@@ -128,28 +134,37 @@ namespace SmartPlant.Controllers
         }
 
         [HttpPost] //verifies user exists, then verifies plant id doesn't already exists, adds plant
-        [Route("/api/Admin/Plant")]
-        public async Task<IActionResult> AdminPost([FromBody] Plant plant)
+        [Authorize(Roles = UserRoles.Admin)]
+        [Route("/api/Admin/Plants")]
+        public async Task<IActionResult> AdminPost(string userID)
         {
-            var user = await _userManager.FindByIdAsync(plant.UserID);
+            var user = await _userManager.FindByIdAsync(userID);
 
             if (user == null)
             {
                 return BadRequest("User does not exist");
             }
 
-            var id = plant.PlantID;
+            var plant = new Plant
+            {
+                PlantID = Guid.NewGuid().ToString(),
+                UserID = userID
+            };
+
             var result = await _repo.Add(plant);
 
-            if (result == null)
+            if (result == 0)
             {
-                return Conflict(); //409 , 400?
+                return Conflict("Plant id exists"); //409 , 400?
             }
-
+            if (result == -1)
+            {
+                return Conflict("Max Plant Limit Hit");
+            }
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
-            return Created("", result);
+
+            //else result == 1
+            return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}");
         }
-
-
     }
 }

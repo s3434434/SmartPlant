@@ -12,7 +12,7 @@ namespace SmartPlant.MappingConfigurations
             //SensorDataModel to SensorData
             CreateMap<SensorDataModel, SensorData>();
 
-            CreateMap<AddPlantDto, Plant>();
+            CreateMap<AdminAddPlantDto, Plant>();
 
             //map from user reg dto to user model
             //assign username as the email - so user logs in with their email.

@@ -10,6 +10,10 @@ namespace SmartPlant.Models.DataManager
     {
         private readonly DatabaseContext _context;
 
+        //Sets the maximum plants allower per user.
+        private readonly int maxPlantsAllowed = 5;
+               
+
         public PlantManager(DatabaseContext context)
         {
             _context = context;
@@ -41,20 +45,28 @@ namespace SmartPlant.Models.DataManager
         }
 
         //adds plant to db, returns its ID
-        public async Task<string> Add(Plant plant)
+        public async Task<int> Add(Plant plant)
         {
             var exists = await _context.Plants.FirstOrDefaultAsync(p => p.PlantID == plant.PlantID);
 
             if (exists != null) //if the plant already exists, the plant ID is a primary and therefore unique
             {
-                return null;
+                return 0;
             }
+
+            var totalCount = await _context.Plants.Where(p => p.UserID == plant.UserID).ToListAsync();
+
+            if (totalCount.Count >= maxPlantsAllowed)
+            {
+                return -1;
+            }
+
 
             _context.Add(plant);
             await _context.SaveChangesAsync();
 
             var msg = $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}";
-            return msg;
+            return 1;
             //return plant.PlantID;
         }
 

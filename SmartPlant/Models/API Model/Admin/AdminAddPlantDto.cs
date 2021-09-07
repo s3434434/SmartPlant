@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SmartPlant.Models.API_Model
 {
-    public class AddPlantDto
+    public class AdminAddPlantDto
     {
         [Required]
-        public string PlantID { get; set; }
+        public string UserID { get; set; }
     }
 }

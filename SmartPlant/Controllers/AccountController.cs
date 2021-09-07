@@ -75,5 +75,15 @@ namespace SmartPlant.Controllers
 
             return Ok(new AuthResponseDto { IsAuthSuccessful = true, Token = token });
         }
+
+        /* 
+         * ADMIN ROLE REQUIRED ENDPOINTS
+         *           BELOW
+         */
+
+
+        //GET FOR ADMIN GETTING LIST OF USER IDS
+
+
     }
 }
