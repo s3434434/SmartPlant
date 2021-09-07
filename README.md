@@ -28,7 +28,7 @@ Accounts:
 	[Post]
 	/api/account/register
 	Takes in param matching UserRegistrationDto.cs
-	(Email, password, confirmation password)
+	(Email, password, confirmation password) -- ToDo send Email confirmation?
 	password length must be 3 char - changable in startup.cs line 42-46
 	
 	[Post]
@@ -48,15 +48,43 @@ Accounts:
 
 	[Put]
 	/api/User/Email
-	Updates the current user's Email -- ToDO send Email confirmation?
+	Updates the current user's Email -- ToDo send Email confirmation?
 	This also changes the users username - as it's the same as their email.
 
 	[Put]
 	/api/User/Password
 	Updates the current user's password.
 
-	TODO -- Admin API endpoints for updating a users details	
+	
+	
+	[Get] [Admin]
+	/api/Admin/Users
+	Returns all users (ID, Email)  - format of AdminGetAllUsersDto.cs
 
+	[Get] [Admin]
+	/api/Admin/User	
+	Returns a specific user's details (FirstName, LastName, Email, PhoneNumber)	
+
+	[Put] [Admin]
+	/api/Admin/User	
+	Updates a user's details (FirstName, LastName, Email, PhoneNumber)
+	- also takes in ID but this can't be changed
+	format of AdminUpdateUserDetailsDto.cs
+
+
+	[Get] [Admin]
+	/api/Admin/User/Role
+	Returns a list of users and their roles (userID, email, role)
+
+	[Put] [Admin]
+	/api/Admin/User/Role
+	Updates a user's role - from user to admin, admin to user.
+	format of AdminUpdateUserRole.cs
+
+	[Put] [Admin]
+	/api/Admin/User/Role/Password
+	Updates a user's password 
+	
 
 Plants:
 
@@ -68,6 +96,7 @@ Plants:
 	/api/Plants
 	Creates a new plant for the current logged in user.
 	Currently max of 5 per user, changeable in PlantManager.cs: line 14.
+
 
 
 	[Get] [Admin]
@@ -99,6 +128,7 @@ Sensor Data:
         Creates new sensor data
 	input must match the SensorDataModel class
 
+
 	
 	[Get]
 	/api/SensorData/{plantID}
@@ -115,6 +145,7 @@ Sensor Data:
 	Returns sensor data for a plantID whose timestampUTC matches the current month
 	The plantID must belong to the user.
 	
+
 
 	[Get] [Admin]
         /api/Admin/SensorData
@@ -147,5 +178,5 @@ Sensor Data:
 
 
 
-
+ToDo: verification email
 email for sending verification: SmartPlantTeam4@gmail.com, thisisagoodpassword, 1-1-2000

@@ -189,7 +189,7 @@ namespace SmartPlant.Controllers
         [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/Users")]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> AdminGetAllUsers()
         {
             var result = await _repo.AdminGetAllUsers();
 
@@ -202,7 +202,7 @@ namespace SmartPlant.Controllers
         }
 
         //get info for a specific user 
-        [HttpGet]  
+        [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/User")]
         public async Task<IActionResult> AdminGetUserDetails(string userID)
@@ -214,9 +214,9 @@ namespace SmartPlant.Controllers
 
         //set info for a specific user - based on prefilled info from get
         [HttpPut]  //if an Admin changes a user's emails, no verification needed.
-        [Authorize(Roles = UserRoles.Admin)] 
-        [Route("/api/Admin/User")] 
-        public async Task<IActionResult> AdminUpdateDetails([FromBody]AdminUpdateUserDetailsDto DetailsDto)
+        [Authorize(Roles = UserRoles.Admin)]
+        [Route("/api/Admin/User")]
+        public async Task<IActionResult> AdminUpdateDetails([FromBody] AdminUpdateUserDetailsDto DetailsDto)
         {
             if (DetailsDto == null)
             {
@@ -231,7 +231,50 @@ namespace SmartPlant.Controllers
             }
             return Ok(result);
         }
+
+        //get list of users and their roles
+        [HttpGet]
+        [Authorize(Roles = UserRoles.Admin)]
+        [Route("/api/Admin/User/Role")]
+        public async Task<IActionResult> AdminGetRoleList()
+        {
+            var result = await _repo.AdminGetRoleList();
+            return Ok(result);
+        }
+
         //change user role to admin
+        [HttpPut]
+        [Authorize(Roles = UserRoles.Admin)]
+        [Route("/api/Admin/User/Role")]
+        public async Task<IActionResult> AdminUpdateRole([FromBody] AdminUpdateUserRoleDto updateRoleDto)
+        {
+            if (updateRoleDto == null)
+            {
+                return BadRequest();
+            }
+
+            var result = await _repo.AdminUpdateRole(updateRoleDto);
+
+            return Ok(result);
+        }
+
+        [HttpPut]
+        [Authorize(Roles = UserRoles.Admin)] //change a user's password - old password not needed
+        [Route("/api/Admin/User/Role/Password")]
+        public async Task<IActionResult> AdminUpdatePassword([FromBody]AdminUpdatePasswordDto passwordDto)
+        {
+            if (passwordDto == null)
+            {
+                return BadRequest();
+            }
+
+            var result = await _repo.AdminUpdatePassword(passwordDto);
+            if (result == null)
+            {
+                return NotFound("User not found)");
+            }
+            return Ok(result);
+        }
 
     }
 }

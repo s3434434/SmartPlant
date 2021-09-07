@@ -17,7 +17,7 @@ namespace SmartPlant.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class SensorDataController : ControllerBase
+    public class SensorDataController : Controller
     {
         private readonly SensorDataManager _repo;
         private readonly IMapper _mapper;

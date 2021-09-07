@@ -176,10 +176,69 @@ namespace SmartPlant.Models.DataManager
             return detailsDto;
         }
 
-        //admin
-        //get all users list + name / email
-        //get info for a specific user 
-        //set info for a specific user - based on prefilled info from get
+        public async Task<List<AdminGetRoleListDto>> AdminGetRoleList()
+        {
+            var userList = await _userManager.Users.ToListAsync();
+            var userRoleList = new List<AdminGetRoleListDto>();
+
+            foreach (ApplicationUser u in userList)
+            {
+
+                var role = await _userManager.GetRolesAsync(u);
+
+                userRoleList.Add(
+                    new AdminGetRoleListDto
+                    {
+                        ID = u.Id,
+                        Email = u.Email,
+                        Role = role[0] //users should only have 1 role in this program
+                    });
+            }
+
+            return userRoleList;
+        }
+
+        public async Task<AdminUpdateUserRoleDto> AdminUpdateRole(AdminUpdateUserRoleDto detailsDto)
+        {
+            var user = await _userManager.FindByIdAsync(detailsDto.ID);
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (detailsDto.Role == UserRoles.Admin)
+            {   //add to new role, remove from old role
+                await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+                await _userManager.RemoveFromRoleAsync(user, UserRoles.User);
+                return detailsDto;
+
+            }
+            if (detailsDto.Role == UserRoles.User)
+            {
+                await _userManager.AddToRoleAsync(user, UserRoles.User);
+                await _userManager.RemoveFromRoleAsync(user, UserRoles.Admin);
+                return detailsDto;
+            }
+
+            return null;
+        }
+
+        public async Task<string> AdminUpdatePassword(AdminUpdatePasswordDto passwordDto)
+        {
+            var user = await _userManager.FindByIdAsync(passwordDto.ID);
+            
+            if (user == null)
+            {
+                return null;
+            }
+
+            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, passwordDto.NewPassword);
+
+            await _userManager.UpdateAsync(user);
+
+            return "Password Updated";
+
+        }
 
     }
 }
