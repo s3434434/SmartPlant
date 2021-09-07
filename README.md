@@ -40,6 +40,23 @@ Accounts:
 
 	To logout, on frontend remove token from localstorage/cookie?
 
+	
+	
+	[Put]
+	/api/User
+	Updates the current user's details - FirstName, LastName, PhoneNumber
+
+	[Put]
+	/api/User/Email
+	Updates the current user's Email -- ToDO send Email confirmation?
+	This also changes the users username - as it's the same as their email.
+
+	[Put]
+	/api/User/Password
+	Updates the current user's password.
+
+	TODO -- Admin API endpoints for updating a users details	
+
 
 Plants:
 

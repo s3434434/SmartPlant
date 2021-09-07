@@ -6,18 +6,12 @@ using System.Threading.Tasks;
 
 namespace SmartPlant.Models.API_Model.Account
 {
-    public class UserDetailsDto
-    {        
-        [MaxLength(256)]
-        public string FirstName { get; set; }
-        [MaxLength(256)]
-        public string LastName { get; set; }
-
-        [MaxLength(256)]
+    public class UpdateEmailDto
+    {
+        [DataType(DataType.EmailAddress)]
         [Required(ErrorMessage = "Email required.")]
         public string Email { get; set; }
-
-        [MaxLength(10)]        
-        public string PhoneNumber { get; set; }
+        [Compare("Email", ErrorMessage = "Emails do not match.")]
+        public string ConfirmEmail { get; set; }
     }
 }

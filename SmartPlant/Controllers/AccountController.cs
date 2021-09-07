@@ -51,7 +51,7 @@ namespace SmartPlant.Controllers
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);
-                return BadRequest(new RegistrationResponseDto {isSuccessfulRegistration = false ,Errors = errors });
+                return BadRequest(new RegistrationResponseDto { isSuccessfulRegistration = false, Errors = errors });
             };
             await _userManager.AddToRoleAsync(user, UserRoles.User);
 
@@ -65,13 +65,13 @@ namespace SmartPlant.Controllers
             var user = await _userManager.FindByEmailAsync(loginUser.Email);
 
             //if user doens't exist or password is incorrect
-            if (user == null || ! await _userManager.CheckPasswordAsync(user, loginUser.Password))
-            {                
+            if (user == null || !await _userManager.CheckPasswordAsync(user, loginUser.Password))
+            {
                 return Unauthorized(new AuthResponseDto { ErrorMessage = "Incorrect Login Details" });
             }
 
             var signingCredentials = _jwtHandler.GetSigningCredentials();
-            var claims = await _jwtHandler.GetClaims(user);                        
+            var claims = await _jwtHandler.GetClaims(user);
             var tokenOptions = _jwtHandler.GenerateTokenOptions(signingCredentials, claims);
             var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
@@ -106,14 +106,74 @@ namespace SmartPlant.Controllers
         [HttpPut]
         [Authorize]
         [Route("/api/User")]
-        public async Task<IActionResult> UpdateDetails()
+        public async Task<IActionResult> UpdateDetails([FromBody] UpdateUserDetailsDto userDetailsDto)
         {
+            if (userDetailsDto == null)
+            {
+                return BadRequest();
+            }
+
+            var userID = User.Identity.Name;
+
+            var results = await _repo.UpdateDetails(userID, userDetailsDto);
 
 
-            return Ok();
+
+            return Ok(results);
         }
 
+        [HttpPut]
+        [Authorize]
+        [Route("/api/User/Email")]
+        public async Task<IActionResult> UpdateEmail([FromBody] UpdateEmailDto emailDto)
+        {
+            if (emailDto == null)
+            {
+                return BadRequest();
+            }
 
+            var userID = User.Identity.Name;
+
+            var result = await _repo.UpdateEmail(userID, emailDto);
+
+            if (result == -2)
+            {
+                return BadRequest("User Does Not Exist."); // this shouldn't happen...
+            }
+            if (result == -1)
+            {
+                return BadRequest("Email Already Taken"); // this shouldn't happen...
+            }
+
+            if (result == 0)
+            {
+                return Ok("New email is the same as current. Email not changed.");
+            }
+
+            return Ok("Success");
+        }
+
+        [HttpPut]
+        [Authorize]
+        [Route("/api/User/Password")]
+        public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordDto passwordDto)
+        {
+            if (passwordDto == null)
+            {
+                return BadRequest();
+            }
+
+            var userID = User.Identity.Name;
+
+            var result = await _repo.UpdatePassword(userID, passwordDto);
+
+            if (result == 0)
+            {
+                return Unauthorized("Old Password Incorrect");
+            }
+
+            return Ok("Password Changed");
+        }
 
 
 

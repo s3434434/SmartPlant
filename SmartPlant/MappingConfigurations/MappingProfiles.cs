@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SmartPlant.Models;
 using SmartPlant.Models.API_Model;
+using SmartPlant.Models.API_Model.Account;
 
 namespace SmartPlant.MappingConfigurations
 {
@@ -18,6 +19,9 @@ namespace SmartPlant.MappingConfigurations
             //assign username as the email - so user logs in with their email.
             CreateMap<UserRegistrationDto, ApplicationUser>()
                 .ForMember(u => u.UserName, opt => opt.MapFrom(x => x.Email));
+
+            CreateMap<UserDetailsDto, ApplicationUser>()
+                 .ForMember(u => u.UserName, opt => opt.MapFrom(x => x.Email));
         }
 
     }
