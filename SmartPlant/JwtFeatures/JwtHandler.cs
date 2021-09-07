@@ -36,7 +36,7 @@ namespace SmartPlant.JwtFeatures
         {
             var claims = new List<Claim>
             {
-            new Claim(ClaimTypes.Name, user.Email, user.Id)
+            new Claim(ClaimTypes.Name, user.Id)
             };
 
             //add roles
