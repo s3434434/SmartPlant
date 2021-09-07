@@ -13,6 +13,8 @@ API Methods (or just run the program in visual studio and check SwaggerUI)
 
 <a href="https://gfycat.com/vagueacademicferret">How to use a token for authorization when testing the api</a>
 
+Currently the email address is used to login, and by default the username is set to the email.
+
 LOGINS: username - password
 user user
 admin admin
