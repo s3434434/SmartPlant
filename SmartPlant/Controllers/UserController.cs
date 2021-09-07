@@ -11,7 +11,10 @@ namespace SmartPlant.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-
+        public UserController(UserManager<ApplicationUser> userManager)
+        {
+            _userManager = userManager;
+        }
 
 
 

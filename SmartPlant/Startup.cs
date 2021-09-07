@@ -76,6 +76,7 @@ namespace SmartPlant
             //add DataManager Services
             services.AddScoped<PlantManager>();
             services.AddScoped<SensorDataManager>();
+            services.AddScoped<AccountManager>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

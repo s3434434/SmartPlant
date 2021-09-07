@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using SmartPlant.JwtFeatures;
 using SmartPlant.Models;
 using SmartPlant.Models.API_Model;
 using SmartPlant.Models.API_Model.Account;
+using SmartPlant.Models.DataManager;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,12 +22,12 @@ namespace SmartPlant.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly DatabaseContext _repo;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly JwtHandler _jwtHandler;
+        private readonly AccountManager _repo;
 
-        public AccountController(DatabaseContext repo, IMapper mapper,
+        public AccountController(AccountManager repo, IMapper mapper,
             UserManager<ApplicationUser> userManager, JwtHandler jwtHandler)
         {
             _repo = repo;
@@ -76,6 +78,45 @@ namespace SmartPlant.Controllers
             return Ok(new AuthResponseDto { IsAuthSuccessful = true, Token = token });
         }
 
+
+
+        /*            
+         *            FOR
+         *     USER ACCOUNT DETAILS
+         *           BELOW
+         */
+
+        [HttpGet]
+        [Authorize]
+        [Route("/api/User")]
+        public async Task<IActionResult> GetDetails()
+        {
+            var userID = User.Identity.Name;
+
+            var result = await _repo.GetDetails(userID);
+
+            if (result == null)
+            {
+                return NotFound("User Not Found"); //shouldn't happen
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPut]
+        [Authorize]
+        [Route("/api/User")]
+        public async Task<IActionResult> UpdateDetails()
+        {
+
+
+            return Ok();
+        }
+
+
+
+
+
         /* 
          * ADMIN ROLE REQUIRED ENDPOINTS
          *           BELOW
@@ -83,7 +124,10 @@ namespace SmartPlant.Controllers
 
 
         //GET FOR ADMIN GETTING LIST OF USER IDS
-
+        //admin
+        //get all users list + name / email
+        //get info for a specific user 
+        //set info for a specific user - based on prefilled info from get
 
     }
 }
