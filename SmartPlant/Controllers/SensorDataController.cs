@@ -122,6 +122,7 @@ namespace SmartPlant.Controllers
         }
 
         [HttpPost]
+        [Route("/api/SensorData")]
         public async Task<IActionResult> Post([FromBody] SensorDataModel dataModel)
         {
             if (!ModelState.IsValid)
