@@ -15,6 +15,8 @@ API Methods (or just run the program in visual studio and check SwaggerUI)
 
 Currently the email address is used to login, and by default the username is set to the email.
 
+Authentication and Authorization done with JWT tokens.
+
 LOGINS: username - password
 
 user user
@@ -29,7 +31,7 @@ Accounts:
 	/api/account/register
 		Takes in param matching UserRegistrationDto.cs
 		(Email, password, confirmation password)
-		password length must be 3 char - changable in startup.cs line 42-46
+		password length must be 3 char - changeable in startup.cs line 42-46
 	format of userRegDto.cs
 
 	**WARNING - THIS ACTUALLY SENDS A CONFIRMATION EMAIL LINK TO THE INPUTTED EMAIL**
