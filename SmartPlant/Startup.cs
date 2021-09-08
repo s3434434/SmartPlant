@@ -1,3 +1,4 @@
+using EmailService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +38,12 @@ namespace SmartPlant
                 //options.UseLazyLoadingProxies();
             });
 
+            //email service
+            var emailConfig = Configuration.GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            services.AddScoped<IEmailSender, EmailSender>();
+
             //automapper
             services.AddAutoMapper(typeof(Startup));
 
@@ -48,9 +55,12 @@ namespace SmartPlant
                    o.Password.RequireUppercase = false;
                    o.Password.RequireNonAlphanumeric = false;
                    o.Password.RequiredLength = 3;
+                   o.User.RequireUniqueEmail = true;
+                   o.SignIn.RequireConfirmedEmail = true;
                }
                 )
-                .AddEntityFrameworkStores<DatabaseContext>();
+                .AddEntityFrameworkStores<DatabaseContext>()
+                .AddDefaultTokenProviders();
 
             //JWT token 
             var jwtSettings = Configuration.GetSection("JwtSettings");

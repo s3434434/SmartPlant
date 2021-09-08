@@ -30,6 +30,15 @@ Accounts:
 	Takes in param matching UserRegistrationDto.cs
 	(Email, password, confirmation password) -- ToDo send Email confirmation?
 	password length must be 3 char - changable in startup.cs line 42-46
+
+	**WARNING - THIS ACTUALLY SENDS A CONFIRMATION EMAIL LINK TO THE INPUTTED EMAIL**
+	Currently, the token is also sent back in the response body, for easier copy/paste testing
+
+
+	[Get]
+	/api/ConfirmEmail
+	Takes in email and token from a querystring - from the sent confirmation email
+	Confirms a user's email - users need to confirm their email before being able to login.
 	
 	[Post]
 	/api/Account/Login
@@ -38,7 +47,7 @@ Accounts:
 	admin admin
 	returns a JWT token, used for authorization
 
-	To logout, on frontend remove token from localstorage/cookie?
+	To logout, on frontend remove token from localstorage?
 
 	
 	

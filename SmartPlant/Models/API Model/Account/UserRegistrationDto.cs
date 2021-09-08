@@ -19,6 +19,9 @@ namespace SmartPlant.Models.API_Model
 
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
+        
+        [Required(ErrorMessage = "This is the uri for the frontend confirmation page")]
+        public string ClientURI { get; set; }
     }
 
     public class RegistrationResponseDto 

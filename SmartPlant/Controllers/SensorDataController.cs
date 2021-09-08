@@ -123,7 +123,12 @@ namespace SmartPlant.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] SensorDataModel dataModel)
-        {            
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             //use automapper to map from DTO to Model, then add current time UTC .
             var userID = User.Identity.Name;
             var user = await _userManager.FindByIdAsync(userID);
@@ -235,6 +240,11 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/ForTesting/SensorData")]
         public async Task<IActionResult> AdminPost([FromBody] SensorDataModel dataModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             //use automapper to map from DTO to Model, then add current time UTC .
             var userID = User.Identity.Name;
             var user = await _userManager.FindByIdAsync(userID);

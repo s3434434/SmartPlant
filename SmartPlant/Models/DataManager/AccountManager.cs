@@ -1,11 +1,16 @@
 ﻿using AutoMapper;
+using EmailService;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using SmartPlant.Data;
+using SmartPlant.JwtFeatures;
+using SmartPlant.Models.API_Model;
 using SmartPlant.Models.API_Model.Account;
 using SmartPlant.Models.API_Model.Admin;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,13 +21,94 @@ namespace SmartPlant.Models.DataManager
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly DatabaseContext _context;
+        private readonly IEmailSender _emailSender;
+        private readonly JwtHandler _jwtHandler;
 
-        public AccountManager(UserManager<ApplicationUser> userManager, IMapper mapper, DatabaseContext context)
+        public AccountManager(UserManager<ApplicationUser> userManager, IMapper mapper,
+            DatabaseContext context, IEmailSender emailSender, JwtHandler jwtHandler)
         {
             _userManager = userManager;
             _mapper = mapper;
             _context = context;
+            _emailSender = emailSender;
+            _jwtHandler = jwtHandler;
+            
         }
+
+        public async Task<RegistrationResponseDto> Register(ApplicationUser user, UserRegistrationDto userRegDto)
+        {
+            var result = await _userManager.CreateAsync(user, userRegDto.Password);
+            if (!result.Succeeded)
+            {
+                var errors = result.Errors.Select(e => e.Description);
+                return new RegistrationResponseDto { isSuccessfulRegistration = false, Errors = errors };
+            };
+
+            //send confirmation email
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var param = new Dictionary<string, string>
+            {
+                {"token", token },
+                { "email", user.Email }
+            };
+
+            var callback = QueryHelpers.AddQueryString(userRegDto.ClientURI, param);
+            var message = new Message(new string[] { user.Email }, "SmarPlant - Confirm Your Email", callback);
+            await _emailSender.SendEmailAsync(message);
+
+            await _userManager.AddToRoleAsync(user, UserRoles.User);
+
+            return new RegistrationResponseDto { isSuccessfulRegistration = true, Errors = new string[] { token } };
+
+        }
+
+        public async Task<bool> ConfirmEmail(ApplicationUser user, string token)
+        {
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (!result.Succeeded)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<AuthResponseDto> Login(ApplicationUser user, UserForAuthenticationDto loginDto)
+        {
+            //if user doens't exist or password is incorrect
+            if (user == null || !await _userManager.CheckPasswordAsync(user, loginUser.Password))
+            {
+                return (new AuthResponseDto { IsAuthSuccessful = false, ErrorMessage = "Incorrect Login Details" });
+            }
+            if (!await _userManager.IsEmailConfirmedAsync(user)) // if the user hasn't confirmed their email
+            {
+                return (new AuthResponseDto { IsAuthSuccessful = false, ErrorMessage = "Email is not confirmed" });
+            }
+
+            var signingCredentials = _jwtHandler.GetSigningCredentials();
+            var claims = await _jwtHandler.GetClaims(user);
+            var tokenOptions = _jwtHandler.GenerateTokenOptions(signingCredentials, claims);
+            var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+            return new AuthResponseDto { IsAuthSuccessful = true, Token = token };
+
+        }
+
+
+
+
+
+
+
+
+
+        /*            (user)
+        *   ANY ROLE REQUIRED ENDPOINTS
+        *             BELOW
+        */
+
+
 
         public async Task<UserDetailsDto> GetDetails(string userID)
         {
@@ -238,6 +324,17 @@ namespace SmartPlant.Models.DataManager
 
             return "Password Updated";
 
+        }
+
+        public async Task<string> AdminDeleteUser(ApplicationUser user)
+        {
+            var result = await _userManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
+            {
+                return null;
+            }
+            return "User Deleted";
         }
 
     }

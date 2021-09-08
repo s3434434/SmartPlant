@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using EmailService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using SmartPlant.Data;
 using SmartPlant.JwtFeatures;
 using SmartPlant.Models;
@@ -27,14 +29,17 @@ namespace SmartPlant.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly JwtHandler _jwtHandler;
         private readonly AccountManager _repo;
+        private readonly IEmailSender _emailSender;
 
         public AccountController(AccountManager repo, IMapper mapper,
-            UserManager<ApplicationUser> userManager, JwtHandler jwtHandler)
+            UserManager<ApplicationUser> userManager, JwtHandler jwtHandler,
+            IEmailSender emailSender)
         {
             _repo = repo;
             _mapper = mapper;
             _userManager = userManager;
             _jwtHandler = jwtHandler;
+            _emailSender = emailSender;
         }
 
         [HttpPost("Register")]
@@ -48,15 +53,35 @@ namespace SmartPlant.Controllers
 
             var user = _mapper.Map<ApplicationUser>(userRegDto);
 
-            var result = await _userManager.CreateAsync(user, userRegDto.Password);
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors.Select(e => e.Description);
-                return BadRequest(new RegistrationResponseDto { isSuccessfulRegistration = false, Errors = errors });
-            };
-            await _userManager.AddToRoleAsync(user, UserRoles.User);
+            var result = await _repo.Register(user, userRegDto);
 
-            return StatusCode(201);
+            if (!result.isSuccessfulRegistration)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            //return StatusCode(201)
+            return Ok(result.Errors);
+        }
+
+        [HttpGet]
+        [Route("ConfirmEmail")]
+        public async Task<IActionResult> ComfirmEmail([FromQuery] string email, [FromQuery] string token)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return BadRequest("User Not Found");
+            }
+
+            var result = await _repo.ConfirmEmail(user, token);            
+
+            if (!result)
+            {
+                return BadRequest("Invalid Email Confirmation Request - Something Went Wrong");
+            }
+            return Ok("Email Confirmed");
         }
 
         [HttpPost("Login")]
@@ -65,19 +90,88 @@ namespace SmartPlant.Controllers
         {
             var user = await _userManager.FindByEmailAsync(loginUser.Email);
 
-            //if user doens't exist or password is incorrect
+            var result = await _repo.Login(user, loginUser);
+           /* //if user doens't exist or password is incorrect
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginUser.Password))
             {
-                return Unauthorized(new AuthResponseDto { ErrorMessage = "Incorrect Login Details" });
+                return Unauthorized(new AuthResponseDto { IsAuthSuccessful = false,ErrorMessage = "Incorrect Login Details" });
             }
+            if (! await _userManager.IsEmailConfirmedAsync(user)) // if the user hasn't confirmed their email
+            {
+                return Unauthorized(new AuthResponseDto { IsAuthSuccessful = false, ErrorMessage = "Email is not confirmed" });
+            }            
 
             var signingCredentials = _jwtHandler.GetSigningCredentials();
             var claims = await _jwtHandler.GetClaims(user);
             var tokenOptions = _jwtHandler.GenerateTokenOptions(signingCredentials, claims);
-            var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+            var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);*/
 
-            return Ok(new AuthResponseDto { IsAuthSuccessful = true, Token = token });
+            //return Ok(new AuthResponseDto { IsAuthSuccessful = true, Token = token });
+
+            if (!result.IsAuthSuccessful)
+            {
+                return Unauthorized(result.ErrorMessage);
+            }
+
+            return Ok(result.Token);
         }
+
+        [HttpPost]
+        [Route("Password/Forgot")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto passwordDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var user = await _userManager.FindByEmailAsync(passwordDto.Email);
+            if (user == null)
+            {
+                return BadRequest("Email not found");
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var param = new Dictionary<string, string>
+            {
+                {"token", token },
+                { "email", user.Email }
+            };
+
+            var callback = QueryHelpers.AddQueryString(passwordDto.ClientURI, param);
+            var message = new Message(new string[] { user.Email }, "SmarPlant - Reset Your Password", callback);
+            await _emailSender.SendEmailAsync(message);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("Password/Reset")]
+        public async Task<IActionResult> ResetPassword([FromBody]ResetPasswordDto passwordDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var user = await _userManager.FindByEmailAsync(passwordDto.Email);
+
+            if (user == null)
+            {
+                return BadRequest("User Not Found");
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, passwordDto.Token, passwordDto.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                var errors = result.Errors.Select(e => e.Description);
+                return BadRequest(new { Error = errors });
+            }
+
+            return Ok();
+        }
+        
 
 
         /*            (user)
@@ -108,7 +202,7 @@ namespace SmartPlant.Controllers
         [Route("/api/User")]
         public async Task<IActionResult> UpdateDetails([FromBody] UpdateUserDetailsDto userDetailsDto)
         {
-            if (userDetailsDto == null)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
@@ -127,7 +221,7 @@ namespace SmartPlant.Controllers
         [Route("/api/User/Email")]
         public async Task<IActionResult> UpdateEmail([FromBody] UpdateEmailDto emailDto)
         {
-            if (emailDto == null)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
@@ -158,7 +252,7 @@ namespace SmartPlant.Controllers
         [Route("/api/User/Password")]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordDto passwordDto)
         {
-            if (passwordDto == null)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
@@ -218,7 +312,7 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/User")]
         public async Task<IActionResult> AdminUpdateDetails([FromBody] AdminUpdateUserDetailsDto DetailsDto)
         {
-            if (DetailsDto == null)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
@@ -248,7 +342,7 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/User/Role")]
         public async Task<IActionResult> AdminUpdateRole([FromBody] AdminUpdateUserRoleDto updateRoleDto)
         {
-            if (updateRoleDto == null)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
@@ -263,7 +357,7 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/User/Role/Password")]
         public async Task<IActionResult> AdminUpdatePassword([FromBody]AdminUpdatePasswordDto passwordDto)
         {
-            if (passwordDto == null)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
@@ -273,6 +367,28 @@ namespace SmartPlant.Controllers
             {
                 return NotFound("User not found)");
             }
+            return Ok(result);
+        }
+
+        [HttpDelete]
+        [Authorize(Roles = UserRoles.Admin)]
+        [Route("/api/Admin/User")]
+        public async Task<IActionResult> AdminDeleteUser(string userID)
+        {
+            var user = await _userManager.FindByIdAsync(userID);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            var result = await _repo.AdminDeleteUser(user);
+
+            if (result == null)
+            {
+                return BadRequest("Something went wrong");
+            }
+
             return Ok(result);
         }
 
