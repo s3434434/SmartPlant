@@ -27,7 +27,7 @@ namespace SmartPlant.Controllers
     {
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly JwtHandler _jwtHandler;
+        //private readonly JwtHandler _jwtHandler;
         private readonly AccountManager _repo;
         private readonly IEmailSender _emailSender;
 
@@ -38,7 +38,7 @@ namespace SmartPlant.Controllers
             _repo = repo;
             _mapper = mapper;
             _userManager = userManager;
-            _jwtHandler = jwtHandler;
+            //_jwtHandler = jwtHandler;
             _emailSender = emailSender;
         }
 
@@ -88,9 +88,9 @@ namespace SmartPlant.Controllers
         //[Route("/api/Login")]
         public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto loginUser)
         {
-            var user = await _userManager.FindByEmailAsync(loginUser.Email);
+           //var user = await _userManager.FindByEmailAsync(loginUser.Email);
 
-            var result = await _repo.Login(user, loginUser);
+            var result = await _repo.Login(loginUser);
            /* //if user doens't exist or password is incorrect
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginUser.Password))
             {
@@ -113,7 +113,7 @@ namespace SmartPlant.Controllers
                 return Unauthorized(result.ErrorMessage);
             }
 
-            return Ok(result.Token);
+            return Ok(result);
         }
 
         [HttpPost]
@@ -124,7 +124,11 @@ namespace SmartPlant.Controllers
             {
                 return BadRequest();
             }
-            var user = await _userManager.FindByEmailAsync(passwordDto.Email);
+
+            var result = await _repo.ForgotPassword(passwordDto);
+
+
+           /* var user = await _userManager.FindByEmailAsync(passwordDto.Email);
             if (user == null)
             {
                 return BadRequest("Email not found");
@@ -142,7 +146,23 @@ namespace SmartPlant.Controllers
             var message = new Message(new string[] { user.Email }, "SmarPlant - Reset Your Password", callback);
             await _emailSender.SendEmailAsync(message);
 
-            return Ok();
+            return Ok();*/
+
+            //----
+            /*if (!result)
+            {
+                return BadRequest("Email not found");
+            }
+
+            return Ok();*/
+
+            if (result == null)
+            {
+                return BadRequest("Email not found");
+            }
+            return Ok(result);
+
+
         }
 
         [HttpPost]
@@ -154,7 +174,9 @@ namespace SmartPlant.Controllers
                 return BadRequest();
             }
 
-            var user = await _userManager.FindByEmailAsync(passwordDto.Email);
+            var result = await _repo.ResetPassword(passwordDto);
+
+            /*var user = await _userManager.FindByEmailAsync(passwordDto.Email);
 
             if (user == null)
             {
@@ -169,6 +191,13 @@ namespace SmartPlant.Controllers
                 return BadRequest(new { Error = errors });
             }
 
+            return Ok();*/
+
+            if (!result.Succeeded)
+            {
+                var errors = result.Errors.Select(e => e.Description);
+                return BadRequest(new { Error = errors });
+            }
             return Ok();
         }
         

@@ -74,8 +74,10 @@ namespace SmartPlant.Models.DataManager
             return true;
         }
 
-        public async Task<AuthResponseDto> Login(ApplicationUser user, UserForAuthenticationDto loginDto)
+        public async Task<AuthResponseDto> Login(UserForAuthenticationDto loginUser)
         {
+            var user = await _userManager.FindByEmailAsync(loginUser.Email);
+
             //if user doens't exist or password is incorrect
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginUser.Password))
             {
@@ -95,15 +97,51 @@ namespace SmartPlant.Models.DataManager
 
         }
 
+                    //Task<bool>
+        public async Task<IEnumerable<string>> ForgotPassword(ForgotPasswordDto passwordDto)
+        {
+            var user = await _userManager.FindByEmailAsync(passwordDto.Email);
+            if (user == null)
+            {
+                //return false;
+                return null;
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var param = new Dictionary<string, string>
+            {
+                {"token", token },
+                { "email", user.Email }
+            };
+
+            var callback = QueryHelpers.AddQueryString(passwordDto.ClientURI, param);
+            var message = new Message(new string[] { user.Email }, "SmarPlant - Reset Your Password", callback);
+            await _emailSender.SendEmailAsync(message);
+
+            //return true;
+            return new string[] { token };
+
+        }
+
+        public async Task<IdentityResult> ResetPassword(ResetPasswordDto passwordDto)
+        {
+            var user = await _userManager.FindByEmailAsync(passwordDto.Email);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, passwordDto.Token, passwordDto.NewPassword);
+
+            return result;
+        }
 
 
 
-
-
-
-
-
-        /*            (user)
+        /*    
+         *           (user)
         *   ANY ROLE REQUIRED ENDPOINTS
         *             BELOW
         */
