@@ -43,7 +43,5 @@ namespace SmartPlant.Models
         [Required]
         public DateTime TimeStampUTC { get; set; }
 
-        
-        public decimal Test { get; set; }
     }
 }

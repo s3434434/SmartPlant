@@ -146,7 +146,7 @@ namespace SmartPlant.Controllers
 
             if (result == null)
             {
-                return BadRequest("Plant ID does not exist");
+                return NotFound("Plant ID does not exist");
             }
             if (result == "")
             {

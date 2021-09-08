@@ -23,7 +23,5 @@ namespace SmartPlant.Models.API_Model
         [Range(0, 100), Required]
         public int Moisture { get; set; }
       
-
-        public decimal Test { get; set; }
     }
 }

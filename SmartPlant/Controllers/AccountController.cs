@@ -332,6 +332,11 @@ namespace SmartPlant.Controllers
         {
             var result = await _repo.AdminGetUserDetails(userID);
 
+            if (result == null)
+            {
+                return NotFound();
+            }
+
             return Ok(result);
         }
 

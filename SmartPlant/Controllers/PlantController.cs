@@ -124,8 +124,6 @@ namespace SmartPlant.Controllers
         public async Task<IActionResult> AdminGet(string id)
         {
 
-
-
             var plants = await _repo.GetAllForUser(id);
 
             if (plants == null)
@@ -145,7 +143,7 @@ namespace SmartPlant.Controllers
 
             if (user == null)
             {
-                return BadRequest("User does not exist");
+                return NotFound("User does not exist");
             }
 
             var plant = new Plant

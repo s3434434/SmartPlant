@@ -21,10 +21,11 @@ namespace SmartPlant.Data
 
             //set CHECK constraint -> humidity cannot be negative. Needed? light level, moisture %
             //builder.Entity<SensorData>().HasCheckConstraint("CH_SensorData_Humidity", "(Humidity >= 0)");
-
+            
+            /* decimal stuff
             builder.Entity<SensorData>()
                 .Property(s => s.Test)
-                .HasPrecision(5, 2);
+                .HasPrecision(5, 2);*/
 
             builder.Entity<ApplicationUser>()
                 .HasMany(x => x.Plants)
