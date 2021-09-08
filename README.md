@@ -30,7 +30,7 @@ Accounts:
 	[Post]
 	/api/account/register
 		Takes in param matching UserRegistrationDto.cs
-		(Email, password, confirmation password)
+		(FirstName, LastName, Email, password, confirmation password, URI for confirmation route)
 		password length must be 3 char - changeable in startup.cs line 42-46
 	format of userRegDto.cs
 				Returns: BadRequest - 400  invalid input
