@@ -13,6 +13,7 @@ using SmartPlant.Data;
 using SmartPlant.JwtFeatures;
 using SmartPlant.Models;
 using SmartPlant.Models.DataManager;
+using SmartPlant.Models.Repository;
 using System.Text;
 
 namespace SmartPlant
@@ -84,9 +85,9 @@ namespace SmartPlant
             services.AddScoped<JwtHandler>();
 
             //add DataManager Services
-            services.AddScoped<PlantManager>();
-            services.AddScoped<SensorDataManager>();
-            services.AddScoped<AccountManager>();
+            services.AddScoped<IPlantManager, PlantManager>();
+            services.AddScoped<ISensorDataManager, SensorDataManager>();
+            services.AddScoped<IAccountManager, AccountManager>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

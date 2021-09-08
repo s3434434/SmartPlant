@@ -281,7 +281,7 @@ Sensor Data:
 				Returns: BadRequest - 400
 					 BadRequest - 400  msg "User does not exist, this really shouldn't happen" --shouldn't happen...
 					   NotFound - 404  msg "Plant ID does not exist"
-				  Too Many Requests - 429  msg "Please wait 5 minutes between updates"  --I put in an arbitrary wait of 5 mins between sensordata updates to stop db from being spammed - can change if needed
+				  Too Many Requests - 429  msg "Please wait 5 minutes between updates"  -- Currently Disabled - but I put in an arbitrary wait of 5 mins between sensordata updates to stop db from being spammed 
 					    Created - 201  msg "added"
 					 
 	
@@ -328,7 +328,7 @@ Sensor Data:
 				Returns: BadRequest - 400
 					 BadRequest - 400  msg "User does not exist, this really shouldn't happen"
 					 BadRequest - 400  msg "Plant ID Does not exist"
-				  Too Many Requests - 429  msg "Please wait 5 minutes between updates"  --I put in an arbitrary wait of 5 mins between sensordata updates to stop db from being spammed - can change if needed
+				  Too Many Requests - 429  msg "Please wait 5 minutes between updates"  -- Currently Disabled - But I put in an arbitrary wait of 5 mins between sensordata updates to stop db from being spammed - can change if needed
 					    Created - 201  msg "added"
 				
 

@@ -8,6 +8,7 @@ using SmartPlant.JwtFeatures;
 using SmartPlant.Models.API_Model;
 using SmartPlant.Models.API_Model.Account;
 using SmartPlant.Models.API_Model.Admin;
+using SmartPlant.Models.Repository;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace SmartPlant.Models.DataManager
 {
-    public class AccountManager
+    public class AccountManager : IAccountManager
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
