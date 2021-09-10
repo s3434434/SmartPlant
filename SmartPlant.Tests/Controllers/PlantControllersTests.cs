@@ -149,10 +149,25 @@ namespace SmartPlant.Tests
         {
             // Arrange
             var userID = mock_Principal.Object.Identity.Name;
+            var mock_plant = new Plant();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(userID))
+                .ReturnsAsync(() => new ApplicationUser());
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            mock_PlantManager.Setup(_repo => _repo.Add(mock_plant))
+                .ReturnsAsync(() => -1);
 
             // Act
+            var result = await plantController.Post();
 
             // Assert
+            Assert.That(result, Is.TypeOf<ConflictObjectResult>());
         }
 
         [Test]
