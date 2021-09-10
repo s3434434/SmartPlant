@@ -46,6 +46,8 @@ namespace SmartPlant.Tests
             mock_Principal.Setup(x => x.Identity).Returns(identity.Object);
         }
 
+        #region User
+        
         #region Get
 
         [Test]
@@ -195,6 +197,62 @@ namespace SmartPlant.Tests
             // Assert
             Assert.That(result, Is.TypeOf<CreatedResult>());
         }
+        #endregion
+        #endregion
+
+        #region Admin
+
+        #region AdminGetAll
+
+        #endregion
+
+        #region AdminGet
+        [Test]
+        public async Task AdminGet_WhenParameterIDUserHasPlants_ReturnsOKAsync()
+        {
+            // Arrange
+            var testValue = new List<Plant>();
+
+            mock_PlantManager.Setup(_repo => _repo.GetAllForUser(It.IsAny<string>()))
+                .ReturnsAsync(testValue);
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.AdminGet(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+
+        [Test]
+        public async Task AdminGet_WhenParameterIDUserHasNoPlants_ReturnsNotFound()
+        {
+            // Arrange
+            mock_PlantManager.Setup(_repo => _repo.GetAllForUser(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.AdminGet(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<NotFoundResult>());
+        }
+        #endregion
+
+        #region AdminPost
+
+        #endregion
         #endregion
     }
 }
