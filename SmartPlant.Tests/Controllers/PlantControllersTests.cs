@@ -203,7 +203,47 @@ namespace SmartPlant.Tests
         #region Admin
 
         #region AdminGetAll
+        [Test]
+        public async Task AdminGetAll_WhenRepoHasPlants_ReturnsOKAsync()
+        {
+            // Arrange
+            var testValue = new List<Plant>();
 
+            mock_PlantManager.Setup(_repo => _repo.AdminGetAll())
+                .ReturnsAsync(testValue);
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.AdminGetAll();
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+
+        [Test]
+        public async Task AdminGetAll_RepoHasNoPlants_ReturnsNotFound()
+        {
+            // Arrange
+            mock_PlantManager.Setup(_repo => _repo.AdminGetAll())
+                .ReturnsAsync(() => null);
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.AdminGetAll();
+
+            // Assert
+            Assert.That(result, Is.TypeOf<NotFoundResult>());
+        }
         #endregion
 
         #region AdminGet
