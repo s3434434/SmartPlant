@@ -46,6 +46,7 @@ namespace SmartPlant.Tests.Controllers
             mock_EmailSender = new Mock<IEmailSender>();
         }
 
+        #region Register
         [Test]
         public async Task Register_WhenUserRegistrationDtoIsNull_ReturnsBadRequest()
         {
@@ -64,5 +65,78 @@ namespace SmartPlant.Tests.Controllers
             // Assert
             Assert.That(result, Is.TypeOf<BadRequestResult>());
         }
+
+        [Test]
+        public async Task Register_WhenModelStateIsInvalid_ReturnsBadRequest()
+        {
+            // Arrange
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
+
+            // Act
+            var result = await accountController.Register(Mock.Of<UserRegistrationDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestResult>());
+        }
+
+        [Test]
+        public async Task Register_WhenRepoRegistrationFails_ReturnsBadRequest()
+        {
+            // Arrange
+            var mock_registrationResponseDto = new RegistrationResponseDto();
+            mock_registrationResponseDto.isSuccessfulRegistration = false;
+
+            mock_AccountManager.Setup(_repo => _repo.Register(It.IsAny<ApplicationUser>(), It.IsAny<UserRegistrationDto>()))
+                .ReturnsAsync(mock_registrationResponseDto);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.Register(Mock.Of<UserRegistrationDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+        }
+
+        [Test]
+        public async Task Register_WhenRegistrationIsSuccessful_ReturnsOK()
+        {
+            // Arrange
+            var mock_registrationResponseDto = new RegistrationResponseDto();
+            mock_registrationResponseDto.isSuccessfulRegistration = true;
+
+            mock_AccountManager.Setup(_repo => _repo.Register(It.IsAny<ApplicationUser>(), It.IsAny<UserRegistrationDto>()))
+                .ReturnsAsync(mock_registrationResponseDto);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.Register(Mock.Of<UserRegistrationDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+        #endregion
+
     }
 }
