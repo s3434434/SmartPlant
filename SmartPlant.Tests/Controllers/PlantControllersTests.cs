@@ -286,7 +286,100 @@ namespace SmartPlant.Tests
         #endregion
 
         #region AdminPost
+        [Test]
+        public async Task AdminPost_WhenUserNotFound_ReturnsBadRequest()
+        {
+            // Arrange
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
 
+            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.AdminPost(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public async Task AdminPost_WhenPlantIDAlreadyExists_ReturnsConflict()
+        {
+            // Arrange
+            int returnValue = 0;
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => new ApplicationUser());
+
+            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
+                .ReturnsAsync(returnValue);
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.AdminPost(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<ConflictObjectResult>());
+        }
+
+        [Test]
+        public async Task AdminPost_WhenUserHasReachedPlantLimit_ReturnsConflict()
+        {
+            // Arrange
+            int returnValue = -1;
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => new ApplicationUser());
+
+            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
+                .ReturnsAsync(returnValue);
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.AdminPost(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<ConflictObjectResult>());
+        }
+
+        [Test]
+        public async Task AdminPost_WhenPlantSuccessfullyAdded_ReturnsCreated()
+        {
+            // Arrange
+            int returnValue = 1;
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => new ApplicationUser());
+
+            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
+                .ReturnsAsync(returnValue);
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.AdminPost(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<CreatedResult>());
+        }
         #endregion
         #endregion
     }
