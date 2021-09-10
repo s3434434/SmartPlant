@@ -15,7 +15,7 @@ using SmartPlant.Models.Repository;
 using SmartPlant.Models;
 using SmartPlant.Controllers;
 
-namespace SmartPlant.Tests
+namespace SmartPlant.Tests.Controllers
 {
     public class PlantControllersTests
     {
