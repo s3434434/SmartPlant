@@ -55,9 +55,8 @@ namespace SmartPlant.Tests
         {
             // Arrange
             var testValue = new List<Plant>();
-            var userID = mock_Principal.Object.Identity.Name;
 
-            mock_PlantManager.Setup(_repo => _repo.GetAllForUser(userID))
+            mock_PlantManager.Setup(_repo => _repo.GetAllForUser(It.IsAny<string>()))
                 .ReturnsAsync(testValue);
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
@@ -77,9 +76,7 @@ namespace SmartPlant.Tests
         public async Task Get_WhenUserHasPlants_ReturnsNotFound()
         {
             // Arrange
-            var userID = mock_Principal.Object.Identity.Name;
-
-            mock_PlantManager.Setup(_repo => _repo.GetAllForUser(userID))
+            mock_PlantManager.Setup(_repo => _repo.GetAllForUser(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
