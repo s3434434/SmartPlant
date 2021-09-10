@@ -123,19 +123,19 @@ namespace SmartPlant.Tests
         {
             // Arrange
             var userID = mock_Principal.Object.Identity.Name;
-            var mock_plant = new Plant();
+            int returnValue = 0;
 
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(userID))
                 .ReturnsAsync(() => new ApplicationUser());
+
+            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
+                .ReturnsAsync(returnValue);
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
             };
-
-            mock_PlantManager.Setup(_repo => _repo.Add(mock_plant))
-                .ReturnsAsync(() => 0);
 
             // Act
             var result = await plantController.Post();
@@ -149,19 +149,19 @@ namespace SmartPlant.Tests
         {
             // Arrange
             var userID = mock_Principal.Object.Identity.Name;
-            var mock_plant = new Plant();
+            int returnValue = -1;
 
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(userID))
                 .ReturnsAsync(() => new ApplicationUser());
+
+            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
+                .ReturnsAsync(returnValue);
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
             };
-
-            mock_PlantManager.Setup(_repo => _repo.Add(mock_plant))
-                .ReturnsAsync(() => -1);
 
             // Act
             var result = await plantController.Post();
@@ -175,10 +175,25 @@ namespace SmartPlant.Tests
         {
             // Arrange
             var userID = mock_Principal.Object.Identity.Name;
+            int returnValue = 1;
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(userID))
+                .ReturnsAsync(() => new ApplicationUser());
+
+            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
+                .ReturnsAsync(returnValue);
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };       
 
             // Act
+            var result = await plantController.Post();
 
             // Assert
+            Assert.That(result, Is.TypeOf<CreatedResult>());
         }
         #endregion
     }
