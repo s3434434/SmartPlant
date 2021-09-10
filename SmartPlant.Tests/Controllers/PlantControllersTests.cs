@@ -102,9 +102,7 @@ namespace SmartPlant.Tests
         public async Task Post_WhenUserNotFound_ReturnsBadRequest()
         {
             // Arrange
-            var userID = mock_Principal.Object.Identity.Name;
-
-            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(userID))
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
@@ -124,10 +122,9 @@ namespace SmartPlant.Tests
         public async Task Post_WhenPlantIDAlreadyExists_ReturnsConflict()
         {
             // Arrange
-            var userID = mock_Principal.Object.Identity.Name;
             int returnValue = 0;
 
-            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(userID))
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ApplicationUser());
 
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
@@ -150,10 +147,9 @@ namespace SmartPlant.Tests
         public async Task Post_WhenUserHasReachedPlantLimit_ReturnsConflict()
         {
             // Arrange
-            var userID = mock_Principal.Object.Identity.Name;
             int returnValue = -1;
 
-            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(userID))
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ApplicationUser());
 
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
@@ -176,10 +172,9 @@ namespace SmartPlant.Tests
         public async Task Post_WhenPlantSuccessfullyAdded_ReturnsCreated()
         {
             // Arrange
-            var userID = mock_Principal.Object.Identity.Name;
             int returnValue = 1;
 
-            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(userID))
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ApplicationUser());
 
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
