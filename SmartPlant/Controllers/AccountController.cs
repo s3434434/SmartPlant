@@ -388,7 +388,7 @@ namespace SmartPlant.Controllers
 
         [HttpPut]
         [Authorize(Roles = UserRoles.Admin)] //change a user's password - old password not needed
-        [Route("/api/Admin/User/Role/Password")]
+        [Route("/api/Admin/User/Password")]
         public async Task<IActionResult> AdminUpdatePassword([FromBody]AdminUpdatePasswordDto passwordDto)
         {
             if (!ModelState.IsValid)

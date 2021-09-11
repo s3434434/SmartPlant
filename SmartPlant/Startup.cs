@@ -31,8 +31,8 @@ namespace SmartPlant
         {
             services.AddDbContext<DatabaseContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("LocalDataBase"));
-                //options.UseSqlServer(Configuration.GetConnectionString("LiveDataBase"));
+                //options.UseSqlServer(Configuration.GetConnectionString("LocalDataBase"));
+                options.UseSqlServer(Configuration.GetConnectionString("LiveDataBase"));
 
                 // Enable lazy loading.
                 //options.UseLazyLoadingProxies();

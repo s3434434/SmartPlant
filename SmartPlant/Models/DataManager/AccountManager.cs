@@ -238,6 +238,7 @@ namespace SmartPlant.Models.DataManager
 
             user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, passwordDto.NewPassword);
 
+            Console.WriteLine($"User email:  |{user.Email}|");
             await _userManager.UpdateAsync(user);
 
             return 1;

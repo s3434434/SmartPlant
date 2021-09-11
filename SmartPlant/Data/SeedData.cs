@@ -40,9 +40,9 @@ namespace SmartPlant.Data
                 Id = guid,
                 FirstName = "Default Two",
                 LastName = "Default",
-                UserName = "email@email.com",
-                Email = "email@email.com",
-                NormalizedEmail = "EMAIL@EMAIL.COM",
+                UserName = "testuser@email.com",
+                Email = "testuser@email.com",
+                NormalizedEmail = "TESTUSER@EMAIL.COM",
                 EmailConfirmed = true,
                 LockoutEnabled = false
             };
