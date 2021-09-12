@@ -12,6 +12,7 @@ using SmartPlant.Models.API_Model;
 using SmartPlant.Models.API_Model.Account;
 using SmartPlant.Models.API_Model.Admin;
 using SmartPlant.Models.DataManager;
+using SmartPlant.Models.Repository;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -28,10 +29,10 @@ namespace SmartPlant.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         //private readonly JwtHandler _jwtHandler;
-        private readonly AccountManager _repo;
+        private readonly IAccountManager _repo;
         private readonly IEmailSender _emailSender;
 
-        public AccountController(AccountManager repo, IMapper mapper,
+        public AccountController(IAccountManager repo, IMapper mapper,
             UserManager<ApplicationUser> userManager, JwtHandler jwtHandler,
             IEmailSender emailSender)
         {

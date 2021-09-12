@@ -8,6 +8,7 @@ using SmartPlant.Data;
 using SmartPlant.Models;
 using SmartPlant.Models.API_Model;
 using SmartPlant.Models.DataManager;
+using SmartPlant.Models.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,11 @@ namespace SmartPlant.Controllers
     [ApiController]
     public class PlantController : Controller
     {
-        private readonly PlantManager _repo;
+        private readonly IPlantManager _repo;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public PlantController(PlantManager repo, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public PlantController(IPlantManager repo, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             _repo = repo;
             _mapper = mapper;

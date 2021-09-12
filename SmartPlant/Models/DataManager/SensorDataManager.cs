@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartPlant.Data;
+using SmartPlant.Models.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SmartPlant.Models.DataManager
 {
-    public class SensorDataManager
+    public class SensorDataManager : ISensorDataManager
     {
         private readonly DatabaseContext _context;
 

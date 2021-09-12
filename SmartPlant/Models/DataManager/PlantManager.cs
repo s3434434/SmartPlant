@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartPlant.Data;
+using SmartPlant.Models.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SmartPlant.Models.DataManager
 {
-    public class PlantManager
+    public class PlantManager : IPlantManager
     {
         private readonly DatabaseContext _context;
 
