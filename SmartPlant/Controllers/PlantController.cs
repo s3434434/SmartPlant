@@ -96,6 +96,13 @@ namespace SmartPlant.Controllers
             return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}");
         }
 
+        [HttpDelete]
+        [Route("/api/Plants")]
+        public async Task<IActionResult> Delete()
+        {
+            return null;
+        }
+
 
         /* 
          * ADMIN ROLE REQUIRED ENDPOINTS
