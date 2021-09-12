@@ -337,5 +337,80 @@ namespace SmartPlant.Tests.Controllers
         }
 
         #endregion
+
+        #region ResetPassword
+        [Test]
+        public async Task ResetPassword_WhenModelStateIsInvalid_ReturnsBadRequest()
+        {
+            // Arrange
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
+
+            // Act
+            var result = await accountController.ForgotPassword(It.IsAny<ForgotPasswordDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestResult>());
+        }
+
+        [Test]
+        public async Task ResetPassword_WhenEmailNotFound_ReturnsBadRequest()
+        {
+            // Arrange
+            var error = new IdentityError()
+            {
+                Description = "Test error",
+                Code = "1"
+            };
+
+            mock_AccountManager.Setup(_repo => _repo.ResetPassword(It.IsAny<ResetPasswordDto>()))
+                .ReturnsAsync(IdentityResult.Failed(error));
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.ResetPassword(It.IsAny<ResetPasswordDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+        }
+
+        [Test]
+        public async Task ResetPassword_WhenUserLoginIsSuccessful_ReturnsOkRequest()
+        {
+            // Arrange
+            var mock_Result = new List<string>();
+
+            mock_AccountManager.Setup(_repo => _repo.ResetPassword(It.IsAny<ResetPasswordDto>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.ResetPassword(It.IsAny<ResetPasswordDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkResult>());
+        }
+        #endregion
     }
 }
