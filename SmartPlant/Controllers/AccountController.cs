@@ -67,7 +67,7 @@ namespace SmartPlant.Controllers
 
         [HttpGet]
         [Route("ConfirmEmail")]
-        public async Task<IActionResult> ComfirmEmail([FromQuery] string email, [FromQuery] string token)
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string email, [FromQuery] string token)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
