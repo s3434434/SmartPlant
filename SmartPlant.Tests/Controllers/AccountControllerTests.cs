@@ -30,6 +30,7 @@ namespace SmartPlant.Tests.Controllers
         private Mock<UserManager<ApplicationUser>> mock_UserManager;
         private Mock<JwtHandler> mock_JWTHandler;
         private Mock<IEmailSender> mock_EmailSender;
+        private Mock<ClaimsPrincipal> mock_Principal;
 
         [SetUp]
         public void Setup()
@@ -44,6 +45,16 @@ namespace SmartPlant.Tests.Controllers
 
             mock_JWTHandler = new Mock<JwtHandler>(Mock.Of<IConfiguration>(), mock_UserManager.Object);
             mock_EmailSender = new Mock<IEmailSender>();
+
+            // Mocking a ClaimsPrincipal which is passed via HTTPContext to the Controller
+            // First an Identity
+            var identity = new Mock<IIdentity>();
+            identity.SetupGet(i => i.IsAuthenticated).Returns(true);
+            identity.SetupGet(i => i.Name).Returns("FakeUserName");
+
+            // Which is used by the ClaimsPrincipal
+            mock_Principal = new Mock<ClaimsPrincipal>();
+            mock_Principal.Setup(x => x.Identity).Returns(identity.Object);
         }
 
         #region Register
@@ -410,6 +421,66 @@ namespace SmartPlant.Tests.Controllers
 
             // Assert
             Assert.That(result, Is.TypeOf<OkResult>());
+        }
+        #endregion
+
+        #region GetDetails
+        [Test]
+        public async Task GetDetails_WhenUserDoesNotExist_ReturnsNotFoundRequest()
+        {
+            // Arrange
+            var mock_Result = new UserDetailsDto();
+
+            mock_AccountManager.Setup(_repo => _repo.GetDetails(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            accountController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await accountController.GetDetails();
+
+            // Assert
+            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public async Task GetDetails_WhenUserDoesExist_ReturnsOkRequest()
+        {
+            // Arrange
+            var mock_Result = new UserDetailsDto();
+
+            mock_AccountManager.Setup(_repo => _repo.GetDetails(It.IsAny<string>()))
+                .ReturnsAsync(mock_Result);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            accountController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await accountController.GetDetails();
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
         }
         #endregion
     }
