@@ -862,5 +862,74 @@ namespace SmartPlant.Tests.Controllers
             Assert.That(result, Is.TypeOf<OkObjectResult>());
         }
         #endregion
+
+        #region AdminUpdateDetails
+        [Test]
+        public async Task AdminUpdateDetails_WhenModelStateInvalid_ReturnsBadRequest()
+        {
+            // Arrange
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
+
+            // Act
+            var result = await accountController.AdminUpdateDetails(It.IsAny<AdminUpdateUserDetailsDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestResult>());
+        }
+
+        [Test]
+        public async Task AdminUpdateDetails_WhenUserDoesNotExistInRepo_ReturnsNotFoundRequest()
+        {
+            // Arrange
+            mock_AccountManager.Setup(_repo => _repo.AdminUpdateUserDetails(It.IsAny<AdminUpdateUserDetailsDto>()))
+                .ReturnsAsync(() => null);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.AdminUpdateDetails(It.IsAny<AdminUpdateUserDetailsDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestResult>());
+        }
+
+        [Test]
+        public async Task AdminUpdateDetails_WhenUserDoesExistInRepo_ReturnsOkRequest()
+        {
+            // Arrange
+            var mock_Result = new AdminUpdateUserDetailsDto();
+
+            mock_AccountManager.Setup(_repo => _repo.AdminUpdateUserDetails(It.IsAny<AdminUpdateUserDetailsDto>()))
+                .ReturnsAsync(mock_Result);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.AdminUpdateDetails(It.IsAny<AdminUpdateUserDetailsDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+        #endregion
     }
 }
