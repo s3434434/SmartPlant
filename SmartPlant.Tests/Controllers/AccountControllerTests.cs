@@ -138,9 +138,9 @@ namespace SmartPlant.Tests.Controllers
         }
         #endregion
 
-        #region ComfirmEmail
+        #region ConfirmEmail
         [Test]
-        public async Task ComfirmEmail_WhenUserNotFound_ReturnsBadRequest()
+        public async Task ConfirmEmail_WhenUserNotFound_ReturnsBadRequest()
         {
             // Arrange
             mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
@@ -162,7 +162,7 @@ namespace SmartPlant.Tests.Controllers
         }
 
         [Test]
-        public async Task ComfirmEmail_WhenUserEmailTokenInvalid_ReturnsBadRequest()
+        public async Task ConfirmEmail_WhenUserEmailTokenInvalid_ReturnsBadRequest()
         {
             // Arrange
             var mock_ApplicationUser = new ApplicationUser();
@@ -189,7 +189,7 @@ namespace SmartPlant.Tests.Controllers
         }
 
         [Test]
-        public async Task ComfirmEmail_WhenUserEmailConfirmedSuccessfully_ReturnsOkRequest()
+        public async Task ConfirmEmail_WhenUserEmailConfirmedSuccessfully_ReturnsOkRequest()
         {
             // Arrange
             var mock_ApplicationUser = new ApplicationUser();
