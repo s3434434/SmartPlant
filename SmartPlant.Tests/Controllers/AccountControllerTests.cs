@@ -483,5 +483,67 @@ namespace SmartPlant.Tests.Controllers
             Assert.That(result, Is.TypeOf<OkObjectResult>());
         }
         #endregion
+
+        #region UpdateDetails
+        [Test]
+        public async Task UpdateDetails_WhenModelStateInvalid_ReturnsBadRequest()
+        {
+            // Arrange
+            var mock_Result = "success";
+
+            mock_AccountManager.Setup(_repo => _repo.UpdateDetails(It.IsAny<string>(), It.IsAny<UpdateUserDetailsDto>()))
+                .ReturnsAsync(mock_Result);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            accountController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
+
+            // Act
+            var result = await accountController.UpdateDetails(It.IsAny<UpdateUserDetailsDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestResult>());
+        }
+
+        [Test]
+        public async Task UpdateDetails_WhenDetailUpdateSuccessful_ReturnsOkRequest()
+        {
+            // Arrange
+            var mock_Result = "success";
+
+            mock_AccountManager.Setup(_repo => _repo.UpdateDetails(It.IsAny<string>(), It.IsAny< UpdateUserDetailsDto>()))
+                .ReturnsAsync(mock_Result);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            accountController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await accountController.UpdateDetails(It.IsAny<UpdateUserDetailsDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+        #endregion
     }
 }
