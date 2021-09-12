@@ -765,7 +765,54 @@ namespace SmartPlant.Tests.Controllers
             Assert.That(result, Is.TypeOf<OkObjectResult>());
 
         }
+        #endregion
 
+        #region AdminGetUserDetails
+        [Test]
+        public async Task AdminGetUserDetails_WhenUserDoesNotExistInRepo_ReturnsNotFoundRequest()
+        {
+            // Arrange
+            mock_AccountManager.Setup(_repo => _repo.AdminGetUserDetails(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.AdminGetUserDetails(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<NotFoundResult>());
+        }
+
+        [Test]
+        public async Task AdminGetUserDetails_WhenUserDoesExistInRepo_ReturnsOkRequest()
+        {
+            // Arrange
+            var mock_Result = new UserDetailsDto();
+
+            mock_AccountManager.Setup(_repo => _repo.AdminGetUserDetails(It.IsAny<string>()))
+                .ReturnsAsync(mock_Result);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.AdminGetUserDetails(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
         #endregion
     }
 }
