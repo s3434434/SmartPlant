@@ -1004,5 +1004,74 @@ namespace SmartPlant.Tests.Controllers
             Assert.That(result, Is.TypeOf<OkObjectResult>());
         }
         #endregion
+
+        #region AdminUpdatePassword
+        [Test]
+        public async Task AdminUpdatePassword_WhenModelStateIsInvalid_ReturnsBadRequest()
+        {
+            // Arrange
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
+
+            // Act
+            var result = await accountController.AdminUpdateRole(It.IsAny<AdminUpdateUserRoleDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestResult>());
+        }
+
+        [Test]
+        public async Task AdminUpdatePassword_WhenUserNotInRepo_ReturnsNotFoundRequest()
+        {
+            // Arrange
+            mock_AccountManager.Setup(_repo => _repo.AdminUpdatePassword(It.IsAny<AdminUpdatePasswordDto>()))
+                .ReturnsAsync(() => null);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.AdminUpdatePassword(It.IsAny<AdminUpdatePasswordDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public async Task AdminUpdatePassword_WhenPasswordUpdatedSucessefully_ReturnsOkRequest()
+        {
+            // Arrange
+            var mock_Result = "success";
+
+            mock_AccountManager.Setup(_repo => _repo.AdminUpdatePassword(It.IsAny<AdminUpdatePasswordDto>()))
+                .ReturnsAsync(mock_Result);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.AdminUpdatePassword(It.IsAny<AdminUpdatePasswordDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+        #endregion
     }
 }
