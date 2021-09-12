@@ -155,7 +155,7 @@ namespace SmartPlant.Tests.Controllers
                 );
 
             // Act
-            var result = await accountController.ComfirmEmail(It.IsAny<string>(), It.IsAny<string>());
+            var result = await accountController.ConfirmEmail(It.IsAny<string>(), It.IsAny<string>());
 
             // Assert
             Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
@@ -182,7 +182,7 @@ namespace SmartPlant.Tests.Controllers
                 );
 
             // Act
-            var result = await accountController.ComfirmEmail(It.IsAny<string>(), It.IsAny<string>());
+            var result = await accountController.ConfirmEmail(It.IsAny<string>(), It.IsAny<string>());
 
             // Assert
             Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
@@ -209,7 +209,7 @@ namespace SmartPlant.Tests.Controllers
                 );
 
             // Act
-            var result = await accountController.ComfirmEmail(It.IsAny<string>(), It.IsAny<string>());
+            var result = await accountController.ConfirmEmail(It.IsAny<string>(), It.IsAny<string>());
 
             // Assert
             Assert.That(result, Is.TypeOf<OkObjectResult>());
@@ -266,6 +266,76 @@ namespace SmartPlant.Tests.Controllers
             // Assert
             Assert.That(result, Is.TypeOf<OkObjectResult>());
         }
-        #endregion  
+        #endregion
+
+        #region ForgotPassword
+        [Test]
+        public async Task ForgotPassword_WhenModelStateIsInvalid_ReturnsBadRequest()
+        {
+            // Arrange
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
+
+            // Act
+            var result = await accountController.ForgotPassword(It.IsAny<ForgotPasswordDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestResult>());
+        }
+
+        [Test]
+        public async Task ForgotPassword_WhenEmailNotFound_ReturnsBadRequest()
+        {
+            // Arrange
+            mock_AccountManager.Setup(_repo => _repo.ForgotPassword(It.IsAny<ForgotPasswordDto>()))
+                .ReturnsAsync(() => null);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.ForgotPassword(It.IsAny<ForgotPasswordDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+        }
+
+        [Test]
+        public async Task ForgotPassword_WhenUserLoginIsSuccessful_ReturnsOkRequest()
+        {
+            // Arrange
+            var mock_Result = new List<string>();
+
+            mock_AccountManager.Setup(_repo => _repo.ForgotPassword(It.IsAny<ForgotPasswordDto>()))
+                .ReturnsAsync(mock_Result);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.ForgotPassword(It.IsAny<ForgotPasswordDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+
+        #endregion
     }
 }
