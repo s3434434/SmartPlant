@@ -931,5 +931,78 @@ namespace SmartPlant.Tests.Controllers
             Assert.That(result, Is.TypeOf<OkObjectResult>());
         }
         #endregion
+
+        #region AdminGetRoleList
+        [Test]
+        public async Task AdminGetRoleList_WhenRolesExistInRepo_ReturnsOkRequest()
+        {
+            // Arrange
+            var mock_Result = new List<AdminGetRoleListDto>();
+
+            mock_AccountManager.Setup(_repo => _repo.AdminGetRoleList())
+                .ReturnsAsync(mock_Result);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.AdminGetRoleList();
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+        #endregion
+
+        #region AdminUpdateRole
+        [Test]
+        public async Task AdminUpdateRole_WhenModelStateIsInvalid_ReturnsBadRequest()
+        {
+            // Arrange
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
+
+            // Act
+            var result = await accountController.AdminUpdateRole(It.IsAny<AdminUpdateUserRoleDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestResult>());
+        }
+
+        [Test]
+        public async Task AdminUpdateRole_WhenRoleUpdatedSucessefully_ReturnsOkRequest()
+        {
+            // Arrange
+            var mock_Result = new AdminUpdateUserRoleDto();
+
+            mock_AccountManager.Setup(_repo => _repo.AdminUpdateRole(It.IsAny<AdminUpdateUserRoleDto>()))
+                .ReturnsAsync(mock_Result);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.AdminUpdateRole(It.IsAny<AdminUpdateUserRoleDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+        #endregion
     }
 }
