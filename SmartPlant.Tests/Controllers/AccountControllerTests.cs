@@ -215,5 +215,57 @@ namespace SmartPlant.Tests.Controllers
             Assert.That(result, Is.TypeOf<OkObjectResult>());
         }
         #endregion
+
+        #region Login
+        [Test]
+        public async Task Login_WhenUserLoginFails_ReturnsUnauthorisedRequest()
+        {
+            // Arrange
+            var mock_AuthResponseDto = new AuthResponseDto();
+            mock_AuthResponseDto.IsAuthSuccessful = false;
+
+            mock_AccountManager.Setup(_repo => _repo.Login(It.IsAny<UserForAuthenticationDto>()))
+                .ReturnsAsync(mock_AuthResponseDto);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.Login(It.IsAny<UserForAuthenticationDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<UnauthorizedObjectResult>());
+        }
+
+        [Test]
+        public async Task Login_WhenUserLoginIsSuccessful_ReturnsOkRequest()
+        {
+            // Arrange
+            var mock_AuthResponseDto = new AuthResponseDto();
+            mock_AuthResponseDto.IsAuthSuccessful = true;
+
+            mock_AccountManager.Setup(_repo => _repo.Login(It.IsAny<UserForAuthenticationDto>()))
+                .ReturnsAsync(mock_AuthResponseDto);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.Login(It.IsAny<UserForAuthenticationDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+        #endregion  
     }
 }
