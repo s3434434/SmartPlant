@@ -38,6 +38,14 @@ namespace SmartPlant.Controllers
          *             BELOW
          */
 
+
+        /// <summary>
+        /// Gets all plants belonging to the current user
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
+        /// <response code="404">No Plants Found</response>
         [HttpGet] //gets all plants for current user
         [Route("/api/Plants")]
         public async Task<IActionResult> Get()
@@ -62,6 +70,16 @@ namespace SmartPlant.Controllers
             return Ok(plants); //200
         }
 
+
+        /// <summary>
+        /// Adds a plant
+        /// </summary>
+        /// <remarks>This should be used when the user chooses to add a plant. Autogenerates the plant ID. 
+        /// The user should then copy and paste the new plant ID into an arduino setup file?
+        /// </remarks>
+        /// <response code="201">Plant Created</response>
+        /// <response code="400">Bad Data</response>
+        /// <response code="409">Max plant limit hit (currently set to 5)</response>
         [HttpPost] //This should be used when the user chooses to add a plant. Autogenerates plant ID. UserID taken from JWT token 
         [Route("/api/Plants")]
         public async Task<IActionResult> Post()
@@ -85,7 +103,7 @@ namespace SmartPlant.Controllers
 
             if (result == 0)
             {
-                return Conflict("Plant id exists"); //409 , 400?
+                return Conflict("Plant id exists"); //409 , 400? - this should no longer happen since we are now using GUIDs
             }
             if (result == -1)
             {
@@ -97,6 +115,15 @@ namespace SmartPlant.Controllers
             return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}");
         }
 
+
+        /// <summary>
+        /// Deletes a plant that belongs to the user
+        /// </summary>
+        /// <remarks>Deleting a plant will cascade delete all related sensor data, this is permanent.
+        /// </remarks>
+        /// <response code="200">Plant Deleted</response>
+        /// <response code="403">Plant Does Not Belong To User</response>
+        /// <response code="404">PlantID Not Found</response>
         [HttpDelete]
         [Route("/api/Plants")]
         public async Task<IActionResult> Delete(string plantID)
@@ -125,6 +152,13 @@ namespace SmartPlant.Controllers
          */
 
 
+        /// <summary>
+        /// Gets a list of all plants (plantID, userID)
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
+        /// <response code="404">No Plants Found</response>
         [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/Plants")]
@@ -139,6 +173,14 @@ namespace SmartPlant.Controllers
             return Ok(plants); //200
         }
 
+
+        /// <summary>
+        /// Gets plants for a specific user
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
+        /// <response code="404">No Plants Found</response>
         [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/Plants/User/{id}")] //gets plants for a specific user
@@ -156,6 +198,15 @@ namespace SmartPlant.Controllers
             return Ok(plants); //200
         }
 
+
+        /// <summary>
+        /// Adds a plant for a specific user
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="201">Plant Created</response>
+        /// <response code="404">UserID Not Found</response>
+        /// <response code="409">Max Plant Limit Hit</response>
         [HttpPost] //verifies user exists, then verifies plant id doesn't already exists, adds plant
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/Plants")]
@@ -190,6 +241,14 @@ namespace SmartPlant.Controllers
             return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}");
         }
 
+
+        /// <summary>
+        /// Delets a plant
+        /// </summary>
+        /// <remarks>Deleting a plant will delete all related sensor data
+        /// </remarks>
+        /// <response code="200">Plant Deleted</response>
+        /// <response code="404">Plant Not Found</response>
         [HttpDelete]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/Plants/Delete")]

@@ -98,13 +98,12 @@ namespace SmartPlant.Models.DataManager
 
         }
 
-                    //Task<bool>
+
         public async Task<IEnumerable<string>> ForgotPassword(ForgotPasswordDto passwordDto)
         {
             var user = await _userManager.FindByEmailAsync(passwordDto.Email);
             if (user == null)
             {
-                //return false;
                 return null;
             }
 
@@ -297,9 +296,13 @@ namespace SmartPlant.Models.DataManager
             user.Email = detailsDto.Email;
             user.PhoneNumber = detailsDto.PhoneNumber;
 
-            await _userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(user);
 
-            return detailsDto;
+            if (result.Succeeded)
+            {
+                return detailsDto;
+            }
+            return null; 
         }
 
         public async Task<List<AdminGetRoleListDto>> AdminGetRoleList()

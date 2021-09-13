@@ -43,6 +43,15 @@ namespace SmartPlant.Controllers
             _emailSender = emailSender;
         }
 
+
+        /// <summary>
+        /// Registers a user to the database, sends a confirmation email.
+        /// </summary>
+        /// <remarks>This takes in a URI, e.g. website.com/confirmEmail , and attaches the confirmation token and email as a querystring. This 
+        /// gets sent as the confirmation link in the email and should be routed to the frontend confirmation webpage.</remarks>
+        /// <param name="userRegDto"></param>
+        /// <response code="200">Successfully Registers User</response>
+        /// <response code="400">Invalid Registration input</response>
         [HttpPost("Register")]
         // [Route("api/Register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto userRegDto)
@@ -65,6 +74,13 @@ namespace SmartPlant.Controllers
             return Ok(result.Errors);
         }
 
+
+        /// <summary>
+        /// Confirms a user's email 
+        /// </summary>
+        /// <remarks>Required to login</remarks>        
+        /// <response code="200">Successfully Logged In</response>
+        /// <response code="400">Failed to login</response>
         [HttpGet]
         [Route("ConfirmEmail")]
         public async Task<IActionResult> ComfirmEmail([FromQuery] string email, [FromQuery] string token)
@@ -85,29 +101,25 @@ namespace SmartPlant.Controllers
             return Ok("Email Confirmed");
         }
 
+
+        /// <summary>
+        /// Logs the user in, returns a Json Web Token in the response body
+        /// </summary>
+        /// <remarks>The JWT must be stored (local storage?) and used with every API endpoint that requires authentication.
+        /// Pass the token through in the header with authorization type bearer e.g.&#xA; 
+        /// 'headers': { &#xA;
+        ///     ...
+        ///     'Authorization': 'Bearer [INSERT TOKEN HERE]', &#xA;
+        ///     'Content-Type': 'application/json' &#xA;
+        ///     }
+        /// </remarks>
+        /// <response code="200">Successfully Logged In</response>
+        /// <response code="401">Invalid Login Details</response>
         [HttpPost("Login")]
         //[Route("/api/Login")]
         public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto loginUser)
-        {
-           //var user = await _userManager.FindByEmailAsync(loginUser.Email);
-
-            var result = await _repo.Login(loginUser);
-           /* //if user doens't exist or password is incorrect
-            if (user == null || !await _userManager.CheckPasswordAsync(user, loginUser.Password))
-            {
-                return Unauthorized(new AuthResponseDto { IsAuthSuccessful = false,ErrorMessage = "Incorrect Login Details" });
-            }
-            if (! await _userManager.IsEmailConfirmedAsync(user)) // if the user hasn't confirmed their email
-            {
-                return Unauthorized(new AuthResponseDto { IsAuthSuccessful = false, ErrorMessage = "Email is not confirmed" });
-            }            
-
-            var signingCredentials = _jwtHandler.GetSigningCredentials();
-            var claims = await _jwtHandler.GetClaims(user);
-            var tokenOptions = _jwtHandler.GenerateTokenOptions(signingCredentials, claims);
-            var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);*/
-
-            //return Ok(new AuthResponseDto { IsAuthSuccessful = true, Token = token });
+        {  
+            var result = await _repo.Login(loginUser);          
 
             if (!result.IsAuthSuccessful)
             {
@@ -117,6 +129,15 @@ namespace SmartPlant.Controllers
             return Ok(result);
         }
 
+
+        /// <summary>
+        /// Sends a confirmation email with a password reset token to the user.
+        /// </summary>
+        /// <remarks>The also takes in a URI, which would be the route for the frontend 'confirm reset password' page.
+        /// To that URI it attaches a querystring with the user's email and password reset token.
+        /// </remarks>
+        /// <response code="200">Reset Email Sent</response>
+        /// <response code="400">Invalid Details</response>
         [HttpPost]
         [Route("Password/Forgot")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto passwordDto)
@@ -128,44 +149,21 @@ namespace SmartPlant.Controllers
 
             var result = await _repo.ForgotPassword(passwordDto);
 
-
-           /* var user = await _userManager.FindByEmailAsync(passwordDto.Email);
-            if (user == null)
-            {
-                return BadRequest("Email not found");
-            }
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            var param = new Dictionary<string, string>
-            {
-                {"token", token },
-                { "email", user.Email }
-            };
-
-            var callback = QueryHelpers.AddQueryString(passwordDto.ClientURI, param);
-            var message = new Message(new string[] { user.Email }, "SmarPlant - Reset Your Password", callback);
-            await _emailSender.SendEmailAsync(message);
-
-            return Ok();*/
-
-            //----
-            /*if (!result)
-            {
-                return BadRequest("Email not found");
-            }
-
-            return Ok();*/
-
             if (result == null)
             {
                 return BadRequest("Email not found");
             }
             return Ok(result);
-
-
         }
 
+
+        /// <summary>
+        /// Resets the user's password
+        /// </summary>
+        /// <remarks>This takes in a password and confirmed password, and the token + email from the 'forgot password' email.
+        /// </remarks>
+        /// <response code="200">Password Reset</response>
+        /// <response code="400">Something went wrong, incorrect info</response>
         [HttpPost]
         [Route("Password/Reset")]
         public async Task<IActionResult> ResetPassword([FromBody]ResetPasswordDto passwordDto)
@@ -177,23 +175,6 @@ namespace SmartPlant.Controllers
 
             var result = await _repo.ResetPassword(passwordDto);
 
-            /*var user = await _userManager.FindByEmailAsync(passwordDto.Email);
-
-            if (user == null)
-            {
-                return BadRequest("User Not Found");
-            }
-
-            var result = await _userManager.ResetPasswordAsync(user, passwordDto.Token, passwordDto.NewPassword);
-
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors.Select(e => e.Description);
-                return BadRequest(new { Error = errors });
-            }
-
-            return Ok();*/
-
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);
@@ -201,7 +182,7 @@ namespace SmartPlant.Controllers
             }
             return Ok();
         }
-        
+
 
 
         /*            (user)
@@ -210,6 +191,13 @@ namespace SmartPlant.Controllers
          */
 
 
+        /// <summary>
+        /// Gets the logged in user's details
+        /// </summary>
+        /// <remarks>Returns user details (First name, last name, email, phone number)
+        /// </remarks>
+        /// <response code="200">Success</response>
+        /// <response code="404">Something went wrong, user not found</response>
         [HttpGet]
         [Authorize]
         [Route("/api/User")]
@@ -227,6 +215,14 @@ namespace SmartPlant.Controllers
             return Ok(result);
         }
 
+
+        /// <summary>
+        /// Updates non-important details (First name, last name, phone number)
+        /// </summary>
+        /// <remarks>This is used for updating non-important user details. Since the email address is used to login, it has its own method
+        /// </remarks>
+        /// <response code="200">Success</response>
+        /// <response code="400">Something went wrong, user not found</response>
         [HttpPut]
         [Authorize]
         [Route("/api/User")]
@@ -241,11 +237,17 @@ namespace SmartPlant.Controllers
 
             var results = await _repo.UpdateDetails(userID, userDetailsDto);
 
-
-
             return Ok(results);
         }
 
+
+        /// <summary>
+        /// Updates the logged in user's email
+        /// </summary>
+        /// <remarks>The new email will be required for future logins. -No confirmation email sent.
+        /// </remarks>
+        /// <response code="200">Email changed or same as current</response>
+        /// <response code="400">Bad input, or email already taken</response>
         [HttpPut]
         [Authorize]
         [Route("/api/User/Email")]
@@ -266,7 +268,7 @@ namespace SmartPlant.Controllers
             }
             if (result == -1)
             {
-                return BadRequest("Email Already Taken"); // this shouldn't happen...
+                return BadRequest("Email Already Taken"); 
             }
 
             if (result == 0)
@@ -277,6 +279,15 @@ namespace SmartPlant.Controllers
             return Ok("Success");
         }
 
+
+        /// <summary>
+        /// Updates the logged in user's password
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Password Changed</response>
+        /// <response code="400"></response>
+        /// <response code="401">Old password Incorrect</response>
         [HttpPut]
         [Authorize]
         [Route("/api/User/Password")]
@@ -307,9 +318,13 @@ namespace SmartPlant.Controllers
          */
 
 
-        //GET FOR ADMIN GETTING LIST OF USER IDS
-        //admin
-        //get all users list + name / email
+        /// <summary>
+        /// Gets a list of all Users and their details (User Id, Email)
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Sucess</response>
+        /// <response code="404">No Users Found</response>
         [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/Users")]
@@ -325,7 +340,13 @@ namespace SmartPlant.Controllers
             return Ok(result);
         }
 
-        //get info for a specific user 
+        /// <summary>
+        /// Gets info for a specific user (First name, Last name, Email, Phone number)
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">User Found</response>
+        /// <response code="404">User Not Found</response>
         [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/User")]
@@ -341,8 +362,15 @@ namespace SmartPlant.Controllers
             return Ok(result);
         }
 
-        //set info for a specific user - based on prefilled info from get
-        [HttpPut]  //if an Admin changes a user's emails, no verification needed.
+        
+        /// <summary>
+        /// Used to update a user's details (First name, Last name, Email, Phone number)
+        /// </summary>
+        /// <remarks>Since this is an admin action, no verification needed for changing emails
+        /// </remarks>
+        /// <response code="200">Details successfully updated</response>
+        /// <response code="400">User Not Found or email already in use</response>
+        [HttpPut] 
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/User")]
         public async Task<IActionResult> AdminUpdateDetails([FromBody] AdminUpdateUserDetailsDto DetailsDto)
@@ -356,11 +384,18 @@ namespace SmartPlant.Controllers
 
             if (result == null)
             {
-                return BadRequest();
-            }
+                return BadRequest("Email already exists or user does not exist");
+            }                       
             return Ok(result);
         }
 
+
+        /// <summary>
+        /// Gets a list of users and their roles (userID, email, role)
+        /// </summary>
+        /// <remarks>Currently there are only 2 roles, User and Admin
+        /// </remarks>
+        /// <response code="200">Success</response>
         //get list of users and their roles
         [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
@@ -371,6 +406,14 @@ namespace SmartPlant.Controllers
             return Ok(result);
         }
 
+
+        /// <summary>
+        /// Used to update a user's role
+        /// </summary>
+        /// <remarks>Elevate a user to an Admin, or vice versa
+        /// </remarks>
+        /// <response code="200">Role Updated</response>
+        /// <response code="400">Failed to update</response>
         //change user role to admin
         [HttpPut]
         [Authorize(Roles = UserRoles.Admin)]
@@ -387,6 +430,15 @@ namespace SmartPlant.Controllers
             return Ok(result);
         }
 
+
+        /// <summary>
+        /// Change a user's password
+        /// </summary>
+        /// <remarks>Takes in a userID, a new password, and a confirmation password
+        /// </remarks>
+        /// <response code="200">Password Updated</response>
+        /// <response code="400">Bad Data</response>
+        /// <response code="404">UserID Not Found</response>
         [HttpPut]
         [Authorize(Roles = UserRoles.Admin)] //change a user's password - old password not needed
         [Route("/api/Admin/User/Password")]
@@ -405,6 +457,15 @@ namespace SmartPlant.Controllers
             return Ok(result);
         }
 
+
+        /// <summary>
+        /// Deletes a User
+        /// </summary>
+        /// <remarks>Deleting a user will cascade delete all connected plants, which will delete all connected sensor data.
+        /// </remarks>
+        /// <response code="200">User Deleted</response>
+        /// <response code="400">Bad Data</response>
+        /// <response code="404">UserID Not Found</response>
         [HttpDelete]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/User")]
@@ -426,6 +487,5 @@ namespace SmartPlant.Controllers
 
             return Ok(result);
         }
-
     }
 }

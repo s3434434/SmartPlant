@@ -37,6 +37,14 @@ namespace SmartPlant.Controllers
          */
 
 
+        /// <summary>
+        /// Gets all sensor data for every plant belonging to the user
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
+        /// <response code="400"></response>
+        /// <response code="404">No Sensor Data Found</response>
         [HttpGet]
         [Route("/api/SensorData/")]
         public async Task<IActionResult> GetAll()
@@ -59,6 +67,15 @@ namespace SmartPlant.Controllers
             return Ok(data);
         }
 
+
+        /// <summary>
+        /// Gets all sensor data for a specific plant belonging to the user
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
+        /// <response code="400"></response>
+        /// <response code="404">No Sensor Data Found</response>
         [HttpGet]
         [Route("/api/SensorData/{plantID}")]
         public async Task<IActionResult> GetAllForPlant(string plantID)
@@ -80,6 +97,15 @@ namespace SmartPlant.Controllers
             return Ok(data);
         }
 
+
+        /// <summary>
+        /// Gets daily sensor data for a plant belonging to the user
+        /// </summary>
+        /// <remarks> Based on current day
+        /// </remarks>
+        /// <response code="200">Success</response>
+        /// <response code="400"></response>
+        /// <response code="404">No Sensor Data Found</response>
         [HttpGet]
         [Route("/api/SensorData/Daily/{plantID}")] //shows a plants sensor data based on current date
         public async Task<IActionResult> GetDaily(string plantID)
@@ -101,6 +127,15 @@ namespace SmartPlant.Controllers
             return Ok(data);
         }
 
+
+        /// <summary>
+        /// Gets monthly sensor data for a plant belonging to the user
+        /// </summary>
+        /// <remarks> Based on current month
+        /// </remarks>
+        /// <response code="200">Success</response>
+        /// <response code="400"></response>
+        /// <response code="404">No Sensor Data Found</response>
         [HttpGet]
         [Route("/api/SensorData/Monthly/{plantID}")] //shows sensor data based on current month
         public async Task<IActionResult> GetMonthly(string plantID)
@@ -122,6 +157,16 @@ namespace SmartPlant.Controllers
             return Ok(data);
         }
 
+
+        /// <summary>
+        /// Adds sensor data for a plant belonging to the user
+        /// </summary>
+        /// <remarks> This should be used from the Arduino code to update the database with sensor data
+        /// </remarks>
+        /// <response code="201">Sensor Data Created</response>
+        /// <response code="400">Bad Data / Format</response>
+        /// <response code="404">PlantID Not Found</response>
+        /// <response code="429">Wait at least 5 mins between updates</response>
         [HttpPost]
         [Route("/api/SensorData")]
         public async Task<IActionResult> Post([FromBody] SensorDataModel dataModel)
@@ -157,21 +202,6 @@ namespace SmartPlant.Controllers
             return Created("", result);
         }
 
-        /* [HttpPost] //this is just for testing with custom dates
-         [Route("test")]
-         public async Task<IActionResult> Post([FromBody] SensorData data)
-         {
-
-             var result = await _repo.Add(data);
-
-             if (result == null)
-             {
-                 return BadRequest("Plant ID does not exist");
-             }
-
-             return Created("", result);
-         }*/
-
 
         /* 
          * ADMIN ROLE REQUIRED ENDPOINTS
@@ -179,6 +209,13 @@ namespace SmartPlant.Controllers
          */
 
 
+        /// <summary>
+        /// Gets all sensor data for all plants
+        /// </summary>
+        /// <remarks> 
+        /// </remarks>
+        /// <response code="200">Success</response>        
+        /// <response code="404">No Sensor Data Found</response>
         [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/SensorData")] //returns ALL sensor data for ALL plants, is this needed? maybe for extra graphs/ statistics?
@@ -194,6 +231,14 @@ namespace SmartPlant.Controllers
             return Ok(data);
         }
 
+
+        /// <summary>
+        /// Gets sensor data for a specific plantID
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
+        /// <response code="404">PlantID Not Found</response>
         [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/SensorData/{plantID}")]
@@ -208,6 +253,14 @@ namespace SmartPlant.Controllers
             return Ok(data);
         }
 
+
+        /// <summary>
+        /// Gets daily sensor data for a specific plantID
+        /// </summary>
+        /// <remarks> Based on the current date
+        /// </remarks>
+        /// <response code="200">Success</response>
+        /// <response code="404">No Sensor Data Found</response>
         [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/SensorData/Daily/{plantID}")] //shows a plants sensor data based on current date
@@ -222,6 +275,15 @@ namespace SmartPlant.Controllers
             return Ok(data);
         }
 
+
+        /// <summary>
+        /// Gets monthly sensor data for a specific plantID
+        /// </summary>
+        /// <remarks> Based on the current date
+        /// </remarks>
+        /// <response code="201">Success</response>
+        /// <response code="404">PlantID Not Found</response>
+        /// <response code="429"></response>
         [HttpGet]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/SensorData/Monthly/{plantID}")] //shows sensor data based on current month
@@ -237,7 +299,14 @@ namespace SmartPlant.Controllers
         }
 
 
-        //this is for adding sensor data, to test the daily/monthly views, etc.
+
+        /// <summary>
+        /// Adds sensor data -- this is just used for testing 
+        /// </summary>
+        /// <remarks> 
+        /// </remarks>
+        /// <response code="200">Success</response>
+        /// <response code="404">No Sensor Data Found</response>
         [HttpPost]
         [Route("/api/Admin/ForTesting/SensorData")]
         public async Task<IActionResult> AdminPost([FromBody] SensorDataModel dataModel)
@@ -272,7 +341,5 @@ namespace SmartPlant.Controllers
 
             return Created("", result);
         }
-
-
     }
 }

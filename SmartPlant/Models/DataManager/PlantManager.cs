@@ -20,7 +20,7 @@ namespace SmartPlant.Models.DataManager
             _context = context;
         }
 
-        //user by both admins and normal users
+        //used by both admins and normal users
         //returns all plants belonging to a specific user (userID, plantID)
         public async Task<IEnumerable<Plant>> GetAllForUser(string userID)
         {
@@ -38,7 +38,7 @@ namespace SmartPlant.Models.DataManager
             return plants;
         }
 
-        //user by both admins and normal users
+        //used by both admins and normal users
         //adds plant to db, returns its ID
         public async Task<int> Add(Plant plant)
         {

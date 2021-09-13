@@ -14,6 +14,7 @@ using SmartPlant.JwtFeatures;
 using SmartPlant.Models;
 using SmartPlant.Models.DataManager;
 using SmartPlant.Models.Repository;
+using System.IO;
 using System.Text;
 
 namespace SmartPlant
@@ -32,8 +33,9 @@ namespace SmartPlant
         {
             services.AddDbContext<DatabaseContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("LocalDataBase"));
+                //options.UseSqlServer(Configuration.GetConnectionString("LocalDataBase"));
                 //options.UseSqlServer(Configuration.GetConnectionString("LiveDataBase"));
+                options.UseSqlServer(Configuration.GetConnectionString("DataBase"));
 
                 // Enable lazy loading.
                 //options.UseLazyLoadingProxies();
@@ -93,6 +95,12 @@ namespace SmartPlant
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SmartPlant", Version = "v1" });
+
+                //xml documentation
+                var filePath = Path.Combine(System.AppContext.BaseDirectory, "SmartPlant.xml");
+                c.IncludeXmlComments(filePath);
+
+                //authorization in swagger ui
                 c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
                 {
                     Description = "`Token only` - without `\"\"`",
@@ -122,12 +130,12 @@ namespace SmartPlant
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
+            /*if (env.IsDevelopment())
+            {*/
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SmartPlant v1"));
-            }
+            //}
 
             app.UseHttpsRedirection();
 
