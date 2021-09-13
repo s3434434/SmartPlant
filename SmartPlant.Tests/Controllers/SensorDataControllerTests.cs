@@ -628,5 +628,137 @@ namespace SmartPlant.Tests.Controllers
             Assert.AreEqual(200, result.StatusCode);
         }
         #endregion
+
+        #region AdminPost
+        [Test]
+        public async Task AdminPost_WhenModelStateInvalid_ReturnsBadRequest()
+        {
+            // Arrange
+            var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            sensorDataController.ModelState.AddModelError("Adding error", "Model state now invalid");
+            // Act
+            ObjectResult result = (ObjectResult) await sensorDataController.AdminPost(It.IsAny<SensorDataModel>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.AreEqual(400, result.StatusCode);
+        }
+
+        [Test]
+        public async Task AdminPost_WhenUserDoesNotExist_ReturnsBadRequest()
+        {
+            // Arrange
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            sensorDataController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            ObjectResult result = (ObjectResult) await sensorDataController.AdminPost(It.IsAny<SensorDataModel>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.AreEqual(400, result.StatusCode);
+            Assert.AreEqual("User does not exist, this really shouldn't happen", result.Value);
+        }
+
+        [Test]
+        public async Task AdminPost_WhenPlantIDDoesNotExist_ReturnsBadRequest()
+        {
+            // Arrange
+            var mock_ApplicationUser = new ApplicationUser();
+            var mock_SensorData = new SensorData();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(mock_ApplicationUser);
+
+            mock_Mapper.Setup(_mapper => _mapper.Map<SensorData>(It.IsAny<SensorDataModel>()))
+                .Returns(mock_SensorData);
+
+            mock_SensorDataManager.Setup(_repo => _repo.AdminAdd(It.IsAny<SensorData>()))
+                .ReturnsAsync(() => null);
+
+            var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            sensorDataController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            ObjectResult result = (ObjectResult)await sensorDataController.AdminPost(It.IsAny<SensorDataModel>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.AreEqual(400, result.StatusCode);
+            Assert.AreEqual("Plant ID does not exist", result.Value);
+        }
+
+        [Test]
+        public async Task AdminPost_WhenSensorDataManagerIsNotReadyForUpdate_ReturnsStatusCodeRequest()
+        {
+            // Arrange
+            var mock_ApplicationUser = new ApplicationUser();
+            var mock_SensorData = new SensorData();
+            var mock_AddResult = "";
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(mock_ApplicationUser);
+
+            mock_Mapper.Setup(_mapper => _mapper.Map<SensorData>(It.IsAny<SensorDataModel>()))
+                .Returns(mock_SensorData);
+
+            mock_SensorDataManager.Setup(_repo => _repo.AdminAdd(It.IsAny<SensorData>()))
+                .ReturnsAsync(mock_AddResult);
+
+            var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            sensorDataController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            ObjectResult result = (ObjectResult) await sensorDataController.AdminPost(It.IsAny<SensorDataModel>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<ObjectResult>());
+            Assert.AreEqual(429, result.StatusCode);
+            Assert.AreEqual("Please wait 5 minutes between updates", result.Value);
+        }
+
+        [Test]
+        public async Task AdminPost_WhenUpdateIsSuccessful_ReturnsCreatedResult()
+        {
+            // Arrange
+            var mock_ApplicationUser = new ApplicationUser();
+            var mock_SensorData = new SensorData();
+            var mock_AddResult = "success";
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(mock_ApplicationUser);
+
+            mock_Mapper.Setup(_mapper => _mapper.Map<SensorData>(It.IsAny<SensorDataModel>()))
+                .Returns(mock_SensorData);
+
+            mock_SensorDataManager.Setup(_repo => _repo.AdminAdd(It.IsAny<SensorData>()))
+                .ReturnsAsync(mock_AddResult);
+
+            var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            sensorDataController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            ObjectResult result = (ObjectResult)await sensorDataController.AdminPost(It.IsAny<SensorDataModel>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<CreatedResult>());
+            Assert.AreEqual(201, result.StatusCode);
+        }
+        #endregion
     }
 }
