@@ -9,6 +9,10 @@ rough example of layout
 
 
 
+## Just go to : https://smart-plant.azurewebsites.net/swagger/index.html
+
+
+
 API Methods (or just run the program in visual studio and check SwaggerUI)
 
 <a href="https://gfycat.com/vagueacademicferret">How to use a token for authorization when testing the api</a>
