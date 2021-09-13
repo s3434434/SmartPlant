@@ -63,7 +63,29 @@ namespace SmartPlant.Models.DataManager
             //return plant.PlantID;
         }
 
+        public async Task<int> Delete(string plantID, string userID)
+        {
+            var plant = await _context.Plants.FindAsync(plantID);
 
+            if (plant == null)
+            {
+                return 0;
+            }
+
+            if (plant.UserID == userID)
+            {
+
+                _context.Plants.Remove(plant);
+
+                await _context.SaveChangesAsync();
+
+                return 1;
+            }
+
+            //else plant does not belong to the user
+            return -1;
+
+        }
 
         /* 
          * ADMIN ROLE REQUIRED ENDPOINTS
@@ -76,6 +98,21 @@ namespace SmartPlant.Models.DataManager
             var plants = await _context.Plants.ToListAsync();
 
             return plants;
+        }
+
+        public async Task<bool> AdminDelete(string plantID)
+        {
+            var plant = await _context.Plants.FindAsync(plantID);
+
+            if (plant == null)
+            {
+                return false;
+            }
+
+            _context.Remove(plant);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
     }

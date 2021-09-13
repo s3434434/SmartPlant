@@ -147,7 +147,7 @@ namespace SmartPlant.Controllers
 
             if (result == null)
             {
-                return NotFound("Plant ID does not exist");
+                return NotFound("Plant ID does not exist in the user's list of plants.");
             }
             if (result == "")
             {

@@ -9,7 +9,9 @@ namespace SmartPlant.Models.Repository
     {
         Task<IEnumerable<Plant>> GetAllForUser(string userID);
         Task<int> Add(Plant plant);
+        Task<int> Delete(string plantID, string userID);
         Task<IEnumerable<Plant>> AdminGetAll();
+        Task<bool> AdminDelete(string plantID);
 
     }
 }

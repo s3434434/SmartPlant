@@ -99,9 +99,23 @@ namespace SmartPlant.Controllers
 
         [HttpDelete]
         [Route("/api/Plants")]
-        public async Task<IActionResult> Delete()
+        public async Task<IActionResult> Delete(string plantID)
         {
-            return null;
+            var userID = User.Identity.Name;
+            var result = await _repo.Delete(plantID, userID);           
+
+            if (result == 1)
+            {
+                return Ok($"Plant Deleted ({plantID})");
+            }
+            if (result == 0)
+            {
+                return NotFound("Plant does not exist");
+            }
+
+            //else result == -1
+            return Unauthorized("Plant does not belong to user");
+
         }
 
 
@@ -174,6 +188,23 @@ namespace SmartPlant.Controllers
 
             //else result == 1
             return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}");
+        }
+
+        [HttpDelete]
+        [Authorize(Roles = UserRoles.Admin)]
+        [Route("/api/Admin/Plants/Delete")]
+        public async Task<IActionResult> AdminDelete(string plantID)
+        {
+            var result = await _repo.AdminDelete(plantID);
+
+            if (result)
+            {
+                return Ok($"Plant Deleted ({plantID})");
+            }
+            else
+            {
+                return NotFound("Plant does not exist");
+            }
         }
     }
 }
