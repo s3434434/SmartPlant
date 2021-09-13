@@ -210,6 +210,14 @@ Plants:
 					    Created - 201  msg ""Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}"
 
 
+	[Delete]
+	/api/Plants
+		Deletes a plant based on plantID, must belong to logged in user.
+
+				Returns: Forbidden - 403  msg "Plant does not belong to user"
+					  NotFound - 404  msg "Plant does not exist"
+					 	Ok - 200  msg "Plant Deletes {plantID}"
+
 	[Get] [Admin]
 	/api/Admin/Plants	
 		Returns all plants for all users (plantID, userID)
@@ -230,7 +238,7 @@ Plants:
 
 
 	[Post] [Admin]
-	api/Admin/Plants
+	/api/Admin/Plants
 		Creates a new plant for a user
 		Takes in a UserID - UserID must exist on database
 
@@ -241,6 +249,13 @@ Plants:
 					     Created - 201  msg "Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}"
 
 		
+	[Delete] [Admin]
+	/api/Admin/Plants
+		Deletes any plant matching the input plantID
+				
+				Returns:  NotFound - 404  msg "Plant does not exist"
+					 	Ok - 200  msg "Plant Deletes {plantID}"
+
 
 Sensor Data:
 	

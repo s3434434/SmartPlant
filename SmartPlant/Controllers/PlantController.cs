@@ -114,7 +114,7 @@ namespace SmartPlant.Controllers
             }
 
             //else result == -1
-            return Unauthorized("Plant does not belong to user");
+            return Forbid("Plant does not belong to user");
 
         }
 
