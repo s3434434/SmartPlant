@@ -74,7 +74,7 @@ namespace SmartPlant.Controllers
             var data = await _repo.GetAllForAPlant(userID, plantID);
             if (data == null)
             {
-                return NotFound();
+                return NotFound("No Sensor Data Found");
             }
 
             return Ok(data);
