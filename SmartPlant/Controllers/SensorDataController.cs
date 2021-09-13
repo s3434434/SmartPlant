@@ -244,7 +244,7 @@ namespace SmartPlant.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("Model state invalid");
             }
 
             //use automapper to map from DTO to Model, then add current time UTC .
