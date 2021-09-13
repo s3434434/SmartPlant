@@ -1073,5 +1073,84 @@ namespace SmartPlant.Tests.Controllers
             Assert.That(result, Is.TypeOf<OkObjectResult>());
         }
         #endregion
+
+        #region AdminDeleteUser
+        [Test]
+        public async Task AdminDeleteUser_WhenUserNotInRepo_ReturnsNotFoundRequest()
+        {
+            // Arrange
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.AdminUpdatePassword(It.IsAny<AdminUpdatePasswordDto>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public async Task AdminDeleteUser_WhenUserDeleteFails_ReturnsBadRequest()
+        {
+            // Arrange
+            var mock_FindResult = new ApplicationUser();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(mock_FindResult);
+
+            mock_AccountManager.Setup(_repo => _repo.AdminDeleteUser(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(() => null);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.AdminDeleteUser(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+        }
+
+        [Test]
+        public async Task AdminDeleteUser_WhenUserDeletedSucessefully_ReturnsOkRequest()
+        {
+            // Arrange
+            var mock_FindResult = new ApplicationUser();
+            var mock_DeleteResult = "success";
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(mock_FindResult);
+
+            mock_AccountManager.Setup(_repo => _repo.AdminDeleteUser(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(mock_DeleteResult);
+
+            var accountController = new AccountController(
+                mock_AccountManager.Object,
+                mock_Mapper.Object,
+                mock_UserManager.Object,
+                mock_JWTHandler.Object,
+                mock_EmailSender.Object
+                );
+
+            // Act
+            var result = await accountController.AdminDeleteUser(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+        #endregion
     }
 }
