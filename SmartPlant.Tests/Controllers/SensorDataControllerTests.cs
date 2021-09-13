@@ -511,5 +511,44 @@ namespace SmartPlant.Tests.Controllers
             Assert.AreEqual(200, result.StatusCode);
         }
         #endregion  
+
+        #region AdminGetAllForPlant
+        [Test]
+        public async Task AdminGetAllForPlant_WhenDataForPlantDoesNotExist_ReturnsNotFound()
+        {
+            // Arrange
+            mock_SensorDataManager.Setup(_repo => _repo.AdminGetAllForAPlant(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+
+            // Act
+            ObjectResult result = (ObjectResult)await sensorDataController.AdminGetAllForPlant(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+            Assert.AreEqual(404, result.StatusCode);
+            Assert.AreEqual("No Sensor Data Found", result.Value);
+        }
+
+        [Test]
+        public async Task AdminGetAllForPlant_WhenDataForPlantDoesExist_ReturnsOkResult()
+        {
+            // Arrange
+            var mock_SensorData = new List<SensorData>();
+
+            mock_SensorDataManager.Setup(_repo => _repo.AdminGetAllForAPlant(It.IsAny<string>()))
+                .ReturnsAsync(mock_SensorData);
+
+            var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+
+            // Act
+            ObjectResult result = (ObjectResult)await sensorDataController.AdminGetAll();
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+            Assert.AreEqual(200, result.StatusCode);
+        }
+        #endregion  
     }
 }
