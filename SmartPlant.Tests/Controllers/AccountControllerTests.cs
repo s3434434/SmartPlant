@@ -35,7 +35,7 @@ namespace SmartPlant.Tests.Controllers
         [SetUp]
         public void Setup()
         {
-            // Mocking PlantManager, Mapper and UserManager for the PlantController
+            // Mocking PlantManager, Mapper and UserManager for the AccountController
             mock_AccountManager = new Mock<IAccountManager>();
             mock_Mapper = new Mock<IMapper>();
             mock_UserManager = new Mock<UserManager<ApplicationUser>>(
