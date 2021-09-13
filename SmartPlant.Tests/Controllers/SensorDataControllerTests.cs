@@ -52,6 +52,7 @@ namespace SmartPlant.Tests.Controllers
             mock_Principal.Setup(x => x.Identity).Returns(identity.Object);
         }
 
+        #region GetAll
         [Test]
         public async Task GetAll_WhenUserDoesNotExist_ReturnsBadRequest()
         {
@@ -122,5 +123,79 @@ namespace SmartPlant.Tests.Controllers
             // Assert
             Assert.That(result, Is.TypeOf<OkObjectResult>());
         }
+        #endregion
+
+        #region GetAllForPlant
+        [Test]
+        public async Task GetAllForPlant_WhenUserDoesNotExist_ReturnsBadRequest()
+        {
+            // Arrange
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            sensorDataController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await sensorDataController.GetAllForPlant(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+        }
+
+        [Test]
+        public async Task GetAllForPlant_WhenUserHasNoPlants_ReturnsNotFound()
+        {
+            // Arrange
+            var mock_ApplicationUser = new ApplicationUser();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(mock_ApplicationUser);
+
+            mock_SensorDataManager.Setup(_repo => _repo.GetAllForAPlant(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            sensorDataController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await sensorDataController.GetAllForPlant(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public async Task GetAllForPlant_WhenUserHasPlants_ReturnsOkResult()
+        {
+            // Arrange
+            var mock_ApplicationUser = new ApplicationUser();
+            var mock_SensorData = new List<SensorData>();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(mock_ApplicationUser);
+
+            mock_SensorDataManager.Setup(_repo => _repo.GetAllForAPlant(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(mock_SensorData);
+
+            var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            sensorDataController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await sensorDataController.GetAllForPlant(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+        #endregion
     }
 }
