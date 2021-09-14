@@ -6,12 +6,15 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\William\Desktop\programming project\SmartPlant\SmartPlant\SmartPlant.xml</DocumentationFile>
+    <DocumentationFile>SmartPlant\SmartPlant.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
+    <OutputPath>SmartPlant\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\William\Desktop\programming project\SmartPlant\SmartPlant\SmartPlant.xml</DocumentationFile>
+    <DocumentationFile>SmartPlant\SmartPlant.xml</DocumentationFile>
+    <NoWarn>1701;1702;1519</NoWarn>
+    <OutputPath>SmartPlant\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

@@ -243,7 +243,7 @@ namespace SmartPlant.Controllers
 
 
         /// <summary>
-        /// Delets a plant
+        /// Deletes a plant
         /// </summary>
         /// <remarks>Deleting a plant will delete all related sensor data
         /// </remarks>
