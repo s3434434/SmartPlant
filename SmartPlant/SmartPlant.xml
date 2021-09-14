@@ -14,7 +14,7 @@
             <response code="200">Successfully Registers User</response>
             <response code="400">Invalid Registration input</response>
         </member>
-        <member name="M:SmartPlant.Controllers.AccountController.ComfirmEmail(System.String,System.String)">
+        <member name="M:SmartPlant.Controllers.AccountController.ConfirmEmail(System.String,System.String)">
             <summary>
             Confirms a user's email 
             </summary>
@@ -217,7 +217,7 @@
         </member>
         <member name="M:SmartPlant.Controllers.PlantController.AdminDelete(System.String)">
             <summary>
-            Delets a plant
+            Deletes a plant
             </summary>
             <remarks>Deleting a plant will delete all related sensor data
             </remarks>

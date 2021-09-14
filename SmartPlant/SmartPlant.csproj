@@ -6,15 +6,16 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>SmartPlant\SmartPlant.xml</DocumentationFile>
+    <DocumentationFile>SmartPlant.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
-    <OutputPath>SmartPlant\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>SmartPlant\SmartPlant.xml</DocumentationFile>
-    <NoWarn>1701;1702;1519</NoWarn>
-    <OutputPath>SmartPlant\</OutputPath>
+    <DocumentationFile>SmartPlant.xml</DocumentationFile>
+    <NoWarn>1701;1702;1591</NoWarn>
+    <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
