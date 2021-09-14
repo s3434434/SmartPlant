@@ -91,7 +91,7 @@ namespace SmartPlant.Controllers
             var data = await _repo.GetAllForAPlant(userID, plantID);
             if (data == null)
             {
-                return NotFound();
+                return NotFound("No Sensor Data Found");
             }
 
             return Ok(data);
@@ -121,7 +121,7 @@ namespace SmartPlant.Controllers
             var data = await _repo.GetDaily(userID, plantID);
             if (data == null)
             {
-                return NotFound();
+                return NotFound("No Sensor Data Found");
             }
 
             return Ok(data);
@@ -151,7 +151,7 @@ namespace SmartPlant.Controllers
             var data = await _repo.GetMonthly(userID, plantID);
             if (data == null)
             {
-                return NotFound();
+                return NotFound("No Sensor Data Found");
             }
 
             return Ok(data);
@@ -225,7 +225,7 @@ namespace SmartPlant.Controllers
 
             if (data == null)
             {
-                return NotFound();
+                return NotFound("No Sensor Data Found");
             }
 
             return Ok(data);
@@ -247,7 +247,7 @@ namespace SmartPlant.Controllers
             var data = await _repo.AdminGetAllForAPlant(plantID);
             if (data == null)
             {
-                return NotFound();
+                return NotFound("No Sensor Data Found");
             }
 
             return Ok(data);
@@ -269,7 +269,7 @@ namespace SmartPlant.Controllers
             var data = await _repo.AdminGetDaily(plantID);
             if (data == null)
             {
-                return NotFound();
+                return NotFound("No Sensor Data Found");
             }
 
             return Ok(data);
@@ -292,7 +292,7 @@ namespace SmartPlant.Controllers
             var data = await _repo.AdminGetMonthly(plantID);
             if (data == null)
             {
-                return NotFound();
+                return NotFound("No Sensor Data Found");
             }
 
             return Ok(data);
@@ -313,7 +313,7 @@ namespace SmartPlant.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("Model state invalid");
             }
 
             //use automapper to map from DTO to Model, then add current time UTC .
