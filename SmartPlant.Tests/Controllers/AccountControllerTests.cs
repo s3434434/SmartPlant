@@ -904,7 +904,7 @@ namespace SmartPlant.Tests.Controllers
             var result = await accountController.AdminUpdateDetails(It.IsAny<AdminUpdateUserDetailsDto>());
 
             // Assert
-            Assert.That(result, Is.TypeOf<BadRequestResult>());
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
