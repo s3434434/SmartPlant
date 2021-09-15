@@ -1,21 +1,11 @@
 ﻿using NUnit.Framework;
-using Moq;
-using AutoMapper;
 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Security.Claims;
-using System.Security.Principal;
 
-using SmartPlant.Models.Repository;
 using SmartPlant.Models.DataManager;
-using SmartPlant.Controllers;
 using SmartPlant.Data;
 using SmartPlant.Models;
 
