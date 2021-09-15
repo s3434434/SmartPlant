@@ -43,6 +43,7 @@ namespace SmartPlant.Tests.Models.DataManager
             mock_DatabaseContext.Database.EnsureDeleted();
         }
 
+        #region GetAllForUser
         [Test]
         public async Task GetAllForUser_WhenUserIDDoesNotExist_ReturnsNull()
         {
@@ -75,5 +76,84 @@ namespace SmartPlant.Tests.Models.DataManager
                 Assert.AreEqual(plant.PlantID, "correct");
             }
         }
+        #endregion
+
+        #region Add
+        [Test]
+        public async Task Add_WhenPlantIDAlreadyExists_Returns0()
+        {
+            // Arrange
+            Plant test_Plant = new Plant()
+            {
+                PlantID = "correct",
+                UserID = "correct"
+            };
+
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            var expected = 0;
+
+            // Act
+            var result = await plantManager.Add(test_Plant);
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public async Task Add_WhenMaxPlantCountIsExceeded_ReturnsNegative1()
+        {
+            // Arrange
+            var existing_Plants = new List<Plant>();
+            var existing_UserID = "existingUserID";
+
+            for (int i = 0; i < 5; i++)
+                existing_Plants.Add(new Plant() { PlantID = i.ToString(), UserID = existing_UserID });
+
+            Plant test_Plant = new Plant()
+            {
+                PlantID = "tooManyPlants",
+                UserID = existing_UserID
+            };
+
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            var expected = -1;
+
+            // Add existing plants
+            foreach (Plant plant in existing_Plants)
+            {
+                await plantManager.Add(plant);
+            }
+
+            // Act
+            var result = await plantManager.Add(test_Plant);
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public async Task Add_WhenPlantSuccessfullyAdded_Returns1()
+        {
+            // Arrange
+            Plant test_Plant = new Plant()
+            {
+                PlantID = "newcorrect",
+                UserID = "newcorrect"
+            };
+
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            var expected = 1;
+
+            // Act
+            var result = await plantManager.Add(test_Plant);
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+        #endregion
+
     }
 }
