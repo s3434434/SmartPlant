@@ -211,5 +211,52 @@ namespace SmartPlant.Tests.Models.DataManager
             Assert.AreEqual(expected, result);
         }
         #endregion
+
+        #region AdminGetAll
+        [Test]
+        public async Task AdminGetAll_WhenCalled_ReturnsIEnumarablePlants()
+        {
+            // Arrange
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            // Act
+            var result = await plantManager.AdminGetAll();
+
+            // Assert
+            Assert.IsNotNull(result);        
+        }
+        #endregion
+
+        #region AdminDelete
+        [Test]
+        public async Task AdminDelete_WhenPlantIDDoesNotExist_ReturnsFalse()
+        {
+            // Arrange
+            var plantID = "doesNotExist";
+
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            // Act
+            var result = await plantManager.AdminDelete(plantID);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public async Task AdminDelete_WhenPlantIDIsDeletedSuccessfully_ReturnsTrue()
+        {
+            // Arrange
+            var plantID = "existing";
+
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            // Act
+            var result = await plantManager.AdminDelete(plantID);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+        #endregion
     }
 }
