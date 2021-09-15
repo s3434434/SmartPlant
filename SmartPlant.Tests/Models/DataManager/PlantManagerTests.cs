@@ -37,6 +37,12 @@ namespace SmartPlant.Tests.Models.DataManager
             mock_DatabaseContext.SaveChanges();
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            mock_DatabaseContext.Database.EnsureDeleted();
+        }
+
         [Test]
         public async Task GetAllForUser_WhenUserIDDoesNotExist_ReturnsNull()
         {
@@ -50,6 +56,24 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Assert
             Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task GetAllForUser_WhenUserIDDoesExist_ReturnsEnumarablePlants()
+        {
+            // Arrange
+            string test_UserID = "correct";
+
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            // Act
+            IEnumerable<Plant> result = await plantManager.GetAllForUser(test_UserID);
+
+            // Assert
+            foreach (Plant plant in result)
+            {
+                Assert.AreEqual(plant.PlantID, "correct");
+            }
         }
     }
 }
