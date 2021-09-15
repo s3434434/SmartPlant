@@ -33,7 +33,7 @@ namespace SmartPlant.Tests.Models.DataManager
                 .Options;
 
             mock_DatabaseContext = new DatabaseContext(options);
-            mock_DatabaseContext.Plants.Add(new Plant { PlantID = "correct", UserID = "correct" });
+            mock_DatabaseContext.Plants.Add(new Plant { PlantID = "existing", UserID = "existing" });
             mock_DatabaseContext.SaveChanges();
         }
 
@@ -48,7 +48,7 @@ namespace SmartPlant.Tests.Models.DataManager
         public async Task GetAllForUser_WhenUserIDDoesNotExist_ReturnsNull()
         {
             // Arrange
-            string test_UserID = "incorrect";
+            string test_UserID = "doesNotExist";
 
             var plantManager = new PlantManager(mock_DatabaseContext);
 
@@ -63,7 +63,7 @@ namespace SmartPlant.Tests.Models.DataManager
         public async Task GetAllForUser_WhenUserIDDoesExist_ReturnsEnumarablePlants()
         {
             // Arrange
-            string test_UserID = "correct";
+            string test_UserID = "existing";
 
             var plantManager = new PlantManager(mock_DatabaseContext);
 
@@ -71,9 +71,10 @@ namespace SmartPlant.Tests.Models.DataManager
             IEnumerable<Plant> result = await plantManager.GetAllForUser(test_UserID);
 
             // Assert
+            Assert.IsNotNull(result);
             foreach (Plant plant in result)
             {
-                Assert.AreEqual(plant.PlantID, "correct");
+                Assert.AreEqual(plant.PlantID, "existing");
             }
         }
         #endregion
@@ -85,8 +86,8 @@ namespace SmartPlant.Tests.Models.DataManager
             // Arrange
             Plant test_Plant = new Plant()
             {
-                PlantID = "correct",
-                UserID = "correct"
+                PlantID = "existing",
+                UserID = "existing"
             };
 
             var plantManager = new PlantManager(mock_DatabaseContext);
@@ -105,9 +106,9 @@ namespace SmartPlant.Tests.Models.DataManager
         {
             // Arrange
             var existing_Plants = new List<Plant>();
-            var existing_UserID = "existingUserID";
+            var existing_UserID = "existing";
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 4; i++)
                 existing_Plants.Add(new Plant() { PlantID = i.ToString(), UserID = existing_UserID });
 
             Plant test_Plant = new Plant()
@@ -139,8 +140,8 @@ namespace SmartPlant.Tests.Models.DataManager
             // Arrange
             Plant test_Plant = new Plant()
             {
-                PlantID = "newcorrect",
-                UserID = "newcorrect"
+                PlantID = "newID",
+                UserID = "newID"
             };
 
             var plantManager = new PlantManager(mock_DatabaseContext);
@@ -155,5 +156,60 @@ namespace SmartPlant.Tests.Models.DataManager
         }
         #endregion
 
+        #region Delete
+        [Test]
+        public async Task Delete_WhenPlantIDDoesNotExist_Returns0()
+        {
+            // Arrange
+            var plantID = "doesNotExist";
+            var userID = "doesNotMatter";
+
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            var expected = 0;
+
+            // Act
+            var result = await plantManager.Delete(plantID, userID);
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public async Task Delete_WhenPlantIDDoesNotBelongToUserID_ReturnsNegative1()
+        {
+            // Arrange
+            var plantID = "existing";
+            var userID = "NotThisPersonsPlant";
+
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            var expected = -1;
+
+            // Act
+            var result = await plantManager.Delete(plantID, userID);
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public async Task Delete_WhenPlantSuccessfullyDeleted_Returns1()
+        {
+            // Arrange
+            var plantID = "existing";
+            var userID = "existing";
+
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            var expected = 1;
+
+            // Act
+            var result = await plantManager.Delete(plantID, userID);
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+        #endregion
     }
 }
