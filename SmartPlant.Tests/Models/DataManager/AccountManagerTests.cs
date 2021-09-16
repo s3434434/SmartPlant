@@ -80,6 +80,97 @@ namespace SmartPlant.Tests.Models.DataManager
             // Assert
             Assert.IsFalse(result.isSuccessfulRegistration);
         }
+
+        [Test]
+        public async Task Register_WhenUserRegistrationIsSuccessful_ReturnsRegistrationResponseDtoWithSuccessfullRegistrationTrue()
+        {
+            // Arrange
+            var test_User = new Mock<ApplicationUser>();
+            test_User.SetupProperty(m => m.Email, "test@email.com");
+
+            var test_UserRegistrationDto = new UserRegistrationDto() { ClientURI = "testingURI" };
+
+            var test_IdentityResult = IdentityResult.Success;
+            var test_Token = "token";
+
+            mock_UserManager.Setup(_userManager => _userManager.CreateAsync(test_User.Object, It.IsAny<string>()))
+                .ReturnsAsync(test_IdentityResult);
+
+            mock_UserManager.Setup(_userManager => _userManager.GenerateEmailConfirmationTokenAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(test_Token);
+
+            mock_EmailSender.Setup(_emailSender => _emailSender.SendEmailAsync(It.IsAny<Message>()));
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            RegistrationResponseDto result = await accountManager.Register(test_User.Object, test_UserRegistrationDto);
+
+            // Assert
+            Assert.IsTrue(result.isSuccessfulRegistration);
+        }
+        #endregion
+
+        #region ConfirmEmail
+        [Test]
+        public async Task ConfirmEmail_WhenEmailConfirmationFails_ReturnsFalse()
+        {
+            // Arrange
+            var test_User = new Mock<ApplicationUser>();
+            var test_Token = "token";
+
+            var test_IdentityResult = IdentityResult.Failed();
+
+            mock_UserManager.Setup(_userManager => _userManager.ConfirmEmailAsync(test_User.Object, It.IsAny<string>()))
+                .ReturnsAsync(test_IdentityResult);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.ConfirmEmail(test_User.Object, test_Token);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public async Task ConfirmEmail_WhenEmailConfirmationIsSuccessful_ReturnsTrue()
+        {
+            // Arrange
+            var test_User = new Mock<ApplicationUser>();
+            var test_Token = "token";
+
+            var test_IdentityResult = IdentityResult.Success;
+
+            mock_UserManager.Setup(_userManager => _userManager.ConfirmEmailAsync(test_User.Object, It.IsAny<string>()))
+                .ReturnsAsync(test_IdentityResult);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.ConfirmEmail(test_User.Object, test_Token);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
         #endregion
     }
 }
