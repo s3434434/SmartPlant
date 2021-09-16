@@ -166,7 +166,7 @@
             <response code="200">Success</response>
             <response code="404">No Plants Found</response>
         </member>
-        <member name="M:SmartPlant.Controllers.PlantController.Post">
+        <member name="M:SmartPlant.Controllers.PlantController.Post(SmartPlant.Models.API_Model.Plant.AddPlantDto)">
             <summary>
             Adds a plant
             </summary>
@@ -205,7 +205,7 @@
             <response code="200">Success</response>
             <response code="404">No Plants Found</response>
         </member>
-        <member name="M:SmartPlant.Controllers.PlantController.AdminPost(System.String)">
+        <member name="M:SmartPlant.Controllers.PlantController.AdminPost(SmartPlant.Models.API_Model.AdminAddPlantDto)">
             <summary>
             Adds a plant for a specific user
             </summary>

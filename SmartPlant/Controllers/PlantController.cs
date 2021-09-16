@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartPlant.Data;
 using SmartPlant.Models;
 using SmartPlant.Models.API_Model;
+using SmartPlant.Models.API_Model.Plant;
 using SmartPlant.Models.DataManager;
 using SmartPlant.Models.Repository;
 using System;
@@ -50,10 +51,8 @@ namespace SmartPlant.Controllers
         [Route("/api/Plants")]
         public async Task<IActionResult> Get()
         {
-            //get the ID (which was stored in claimtyupes.Name)
-            //from the controllerbase ClaimsIdentity User
-            //should be able to remove the id input from the method param,
-            //and then this should only work with a logged in user, using their own id's
+            //get the ID (which was stored in claimtyupes.Name) from the controllerbase ClaimsIdentity User
+            //this should only work with a logged in user, using their own id's
             var userID = User.Identity.Name;
 
             /*//this gets the users Role (user or admin)
@@ -82,10 +81,15 @@ namespace SmartPlant.Controllers
         /// <response code="409">Max plant limit hit (currently set to 5)</response>
         [HttpPost] //This should be used when the user chooses to add a plant. Autogenerates plant ID. UserID taken from JWT token 
         [Route("/api/Plants")]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post([FromBody] AddPlantDto dto)
         {
             var userID = User.Identity.Name;
             var user = await _userManager.FindByIdAsync(userID);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
             //it really shouldn't be null
             if (user == null)
@@ -96,8 +100,10 @@ namespace SmartPlant.Controllers
             var plant = new Plant
             {
                 PlantID = Guid.NewGuid().ToString(),
-                UserID = userID
+                UserID = userID,
+                Name = dto.PlantName
             };
+
 
             var result = await _repo.Add(plant);
 
@@ -112,7 +118,7 @@ namespace SmartPlant.Controllers
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
 
             //else result == 1
-            return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}");
+            return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}\nPlant Name: {plant.Name}");
         }
 
 
@@ -129,7 +135,7 @@ namespace SmartPlant.Controllers
         public async Task<IActionResult> Delete(string plantID)
         {
             var userID = User.Identity.Name;
-            var result = await _repo.Delete(plantID, userID);           
+            var result = await _repo.Delete(plantID, userID);
 
             if (result == 1)
             {
@@ -210,9 +216,9 @@ namespace SmartPlant.Controllers
         [HttpPost] //verifies user exists, then verifies plant id doesn't already exists, adds plant
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/Plants")]
-        public async Task<IActionResult> AdminPost(string userID)
+        public async Task<IActionResult> AdminPost([FromBody]AdminAddPlantDto plantDto)
         {
-            var user = await _userManager.FindByIdAsync(userID);
+            var user = await _userManager.FindByIdAsync(plantDto.UserID);
 
             if (user == null)
             {
@@ -222,7 +228,8 @@ namespace SmartPlant.Controllers
             var plant = new Plant
             {
                 PlantID = Guid.NewGuid().ToString(),
-                UserID = userID
+                UserID = plantDto.UserID,
+                Name = plantDto.PlantName                
             };
 
             var result = await _repo.Add(plant);
@@ -238,7 +245,7 @@ namespace SmartPlant.Controllers
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
 
             //else result == 1
-            return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}");
+            return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}\nPlant Name: {plant.Name}");
         }
 
 

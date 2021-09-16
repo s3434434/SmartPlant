@@ -4,13 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SmartPlant.Models.API_Model
+namespace SmartPlant.Models.API_Model.Plant
 {
-    public class AdminAddPlantDto
+    public class AddPlantDto
     {
-        [Required]
-        public string UserID { get; set; }
-
+        //name of the plant chosen by the user e.g. COMPANY NAME - LOC - FLOOR 2 - MEETING ROOM 1
+        [MaxLength(250)]
         public string PlantName { get; set; }
     }
 }
