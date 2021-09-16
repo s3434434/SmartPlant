@@ -406,7 +406,7 @@ namespace SmartPlant.Tests.Controllers
             // Assert
             Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
             Assert.AreEqual(404, result.StatusCode);
-            Assert.AreEqual("Plant ID does not exist", result.Value);
+            Assert.AreEqual("Plant ID does not exist in the user's list of plants.", result.Value);
         }
 
         [Test]
