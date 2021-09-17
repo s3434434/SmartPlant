@@ -29,6 +29,13 @@ admin admin
 
 Everything except Register, Login, ConfirmEmail, Forgot Password, and Reset Password requires a user to be logged in to use.
 
+
+
+
+Slightly outdated documentation below, use the site above.
+
+------
+
 Accounts:
 
 	[Post]
