@@ -22,5 +22,10 @@ namespace SmartPlant.Models
         public virtual ApplicationUser User { get; set; }
 
 
+        public override string ToString()
+        {
+            return $"Plant ID: {PlantID}\nuserID: {UserID}\nPlant Name: {Name}";
+        }
+
     }
 }

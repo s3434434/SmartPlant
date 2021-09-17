@@ -120,7 +120,7 @@ namespace SmartPlant.Controllers
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
 
             //else result == 1
-            return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}\nPlant Name: {plant.Name}");
+            return Created("", $"Success\n{plant}");
         }
 
 
@@ -249,7 +249,8 @@ namespace SmartPlant.Controllers
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
 
             //else result == 1
-            return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}\nPlant Name: {plant.Name}");
+            //return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}\nPlant Name: {plant.Name}");
+            return Created("", $"Success\n{plant}");
         }
 
 
