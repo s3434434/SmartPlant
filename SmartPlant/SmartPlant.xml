@@ -170,7 +170,9 @@
             <summary>
             Adds a plant
             </summary>
-            <remarks>This should be used when the user chooses to add a plant. Autogenerates the plant ID. 
+            <remarks>
+            Takes in a plant name (maxlength 250 - nullable) - this can be excluded but is intended help user readabillity  e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily" &#xA;
+            This should be used when the user chooses to add a plant. Autogenerates the plant ID. &#xA;
             The user should then copy and paste the new plant ID into an arduino setup file?
             </remarks>
             <response code="201">Plant Created</response>
@@ -210,6 +212,8 @@
             Adds a plant for a specific user
             </summary>
             <remarks>
+            Takes in a plant name (maxlength 250 - nullable) - this can be excluded but is intended help user readabillity  e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily"
+            and user ID
             </remarks>
             <response code="201">Plant Created</response>
             <response code="404">UserID Not Found</response>
