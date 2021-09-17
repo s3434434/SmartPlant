@@ -5,7 +5,7 @@ open in visual studio -> tools ->NuGet Package Manager -> Package Manager Consol
 
 rough example of layout
 
-![alt text](https://i.imgur.com/Kpu1YoR.png)
+![alt text](https://i.imgur.com/Yf29BTT.png)
 
 
 
