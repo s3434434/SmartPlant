@@ -15,6 +15,10 @@ using SmartPlant.JwtFeatures;
 using SmartPlant.Data;
 using SmartPlant.Models.API_Model;
 using SmartPlant.Models.DataManager;
+using SmartPlant.Models.API_Model.Account;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace SmartPlant.Tests.Models.DataManager
 {
@@ -170,6 +174,132 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Assert
             Assert.IsTrue(result);
+        }
+        #endregion
+
+        #region Login
+        [Test]
+        public async Task Login_WhenUserDoesNotExist_ReturnsAuthResponseDtoWithFalse()
+        {
+            // Arrange
+            var test_UserAuth = new UserForAuthenticationDto();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            AuthResponseDto result = await accountManager.Login(test_UserAuth);
+
+            // Assert
+            Assert.IsFalse(result.IsAuthSuccessful);
+            Assert.AreEqual("Incorrect Login Details", result.ErrorMessage);
+        }
+
+        [Test]
+        public async Task Login_WhenPasswordIncorrect_ReturnsAuthResponseDtoWithFalse()
+        {
+            // Arrange
+            var test_User = new ApplicationUser();
+            var test_UserAuth = new UserForAuthenticationDto();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.CheckPasswordAsync(test_User, It.IsAny<string>()))
+                .ReturnsAsync(false);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            AuthResponseDto result = await accountManager.Login(test_UserAuth);
+
+            // Assert
+            Assert.IsFalse(result.IsAuthSuccessful);
+            Assert.AreEqual("Incorrect Login Details", result.ErrorMessage);
+        }
+
+        [Test]
+        public async Task Login_WhenUserHasNotConfirmedEmail_ReturnsAuthResponseDtoWithFalse()
+        {
+            // Arrange
+            var test_User = new ApplicationUser();
+            var test_UserAuth = new UserForAuthenticationDto();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.CheckPasswordAsync(test_User, It.IsAny<string>()))
+                .ReturnsAsync(true);
+
+            mock_UserManager.Setup(_userManager => _userManager.IsEmailConfirmedAsync(test_User))
+                .ReturnsAsync(false);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            AuthResponseDto result = await accountManager.Login(test_UserAuth);
+
+            // Assert
+            Assert.IsFalse(result.IsAuthSuccessful);
+            Assert.AreEqual("Email is not confirmed", result.ErrorMessage);
+        }
+
+        [Test]
+        public async Task Login_WhenUserSuccessfullyLoggedIn_ReturnsAuthResponseDtoWithTrue()
+        {
+            // Arrange
+            var test_User = new ApplicationUser();
+            var test_UserAuth = new UserForAuthenticationDto();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.CheckPasswordAsync(test_User, It.IsAny<string>()))
+                .ReturnsAsync(true);
+
+            mock_UserManager.Setup(_userManager => _userManager.IsEmailConfirmedAsync(test_User))
+                .ReturnsAsync(true);
+
+            mock_JWTHandler.Setup(_jwtHandler => _jwtHandler.GetSigningCredentials())
+                .Returns(new Mock<SigningCredentials>(Mock.Of<SecurityKey>(), SecurityAlgorithms.HmacSha256).Object);
+            mock_JWTHandler.Setup(_jwtHandler => _jwtHandler.GetClaims(test_User))
+                .ReturnsAsync(new List<Claim>());
+            mock_JWTHandler.Setup(_jwtHandler => _jwtHandler.GenerateTokenOptions(It.IsAny<SigningCredentials>(), It.IsAny<List<Claim>>()))
+                .Returns(new Mock<JwtSecurityToken>(null, null, null, null, null, null).Object);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            AuthResponseDto result = await accountManager.Login(test_UserAuth);
+
+            // Assert
+            Assert.IsTrue(result.IsAuthSuccessful);
         }
         #endregion
     }
