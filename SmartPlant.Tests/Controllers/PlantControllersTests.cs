@@ -14,6 +14,8 @@ using System.Security.Principal;
 using SmartPlant.Models.Repository;
 using SmartPlant.Models;
 using SmartPlant.Controllers;
+using SmartPlant.Models.API_Model.Plant;
+using SmartPlant.Models.API_Model;
 
 namespace SmartPlant.Tests.Controllers
 {
@@ -109,7 +111,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.Post();
+            var result = await plantController.Post(It.IsAny<AddPlantDto>());
 
             // Assert
             Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
@@ -134,7 +136,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.Post();
+            var result = await plantController.Post(It.IsAny<AddPlantDto>());
 
             // Assert
             Assert.That(result, Is.TypeOf<ConflictObjectResult>());
@@ -159,7 +161,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.Post();
+            var result = await plantController.Post(It.IsAny<AddPlantDto>());
 
             // Assert
             Assert.That(result, Is.TypeOf<ConflictObjectResult>());
@@ -181,10 +183,10 @@ namespace SmartPlant.Tests.Controllers
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
-            };       
+            };
 
             // Act
-            var result = await plantController.Post();
+            var result = await plantController.Post(It.IsAny<AddPlantDto>());
 
             // Assert
             Assert.That(result, Is.TypeOf<CreatedResult>());
@@ -297,7 +299,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.AdminPost(It.IsAny<string>());
+            var result = await plantController.AdminPost(It.IsAny<AdminAddPlantDto>());
 
             // Assert
             Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
@@ -322,7 +324,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.AdminPost(It.IsAny<string>());
+            var result = await plantController.AdminPost(It.IsAny<AdminAddPlantDto>());
 
             // Assert
             Assert.That(result, Is.TypeOf<ConflictObjectResult>());
@@ -347,7 +349,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.AdminPost(It.IsAny<string>());
+            var result = await plantController.AdminPost(It.IsAny<AdminAddPlantDto>());
 
             // Assert
             Assert.That(result, Is.TypeOf<ConflictObjectResult>());
@@ -372,7 +374,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.AdminPost(It.IsAny<string>());
+            var result = await plantController.AdminPost(It.IsAny<AdminAddPlantDto>());
 
             // Assert
             Assert.That(result, Is.TypeOf<CreatedResult>());

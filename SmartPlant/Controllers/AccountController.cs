@@ -30,17 +30,16 @@ namespace SmartPlant.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         //private readonly JwtHandler _jwtHandler;
         private readonly IAccountManager _repo;
-        private readonly IEmailSender _emailSender;
+        //private readonly IEmailSender _emailSender;
 
         public AccountController(IAccountManager repo, IMapper mapper,
-            UserManager<ApplicationUser> userManager, JwtHandler jwtHandler,
-            IEmailSender emailSender)
+            UserManager<ApplicationUser> userManager)
         {
             _repo = repo;
             _mapper = mapper;
             _userManager = userManager;
             //_jwtHandler = jwtHandler;
-            _emailSender = emailSender;
+            //_emailSender = emailSender;
         }
 
 
@@ -67,11 +66,11 @@ namespace SmartPlant.Controllers
 
             if (!result.isSuccessfulRegistration)
             {
-                return BadRequest(result.Errors);
+                return BadRequest(result);
             }
 
             //return StatusCode(201)
-            return Ok(result.Errors);
+            return Ok(result);
         }
 
 

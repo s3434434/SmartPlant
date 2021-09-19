@@ -28,8 +28,6 @@ namespace SmartPlant.Tests.Controllers
         private Mock<IAccountManager> mock_AccountManager;
         private Mock<IMapper> mock_Mapper;
         private Mock<UserManager<ApplicationUser>> mock_UserManager;
-        private Mock<JwtHandler> mock_JWTHandler;
-        private Mock<IEmailSender> mock_EmailSender;
         private Mock<ClaimsPrincipal> mock_Principal;
 
         [SetUp]
@@ -43,8 +41,6 @@ namespace SmartPlant.Tests.Controllers
                 null, null, null, null, null, null, null, null
                 );
 
-            mock_JWTHandler = new Mock<JwtHandler>(Mock.Of<IConfiguration>(), mock_UserManager.Object);
-            mock_EmailSender = new Mock<IEmailSender>();
 
             // Mocking a ClaimsPrincipal which is passed via HTTPContext to the Controller
             // First an Identity
@@ -65,9 +61,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -84,9 +80,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
@@ -111,9 +107,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -136,9 +132,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -160,9 +156,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -187,9 +183,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -214,9 +210,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -241,9 +237,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -266,9 +262,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -287,9 +283,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
@@ -311,9 +307,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -335,9 +331,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -357,9 +353,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
@@ -387,9 +383,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -411,9 +407,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -437,9 +433,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -466,9 +462,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -497,9 +493,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -528,9 +524,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -554,9 +550,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
@@ -580,9 +576,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -609,9 +605,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -638,9 +634,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -667,9 +663,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -693,9 +689,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
@@ -719,9 +715,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -748,9 +744,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -778,9 +774,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -802,9 +798,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -826,9 +822,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -850,9 +846,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -871,9 +867,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
@@ -895,9 +891,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -919,9 +915,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -945,9 +941,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -966,9 +962,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
@@ -992,9 +988,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -1013,9 +1009,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
@@ -1037,9 +1033,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -1061,9 +1057,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -1085,9 +1081,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -1112,9 +1108,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act
@@ -1140,9 +1136,9 @@ namespace SmartPlant.Tests.Controllers
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
-                mock_UserManager.Object,
-                mock_JWTHandler.Object,
-                mock_EmailSender.Object
+                mock_UserManager.Object
+
+
                 );
 
             // Act

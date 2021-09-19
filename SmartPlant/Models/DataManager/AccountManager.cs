@@ -59,7 +59,7 @@ namespace SmartPlant.Models.DataManager
 
             await _userManager.AddToRoleAsync(user, UserRoles.User);
 
-            return new RegistrationResponseDto { isSuccessfulRegistration = true, Errors = new string[] { token } };
+            return new RegistrationResponseDto { isSuccessfulRegistration = true, Errors = new string[] { "The token is added here for easier testing",token } };
 
         }
 
