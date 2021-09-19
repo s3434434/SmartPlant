@@ -17,6 +17,7 @@ namespace SmartPlant.JwtFeatures
         private readonly IConfiguration _configuration;
         private readonly IConfigurationSection _jwtSettings;
         private readonly UserManager<ApplicationUser> _userManager;
+
         public JwtHandler(IConfiguration configuration, UserManager<ApplicationUser> userManager)
         {
             _configuration = configuration;
@@ -24,7 +25,7 @@ namespace SmartPlant.JwtFeatures
             _userManager = userManager;
         }
 
-        public SigningCredentials GetSigningCredentials()
+        public virtual SigningCredentials GetSigningCredentials()
         {
             var key = Encoding.UTF8.GetBytes(_jwtSettings.GetSection("securityKey").Value);
             var secret = new SymmetricSecurityKey(key);
@@ -32,7 +33,7 @@ namespace SmartPlant.JwtFeatures
         }
 
         //generates claims with user's email and id
-        public async Task<List<Claim>> GetClaims(ApplicationUser user)
+        public virtual async Task<List<Claim>> GetClaims(ApplicationUser user)
         {
             var claims = new List<Claim>
             {
@@ -50,7 +51,7 @@ namespace SmartPlant.JwtFeatures
         }
 
         //generates token with claims
-        public JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
+        public virtual JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
         {
             var tokenOptions = new JwtSecurityToken(
                 issuer: _jwtSettings.GetSection("validIssuer").Value,
