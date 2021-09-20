@@ -485,7 +485,7 @@ namespace SmartPlant.Tests.Controllers
         public async Task UpdateDetails_WhenModelStateInvalid_ReturnsBadRequest()
         {
             // Arrange
-            var mock_Result = "success";
+            var mock_Result = IdentityResult.Success;
 
             mock_AccountManager.Setup(_repo => _repo.UpdateDetails(It.IsAny<string>(), It.IsAny<UpdateUserDetailsDto>()))
                 .ReturnsAsync(mock_Result);
@@ -494,8 +494,6 @@ namespace SmartPlant.Tests.Controllers
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
                 mock_UserManager.Object
-
-
                 );
 
             accountController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -516,7 +514,7 @@ namespace SmartPlant.Tests.Controllers
         public async Task UpdateDetails_WhenDetailUpdateSuccessful_ReturnsOkRequest()
         {
             // Arrange
-            var mock_Result = "success";
+            var mock_Result = IdentityResult.Success;
 
             mock_AccountManager.Setup(_repo => _repo.UpdateDetails(It.IsAny<string>(), It.IsAny<UpdateUserDetailsDto>()))
                 .ReturnsAsync(mock_Result);
@@ -525,8 +523,6 @@ namespace SmartPlant.Tests.Controllers
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
                 mock_UserManager.Object
-
-
                 );
 
             accountController.ControllerContext.HttpContext = new DefaultHttpContext()
