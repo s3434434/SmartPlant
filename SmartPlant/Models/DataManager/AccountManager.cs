@@ -63,16 +63,16 @@ namespace SmartPlant.Models.DataManager
 
         }
 
-        public async Task<bool> ConfirmEmail(ApplicationUser user, string token)
+        public async Task<IdentityResult> ConfirmEmail(ApplicationUser user, string token)
         {
-            var result = await _userManager.ConfirmEmailAsync(user, token);
+            return await _userManager.ConfirmEmailAsync(user, token);
 
-            if (!result.Succeeded)
+            /*if (!result.Succeeded)
             {
                 return false;
             }
 
-            return true;
+            return true;*/
         }
 
         public async Task<AuthResponseDto> Login(UserForAuthenticationDto loginUser)
@@ -172,6 +172,11 @@ namespace SmartPlant.Models.DataManager
             //check if email exists elsewhere
             // var emailAlreadyExists = await _userManager.FindByEmailAsync(details.Email);
             var user = await _userManager.FindByIdAsync(userID);
+
+            if (user == null)
+            {
+                return null;
+            }
 
             //if the email already belongs to a user
             //check that it belongs to THE user

@@ -12,7 +12,7 @@ namespace SmartPlant.Models.Repository
     public interface IAccountManager
     {
         Task<RegistrationResponseDto> Register(ApplicationUser user, UserRegistrationDto userRegDto);
-        Task<bool> ConfirmEmail(ApplicationUser user, string token);
+        Task<IdentityResult> ConfirmEmail(ApplicationUser user, string token);
         Task<AuthResponseDto> Login(UserForAuthenticationDto loginUser);
         Task<IEnumerable<string>> ForgotPassword(ForgotPasswordDto passwordDto);
         Task<IdentityResult> ResetPassword(ResetPasswordDto passwordDto);
