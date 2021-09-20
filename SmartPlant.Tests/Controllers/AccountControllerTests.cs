@@ -178,7 +178,7 @@ namespace SmartPlant.Tests.Controllers
                 .ReturnsAsync(mock_ApplicationUser);
 
             mock_AccountManager.Setup(_repo => _repo.ConfirmEmail(mock_ApplicationUser, It.IsAny<string>()))
-                .ReturnsAsync(false);
+                .ReturnsAsync(IdentityResult.Failed());
 
             var accountController = new AccountController(
                 mock_AccountManager.Object,
@@ -205,7 +205,7 @@ namespace SmartPlant.Tests.Controllers
                 .ReturnsAsync(mock_ApplicationUser);
 
             mock_AccountManager.Setup(_repo => _repo.ConfirmEmail(mock_ApplicationUser, It.IsAny<string>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(IdentityResult.Failed());
 
             var accountController = new AccountController(
                 mock_AccountManager.Object,
