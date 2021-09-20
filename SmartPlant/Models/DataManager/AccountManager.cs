@@ -201,12 +201,12 @@ namespace SmartPlant.Models.DataManager
             return await _userManager.UpdateAsync(user);
         }
 
-        public async Task<int> UpdateEmail(string userID, UpdateEmailDto emailDto)
+        public async Task<IdentityResult> UpdateEmail(string userID, UpdateEmailDto emailDto)
         {
             var user = await _userManager.FindByIdAsync(userID);
             if (user == null)
             {
-                return -2;
+                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
             }
 
             var doesEmailAlreadyExist = await _userManager.FindByEmailAsync(emailDto.Email);
@@ -215,18 +215,16 @@ namespace SmartPlant.Models.DataManager
             {
                 if (doesEmailAlreadyExist.Id == userID)
                 {
-                    return 0;
+                    return IdentityResult.Failed(new IdentityError() { Code = "2", Description = "New email is the same as existing email." });
                 }
-                return -1;
-            }
+
+                return IdentityResult.Failed(new IdentityError() { Code = "1", Description = "Email already in use." });
+                }
 
             user.Email = emailDto.Email;
             user.UserName = emailDto.Email;
 
-            await _userManager.UpdateAsync(user);
-
-            return 1;
-
+            return await _userManager.UpdateAsync(user);
         }
 
         public async Task<int> UpdatePassword(string userID, UpdatePasswordDto passwordDto)
