@@ -167,7 +167,7 @@ namespace SmartPlant.Models.DataManager
             return details;
         }
 
-        public async Task<String> UpdateDetails(string userID, UpdateUserDetailsDto details)
+        public async Task<IdentityResult> UpdateDetails(string userID, UpdateUserDetailsDto details)
         {
             //check if email exists elsewhere
             // var emailAlreadyExists = await _userManager.FindByEmailAsync(details.Email);
@@ -175,7 +175,7 @@ namespace SmartPlant.Models.DataManager
 
             if (user == null)
             {
-                return null;
+                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
             }
 
             //if the email already belongs to a user
@@ -198,9 +198,7 @@ namespace SmartPlant.Models.DataManager
             //user.UserName = details.Email;
             user.PhoneNumber = details.PhoneNumber;
 
-            await _userManager.UpdateAsync(user);
-
-            return "success";
+            return await _userManager.UpdateAsync(user);
         }
 
         public async Task<int> UpdateEmail(string userID, UpdateEmailDto emailDto)
