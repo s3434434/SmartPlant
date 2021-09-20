@@ -183,6 +183,16 @@
             <response code="400">Bad Data</response>
             <response code="409">Max plant limit hit (currently set to 5)</response>
         </member>
+        <member name="M:SmartPlant.Controllers.PlantController.Update(SmartPlant.Models.API_Model.Plant.UpdatePlantDto)">
+            <summary>
+            Updates a plants name
+            </summary>
+            <remarks>
+            This takes in a plant ID and a string name --this can be excluded, making the name param null (no name)
+            </remarks>
+            <response code="200">Name changed</response>        
+            <response code="404">Plant Not Found</response>
+        </member>
         <member name="M:SmartPlant.Controllers.PlantController.Delete(System.String)">
             <summary>
             Deletes a plant that belongs to the user
@@ -222,6 +232,16 @@
             <response code="201">Plant Created</response>
             <response code="404">UserID Not Found</response>
             <response code="409">Max Plant Limit Hit</response>
+        </member>
+        <member name="M:SmartPlant.Controllers.PlantController.AdminUpdate(SmartPlant.Models.API_Model.Plant.UpdatePlantDto)">
+            <summary>
+            Updates a plants name
+            </summary>
+            <remarks>
+            This takes in a plant ID and a string name --this can be excluded, making the name param null (no name)
+            </remarks>
+            <response code="200">Name changed</response>        
+            <response code="404">Plant Not Found</response>
         </member>
         <member name="M:SmartPlant.Controllers.PlantController.AdminDelete(System.String)">
             <summary>

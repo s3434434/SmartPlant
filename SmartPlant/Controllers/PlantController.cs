@@ -123,6 +123,30 @@ namespace SmartPlant.Controllers
 
 
         /// <summary>
+        /// Updates a plants name
+        /// </summary>
+        /// <remarks>
+        /// This takes in a plant ID and a string name --this can be excluded, making the name param null (no name)
+        /// </remarks>
+        /// <response code="200">Name changed</response>        
+        /// <response code="404">Plant Not Found</response>
+        [HttpPut]
+        [Route("/api/Plants")]
+        public async Task<IActionResult> Update([FromBody] UpdatePlantDto dto)
+        {
+            //var userID = User.Identity.Name;
+            var plant = new Plant() { Name = dto.Name, PlantID = dto.PlantID, UserID = User.Identity.Name };
+            var result = await _repo.Update(plant);
+
+            if (result == 1)
+            {
+                return Ok();
+            }
+            return NotFound();
+
+        }
+
+        /// <summary>
         /// Deletes a plant that belongs to the user
         /// </summary>
         /// <remarks>Deleting a plant will cascade delete all related sensor data, this is permanent.
@@ -251,6 +275,31 @@ namespace SmartPlant.Controllers
             return Created("", $"Success\n{plant}");
         }
 
+        /// <summary>
+        /// Updates a plants name
+        /// </summary>
+        /// <remarks>
+        /// This takes in a plant ID and a string name --this can be excluded, making the name param null (no name)
+        /// </remarks>
+        /// <response code="200">Name changed</response>        
+        /// <response code="404">Plant Not Found</response>
+        [HttpPut]
+        [Route("/api/Admin/Plants")]
+        public async Task<IActionResult> AdminUpdate([FromBody] UpdatePlantDto dto)
+        {
+            //user id is not needed, since this is an admin action the userID is not relevant
+            var plant = new Plant() { Name = dto.Name, PlantID = dto.PlantID };
+            var result = await _repo.AdminUpdate(plant);
+
+            if (result == 1)
+            {
+                return Ok();
+            }
+            return NotFound();
+
+        }
+
+
 
         /// <summary>
         /// Deletes a plant
@@ -261,7 +310,7 @@ namespace SmartPlant.Controllers
         /// <response code="404">Plant Not Found</response>
         [HttpDelete]
         [Authorize(Roles = UserRoles.Admin)]
-        [Route("/api/Admin/Plants/Delete")]
+        [Route("/api/Admin/Plants")]
         public async Task<IActionResult> AdminDelete(string plantID)
         {
             var result = await _repo.AdminDelete(plantID);

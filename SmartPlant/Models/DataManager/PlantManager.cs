@@ -61,6 +61,21 @@ namespace SmartPlant.Models.DataManager
             return 1;
             //return plant.PlantID;
         }
+               
+        public async Task<int> Update(Plant plant)
+        {
+            var plantToUpdate = await _context.Plants.Where(p => p.UserID == plant.UserID && p.PlantID == plant.PlantID).FirstOrDefaultAsync();
+            if (plantToUpdate == null)
+            {
+                return -1;
+            }
+
+            plantToUpdate.Name = plant.Name;
+
+            _context.Plants.Update(plantToUpdate);
+
+            return await _context.SaveChangesAsync();
+        }
 
         public async Task<int> Delete(string plantID, string userID)
         {
@@ -76,7 +91,8 @@ namespace SmartPlant.Models.DataManager
 
                 _context.Plants.Remove(plant);
 
-                await _context.SaveChangesAsync();
+                var t = await _context.SaveChangesAsync();
+                System.Console.WriteLine(t);
 
                 return 1;
             }
@@ -97,6 +113,21 @@ namespace SmartPlant.Models.DataManager
             var plants = await _context.Plants.ToListAsync();
 
             return plants;
+        }
+
+        public async Task<int> AdminUpdate(Plant plant)
+        {
+            var plantToUpdate = await _context.Plants.Where(p => p.PlantID == plant.PlantID).FirstOrDefaultAsync();
+            if (plantToUpdate == null)
+            {
+                return -1;
+            }
+
+            plantToUpdate.Name = plant.Name;
+
+            _context.Plants.Update(plantToUpdate);
+
+            return await _context.SaveChangesAsync();
         }
 
         public async Task<bool> AdminDelete(string plantID)

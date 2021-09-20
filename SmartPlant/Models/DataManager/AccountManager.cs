@@ -116,7 +116,7 @@ namespace SmartPlant.Models.DataManager
             };
 
             var callback = QueryHelpers.AddQueryString(passwordDto.ClientURI, param);
-            var message = new Message(new string[] { user.Email }, "SmarPlant - Reset Your Password", callback);
+            var message = new Message(new string[] { user.Email }, "SmarPlant - Reset Your Password", callback);            
             await _emailSender.SendEmailAsync(message);
 
             //return true;
