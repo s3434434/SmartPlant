@@ -23,7 +23,6 @@ namespace SmartPlant.Tests.Controllers
     {
         private Mock<IPlantManager> mock_PlantManager;
         private Mock<UserManager<ApplicationUser>> mock_UserManager;
-        private Mock<IMapper> mock_Mapper;
         private Mock<ClaimsPrincipal> mock_Principal;
 
         [SetUp]
@@ -31,7 +30,6 @@ namespace SmartPlant.Tests.Controllers
         {
             // Mocking PlantManager, Mapper and UserManager for the PlantController
             mock_PlantManager = new Mock<IPlantManager>();
-            mock_Mapper = new Mock<IMapper>();
             mock_UserManager = new Mock<UserManager<ApplicationUser>>(
                 Mock.Of<IUserStore<ApplicationUser>>(),
                 null, null, null, null, null, null, null, null
@@ -61,7 +59,7 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.GetAllForUser(It.IsAny<string>()))
                 .ReturnsAsync(testValue);
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
@@ -81,7 +79,7 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.GetAllForUser(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
@@ -106,7 +104,7 @@ namespace SmartPlant.Tests.Controllers
 
             var test_AddPlantDto = new AddPlantDto();
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
@@ -133,7 +131,7 @@ namespace SmartPlant.Tests.Controllers
 
             var test_AddPlantDto = new AddPlantDto();
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
@@ -160,7 +158,7 @@ namespace SmartPlant.Tests.Controllers
 
             var test_AddPlantDto = new AddPlantDto();
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
@@ -187,7 +185,7 @@ namespace SmartPlant.Tests.Controllers
 
             var test_AddPlantDto = new AddPlantDto();
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
@@ -214,7 +212,7 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.AdminGetAll())
                 .ReturnsAsync(testValue);
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
@@ -234,7 +232,7 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.AdminGetAll())
                 .ReturnsAsync(() => null);
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
@@ -258,7 +256,7 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.GetAllForUser(It.IsAny<string>()))
                 .ReturnsAsync(testValue);
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
@@ -278,7 +276,7 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.GetAllForUser(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
@@ -302,7 +300,7 @@ namespace SmartPlant.Tests.Controllers
 
             var test_AddPlantDto = new AdminAddPlantDto();
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
@@ -329,7 +327,7 @@ namespace SmartPlant.Tests.Controllers
 
             var test_AddPlantDto = new AdminAddPlantDto();
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
@@ -356,7 +354,7 @@ namespace SmartPlant.Tests.Controllers
 
             var test_AddPlantDto = new AdminAddPlantDto();
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object
@@ -383,7 +381,7 @@ namespace SmartPlant.Tests.Controllers
 
             var test_AddPlantDto = new AdminAddPlantDto();
 
-            var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
                 User = mock_Principal.Object

@@ -24,13 +24,11 @@ namespace SmartPlant.Controllers
     public class PlantController : Controller
     {
         private readonly IPlantManager _repo;
-        private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public PlantController(IPlantManager repo, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public PlantController(IPlantManager repo, UserManager<ApplicationUser> userManager)
         {
             _repo = repo;
-            _mapper = mapper;
             _userManager = userManager;
         }
 
