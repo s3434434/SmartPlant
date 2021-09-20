@@ -595,7 +595,7 @@ namespace SmartPlant.Tests.Models.DataManager
             var result = await accountManager.UpdateDetails(It.IsAny<string>(), test_UpdateUserDetailsDto);
 
             // Assert
-            Assert.IsNull(result);
+            Assert.IsFalse(result.Succeeded);
         }
 
         [Test]
@@ -674,10 +674,10 @@ namespace SmartPlant.Tests.Models.DataManager
                 );
 
             // Act
-            var result = await accountManager.UpdateDetails(test_UserID, test_UpdateUserDetailsDto);
+            IdentityResult result = await accountManager.UpdateDetails(test_UserID, test_UpdateUserDetailsDto);
 
             // Assert
-            Assert.AreEqual("success", result);
+            Assert.IsTrue(result.Succeeded);
         }
         #endregion
     }
