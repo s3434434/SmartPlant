@@ -575,7 +575,7 @@ namespace SmartPlant.Tests.Models.DataManager
 
         #region UpdateDetails
         [Test]
-        public async Task UpdateDetails_WhenUserNotFound_ReturnsNull()
+        public async Task UpdateDetails_WhenUserNotFound_ReturnsIdentityResultFailed()
         {
             // Arrange
             var test_UpdateUserDetailsDto = new UpdateUserDetailsDto();
@@ -640,7 +640,7 @@ namespace SmartPlant.Tests.Models.DataManager
         }
 
         [Test]
-        public async Task UpdateDetails_WhenUserFoundAndUpdateCalled_ReturnsSuccessString()
+        public async Task UpdateDetails_WhenUserFoundAndUpdateCalled_ReturnsIdentityResultSuccess()
         {
             // Arrange
             var test_UserID = "123456";
@@ -678,6 +678,32 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Assert
             Assert.IsTrue(result.Succeeded);
+        }
+        #endregion
+
+        #region UpdateEmail
+        [Test]
+        public async Task UpdateEmail_WhenUserNotFound_ReturnsIdentityResultFailed()
+        {
+            // Arrange
+            var test_UpdateEmailDto = new UpdateEmailDto();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.UpdateEmail(It.IsAny<string>(), test_UpdateEmailDto);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
         }
         #endregion
     }
