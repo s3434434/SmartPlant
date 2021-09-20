@@ -205,14 +205,12 @@ namespace SmartPlant.Tests.Controllers
                 .ReturnsAsync(mock_ApplicationUser);
 
             mock_AccountManager.Setup(_repo => _repo.ConfirmEmail(mock_ApplicationUser, It.IsAny<string>()))
-                .ReturnsAsync(IdentityResult.Failed());
+                .ReturnsAsync(IdentityResult.Success);
 
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
                 mock_UserManager.Object
-
-
                 );
 
             // Act
@@ -564,7 +562,7 @@ namespace SmartPlant.Tests.Controllers
         public async Task UpdateEmail_WhenUserDoesNotExist_ReturnsBadRequest()
         {
             // Arrange
-            var mock_Result = -2;
+            var mock_Result = IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
 
             mock_AccountManager.Setup(_repo => _repo.UpdateEmail(It.IsAny<string>(), It.IsAny<UpdateEmailDto>()))
                 .ReturnsAsync(mock_Result);
@@ -593,7 +591,7 @@ namespace SmartPlant.Tests.Controllers
         public async Task UpdateEmail_WhenUserEmailAlreadyTaken_ReturnsBadRequest()
         {
             // Arrange
-            var mock_Result = -1;
+            var mock_Result = IdentityResult.Failed(new IdentityError() { Code = "1", Description = "Email already in use." });
 
             mock_AccountManager.Setup(_repo => _repo.UpdateEmail(It.IsAny<string>(), It.IsAny<UpdateEmailDto>()))
                 .ReturnsAsync(mock_Result);
@@ -622,7 +620,7 @@ namespace SmartPlant.Tests.Controllers
         public async Task UpdateEmail_WhenNewEmailSameAsOldEmail_ReturnsOkRequest()
         {
             // Arrange
-            var mock_Result = 0;
+            var mock_Result = IdentityResult.Failed(new IdentityError() { Code = "2", Description = "New email is the same as existing email." });
 
             mock_AccountManager.Setup(_repo => _repo.UpdateEmail(It.IsAny<string>(), It.IsAny<UpdateEmailDto>()))
                 .ReturnsAsync(mock_Result);
@@ -631,8 +629,6 @@ namespace SmartPlant.Tests.Controllers
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
                 mock_UserManager.Object
-
-
                 );
 
             accountController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -651,7 +647,7 @@ namespace SmartPlant.Tests.Controllers
         public async Task UpdateEmail_WhenDetailUpdateSuccessful_ReturnsOkRequest()
         {
             // Arrange
-            var mock_Result = 1;
+            var mock_Result = IdentityResult.Success;
 
             mock_AccountManager.Setup(_repo => _repo.UpdateEmail(It.IsAny<string>(), It.IsAny<UpdateEmailDto>()))
                 .ReturnsAsync(mock_Result);

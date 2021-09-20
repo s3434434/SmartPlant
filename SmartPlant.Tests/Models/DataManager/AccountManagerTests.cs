@@ -19,6 +19,7 @@ using SmartPlant.Models.API_Model.Account;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 
 namespace SmartPlant.Tests.Models.DataManager
 {
@@ -592,10 +593,13 @@ namespace SmartPlant.Tests.Models.DataManager
                 );
 
             // Act
-            var result = await accountManager.UpdateDetails(It.IsAny<string>(), test_UpdateUserDetailsDto);
+            IdentityResult result = await accountManager.UpdateDetails(It.IsAny<string>(), test_UpdateUserDetailsDto);
 
             // Assert
             Assert.IsFalse(result.Succeeded);
+            var errorCodes = result.Errors.Select(x => x.Code).ToList();
+            CollectionAssert.Contains(errorCodes, "0");
+            
         }
 
         [Test]
