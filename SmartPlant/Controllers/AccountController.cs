@@ -268,20 +268,21 @@ namespace SmartPlant.Controllers
 
             var userID = User.Identity.Name;
 
-            var result = await _repo.UpdateEmail(userID, emailDto);
+            IdentityResult result = await _repo.UpdateEmail(userID, emailDto);
 
-            if (result == -2)
+            if (!result.Succeeded)
             {
-                return BadRequest("User Does Not Exist."); // this shouldn't happen...
-            }
-            if (result == -1)
-            {
-                return BadRequest("Email Already Taken"); 
-            }
+                foreach (IdentityError error in result.Errors)
+                {
+                    if (error.Code == "0")
+                        return BadRequest(error.Description);
 
-            if (result == 0)
-            {
-                return Ok("New email is the same as current. Email not changed.");
+                    if(error.Code == "1")
+                       return BadRequest(error.Description);
+
+                    if (error.Code == "2")
+                       return Ok(error.Description);
+                }
             }
 
             return Ok("Success");
