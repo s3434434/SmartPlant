@@ -93,7 +93,7 @@ namespace SmartPlant.Controllers
 
             var result = await _repo.ConfirmEmail(user, token);            
 
-            if (!result)
+            if (!result.Succeeded)
             {
                 return BadRequest("Invalid Email Confirmation Request - Something Went Wrong");
             }
