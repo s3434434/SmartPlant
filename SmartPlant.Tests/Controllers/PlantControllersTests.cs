@@ -14,6 +14,8 @@ using System.Security.Principal;
 using SmartPlant.Models.Repository;
 using SmartPlant.Models;
 using SmartPlant.Controllers;
+using SmartPlant.Models.API_Model.Plant;
+using SmartPlant.Models.API_Model;
 
 namespace SmartPlant.Tests.Controllers
 {
@@ -102,6 +104,8 @@ namespace SmartPlant.Tests.Controllers
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
 
+            var test_AddPlantDto = new AddPlantDto();
+
             var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
@@ -109,7 +113,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.Post();
+            var result = await plantController.Post(test_AddPlantDto);
 
             // Assert
             Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
@@ -127,6 +131,8 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
                 .ReturnsAsync(returnValue);
 
+            var test_AddPlantDto = new AddPlantDto();
+
             var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
@@ -134,7 +140,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.Post();
+            var result = await plantController.Post(test_AddPlantDto);
 
             // Assert
             Assert.That(result, Is.TypeOf<ConflictObjectResult>());
@@ -152,6 +158,8 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
                 .ReturnsAsync(returnValue);
 
+            var test_AddPlantDto = new AddPlantDto();
+
             var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
@@ -159,7 +167,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.Post();
+            var result = await plantController.Post(test_AddPlantDto);
 
             // Assert
             Assert.That(result, Is.TypeOf<ConflictObjectResult>());
@@ -177,6 +185,8 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
                 .ReturnsAsync(returnValue);
 
+            var test_AddPlantDto = new AddPlantDto();
+
             var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
@@ -184,7 +194,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.Post();
+            var result = await plantController.Post(test_AddPlantDto);
 
             // Assert
             Assert.That(result, Is.TypeOf<CreatedResult>());
@@ -290,6 +300,8 @@ namespace SmartPlant.Tests.Controllers
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
 
+            var test_AddPlantDto = new AdminAddPlantDto();
+
             var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
@@ -297,7 +309,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.AdminPost(It.IsAny<string>());
+            var result = await plantController.AdminPost(test_AddPlantDto);
 
             // Assert
             Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
@@ -315,6 +327,8 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
                 .ReturnsAsync(returnValue);
 
+            var test_AddPlantDto = new AdminAddPlantDto();
+
             var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
@@ -322,7 +336,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.AdminPost(It.IsAny<string>());
+            var result = await plantController.AdminPost(test_AddPlantDto);
 
             // Assert
             Assert.That(result, Is.TypeOf<ConflictObjectResult>());
@@ -340,6 +354,8 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
                 .ReturnsAsync(returnValue);
 
+            var test_AddPlantDto = new AdminAddPlantDto();
+
             var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
@@ -347,7 +363,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.AdminPost(It.IsAny<string>());
+            var result = await plantController.AdminPost(test_AddPlantDto);
 
             // Assert
             Assert.That(result, Is.TypeOf<ConflictObjectResult>());
@@ -365,6 +381,8 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
                 .ReturnsAsync(returnValue);
 
+            var test_AddPlantDto = new AdminAddPlantDto();
+
             var plantController = new PlantController(mock_PlantManager.Object, mock_Mapper.Object, mock_UserManager.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
@@ -372,7 +390,7 @@ namespace SmartPlant.Tests.Controllers
             };
 
             // Act
-            var result = await plantController.AdminPost(It.IsAny<string>());
+            var result = await plantController.AdminPost(test_AddPlantDto);
 
             // Assert
             Assert.That(result, Is.TypeOf<CreatedResult>());
