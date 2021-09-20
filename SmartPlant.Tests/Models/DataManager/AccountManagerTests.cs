@@ -302,5 +302,221 @@ namespace SmartPlant.Tests.Models.DataManager
             Assert.IsTrue(result.IsAuthSuccessful);
         }
         #endregion
+
+        #region ForgotPassword
+        [Test]
+        public async Task ForgotPassword_WhenUserNotFound_ReturnsNull()
+        {
+            // Arrange
+            var test_ForgotPasswordDto = new ForgotPasswordDto();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.ForgotPassword(test_ForgotPasswordDto);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task ForgotPassword_WhenUserFound_CallsGeneratePasswordResetToken()
+        {
+            // Arrange
+            var test_ForgotPasswordDto = new ForgotPasswordDto();
+            test_ForgotPasswordDto.ClientURI = "mockURI";
+            test_ForgotPasswordDto.Email = "test@email.com";
+
+            var test_User = new ApplicationUser();
+            test_User.Email = "test@email.com";
+
+            var test_Token = "token";
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.GeneratePasswordResetTokenAsync(test_User))
+                .ReturnsAsync(test_Token);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.ForgotPassword(test_ForgotPasswordDto);
+
+            // Assert
+            mock_UserManager.Verify(_userManager => _userManager.GeneratePasswordResetTokenAsync(test_User), Times.Once());
+        }
+
+        [Test]
+        public async Task ForgotPassword_WhenUserFound_CallsSendEmailAsync()
+        {
+            // Arrange
+            var test_ForgotPasswordDto = new ForgotPasswordDto();
+            test_ForgotPasswordDto.ClientURI = "mockURI";
+            test_ForgotPasswordDto.Email = "test@email.com";
+
+            var test_User = new ApplicationUser();
+            test_User.Email = "test@email.com";
+
+            var test_Token = "token";
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.GeneratePasswordResetTokenAsync(test_User))
+                .ReturnsAsync(test_Token);
+
+            mock_EmailSender.Setup(_emailSender => _emailSender.SendEmailAsync(It.IsAny<Message>()));
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.ForgotPassword(test_ForgotPasswordDto);
+
+            // Assert
+            mock_EmailSender.Verify(_emailSender => _emailSender.SendEmailAsync(It.IsAny<Message>()), Times.Once());
+        }
+
+        [Test]
+        public async Task ForgotPassword_WhenUserFound_ReturnsArrayOfTokens()
+        {
+            // Arrange
+            var test_ForgotPasswordDto = new ForgotPasswordDto();
+            test_ForgotPasswordDto.ClientURI = "mockURI";
+            test_ForgotPasswordDto.Email = "test@email.com";
+
+            var test_User = new ApplicationUser();
+            test_User.Email = "test@email.com";
+
+            var test_Token = "token";
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.GeneratePasswordResetTokenAsync(test_User))
+                .ReturnsAsync(test_Token);
+
+            mock_EmailSender.Setup(_emailSender => _emailSender.SendEmailAsync(It.IsAny<Message>()));
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.ForgotPassword(test_ForgotPasswordDto);
+
+            // Assert
+            Assert.NotNull(result);
+        }
+        #endregion
+
+        #region ResetPassword
+        [Test]
+        public async Task ResetPassword_WhenUserNotFound_ReturnsNull()
+        {
+            // Arrange
+            var test_ResetPasswordDto = new ResetPasswordDto();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.ResetPassword(test_ResetPasswordDto);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task ResetPassword_WhenUserFound_CallsUserManagerResetPasswordAsync()
+        {
+            // Arrange
+            var test_ResetPasswordDto = new ResetPasswordDto();
+            var test_User = new ApplicationUser();
+            var test_IdentityResult = IdentityResult.Success;
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.ResetPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(test_IdentityResult);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.ResetPassword(test_ResetPasswordDto);
+
+            // Assert
+            mock_UserManager.Verify(_userManager => _userManager.ResetPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+        }
+
+        [Test]
+        public async Task ResetPassword_WhenPasswordReset_ReturnsIdentityResultSuccessfulTrue()
+        {
+            // Arrange
+            var test_ResetPasswordDto = new ResetPasswordDto();
+            var test_User = new ApplicationUser();
+            var test_IdentityResult = IdentityResult.Success;
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.ResetPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(test_IdentityResult);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.ResetPassword(test_ResetPasswordDto);
+
+            // Assert
+            Assert.IsTrue(result.Succeeded);
+        }
+        #endregion
     }
 }
