@@ -63,16 +63,16 @@ namespace SmartPlant.Models.DataManager
 
         }
 
-        public async Task<bool> ConfirmEmail(ApplicationUser user, string token)
+        public async Task<IdentityResult> ConfirmEmail(ApplicationUser user, string token)
         {
-            var result = await _userManager.ConfirmEmailAsync(user, token);
+            return await _userManager.ConfirmEmailAsync(user, token);
 
-            if (!result.Succeeded)
+            /*if (!result.Succeeded)
             {
                 return false;
             }
 
-            return true;
+            return true;*/
         }
 
         public async Task<AuthResponseDto> Login(UserForAuthenticationDto loginUser)
@@ -167,11 +167,16 @@ namespace SmartPlant.Models.DataManager
             return details;
         }
 
-        public async Task<String> UpdateDetails(string userID, UpdateUserDetailsDto details)
+        public async Task<IdentityResult> UpdateDetails(string userID, UpdateUserDetailsDto details)
         {
             //check if email exists elsewhere
             // var emailAlreadyExists = await _userManager.FindByEmailAsync(details.Email);
             var user = await _userManager.FindByIdAsync(userID);
+
+            if (user == null)
+            {
+                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
+            }
 
             //if the email already belongs to a user
             //check that it belongs to THE user
@@ -195,45 +200,54 @@ namespace SmartPlant.Models.DataManager
 
             await _userManager.UpdateAsync(user);
 
-            return "success";
+            return IdentityResult.Success;
         }
 
-        public async Task<int> UpdateEmail(string userID, UpdateEmailDto emailDto)
+        public async Task<IdentityResult> UpdateEmail(string userID, UpdateEmailDto emailDto)
+        {
+            var id_user = await _userManager.FindByIdAsync(userID);
+
+            if (id_user == null)
+                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
+
+            var email_user = await _userManager.FindByEmailAsync(emailDto.Email);
+
+            if (email_user != null)
+            {
+                if (email_user.Id == id_user.Id)
+                    return IdentityResult.Failed(new IdentityError() { Code = "2", Description = "New email is the same as existing email." });
+
+                if (email_user.Id != id_user.Id)
+                    return IdentityResult.Failed(new IdentityError() { Code = "1", Description = "Email already in use." });
+            }
+
+            id_user.Email = emailDto.Email;
+            id_user.UserName = emailDto.Email;
+
+            await _userManager.UpdateAsync(id_user);
+
+            return IdentityResult.Success;
+        }
+
+        /// <summary>
+        /// Updates a users password.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="passwordDto"></param>
+        /// <returns>
+        /// An IdentityResult
+        /// </returns>
+        public async Task<IdentityResult> UpdatePassword(string userID, UpdatePasswordDto passwordDto)
         {
             var user = await _userManager.FindByIdAsync(userID);
+
             if (user == null)
-            {
-                return -2;
-            }
-
-            var doesEmailAlreadyExist = await _userManager.FindByEmailAsync(emailDto.Email);
-
-            if (doesEmailAlreadyExist != null)
-            {
-                if (doesEmailAlreadyExist.Id == userID)
-                {
-                    return 0;
-                }
-                return -1;
-            }
-
-            user.Email = emailDto.Email;
-            user.UserName = emailDto.Email;
-
-            await _userManager.UpdateAsync(user);
-
-            return 1;
-
-        }
-
-        public async Task<int> UpdatePassword(string userID, UpdatePasswordDto passwordDto)
-        {
-            var user = await _userManager.FindByIdAsync(userID);
+                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
 
             var oldPasswordMatches = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, passwordDto.OldPassword);
-            if (oldPasswordMatches == 0)// 0 means it doesn't match
+            if (oldPasswordMatches == PasswordVerificationResult.Failed)// 0 means it doesn't match
             {
-                return 0;
+                return IdentityResult.Failed(new IdentityError() { Code = "4", Description = "Old password is not correct." });
             }
 
             user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, passwordDto.NewPassword);
@@ -241,7 +255,7 @@ namespace SmartPlant.Models.DataManager
             Console.WriteLine($"User email:  |{user.Email}|");
             await _userManager.UpdateAsync(user);
 
-            return 1;
+            return IdentityResult.Success;
         }
 
 
@@ -352,33 +366,23 @@ namespace SmartPlant.Models.DataManager
             return null;
         }
 
-        public async Task<string> AdminUpdatePassword(AdminUpdatePasswordDto passwordDto)
+        public async Task<IdentityResult> AdminUpdatePassword(AdminUpdatePasswordDto passwordDto)
         {
             var user = await _userManager.FindByIdAsync(passwordDto.ID);
             
             if (user == null)
             {
-                return null;
+                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
             }
 
             user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, passwordDto.NewPassword);
 
-            await _userManager.UpdateAsync(user);
-
-            return "Password Updated";
-
+            return await _userManager.UpdateAsync(user);
         }
 
-        public async Task<string> AdminDeleteUser(ApplicationUser user)
+        public async Task<IdentityResult> AdminDeleteUser(ApplicationUser user)
         {
-            var result = await _userManager.DeleteAsync(user);
-
-            if (!result.Succeeded)
-            {
-                return null;
-            }
-            return "User Deleted";
+            return await _userManager.DeleteAsync(user);
         }
-
     }
 }

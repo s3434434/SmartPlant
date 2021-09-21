@@ -349,5 +349,15 @@
             <response code="200">Success</response>
             <response code="404">No Sensor Data Found</response>
         </member>
+        <member name="M:SmartPlant.Models.DataManager.AccountManager.UpdatePassword(System.String,SmartPlant.Models.API_Model.Account.UpdatePasswordDto)">
+            <summary>
+            Updates a users password.
+            </summary>
+            <param name="userID"></param>
+            <param name="passwordDto"></param>
+            <returns>
+            An IdentityResult
+            </returns>
+        </member>
     </members>
 </doc>
