@@ -198,43 +198,56 @@ namespace SmartPlant.Models.DataManager
             //user.UserName = details.Email;
             user.PhoneNumber = details.PhoneNumber;
 
-            return await _userManager.UpdateAsync(user);
+            await _userManager.UpdateAsync(user);
+
+            return IdentityResult.Success;
         }
 
         public async Task<IdentityResult> UpdateEmail(string userID, UpdateEmailDto emailDto)
         {
-            var user = await _userManager.FindByIdAsync(userID);
-            if (user == null)
-            {
+            var id_user = await _userManager.FindByIdAsync(userID);
+
+            if (id_user == null)
                 return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
+
+            var email_user = await _userManager.FindByEmailAsync(emailDto.Email);
+
+            if (email_user != null)
+            {
+                if (email_user.Id == id_user.Id)
+                    return IdentityResult.Failed(new IdentityError() { Code = "2", Description = "New email is the same as existing email." });
+
+                if (email_user.Id != id_user.Id)
+                    return IdentityResult.Failed(new IdentityError() { Code = "1", Description = "Email already in use." });
             }
 
-            var doesEmailAlreadyExist = await _userManager.FindByEmailAsync(emailDto.Email);
+            id_user.Email = emailDto.Email;
+            id_user.UserName = emailDto.Email;
 
-            if (doesEmailAlreadyExist != null)
-            {
-                if (doesEmailAlreadyExist.Id == userID)
-                {
-                    return IdentityResult.Failed(new IdentityError() { Code = "2", Description = "New email is the same as existing email." });
-                }
+            await _userManager.UpdateAsync(id_user);
 
-                return IdentityResult.Failed(new IdentityError() { Code = "1", Description = "Email already in use." });
-                }
-
-            user.Email = emailDto.Email;
-            user.UserName = emailDto.Email;
-
-            return await _userManager.UpdateAsync(user);
+            return IdentityResult.Success;
         }
 
-        public async Task<int> UpdatePassword(string userID, UpdatePasswordDto passwordDto)
+        /// <summary>
+        /// Updates a users password.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="passwordDto"></param>
+        /// <returns>
+        /// An IdentityResult
+        /// </returns>
+        public async Task<IdentityResult> UpdatePassword(string userID, UpdatePasswordDto passwordDto)
         {
             var user = await _userManager.FindByIdAsync(userID);
+
+            if (user == null)
+                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
 
             var oldPasswordMatches = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, passwordDto.OldPassword);
             if (oldPasswordMatches == 0)// 0 means it doesn't match
             {
-                return 0;
+                return IdentityResult.Failed(new IdentityError() { Code = "4", Description = "Old password is not correct." });
             }
 
             user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, passwordDto.NewPassword);
@@ -242,7 +255,7 @@ namespace SmartPlant.Models.DataManager
             Console.WriteLine($"User email:  |{user.Email}|");
             await _userManager.UpdateAsync(user);
 
-            return 1;
+            return IdentityResult.Success;
         }
 
 
