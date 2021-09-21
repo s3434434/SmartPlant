@@ -245,7 +245,7 @@ namespace SmartPlant.Models.DataManager
                 return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
 
             var oldPasswordMatches = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, passwordDto.OldPassword);
-            if (oldPasswordMatches == 0)// 0 means it doesn't match
+            if (oldPasswordMatches == PasswordVerificationResult.Failed)// 0 means it doesn't match
             {
                 return IdentityResult.Failed(new IdentityError() { Code = "4", Description = "Old password is not correct." });
             }
