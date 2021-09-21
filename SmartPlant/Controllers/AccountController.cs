@@ -93,7 +93,7 @@ namespace SmartPlant.Controllers
 
             var result = await _repo.ConfirmEmail(user, token);            
 
-            if (!result)
+            if (!result.Succeeded)
             {
                 return BadRequest("Invalid Email Confirmation Request - Something Went Wrong");
             }
@@ -268,20 +268,12 @@ namespace SmartPlant.Controllers
 
             var userID = User.Identity.Name;
 
-            var result = await _repo.UpdateEmail(userID, emailDto);
+            IdentityResult result = await _repo.UpdateEmail(userID, emailDto);
 
-            if (result == -2)
+            if (!result.Succeeded)
             {
-                return BadRequest("User Does Not Exist."); // this shouldn't happen...
-            }
-            if (result == -1)
-            {
-                return BadRequest("Email Already Taken"); 
-            }
-
-            if (result == 0)
-            {
-                return Ok("New email is the same as current. Email not changed.");
+                foreach (IdentityError error in result.Errors)
+                    return BadRequest(error.Description);
             }
 
             return Ok("Success");
@@ -310,9 +302,9 @@ namespace SmartPlant.Controllers
 
             var result = await _repo.UpdatePassword(userID, passwordDto);
 
-            if (result == 0)
-            {
-                return Unauthorized("Old Password Incorrect");
+            if (!result.Succeeded){
+                foreach (IdentityError error in result.Errors)
+                    return Unauthorized(error.Description);
             }
 
             return Ok("Password Changed");

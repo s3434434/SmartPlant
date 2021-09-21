@@ -19,6 +19,9 @@ using SmartPlant.Models.API_Model.Account;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using SmartPlant.Models.API_Model.Admin;
+using System.Threading;
 
 namespace SmartPlant.Tests.Models.DataManager
 {
@@ -30,14 +33,18 @@ namespace SmartPlant.Tests.Models.DataManager
         private DatabaseContext mock_DatabaseContext;
         private Mock<IEmailSender> mock_EmailSender;
         private Mock<JwtHandler> mock_JWTHandler;
+        private Mock<IPasswordHasher<ApplicationUser>> mock_PasswordHasher;
 
         [SetUp]
         public void Setup()
         {
+            mock_PasswordHasher = new Mock<IPasswordHasher<ApplicationUser>>();
+            
             mock_UserManager = new Mock<UserManager<ApplicationUser>>(
                 Mock.Of<IUserStore<ApplicationUser>>(),
                 null, null, null, null, null, null, null, null
                 );
+
             mock_Mapper = new Mock<IMapper>();
 
             var options = new DbContextOptionsBuilder<DatabaseContext>()
@@ -50,6 +57,8 @@ namespace SmartPlant.Tests.Models.DataManager
 
             mock_EmailSender = new Mock<IEmailSender>();
             mock_JWTHandler = new Mock<JwtHandler>(Mock.Of<IConfiguration>(), mock_UserManager.Object);
+
+            
         }
 
         [TearDown]
@@ -126,10 +135,12 @@ namespace SmartPlant.Tests.Models.DataManager
         public async Task ConfirmEmail_WhenEmailConfirmationFails_ReturnsFalse()
         {
             // Arrange
+            var test_Errors = new IdentityError[] { new IdentityError() { Code= "5", Description= "Email confirmation failed."} };
+
             var test_User = new Mock<ApplicationUser>();
             var test_Token = "token";
 
-            var test_IdentityResult = IdentityResult.Failed();
+            var test_IdentityResult = IdentityResult.Failed(new IdentityError() { Code = "5", Description = "Email confirmation failed." });
 
             mock_UserManager.Setup(_userManager => _userManager.ConfirmEmailAsync(test_User.Object, It.IsAny<string>()))
                 .ReturnsAsync(test_IdentityResult);
@@ -143,10 +154,10 @@ namespace SmartPlant.Tests.Models.DataManager
                 );
 
             // Act
-            var result = await accountManager.ConfirmEmail(test_User.Object, test_Token);
+            IdentityResult result = await accountManager.ConfirmEmail(test_User.Object, test_Token);
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.IsFalse(result.Succeeded);
         }
 
         [Test]
@@ -170,10 +181,10 @@ namespace SmartPlant.Tests.Models.DataManager
                 );
 
             // Act
-            var result = await accountManager.ConfirmEmail(test_User.Object, test_Token);
+            IdentityResult result = await accountManager.ConfirmEmail(test_User.Object, test_Token);
 
             // Assert
-            Assert.IsTrue(result);
+            Assert.IsTrue(result.Succeeded);
         }
         #endregion
 
@@ -300,6 +311,1059 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Assert
             Assert.IsTrue(result.IsAuthSuccessful);
+        }
+        #endregion
+
+        #region ForgotPassword
+        [Test]
+        public async Task ForgotPassword_WhenUserNotFound_ReturnsNull()
+        {
+            // Arrange
+            var test_ForgotPasswordDto = new ForgotPasswordDto();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.ForgotPassword(test_ForgotPasswordDto);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task ForgotPassword_WhenUserFound_CallsGeneratePasswordResetToken()
+        {
+            // Arrange
+            var test_ForgotPasswordDto = new ForgotPasswordDto();
+            test_ForgotPasswordDto.ClientURI = "mockURI";
+            test_ForgotPasswordDto.Email = "test@email.com";
+
+            var test_User = new ApplicationUser();
+            test_User.Email = "test@email.com";
+
+            var test_Token = "token";
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.GeneratePasswordResetTokenAsync(test_User))
+                .ReturnsAsync(test_Token);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.ForgotPassword(test_ForgotPasswordDto);
+
+            // Assert
+            mock_UserManager.Verify(_userManager => _userManager.GeneratePasswordResetTokenAsync(test_User), Times.Once());
+        }
+
+        [Test]
+        public async Task ForgotPassword_WhenUserFound_CallsSendEmailAsync()
+        {
+            // Arrange
+            var test_ForgotPasswordDto = new ForgotPasswordDto();
+            test_ForgotPasswordDto.ClientURI = "mockURI";
+            test_ForgotPasswordDto.Email = "test@email.com";
+
+            var test_User = new ApplicationUser();
+            test_User.Email = "test@email.com";
+
+            var test_Token = "token";
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.GeneratePasswordResetTokenAsync(test_User))
+                .ReturnsAsync(test_Token);
+
+            mock_EmailSender.Setup(_emailSender => _emailSender.SendEmailAsync(It.IsAny<Message>()));
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.ForgotPassword(test_ForgotPasswordDto);
+
+            // Assert
+            mock_EmailSender.Verify(_emailSender => _emailSender.SendEmailAsync(It.IsAny<Message>()), Times.Once());
+        }
+
+        [Test]
+        public async Task ForgotPassword_WhenUserFound_ReturnsArrayOfTokens()
+        {
+            // Arrange
+            var test_ForgotPasswordDto = new ForgotPasswordDto();
+            test_ForgotPasswordDto.ClientURI = "mockURI";
+            test_ForgotPasswordDto.Email = "test@email.com";
+
+            var test_User = new ApplicationUser();
+            test_User.Email = "test@email.com";
+
+            var test_Token = "token";
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.GeneratePasswordResetTokenAsync(test_User))
+                .ReturnsAsync(test_Token);
+
+            mock_EmailSender.Setup(_emailSender => _emailSender.SendEmailAsync(It.IsAny<Message>()));
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.ForgotPassword(test_ForgotPasswordDto);
+
+            // Assert
+            Assert.NotNull(result);
+        }
+        #endregion
+
+        #region ResetPassword
+        [Test]
+        public async Task ResetPassword_WhenUserNotFound_ReturnsNull()
+        {
+            // Arrange
+            var test_ResetPasswordDto = new ResetPasswordDto();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.ResetPassword(test_ResetPasswordDto);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task ResetPassword_WhenUserFound_CallsUserManagerResetPasswordAsync()
+        {
+            // Arrange
+            var test_ResetPasswordDto = new ResetPasswordDto();
+            var test_User = new ApplicationUser();
+            var test_IdentityResult = IdentityResult.Success;
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.ResetPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(test_IdentityResult);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.ResetPassword(test_ResetPasswordDto);
+
+            // Assert
+            mock_UserManager.Verify(_userManager => _userManager.ResetPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+        }
+
+        [Test]
+        public async Task ResetPassword_WhenPasswordReset_ReturnsIdentityResultSuccessfulTrue()
+        {
+            // Arrange
+            var test_ResetPasswordDto = new ResetPasswordDto();
+            var test_User = new ApplicationUser();
+            var test_IdentityResult = IdentityResult.Success;
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.ResetPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(test_IdentityResult);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.ResetPassword(test_ResetPasswordDto);
+
+            // Assert
+            Assert.IsTrue(result.Succeeded);
+        }
+        #endregion
+
+        #region GetDetails
+        [Test]
+        public async Task GetDetails_WhenUserNotFound_ReturnsNull()
+        {
+            // Arrange
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.GetDetails(It.IsAny<string>());
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task GetDetails_WhenUserFound_ReturnsUserDetailsDto()
+        {
+            // Arrange
+            var test_User = new ApplicationUser();
+            test_User.FirstName = "Test";
+            test_User.LastName = "Testington";
+            test_User.Email = "test@email.com";
+            test_User.PhoneNumber = "7355608";
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            UserDetailsDto result = await accountManager.GetDetails(It.IsAny<string>());
+
+            // Assert
+            Assert.AreEqual(result.Email, test_User.Email);
+        }
+        #endregion
+
+        #region UpdateDetails
+        [Test]
+        public async Task UpdateDetails_WhenUserNotFound_ReturnsIdentityResultFailed()
+        {
+            // Arrange
+            var test_UpdateUserDetailsDto = new UpdateUserDetailsDto();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.UpdateDetails(It.IsAny<string>(), test_UpdateUserDetailsDto);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
+            var errorCodes = result.Errors.Select(x => x.Code).ToList();
+            CollectionAssert.Contains(errorCodes, "0");
+            
+        }
+
+        [Test]
+        public async Task UpdateDetails_WhenUserFound_CallsUserManagerUpdateAsync()
+        {
+            // Arrange
+            var test_UserID = "123456";
+
+            var test_UpdateUserDetailsDto = new UpdateUserDetailsDto();
+
+            var test_User = new ApplicationUser();
+            test_User.FirstName = "Test";
+            test_User.LastName = "Testington";
+            test_User.Email = "test@email.com";
+            test_User.PhoneNumber = "7355608";
+
+            test_UpdateUserDetailsDto.FirstName = "Testy";
+            test_UpdateUserDetailsDto.LastName = "Testington";
+            test_UpdateUserDetailsDto.PhoneNumber = "7355608";
+
+            var test_IdentityResult = IdentityResult.Success;
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.UpdateAsync(test_User))
+                .ReturnsAsync(test_IdentityResult);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.UpdateDetails(test_UserID, test_UpdateUserDetailsDto);
+
+            // Assert
+            mock_UserManager.Verify(_userManager => _userManager.UpdateAsync(test_User), Times.Once());
+        }
+
+        [Test]
+        public async Task UpdateDetails_WhenUserFoundAndUpdateCalled_ReturnsIdentityResultSuccess()
+        {
+            // Arrange
+            var test_UserID = "123456";
+
+            var test_UpdateUserDetailsDto = new UpdateUserDetailsDto();
+
+            var test_User = new ApplicationUser();
+            test_User.FirstName = "Test";
+            test_User.LastName = "Testington";
+            test_User.Email = "test@email.com";
+            test_User.PhoneNumber = "7355608";
+
+            test_UpdateUserDetailsDto.FirstName = "Testy";
+            test_UpdateUserDetailsDto.LastName = "Testington";
+            test_UpdateUserDetailsDto.PhoneNumber = "7355608";
+
+            var test_IdentityResult = IdentityResult.Success;
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.UpdateAsync(test_User))
+                .ReturnsAsync(test_IdentityResult);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.UpdateDetails(test_UserID, test_UpdateUserDetailsDto);
+
+            // Assert
+            Assert.IsTrue(result.Succeeded);
+        }
+        #endregion
+
+        #region UpdateEmail
+        [Test]
+        public async Task UpdateEmail_WhenUserNotFound_ReturnsIdentityResultFailed()
+        {
+            // Arrange
+            var test_UpdateEmailDto = new UpdateEmailDto();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.UpdateEmail(It.IsAny<string>(), test_UpdateEmailDto);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
+            Assert.IsTrue(result.Errors.Any(e => e.Code == "0"));
+        }
+
+        [Test]
+        public async Task UpdateEmail_WhenEmailAlreadyInUse_ReturnsIdentityResultFailed()
+        {
+            // Arrange
+            var test_UpdateEmailDto = new UpdateEmailDto();
+
+            var test_User = new ApplicationUser() { 
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+                };
+
+            var test_OtherUser = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "2"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_OtherUser);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.UpdateEmail(It.IsAny<string>(), test_UpdateEmailDto);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
+            Assert.IsTrue(result.Errors.Any(e => e.Code == "1"));
+        }
+
+        [Test]
+        public async Task UpdateEmail_WhenNewEmailMatchesExistingEmail_ReturnsIdentityResultFailed()
+        {
+            // Arrange
+            var test_UpdateEmailDto = new UpdateEmailDto();
+
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.UpdateEmail(It.IsAny<string>(), test_UpdateEmailDto);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
+            Assert.IsTrue(result.Errors.Any(e => e.Code == "2"));
+        }
+
+        [Test]
+        public async Task UpdateEmail_WhenEmailUpdatedSuccessful_ReturnsIdentityResultSuccess()
+        {
+            // Arrange
+            var test_UpdateEmailDto = new UpdateEmailDto();
+
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.UpdateEmail(It.IsAny<string>(), test_UpdateEmailDto);
+
+            // Assert
+            Assert.IsTrue(result.Succeeded);
+        }
+        #endregion
+
+        #region UpdatePassword
+        [Test]
+        public async Task UpdatePassword_WhenUserNotFound_ReturnsIdentityResultFailed()
+        {
+            // Arrange
+            var test_UpdatePasswordDto = new UpdatePasswordDto();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.UpdatePassword(It.IsAny<string>(), test_UpdatePasswordDto);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
+            Assert.IsTrue(result.Errors.Any(e => e.Code == "0"));
+        }
+
+        [Test]
+        public async Task UpdatePassword_WhenOldPasswordDoesNotMatch_ReturnsIdentityResultFailed()
+        {
+            // Arrange
+            var test_UpdatePasswordDto = new UpdatePasswordDto();
+            var test_HashResult = PasswordVerificationResult.Failed;
+
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+            
+            mock_PasswordHasher.Setup(ph => ph.VerifyHashedPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(test_HashResult);
+
+            mock_UserManager.Object.PasswordHasher = mock_PasswordHasher.Object;
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.UpdatePassword(It.IsAny<string>(), test_UpdatePasswordDto);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
+            Assert.IsTrue(result.Errors.Any(e => e.Code == "4"));
+        }
+
+        [Test]
+        public async Task UpdatePassword_WhenOldPasswordDoesMatch_ReturnsIdentityResultSuccess()
+        {
+            // Arrange
+            var test_UpdatePasswordDto = new UpdatePasswordDto();
+            var test_HashResult = PasswordVerificationResult.Success;
+
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_PasswordHasher.Setup(ph => ph.VerifyHashedPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(test_HashResult);
+
+            mock_UserManager.Object.PasswordHasher = mock_PasswordHasher.Object;
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.UpdatePassword(It.IsAny<string>(), test_UpdatePasswordDto);
+
+            // Assert
+            Assert.IsTrue(result.Succeeded);
+        }
+        #endregion
+
+        #region AdminGetAllUsers
+        /*
+         * Returning to this later, mocking this is a bit of nightmare!
+         * 
+        [Test]
+        public async Task AdminGetAllUsers_WhenCalled_ReturnsList()
+        {
+            // Arrange
+            var test_UserList = new List<ApplicationUser>();
+            var test_Result = new List<AdminGetAllUsersDto>();
+
+            mock_UserManager.Setup(_userManager => _userManager.Users.ToListAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(test_UserList);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminGetAllUsers();
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+        */
+        #endregion
+
+        #region AdminGetUserDetails
+        [Test]
+        public async Task AdminGetUserDetails_WhenUserDoesNotExist_ReturnsNull()
+        {
+            // Arrange
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminGetUserDetails(It.IsAny<string>());
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task AdminGetUserDetails_WhenUserDoesExist_ReturnsUserDetailsDto()
+        {
+            // Arrange
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            var test_UserDetailsDto = new UserDetailsDto()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_Mapper.Setup(_mapper => _mapper.Map<UserDetailsDto>(test_User))
+                .Returns(test_UserDetailsDto);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            UserDetailsDto result = await accountManager.AdminGetUserDetails(It.IsAny<string>());
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("test@email.com", result.Email);
+        }
+        #endregion
+
+        #region AdminUpdateUserDetails
+        [Test]
+        public async Task AdminUpdateUserDetails_WhenUserDoesNotExist_ReturnsNull()
+        {
+            // Arrange
+            var test_NewUserDetails = new AdminUpdateUserDetailsDto()
+            {
+                FirstName = "Testiboi",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminUpdateUserDetails(test_NewUserDetails);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task AdminUpdateUserDetails_WhenUpdateFails_ReturnsNull()
+        {
+            // Arrange
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            var test_NewUserDetails = new AdminUpdateUserDetailsDto()
+            {
+                FirstName = "Testiboi",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.UpdateAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(IdentityResult.Failed());
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminUpdateUserDetails(test_NewUserDetails);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task AdminUpdateUserDetails_WhenUpdateSucceeds_ReturnsAdminUpdateUserDetailsDto()
+        {
+            // Arrange
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            var test_NewUserDetails = new AdminUpdateUserDetailsDto()
+            {
+                FirstName = "Testiboi",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.UpdateAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminUpdateUserDetails(test_NewUserDetails);
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+        #endregion
+
+        #region AdminGetRoleList
+        // No conditions to test
+
+        #endregion
+
+        #region AdminUpdateRole 
+        [Test]
+        public async Task AdminUpdateRole_WhenUserDoesNotExist_ReturnsNull()
+        {
+            // Arrange
+            var test_AdminUpdateUserRoleDto = new AdminUpdateUserRoleDto()
+            {
+                ID = "1",
+                Role = UserRoles.Admin
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminUpdateRole(test_AdminUpdateUserRoleDto);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task AdminUpdateRole_WhenUserRoleIsUpdated_ReturnsNotNull()
+        {
+            // Arrange
+            var test_AdminUpdateUserRoleDto = new AdminUpdateUserRoleDto()
+            {
+                ID = "1",
+                Role = UserRoles.Admin
+            };
+
+            var test_User = new ApplicationUser();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.AddToRoleAsync(test_User, UserRoles.Admin))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminUpdateRole(test_AdminUpdateUserRoleDto);
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+        #endregion
+
+        #region AdminUpdatePassword
+        [Test]
+        public async Task AdminUpdatePassword_WhenUserDoesNotExist_ReturnsIdentityResultFailed()
+        {
+            // Arrange
+            var test_AdminUpdatePasswordDto = new AdminUpdatePasswordDto()
+            {
+                ID = "1",
+                NewPassword = "1234",
+                ConfirmNewPassword = "1234"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.AdminUpdatePassword(test_AdminUpdatePasswordDto);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
+        }
+
+        [Test]
+        public async Task AdminUpdatePassword_WhenPasswordUpdated_ReturnsIdentityResultSuccess()
+        {
+            // Arrange
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            var test_AdminUpdatePasswordDto = new AdminUpdatePasswordDto()
+            {
+                ID = "1",
+                NewPassword = "1234",
+                ConfirmNewPassword = "1234"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.UpdateAsync(test_User))
+                .ReturnsAsync(IdentityResult.Success);
+
+            mock_PasswordHasher.Setup(ph => ph.HashPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
+                .Returns("hashed password string");
+
+            mock_UserManager.Object.PasswordHasher = mock_PasswordHasher.Object;
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.AdminUpdatePassword(test_AdminUpdatePasswordDto);
+
+            // Assert
+            Assert.IsTrue(result.Succeeded);
+        }
+        #endregion
+
+        #region AdminDeleteUser
+        [Test]
+        public async Task AdminDeleteUser_WhenDeleteFails_ReturnsIdentityResultFailed()
+        {
+            // Arrange
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.DeleteAsync(test_User))
+                .ReturnsAsync(IdentityResult.Failed());
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.AdminDeleteUser(test_User);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
+        }
+
+        [Test]
+        public async Task AdminDeleteUser_WhenDeleteSuccess_ReturnsIdentityResultSuccess()
+        {
+            // Arrange
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.DeleteAsync(test_User))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.AdminDeleteUser(test_User);
+
+            // Assert
+            Assert.IsTrue(result.Succeeded);
         }
         #endregion
     }
