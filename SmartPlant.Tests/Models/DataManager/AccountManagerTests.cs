@@ -1041,5 +1041,121 @@ namespace SmartPlant.Tests.Models.DataManager
             Assert.AreEqual("test@email.com", result.Email);
         }
         #endregion
+
+        #region AdminUpdateUserDetails
+        [Test]
+        public async Task AdminUpdateUserDetails_WhenUserDoesNotExist_ReturnsNull()
+        {
+            // Arrange
+            var test_NewUserDetails = new AdminUpdateUserDetailsDto()
+            {
+                FirstName = "Testiboi",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminUpdateUserDetails(test_NewUserDetails);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task AdminUpdateUserDetails_WhenUpdateFails_ReturnsNull()
+        {
+            // Arrange
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            var test_NewUserDetails = new AdminUpdateUserDetailsDto()
+            {
+                FirstName = "Testiboi",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.UpdateAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(IdentityResult.Failed());
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminUpdateUserDetails(test_NewUserDetails);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task AdminUpdateUserDetails_WhenUpdateSucceeds_ReturnsAdminUpdateUserDetailsDto()
+        {
+            // Arrange
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            var test_NewUserDetails = new AdminUpdateUserDetailsDto()
+            {
+                FirstName = "Testiboi",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.UpdateAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminUpdateUserDetails(test_NewUserDetails);
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+        #endregion
     }
 }
