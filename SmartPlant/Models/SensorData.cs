@@ -19,7 +19,7 @@ namespace SmartPlant.Models
 
         [Display(Name = "Temperature")]
         [Column("Temperature")] //celsius
-        [Range(-50,50) ,Required]
+        [Range(-30,50) ,Required]
         public int Temp { get; set; }
 
         //percentage value? decimal(5,2)

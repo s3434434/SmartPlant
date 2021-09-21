@@ -11,7 +11,7 @@ namespace SmartPlant.Models.API_Model
         [Required]
         public string PlantID { get; set; }
         
-        [Range(-50, 50), Required]
+        [Range(-30, 50), Required]
         public int Temp { get; set; }
         
         [Range(0, 100), Required]
