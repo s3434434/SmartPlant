@@ -981,8 +981,6 @@ namespace SmartPlant.Tests.Controllers
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
                 mock_UserManager.Object
-
-
                 );
 
             // Act

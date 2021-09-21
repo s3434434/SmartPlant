@@ -1157,5 +1157,73 @@ namespace SmartPlant.Tests.Models.DataManager
             Assert.IsNotNull(result);
         }
         #endregion
+
+        #region AdminGetRoleList
+        // No conditions to test
+
+        #endregion
+
+        #region AdminUpdateRole 
+        [Test]
+        public async Task AdminUpdateRole_WhenUserDoesNotExist_ReturnsNull()
+        {
+            // Arrange
+            var test_AdminUpdateUserRoleDto = new AdminUpdateUserRoleDto()
+            {
+                ID = "1",
+                Role = UserRoles.Admin
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminUpdateRole(test_AdminUpdateUserRoleDto);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task AdminUpdateRole_WhenUserRoleIsUpdated_ReturnsNotNull()
+        {
+            // Arrange
+            var test_AdminUpdateUserRoleDto = new AdminUpdateUserRoleDto()
+            {
+                ID = "1",
+                Role = UserRoles.Admin
+            };
+
+            var test_User = new ApplicationUser();
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.AddToRoleAsync(test_User, UserRoles.Admin))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminUpdateRole(test_AdminUpdateUserRoleDto);
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+        #endregion
     }
 }
