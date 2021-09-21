@@ -699,7 +699,7 @@ namespace SmartPlant.Tests.Controllers
         public async Task UpdatePassword_WhenOldPasswordIncorrect_ReturnsUnauthorizedRequest()
         {
             // Arrange
-            var mock_Result = 0;
+            var mock_Result = IdentityResult.Failed(new IdentityError() { Code = "4", Description = "Old password is not correct." });
 
             mock_AccountManager.Setup(_repo => _repo.UpdatePassword(It.IsAny<string>(), It.IsAny<UpdatePasswordDto>()))
                 .ReturnsAsync(mock_Result);
@@ -728,7 +728,7 @@ namespace SmartPlant.Tests.Controllers
         public async Task UpdatePassword_WhenDetailUpdateSuccessful_ReturnsOkRequest()
         {
             // Arrange
-            var mock_Result = 1;
+            var mock_Result = IdentityResult.Success;
 
             mock_AccountManager.Setup(_repo => _repo.UpdatePassword(It.IsAny<string>(), It.IsAny<UpdatePasswordDto>()))
                 .ReturnsAsync(mock_Result);

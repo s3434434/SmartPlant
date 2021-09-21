@@ -273,16 +273,7 @@ namespace SmartPlant.Controllers
             if (!result.Succeeded)
             {
                 foreach (IdentityError error in result.Errors)
-                {
-                    if (error.Code == "0")
-                        return BadRequest(error.Description);
-
-                    if(error.Code == "1")
-                       return BadRequest(error.Description);
-
-                    if (error.Code == "2")
-                       return Ok(error.Description);
-                }
+                    return Unauthorized(error.Description);
             }
 
             return Ok("Success");
@@ -311,9 +302,9 @@ namespace SmartPlant.Controllers
 
             var result = await _repo.UpdatePassword(userID, passwordDto);
 
-            if (result == 0)
-            {
-                return Unauthorized("Old Password Incorrect");
+            if (!result.Succeeded){
+                foreach (IdentityError error in result.Errors)
+                    return Unauthorized(error.Description);
             }
 
             return Ok("Password Changed");
