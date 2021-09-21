@@ -20,6 +20,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using SmartPlant.Models.API_Model.Admin;
+using System.Threading;
 
 namespace SmartPlant.Tests.Models.DataManager
 {
@@ -939,6 +941,104 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Assert
             Assert.IsTrue(result.Succeeded);
+        }
+        #endregion
+
+        #region AdminGetAllUsers
+        /*
+         * Returning to this later, mocking this is a bit of nightmare!
+         * 
+        [Test]
+        public async Task AdminGetAllUsers_WhenCalled_ReturnsList()
+        {
+            // Arrange
+            var test_UserList = new List<ApplicationUser>();
+            var test_Result = new List<AdminGetAllUsersDto>();
+
+            mock_UserManager.Setup(_userManager => _userManager.Users.ToListAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(test_UserList);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminGetAllUsers();
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+        */
+        #endregion
+
+        #region AdminGetUserDetails
+        [Test]
+        public async Task AdminGetUserDetails_WhenUserDoesNotExist_ReturnsNull()
+        {
+            // Arrange
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            var result = await accountManager.AdminGetUserDetails(It.IsAny<string>());
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task AdminGetUserDetails_WhenUserDoesExist_ReturnsUserDetailsDto()
+        {
+            // Arrange
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            var test_UserDetailsDto = new UserDetailsDto()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_Mapper.Setup(_mapper => _mapper.Map<UserDetailsDto>(test_User))
+                .Returns(test_UserDetailsDto);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            UserDetailsDto result = await accountManager.AdminGetUserDetails(It.IsAny<string>());
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("test@email.com", result.Email);
         }
         #endregion
     }
