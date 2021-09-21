@@ -273,7 +273,7 @@ namespace SmartPlant.Controllers
             if (!result.Succeeded)
             {
                 foreach (IdentityError error in result.Errors)
-                    return Unauthorized(error.Description);
+                    return BadRequest(error.Description);
             }
 
             return Ok("Success");

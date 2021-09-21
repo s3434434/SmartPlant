@@ -617,7 +617,7 @@ namespace SmartPlant.Tests.Controllers
         }
 
         [Test]
-        public async Task UpdateEmail_WhenNewEmailSameAsOldEmail_ReturnsOkRequest()
+        public async Task UpdateEmail_WhenNewEmailSameAsOldEmail_ReturnsBadRequest()
         {
             // Arrange
             var mock_Result = IdentityResult.Failed(new IdentityError() { Code = "2", Description = "New email is the same as existing email." });
@@ -640,7 +640,7 @@ namespace SmartPlant.Tests.Controllers
             var result = await accountController.UpdateEmail(It.IsAny<UpdateEmailDto>());
 
             // Assert
-            Assert.That(result, Is.TypeOf<OkObjectResult>());
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
