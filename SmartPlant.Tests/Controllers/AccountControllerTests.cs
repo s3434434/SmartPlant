@@ -1039,10 +1039,8 @@ namespace SmartPlant.Tests.Controllers
         public async Task AdminUpdatePassword_WhenPasswordUpdatedSucessefully_ReturnsOkRequest()
         {
             // Arrange
-            var mock_Result = "success";
-
             mock_AccountManager.Setup(_repo => _repo.AdminUpdatePassword(It.IsAny<AdminUpdatePasswordDto>()))
-                .ReturnsAsync(mock_Result);
+                .ReturnsAsync(IdentityResult.Success);
 
             var accountController = new AccountController(
                 mock_AccountManager.Object,
@@ -1115,13 +1113,12 @@ namespace SmartPlant.Tests.Controllers
         {
             // Arrange
             var mock_FindResult = new ApplicationUser();
-            var mock_DeleteResult = "success";
 
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(mock_FindResult);
 
             mock_AccountManager.Setup(_repo => _repo.AdminDeleteUser(It.IsAny<ApplicationUser>()))
-                .ReturnsAsync(mock_DeleteResult);
+                .ReturnsAsync(IdentityResult.Success);
 
             var accountController = new AccountController(
                 mock_AccountManager.Object,

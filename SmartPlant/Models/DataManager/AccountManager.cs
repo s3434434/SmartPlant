@@ -366,33 +366,23 @@ namespace SmartPlant.Models.DataManager
             return null;
         }
 
-        public async Task<string> AdminUpdatePassword(AdminUpdatePasswordDto passwordDto)
+        public async Task<IdentityResult> AdminUpdatePassword(AdminUpdatePasswordDto passwordDto)
         {
             var user = await _userManager.FindByIdAsync(passwordDto.ID);
             
             if (user == null)
             {
-                return null;
+                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
             }
 
             user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, passwordDto.NewPassword);
 
-            await _userManager.UpdateAsync(user);
-
-            return "Password Updated";
-
+            return await _userManager.UpdateAsync(user);
         }
 
-        public async Task<string> AdminDeleteUser(ApplicationUser user)
+        public async Task<IdentityResult> AdminDeleteUser(ApplicationUser user)
         {
-            var result = await _userManager.DeleteAsync(user);
-
-            if (!result.Succeeded)
-            {
-                return null;
-            }
-            return "User Deleted";
+            return await _userManager.DeleteAsync(user);
         }
-
     }
 }

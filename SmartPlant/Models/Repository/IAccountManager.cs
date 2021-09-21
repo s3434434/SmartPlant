@@ -25,8 +25,8 @@ namespace SmartPlant.Models.Repository
         Task<AdminUpdateUserDetailsDto> AdminUpdateUserDetails(AdminUpdateUserDetailsDto detailsDto);
         Task<List<AdminGetRoleListDto>> AdminGetRoleList();
         Task<AdminUpdateUserRoleDto> AdminUpdateRole(AdminUpdateUserRoleDto detailsDto);
-        Task<string> AdminUpdatePassword(AdminUpdatePasswordDto passwordDto);
-        Task<string> AdminDeleteUser(ApplicationUser user);
+        Task<IdentityResult> AdminUpdatePassword(AdminUpdatePasswordDto passwordDto);
+        Task<IdentityResult> AdminDeleteUser(ApplicationUser user);
 
     }
 }

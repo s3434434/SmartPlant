@@ -1225,5 +1225,146 @@ namespace SmartPlant.Tests.Models.DataManager
             Assert.IsNotNull(result);
         }
         #endregion
+
+        #region AdminUpdatePassword
+        [Test]
+        public async Task AdminUpdatePassword_WhenUserDoesNotExist_ReturnsIdentityResultFailed()
+        {
+            // Arrange
+            var test_AdminUpdatePasswordDto = new AdminUpdatePasswordDto()
+            {
+                ID = "1",
+                NewPassword = "1234",
+                ConfirmNewPassword = "1234"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.AdminUpdatePassword(test_AdminUpdatePasswordDto);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
+        }
+
+        [Test]
+        public async Task AdminUpdatePassword_WhenPasswordUpdated_ReturnsIdentityResultSuccess()
+        {
+            // Arrange
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            var test_AdminUpdatePasswordDto = new AdminUpdatePasswordDto()
+            {
+                ID = "1",
+                NewPassword = "1234",
+                ConfirmNewPassword = "1234"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(test_User);
+
+            mock_UserManager.Setup(_userManager => _userManager.UpdateAsync(test_User))
+                .ReturnsAsync(IdentityResult.Success);
+
+            mock_PasswordHasher.Setup(ph => ph.HashPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
+                .Returns("hashed password string");
+
+            mock_UserManager.Object.PasswordHasher = mock_PasswordHasher.Object;
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.AdminUpdatePassword(test_AdminUpdatePasswordDto);
+
+            // Assert
+            Assert.IsTrue(result.Succeeded);
+        }
+        #endregion
+
+        #region AdminDeleteUser
+        [Test]
+        public async Task AdminDeleteUser_WhenDeleteFails_ReturnsIdentityResultFailed()
+        {
+            // Arrange
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.DeleteAsync(test_User))
+                .ReturnsAsync(IdentityResult.Failed());
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.AdminDeleteUser(test_User);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
+        }
+
+        [Test]
+        public async Task AdminDeleteUser_WhenDeleteSuccess_ReturnsIdentityResultSuccess()
+        {
+            // Arrange
+            var test_User = new ApplicationUser()
+            {
+                FirstName = "Test",
+                LastName = "Testington",
+                Email = "test@email.com",
+                PhoneNumber = "7355608",
+                Id = "1"
+            };
+
+            mock_UserManager.Setup(_userManager => _userManager.DeleteAsync(test_User))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var accountManager = new AccountManager(
+                mock_UserManager.Object,
+                mock_Mapper.Object,
+                mock_DatabaseContext,
+                mock_EmailSender.Object,
+                mock_JWTHandler.Object
+                );
+
+            // Act
+            IdentityResult result = await accountManager.AdminDeleteUser(test_User);
+
+            // Assert
+            Assert.IsTrue(result.Succeeded);
+        }
+        #endregion
     }
 }
