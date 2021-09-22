@@ -169,33 +169,15 @@ namespace SmartPlant.Models.DataManager
 
         public async Task<IdentityResult> UpdateDetails(string userID, UpdateUserDetailsDto details)
         {
-            //check if email exists elsewhere
-            // var emailAlreadyExists = await _userManager.FindByEmailAsync(details.Email);
             var user = await _userManager.FindByIdAsync(userID);
 
             if (user == null)
             {
                 return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
             }
-
-            //if the email already belongs to a user
-            //check that it belongs to THE user
-            //if so keep going
-            //otherwise if it belongs to someone else, stop            
-
-            /*if (emailAlreadyExists != null)
-            {
-                if (emailAlreadyExists.Id != user.Id)
-                {
-                    return null;
-                }
-
-            }*/
-
+            
             user.FirstName = details.FirstName;
             user.LastName = details.LastName;
-            //user.Email = details.Email;
-            //user.UserName = details.Email;
             user.PhoneNumber = details.PhoneNumber;
 
             await _userManager.UpdateAsync(user);
@@ -242,20 +224,12 @@ namespace SmartPlant.Models.DataManager
             var user = await _userManager.FindByIdAsync(userID);
 
             if (user == null)
-                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
-
-            var oldPasswordMatches = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, passwordDto.OldPassword);
-            if (oldPasswordMatches == PasswordVerificationResult.Failed)// 0 means it doesn't match
             {
-                return IdentityResult.Failed(new IdentityError() { Code = "4", Description = "Old password is not correct." });
+                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
             }
 
-            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, passwordDto.NewPassword);
-
-            Console.WriteLine($"User email:  |{user.Email}|");
-            await _userManager.UpdateAsync(user);
-
-            return IdentityResult.Success;
+            var result = await _userManager.ChangePasswordAsync(user, passwordDto.OldPassword, passwordDto.NewPassword);
+            return result;
         }
 
 
@@ -373,11 +347,12 @@ namespace SmartPlant.Models.DataManager
             if (user == null)
             {
                 return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
-            }
+            }          
 
-            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, passwordDto.NewPassword);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, passwordDto.NewPassword);
 
-            return await _userManager.UpdateAsync(user);
+            return result;
         }
 
         public async Task<IdentityResult> AdminDeleteUser(ApplicationUser user)

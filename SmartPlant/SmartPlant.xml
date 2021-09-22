@@ -94,7 +94,7 @@
             <remarks>
             </remarks>
             <response code="200">Password Changed</response>
-            <response code="400"></response>
+            <response code="400">Passwords don't match</response>
             <response code="401">Old password Incorrect</response>
         </member>
         <member name="M:SmartPlant.Controllers.AccountController.AdminGetAllUsers">
@@ -148,7 +148,7 @@
             <remarks>Takes in a userID, a new password, and a confirmation password
             </remarks>
             <response code="200">Password Updated</response>
-            <response code="400">Bad Data</response>
+            <response code="400">Passwords don't match</response>
             <response code="404">UserID Not Found</response>
         </member>
         <member name="M:SmartPlant.Controllers.AccountController.AdminDeleteUser(System.String)">

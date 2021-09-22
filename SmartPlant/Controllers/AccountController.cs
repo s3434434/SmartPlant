@@ -286,7 +286,7 @@ namespace SmartPlant.Controllers
         /// <remarks>
         /// </remarks>
         /// <response code="200">Password Changed</response>
-        /// <response code="400"></response>
+        /// <response code="400">Passwords don't match</response>
         /// <response code="401">Old password Incorrect</response>
         [HttpPut]
         [Authorize]
@@ -437,7 +437,7 @@ namespace SmartPlant.Controllers
         /// <remarks>Takes in a userID, a new password, and a confirmation password
         /// </remarks>
         /// <response code="200">Password Updated</response>
-        /// <response code="400">Bad Data</response>
+        /// <response code="400">Passwords don't match</response>
         /// <response code="404">UserID Not Found</response>
         [HttpPut]
         [Authorize(Roles = UserRoles.Admin)] //change a user's password - old password not needed
@@ -450,9 +450,10 @@ namespace SmartPlant.Controllers
             }
 
             var result = await _repo.AdminUpdatePassword(passwordDto);
-            if (result == null)
-            {
-                return NotFound("User not found)");
+
+            if (!result.Succeeded)
+            {               
+                return NotFound(result.Errors);
             }
             return Ok(result);
         }
