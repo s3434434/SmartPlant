@@ -19,23 +19,23 @@ namespace SmartPlant.Models
 
         [Display(Name = "Temperature")]
         [Column("Temperature")] //celsius
-        [Range(-30,50) ,Required]
-        public int Temp { get; set; }
+        [Range(-30,50.00) ,Required]
+        public decimal Temp { get; set; }
 
         //percentage value? decimal(5,2)
         //store its if less precision ok?
-        [Range(0,100) ,Required]
-        public int Humidity { get; set; }
+        [Range(0, 100.00) ,Required]
+        public decimal Humidity { get; set; }
 
         //Integer value? measure in lux?
-        [Range(0, 100), Required]
-        public int LightIntensity { get; set; }
+        [Range(0, 100.00), Required]
+        public decimal LightIntensity { get; set; }
 
         //percentage value ? use integer if less precision is fine.
         [Display(Name = "Moisture %")]
         [Column("Moisture %")]
-        [Range(0, 100), Required]
-        public int Moisture { get; set; }
+        [Range(0, 100.00), Required]
+        public decimal Moisture { get; set; }
 
         //timestamp for when these values were recorded
         //datetime2

@@ -296,7 +296,11 @@
             <summary>
             Adds sensor data for a plant belonging to the user
             </summary>
-            <remarks> This should be used from the Arduino code to update the database with sensor data
+            <remarks> 
+            This should be used from the Arduino code to update the database with sensor data &#xA; 
+            Sensor data is stored as decimals, with 2 decimal places. &#xA; 
+            For example: 12.446 becomes 12.45.
+                         33.44469123 becomes 33.44.
             </remarks>
             <response code="201">Sensor Data Created</response>
             <response code="400">Bad Data / Format</response>
