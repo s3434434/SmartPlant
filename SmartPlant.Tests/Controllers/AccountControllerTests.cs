@@ -1018,7 +1018,7 @@ namespace SmartPlant.Tests.Controllers
         {
             // Arrange
             mock_AccountManager.Setup(_repo => _repo.AdminUpdatePassword(It.IsAny<AdminUpdatePasswordDto>()))
-                .ReturnsAsync(() => null);
+                .ReturnsAsync(IdentityResult.Failed());
 
             var accountController = new AccountController(
                 mock_AccountManager.Object,
@@ -1075,7 +1075,7 @@ namespace SmartPlant.Tests.Controllers
                 );
 
             // Act
-            var result = await accountController.AdminUpdatePassword(It.IsAny<AdminUpdatePasswordDto>());
+            var result = await accountController.AdminDeleteUser(It.IsAny<string>());
 
             // Assert
             Assert.That(result, Is.TypeOf<NotFoundObjectResult>());

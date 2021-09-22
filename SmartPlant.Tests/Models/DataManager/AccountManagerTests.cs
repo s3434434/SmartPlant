@@ -869,7 +869,6 @@ namespace SmartPlant.Tests.Models.DataManager
         {
             // Arrange
             var test_UpdatePasswordDto = new UpdatePasswordDto();
-            var test_HashResult = PasswordVerificationResult.Failed;
 
             var test_User = new ApplicationUser()
             {
@@ -882,11 +881,9 @@ namespace SmartPlant.Tests.Models.DataManager
 
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(test_User);
-            
-            mock_PasswordHasher.Setup(ph => ph.VerifyHashedPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(test_HashResult);
 
-            mock_UserManager.Object.PasswordHasher = mock_PasswordHasher.Object;
+            mock_UserManager.Setup(_userManager => _userManager.ChangePasswordAsync(test_User, It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Failed());
 
             var accountManager = new AccountManager(
                 mock_UserManager.Object,
@@ -901,7 +898,6 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Assert
             Assert.IsFalse(result.Succeeded);
-            Assert.IsTrue(result.Errors.Any(e => e.Code == "4"));
         }
 
         [Test]
@@ -909,7 +905,6 @@ namespace SmartPlant.Tests.Models.DataManager
         {
             // Arrange
             var test_UpdatePasswordDto = new UpdatePasswordDto();
-            var test_HashResult = PasswordVerificationResult.Success;
 
             var test_User = new ApplicationUser()
             {
@@ -922,11 +917,9 @@ namespace SmartPlant.Tests.Models.DataManager
 
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(test_User);
-
-            mock_PasswordHasher.Setup(ph => ph.VerifyHashedPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(test_HashResult);
-
-            mock_UserManager.Object.PasswordHasher = mock_PasswordHasher.Object;
+            
+            mock_UserManager.Setup(_userManager => _userManager.ChangePasswordAsync(test_User, It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success);
 
             var accountManager = new AccountManager(
                 mock_UserManager.Object,
@@ -1276,16 +1269,16 @@ namespace SmartPlant.Tests.Models.DataManager
                 ConfirmNewPassword = "1234"
             };
 
+            var token = "token";
+
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(test_User);
 
-            mock_UserManager.Setup(_userManager => _userManager.UpdateAsync(test_User))
+            mock_UserManager.Setup(_userManager => _userManager.GeneratePasswordResetTokenAsync(test_User))
+                .ReturnsAsync(token);
+            
+            mock_UserManager.Setup(_userManager => _userManager.ResetPasswordAsync(test_User, token, test_AdminUpdatePasswordDto.NewPassword))
                 .ReturnsAsync(IdentityResult.Success);
-
-            mock_PasswordHasher.Setup(ph => ph.HashPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
-                .Returns("hashed password string");
-
-            mock_UserManager.Object.PasswordHasher = mock_PasswordHasher.Object;
 
             var accountManager = new AccountManager(
                 mock_UserManager.Object,
