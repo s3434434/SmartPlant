@@ -225,7 +225,7 @@ namespace SmartPlant.Controllers
 
 
         /// <summary>
-        /// Updates non-important details (First name, last name, phone number)
+        /// Updates non-important details (First name, last name, address, phone number)
         /// </summary>
         /// <remarks>This is used for updating non-important user details. Since the email address is used to login, it has its own method
         /// </remarks>
@@ -341,7 +341,7 @@ namespace SmartPlant.Controllers
         }
 
         /// <summary>
-        /// Gets info for a specific user (First name, Last name, Email, Phone number)
+        /// Gets info for a specific user (First name, last name, address, phone number)
         /// </summary>
         /// <remarks>
         /// </remarks>
@@ -362,9 +362,9 @@ namespace SmartPlant.Controllers
             return Ok(result);
         }
 
-        
+
         /// <summary>
-        /// Used to update a user's details (First name, Last name, Email, Phone number)
+        /// Used to update a user's details (First name, last name, address, phone number, email)
         /// </summary>
         /// <remarks>Since this is an admin action, no verification needed for changing emails
         /// </remarks>
