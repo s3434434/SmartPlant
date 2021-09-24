@@ -14,6 +14,8 @@ namespace SmartPlant.Models
         public string FirstName { get; set; }
         [MaxLength(250)]
         public string LastName { get; set; }
+        [MaxLength(250)]
+        public string Address { get; set;}
 
         [JsonIgnore]
         public virtual IEnumerable<Plant> Plants { get; set; }
