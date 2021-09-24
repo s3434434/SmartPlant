@@ -76,7 +76,7 @@
         </member>
         <member name="M:SmartPlant.Controllers.AccountController.UpdateDetails(SmartPlant.Models.API_Model.Account.UpdateUserDetailsDto)">
             <summary>
-            Updates non-important details (First name, last name, phone number)
+            Updates non-important details (First name, last name, address, phone number)
             </summary>
             <remarks>This is used for updating non-important user details. Since the email address is used to login, it has its own method
             </remarks>
@@ -113,7 +113,7 @@
         </member>
         <member name="M:SmartPlant.Controllers.AccountController.AdminGetUserDetails(System.String)">
             <summary>
-            Gets info for a specific user (First name, Last name, Email, Phone number)
+            Gets info for a specific user (First name, last name, address, phone number)
             </summary>
             <remarks>
             </remarks>
@@ -122,7 +122,7 @@
         </member>
         <member name="M:SmartPlant.Controllers.AccountController.AdminUpdateDetails(SmartPlant.Models.API_Model.Admin.AdminUpdateUserDetailsDto)">
             <summary>
-            Used to update a user's details (First name, Last name, Email, Phone number)
+            Used to update a user's details (First name, last name, address, phone number, email)
             </summary>
             <remarks>Since this is an admin action, no verification needed for changing emails
             </remarks>
