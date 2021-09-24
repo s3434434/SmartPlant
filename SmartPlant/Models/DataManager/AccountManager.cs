@@ -162,6 +162,7 @@ namespace SmartPlant.Models.DataManager
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
+                Address = user.Address,
                 PhoneNumber = user.PhoneNumber
             };
             return details;
@@ -178,6 +179,7 @@ namespace SmartPlant.Models.DataManager
             
             user.FirstName = details.FirstName;
             user.LastName = details.LastName;
+            user.Address = details.Address;
             user.PhoneNumber = details.PhoneNumber;
 
             await _userManager.UpdateAsync(user);
@@ -209,6 +211,16 @@ namespace SmartPlant.Models.DataManager
             await _userManager.UpdateAsync(id_user);
 
             return IdentityResult.Success;
+            
+            /* _userManager.GenerateChangeEmailTokenAsync
+             * 
+             * Use this instead if we want to require verification for email changes.
+             * This would change the return value
+             * The generated changeemail token would need to be sent to the new email address
+             * attached to the frontend URL as a query string for email change confirmation
+             * e.g. www.frontend.com/email/confirm?email=newemail@gmail.com&token=*INSERT TOKEN HERE*
+             * would require a new api endpoint to confirm email change
+             */
         }
 
         /// <summary>
@@ -282,6 +294,7 @@ namespace SmartPlant.Models.DataManager
             user.FirstName = detailsDto.FirstName;
             user.LastName = detailsDto.LastName;
             user.Email = detailsDto.Email;
+            user.Address = detailsDto.Address;
             user.PhoneNumber = detailsDto.PhoneNumber;
 
             var result = await _userManager.UpdateAsync(user);

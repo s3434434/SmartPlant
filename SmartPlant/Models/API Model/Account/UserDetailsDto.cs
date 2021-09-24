@@ -16,7 +16,8 @@ namespace SmartPlant.Models.API_Model.Account
         [MaxLength(256)]
         [Required(ErrorMessage = "Email required.")]
         public string Email { get; set; }
-
+        [MaxLength(250)]
+        public string Address { get; set; }
         [MaxLength(10)]        
         public string PhoneNumber { get; set; }
     }
