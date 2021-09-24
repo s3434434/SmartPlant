@@ -8,8 +8,13 @@
             <summary>
             Registers a user to the database, sends a confirmation email.
             </summary>
-            <remarks>This takes in a URI, e.g. website.com/confirmEmail , and attaches the confirmation token and email as a querystring. This 
-            gets sent as the confirmation link in the email and should be routed to the frontend confirmation webpage.</remarks>
+            <remarks>
+            This takes in a URI, e.g. website.com/confirmEmail , and attaches the confirmation token and email as a querystring. This 
+            gets sent as the confirmation link in the email and should be routed to the frontend confirmation webpage. &#xA;
+            The only required inputs are the Email, Password, Confirmation Password. &#xA;
+            &#xA;
+            First name, last name, address, and phone number are optional and can be left blank.
+            </remarks>
             <param name="userRegDto"></param>
             <response code="200">Successfully Registers User</response>
             <response code="400">Invalid Registration input</response>
