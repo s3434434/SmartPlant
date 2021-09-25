@@ -44,7 +44,7 @@ namespace SmartPlant.Controllers
 
 
         /// <summary>
-        /// Registers a user to the database, sends a confirmation email.
+        /// Registers a user to the database, sends a confirmation email.      TEST TEXT
         /// </summary>
         /// <remarks>
         /// This takes in a URI, e.g. website.com/confirmEmail , and attaches the confirmation token and email as a querystring. This 
