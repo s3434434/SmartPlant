@@ -10,13 +10,16 @@
             "includePath": [
                 "C:/Users/thomb/source/repos/SmartPlant/Arduino/include",
                 "C:/Users/thomb/source/repos/SmartPlant/Arduino/src",
+                "C:/Users/thomb/source/repos/SmartPlant/Arduino/.pio/libdeps/uno/Servo/src",
+                "C:/Users/thomb/source/repos/SmartPlant/Arduino/.pio/libdeps/uno/Ethernet/src",
+                "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                "C:/Users/thomb/source/repos/SmartPlant/Arduino/.pio/libdeps/uno/I2Cdevlib-Core",
+                "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                 "C:/Users/thomb/.platformio/packages/framework-arduino-avr/cores/arduino",
                 "C:/Users/thomb/.platformio/packages/framework-arduino-avr/variants/standard",
                 "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                 "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/HID/src",
-                "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                 "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
-                "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                 ""
             ],
             "browse": {
@@ -24,13 +27,16 @@
                 "path": [
                     "C:/Users/thomb/source/repos/SmartPlant/Arduino/include",
                     "C:/Users/thomb/source/repos/SmartPlant/Arduino/src",
+                    "C:/Users/thomb/source/repos/SmartPlant/Arduino/.pio/libdeps/uno/Servo/src",
+                    "C:/Users/thomb/source/repos/SmartPlant/Arduino/.pio/libdeps/uno/Ethernet/src",
+                    "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                    "C:/Users/thomb/source/repos/SmartPlant/Arduino/.pio/libdeps/uno/I2Cdevlib-Core",
+                    "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                     "C:/Users/thomb/.platformio/packages/framework-arduino-avr/cores/arduino",
                     "C:/Users/thomb/.platformio/packages/framework-arduino-avr/variants/standard",
                     "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                     "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/HID/src",
-                    "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                     "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
-                    "C:/Users/thomb/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                     ""
                 ]
             },
