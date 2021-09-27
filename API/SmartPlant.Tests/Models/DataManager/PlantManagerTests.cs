@@ -217,6 +217,38 @@ namespace SmartPlant.Tests.Models.DataManager
         }
         #endregion
 
+        #region AdminUpdate
+        [Test]
+        public async Task AdminUpdate_WhenPlantIDDoesNotExist_ReturnsNegOne()
+        {
+            // Arrange
+            var test_Plant = new Plant() { PlantID= "doesNotExist" };
+
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            // Act
+            var result = await plantManager.AdminUpdate(test_Plant);
+
+            // Assert
+            Assert.AreEqual(-1, result);
+        }
+
+        [Test]
+        public async Task AdminUpdate_WhenPlantIDIsDeletedSuccessfully_ReturnsOne()
+        {
+            // Arrange
+            var test_Plant = new Plant() { PlantID = "existing" };
+
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            // Act
+            var result = await plantManager.AdminUpdate(test_Plant);
+
+            // Assert
+            Assert.AreEqual(1, result);
+        }
+        #endregion
+
         #region AdminDelete
         [Test]
         public async Task AdminDelete_WhenPlantIDDoesNotExist_ReturnsFalse()
