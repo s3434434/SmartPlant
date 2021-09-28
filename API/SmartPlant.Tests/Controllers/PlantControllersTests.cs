@@ -198,6 +198,125 @@ namespace SmartPlant.Tests.Controllers
             Assert.That(result, Is.TypeOf<CreatedResult>());
         }
         #endregion
+
+        #region Update
+        [Test]
+        public async Task Update_WhenPlantNotFound_ReturnsNotFound()
+        {
+            // Arrange
+            int returnValue = -1;
+
+            mock_PlantManager.Setup(_repo => _repo.Update(It.IsAny<Plant>()))
+                .ReturnsAsync(returnValue);
+
+            var test_UpdatePlantDto = new UpdatePlantDto() { Name="Name", PlantID="1" };
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.Update(test_UpdatePlantDto);
+
+            // Assert
+            Assert.That(result, Is.TypeOf<NotFoundResult>());
+        }
+
+        [Test]
+        public async Task Update_WhenPlantSuccessfullyUpdate_ReturnsOk()
+        {
+            // Arrange
+            int returnValue = 1;
+
+            mock_PlantManager.Setup(_repo => _repo.Update(It.IsAny<Plant>()))
+                .ReturnsAsync(returnValue);
+
+            var test_UpdatePlantDto = new UpdatePlantDto() { Name = "Name", PlantID = "1" };
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.Update(test_UpdatePlantDto);
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkResult>());
+        }
+        #endregion
+
+        #region Delete
+        [Test]
+        public async Task Delete_WhenPlantNotFound_ReturnsNotFound()
+        {
+            // Arrange
+            int returnValue = 0;
+
+            mock_PlantManager.Setup(_repo => _repo.Delete(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(returnValue);
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.Delete(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public async Task Delete_WhenPlantNotUsers_ReturnsForbid()
+        {
+            // Arrange
+            int returnValue = -1;
+
+            mock_PlantManager.Setup(_repo => _repo.Delete(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(returnValue);
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.Delete(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<ForbidResult>());
+        }
+
+        [Test]
+        public async Task Delete_WhenPlantSuccessfullyDeleted_ReturnsOk()
+        {
+            // Arrange
+            int returnValue = 1;
+
+            mock_PlantManager.Setup(_repo => _repo.Delete(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(returnValue);
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.Delete(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+        }
+        #endregion
+
         #endregion
 
         #region Admin
@@ -392,6 +511,102 @@ namespace SmartPlant.Tests.Controllers
 
             // Assert
             Assert.That(result, Is.TypeOf<CreatedResult>());
+        }
+        #endregion
+
+        #region AdminUpdate
+        [Test]
+        public async Task AdminUpdate_WhenPlantNotFound_ReturnsNotFound()
+        {
+            // Arrange
+            int returnValue = -1;
+
+            mock_PlantManager.Setup(_repo => _repo.AdminUpdate(It.IsAny<Plant>()))
+                .ReturnsAsync(returnValue);
+
+            var test_UpdatePlantDto = new UpdatePlantDto() { Name = "Name", PlantID = "1" };
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.AdminUpdate(test_UpdatePlantDto);
+
+            // Assert
+            Assert.That(result, Is.TypeOf<NotFoundResult>());
+        }
+
+        [Test]
+        public async Task AdminUpdate_WhenPlantSuccessfullyUpdate_ReturnsOk()
+        {
+            // Arrange
+            int returnValue = 1;
+
+            mock_PlantManager.Setup(_repo => _repo.AdminUpdate(It.IsAny<Plant>()))
+                .ReturnsAsync(returnValue);
+
+            var test_UpdatePlantDto = new UpdatePlantDto() { Name = "Name", PlantID = "1" };
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.AdminUpdate(test_UpdatePlantDto);
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkResult>());
+        }
+        #endregion
+
+        #region AdminDelete
+        [Test]
+        public async Task AdminDelete_WhenPlantNotFound_ReturnsNotFound()
+        {
+            // Arrange
+            var returnValue = false;
+
+            mock_PlantManager.Setup(_repo => _repo.AdminDelete(It.IsAny<string>()))
+                .ReturnsAsync(returnValue);
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.AdminDelete(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public async Task AdminDelete_WhenPlantSuccessfullyDeleted_ReturnsOk()
+        {
+            // Arrange
+            var returnValue = true;
+
+            mock_PlantManager.Setup(_repo => _repo.AdminDelete(It.IsAny<string>()))
+                .ReturnsAsync(returnValue);
+
+            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
+            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
+            {
+                User = mock_Principal.Object
+            };
+
+            // Act
+            var result = await plantController.AdminDelete(It.IsAny<string>());
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
         }
         #endregion
         #endregion
