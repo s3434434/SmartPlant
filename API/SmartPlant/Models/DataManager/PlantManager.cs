@@ -13,7 +13,7 @@ namespace SmartPlant.Models.DataManager
 
         //Sets the maximum plants allower per user.
         private readonly int maxPlantsAllowed = 5;
-               
+
 
         public PlantManager(DatabaseContext context)
         {
@@ -28,9 +28,9 @@ namespace SmartPlant.Models.DataManager
             var userExists = await _context.Plants.FirstOrDefaultAsync(p => p.UserID == userID);
             if (userExists is null)
             {
-                return null; 
-              
-            }            
+                return null;
+
+            }
 
             var plants = await _context.Plants.Where(p => p.UserID == userID).ToListAsync();
 
@@ -61,7 +61,7 @@ namespace SmartPlant.Models.DataManager
             return 1;
             //return plant.PlantID;
         }
-               
+
         public async Task<int> Update(Plant plant)
         {
             var plantToUpdate = await _context.Plants.Where(p => p.UserID == plant.UserID && p.PlantID == plant.PlantID).FirstOrDefaultAsync();

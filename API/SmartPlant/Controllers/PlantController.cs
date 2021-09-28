@@ -1,19 +1,12 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartPlant.Data;
 using SmartPlant.Models;
 using SmartPlant.Models.API_Model;
 using SmartPlant.Models.API_Model.Plant;
-using SmartPlant.Models.DataManager;
 using SmartPlant.Models.Repository;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SmartPlant.Controllers
@@ -242,7 +235,7 @@ namespace SmartPlant.Controllers
         [HttpPost] //verifies user exists, then verifies plant id doesn't already exists, adds plant
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/Plants")]
-        public async Task<IActionResult> AdminPost([FromBody]AdminAddPlantDto plantDto)
+        public async Task<IActionResult> AdminPost([FromBody] AdminAddPlantDto plantDto)
         {
             var user = await _userManager.FindByIdAsync(plantDto.UserID);
 
@@ -255,7 +248,7 @@ namespace SmartPlant.Controllers
             {
                 PlantID = Guid.NewGuid().ToString(),
                 UserID = plantDto.UserID,
-                Name = plantDto.PlantName                
+                Name = plantDto.PlantName
             };
 
             var result = await _repo.Add(plant);

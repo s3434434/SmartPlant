@@ -27,7 +27,7 @@ namespace SmartPlant.Models.DataManager
                 return null;
             }
 
-            Console.WriteLine($"plants = {usersPlants.Count}");            
+            Console.WriteLine($"plants = {usersPlants.Count}");
 
             var data = new List<SensorData>();
             //add all sensor data of the plants that belong to the user.
@@ -151,7 +151,7 @@ namespace SmartPlant.Models.DataManager
 
         //returns sensor data for a specific plant
         public async Task<IEnumerable<SensorData>> AdminGetAllForAPlant(string plantID)
-        {           
+        {
             //if plant doesn't exist return error 
             if (!await DoesPlantExist(plantID))
             {
@@ -213,7 +213,7 @@ namespace SmartPlant.Models.DataManager
             {
                 return null;
             }
-            
+
             _context.Add(data);
             await _context.SaveChangesAsync();
 

@@ -2,9 +2,7 @@
 using SmartPlant.Models.API_Model;
 using SmartPlant.Models.API_Model.Account;
 using SmartPlant.Models.API_Model.Admin;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SmartPlant.Models.Repository

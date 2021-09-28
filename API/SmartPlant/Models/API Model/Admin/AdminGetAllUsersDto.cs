@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SmartPlant.Models.API_Model.Admin
+﻿namespace SmartPlant.Models.API_Model.Admin
 {
     public class AdminGetAllUsersDto
     {

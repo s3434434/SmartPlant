@@ -1,23 +1,14 @@
 ﻿using AutoMapper;
-using EmailService;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using SmartPlant.Data;
-using SmartPlant.JwtFeatures;
 using SmartPlant.Models;
 using SmartPlant.Models.API_Model;
 using SmartPlant.Models.API_Model.Account;
 using SmartPlant.Models.API_Model.Admin;
-using SmartPlant.Models.DataManager;
 using SmartPlant.Models.Repository;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SmartPlant.Controllers
@@ -28,9 +19,7 @@ namespace SmartPlant.Controllers
     {
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
-        //private readonly JwtHandler _jwtHandler;
         private readonly IAccountManager _repo;
-        //private readonly IEmailSender _emailSender;
 
         public AccountController(IAccountManager repo, IMapper mapper,
             UserManager<ApplicationUser> userManager)
@@ -38,8 +27,6 @@ namespace SmartPlant.Controllers
             _repo = repo;
             _mapper = mapper;
             _userManager = userManager;
-            //_jwtHandler = jwtHandler;
-            //_emailSender = emailSender;
         }
 
 
@@ -96,7 +83,7 @@ namespace SmartPlant.Controllers
                 return BadRequest("User Not Found");
             }
 
-            var result = await _repo.ConfirmEmail(user, token);            
+            var result = await _repo.ConfirmEmail(user, token);
 
             if (!result.Succeeded)
             {
@@ -122,8 +109,8 @@ namespace SmartPlant.Controllers
         [HttpPost("Login")]
         //[Route("/api/Login")]
         public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto loginUser)
-        {  
-            var result = await _repo.Login(loginUser);          
+        {
+            var result = await _repo.Login(loginUser);
 
             if (!result.IsAuthSuccessful)
             {
@@ -174,7 +161,7 @@ namespace SmartPlant.Controllers
         /// <response code="400">Something went wrong, incorrect info</response>
         [HttpPost]
         [Route("Password/Reset")]
-        public async Task<IActionResult> ResetPassword([FromBody]ResetPasswordDto passwordDto)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto passwordDto)
         {
             if (!ModelState.IsValid)
             {
@@ -307,7 +294,8 @@ namespace SmartPlant.Controllers
 
             var result = await _repo.UpdatePassword(userID, passwordDto);
 
-            if (!result.Succeeded){
+            if (!result.Succeeded)
+            {
                 foreach (IdentityError error in result.Errors)
                     return Unauthorized(error.Description);
             }
@@ -375,7 +363,7 @@ namespace SmartPlant.Controllers
         /// </remarks>
         /// <response code="200">Details successfully updated</response>
         /// <response code="400">User Not Found or email already in use</response>
-        [HttpPut] 
+        [HttpPut]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("/api/Admin/User")]
         public async Task<IActionResult> AdminUpdateDetails([FromBody] AdminUpdateUserDetailsDto DetailsDto)
@@ -390,7 +378,7 @@ namespace SmartPlant.Controllers
             if (result == null)
             {
                 return BadRequest("Email already exists or user does not exist");
-            }                       
+            }
             return Ok(result);
         }
 
@@ -447,7 +435,7 @@ namespace SmartPlant.Controllers
         [HttpPut]
         [Authorize(Roles = UserRoles.Admin)] //change a user's password - old password not needed
         [Route("/api/Admin/User/Password")]
-        public async Task<IActionResult> AdminUpdatePassword([FromBody]AdminUpdatePasswordDto passwordDto)
+        public async Task<IActionResult> AdminUpdatePassword([FromBody] AdminUpdatePasswordDto passwordDto)
         {
             if (!ModelState.IsValid)
             {
@@ -457,7 +445,7 @@ namespace SmartPlant.Controllers
             var result = await _repo.AdminUpdatePassword(passwordDto);
 
             if (!result.Succeeded)
-            {               
+            {
                 return NotFound(result.Errors);
             }
             return Ok(result);

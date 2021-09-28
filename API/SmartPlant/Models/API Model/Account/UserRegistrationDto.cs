@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SmartPlant.Models.API_Model
 {
@@ -25,12 +22,12 @@ namespace SmartPlant.Models.API_Model
 
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
-        
+
         [Required(ErrorMessage = "This is the uri for the frontend confirmation page")]
         public string ClientURI { get; set; }
     }
 
-    public class RegistrationResponseDto 
+    public class RegistrationResponseDto
     {
         public bool isSuccessfulRegistration { get; set; }
         public IEnumerable<string> Errors { get; set; }

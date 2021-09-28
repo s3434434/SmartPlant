@@ -15,7 +15,7 @@ namespace SmartPlant
             var host = CreateHostBuilder(args).Build();
 
             using (var scope = host.Services.CreateScope())
-            {                
+            {
                 var services = scope.ServiceProvider;
                 var db = services.GetService<DatabaseContext>();
                 db.Database.Migrate();
@@ -28,7 +28,7 @@ namespace SmartPlant
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "An error occurred seeding the DB.");
-                }               
+                }
 
             }
 

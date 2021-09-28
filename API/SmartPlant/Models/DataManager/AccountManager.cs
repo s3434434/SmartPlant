@@ -9,7 +9,6 @@ using SmartPlant.Models.API_Model;
 using SmartPlant.Models.API_Model.Account;
 using SmartPlant.Models.API_Model.Admin;
 using SmartPlant.Models.Repository;
-using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -33,7 +32,7 @@ namespace SmartPlant.Models.DataManager
             _context = context;
             _emailSender = emailSender;
             _jwtHandler = jwtHandler;
-            
+
         }
 
         public async Task<RegistrationResponseDto> Register(ApplicationUser user, UserRegistrationDto userRegDto)
@@ -47,19 +46,19 @@ namespace SmartPlant.Models.DataManager
 
             //send confirmation email
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var param = new Dictionary<string, string>
+            var queryString = new Dictionary<string, string>
             {
                 {"token", token },
                 { "email", user.Email }
             };
 
-            var callback = QueryHelpers.AddQueryString(userRegDto.ClientURI, param);
-            var message = new Message(new string[] { user.Email }, "SmarPlant - Confirm Your Email", callback);
+            var content = QueryHelpers.AddQueryString(userRegDto.ClientURI, queryString);
+            var message = new Message(new string[] { user.Email }, "SmartPlant - Confirm Your Email", content);
             await _emailSender.SendEmailAsync(message);
 
             await _userManager.AddToRoleAsync(user, UserRoles.User);
 
-            return new RegistrationResponseDto { isSuccessfulRegistration = true, Errors = new string[] { "The token is added here for easier testing",token } };
+            return new RegistrationResponseDto { isSuccessfulRegistration = true, Errors = new string[] { "The token is added here for easier testing", token } };
 
         }
 
@@ -109,14 +108,14 @@ namespace SmartPlant.Models.DataManager
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var param = new Dictionary<string, string>
+            var queryString = new Dictionary<string, string>
             {
                 {"token", token },
                 { "email", user.Email }
             };
 
-            var callback = QueryHelpers.AddQueryString(passwordDto.ClientURI, param);
-            var message = new Message(new string[] { user.Email }, "SmarPlant - Reset Your Password", callback);            
+            var content = QueryHelpers.AddQueryString(passwordDto.ClientURI, queryString);
+            var message = new Message(new string[] { user.Email }, "SmartPlant - Reset Your Password", content);
             await _emailSender.SendEmailAsync(message);
 
             //return true;
@@ -176,7 +175,7 @@ namespace SmartPlant.Models.DataManager
             {
                 return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
             }
-            
+
             user.FirstName = details.FirstName;
             user.LastName = details.LastName;
             user.Address = details.Address;
@@ -211,7 +210,7 @@ namespace SmartPlant.Models.DataManager
             await _userManager.UpdateAsync(id_user);
 
             return IdentityResult.Success;
-            
+
             /* _userManager.GenerateChangeEmailTokenAsync
              * 
              * Use this instead if we want to require verification for email changes.
@@ -303,7 +302,7 @@ namespace SmartPlant.Models.DataManager
             {
                 return detailsDto;
             }
-            return null; 
+            return null;
         }
 
         public async Task<List<AdminGetRoleListDto>> AdminGetRoleList()
@@ -356,11 +355,11 @@ namespace SmartPlant.Models.DataManager
         public async Task<IdentityResult> AdminUpdatePassword(AdminUpdatePasswordDto passwordDto)
         {
             var user = await _userManager.FindByIdAsync(passwordDto.ID);
-            
+
             if (user == null)
             {
                 return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
-            }          
+            }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, token, passwordDto.NewPassword);

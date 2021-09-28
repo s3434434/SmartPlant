@@ -8,10 +8,10 @@ namespace SmartPlant.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key,Required]
+        [Key, Required]
         public string PlantID { get; set; }
-       
-        [ForeignKey("User") ,Required]
+
+        [ForeignKey("User"), Required]
         public string UserID { get; set; }
 
         //name of the plant chosen by the user e.g. COMPANY NAME - LOC - FLOOR 2 - MEETING ROOM 1

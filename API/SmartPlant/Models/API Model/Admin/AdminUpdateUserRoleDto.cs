@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SmartPlant.Models.API_Model.Admin
 {
@@ -13,7 +9,7 @@ namespace SmartPlant.Models.API_Model.Admin
         public string ID { get; set; }
 
         [Required]
-        [RegularExpression(@"^Admin$|^User$",ErrorMessage = "Role must be 'Admin' or 'User'")]
-        public string Role { get; set; }        
+        [RegularExpression(@"^Admin$|^User$", ErrorMessage = "Role must be 'Admin' or 'User'")]
+        public string Role { get; set; }
     }
 }

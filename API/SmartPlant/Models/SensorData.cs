@@ -19,12 +19,12 @@ namespace SmartPlant.Models
 
         [Display(Name = "Temperature")]
         [Column("Temperature")] //celsius
-        [Range(-30,50.00) ,Required]
+        [Range(-30, 50.00), Required]
         public decimal Temp { get; set; }
 
         //percentage value? decimal(5,2)
         //store its if less precision ok?
-        [Range(0, 100.00) ,Required]
+        [Range(0, 100.00), Required]
         public decimal Humidity { get; set; }
 
         //Integer value? measure in lux?
