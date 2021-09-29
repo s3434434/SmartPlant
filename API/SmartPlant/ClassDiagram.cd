@@ -1,0 +1,343 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="SmartPlant.Controllers.AccountController">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAABAABACAACQAAgAABQAAAAEABAIEAAAkZQAIAAAA=</HashCode>
+      <FileName>Controllers\AccountController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Controllers.PlantController" Collapsed="true">
+    <Position X="5.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQABAAABAAAAgBAAIACQAAACAEAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Controllers\PlantController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Controllers.SensorDataController" Collapsed="true">
+    <Position X="9.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAARAAABAAAAgACAAARQAAACAAAAAAAAgQAAAQAAAg=</HashCode>
+      <FileName>Controllers\SensorDataController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Data.DatabaseContext" Collapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\DatabaseContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Data.SeedData" Collapsed="true">
+    <Position X="4" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\SeedData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Data.UserRoles" Collapsed="true">
+    <Position X="5.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\UserRoles.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.JwtFeatures.JwtHandler" Collapsed="true">
+    <Position X="12.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAgIAAAACIAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>JwtFeatures\JwtHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.MappingConfigurations.MappingProfiles" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MappingConfigurations\MappingProfiles.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Migrations.initialCreate" Collapsed="true">
+    <Position X="11" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
+      <FileName>Migrations\20210904083208_initialCreate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Migrations.AddedIdentity" Collapsed="true">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
+      <FileName>Migrations\20210905215448_AddedIdentity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Migrations.connectForeginKeyUserID" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
+      <FileName>Migrations\20210905231432_connectForeginKeyUserID.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Migrations.RemovedTestFromSensorData" Collapsed="true">
+    <Position X="12.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
+      <FileName>Migrations\20210908060547_Removed-Test-From-SensorData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Migrations.AddedPlantName" Collapsed="true">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
+      <FileName>Migrations\20210916124635_Added-Plant-Name.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Migrations.AddedPlantNameMaxLength" Collapsed="true">
+    <Position X="11" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
+      <FileName>Migrations\20210916125937_Added-Plant-Name-MaxLength.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Migrations.Added_Database_Check_Constraints" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
+      <FileName>Migrations\20210921055414_Added_Database_Check_Constraints.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Migrations.Sensor_Data_To_Decimal" Collapsed="true">
+    <Position X="5.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
+      <FileName>Migrations\20210922054049_Sensor_Data_To_Decimal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Migrations.UserAddress" Collapsed="true">
+    <Position X="11" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
+      <FileName>Migrations\20210924054032_UserAddress.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Migrations.DatabaseContextModelSnapshot" Collapsed="true">
+    <Position X="7.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Migrations\DatabaseContextModelSnapshot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Account.ForgotPasswordDto" Collapsed="true">
+    <Position X="9.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\API Model\Account\ForgotPasswordDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Account.ResetPasswordDto" Collapsed="true">
+    <Position X="2.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAFAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\API Model\Account\ResetPasswordDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Account.UpdateEmailDto" Collapsed="true">
+    <Position X="4" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\API Model\Account\UpdateEmailDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Account.UpdatePasswordDto" Collapsed="true">
+    <Position X="5.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAFAAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\API Model\Account\UpdatePasswordDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Account.UpdateUserDetailsDto" Collapsed="true">
+    <Position X="9.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAQAAAAAAAAAACAAAAAAAAAAg=</HashCode>
+      <FileName>Models\API Model\Account\UpdateUserDetailsDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Account.UserDetailsDto" Collapsed="true">
+    <Position X="12.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAACAAAAAAAAAAQAAAAAAAAAACAAAAAAAAAAg=</HashCode>
+      <FileName>Models\API Model\Account\UserDetailsDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Account.UserForAuthenticationDto" Collapsed="true">
+    <Position X="2.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\API Model\Account\UserForAuthenticationDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Account.AuthResponseDto" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\API Model\Account\UserForAuthenticationDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.UserRegistrationDto" Collapsed="true">
+    <Position X="4" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAACAAAACAAAAAQAAAAAAAAAACAAAAAAAAIAg=</HashCode>
+      <FileName>Models\API Model\Account\UserRegistrationDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.RegistrationResponseDto" Collapsed="true">
+    <Position X="11" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Models\API Model\Account\UserRegistrationDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.AdminAddPlantDto" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\API Model\Admin\AdminAddPlantDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.SensorDataModel" Collapsed="true">
+    <Position X="12.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAgAQAAAAAAAAAAgAAAAQA=</HashCode>
+      <FileName>Models\API Model\SensorDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Admin.AdminGetAllUsersDto" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\API Model\Admin\AdminGetAllUsersDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Admin.AdminGetRoleListDto" Collapsed="true">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAgAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\API Model\Admin\AdminGetRoleListDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Admin.AdminUpdatePasswordDto" Collapsed="true">
+    <Position X="7.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAFAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\API Model\Admin\AdminUpdatePasswordDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Admin.AdminUpdateUserDetailsDto" Collapsed="true">
+    <Position X="9.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAACAAgAAAAAAAQAAAAAAAAAACAAAAAAAAAAg=</HashCode>
+      <FileName>Models\API Model\Admin\AdminUpdateUserDetailsDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Admin.AdminUpdateUserRoleDto" Collapsed="true">
+    <Position X="11" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\API Model\Admin\AdminUpdateUserRoleDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Plant.AddPlantDto" Collapsed="true">
+    <Position X="12.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\API Model\Plant\AddPlantDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.API_Model.Plant.UpdatePlantDto" Collapsed="true">
+    <Position X="7.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Models\API Model\Plant\UpdatePlantDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.DataManager.AccountManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAABACAADQAAwAABAAAAAECBgIEAAAkRQAIAAAA=</HashCode>
+      <FileName>Models\DataManager\AccountManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SmartPlant.Models.DataManager.PlantManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYEAAAAAAAABgAAAAACAAAAAAECAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Models\DataManager\PlantManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SmartPlant.Models.DataManager.SensorDataManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAIAAAAAAABgCEAAQQAAAAAAAAAAAAAgQAAAUAAAg=</HashCode>
+      <FileName>Models\DataManager\SensorDataManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SmartPlant.Models.ApplicationUser" Collapsed="true">
+    <Position X="12.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAEAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAg=</HashCode>
+      <FileName>Models\ApplicationUser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.Plant" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAEAAAAAAwAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Models\Plant.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Models.SensorData" Collapsed="true">
+    <Position X="7.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAACAAAgAQAAAAAABAAAgAAAAwA=</HashCode>
+      <FileName>Models\SensorData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Program" Collapsed="true">
+    <Position X="9.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmartPlant.Startup" Collapsed="true">
+    <Position X="2.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAgAAACAAAAAA=</HashCode>
+      <FileName>Startup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="SmartPlant.Models.Repository.IAccountManager" Collapsed="true">
+    <Position X="2.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABACAACQAAgAAAAAAAAEABgIEAAAkRQAIAAAA=</HashCode>
+      <FileName>Models\Repository\IAccountManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SmartPlant.Models.Repository.IPlantManager" Collapsed="true">
+    <Position X="4" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYEAAAAAAAAAgAAAAACAAAAAAEAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Models\Repository\IPlantManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SmartPlant.Models.Repository.ISensorDataManager" Collapsed="true">
+    <Position X="5.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAgAEAAQQAAAAAAAAAAAAAgQAAAUAAAg=</HashCode>
+      <FileName>Models\Repository\ISensorDataManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Calibri" Size="10" />
+</ClassDiagram>

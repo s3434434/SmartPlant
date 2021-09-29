@@ -116,8 +116,8 @@ namespace SmartPlant.Controllers
             {
                 return Unauthorized(result.ErrorMessage);
             }
-
-            return Ok(result);
+            
+            return Ok(result.Token);
         }
 
 
