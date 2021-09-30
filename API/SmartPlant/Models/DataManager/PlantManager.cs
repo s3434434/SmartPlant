@@ -4,6 +4,7 @@ using SmartPlant.Models.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SmartPlant.Models.DataManager
@@ -103,12 +104,27 @@ namespace SmartPlant.Models.DataManager
             //else plant does not belong to the user
             return -1;
         }
-        
-        
-        public async Task<bool> GenerateNewPlantToken(PlantToken plantToken)
+
+
+        public async Task<bool> GenerateNewPlantToken(string userID, PlantToken plantToken)
         {
-            
-            return false;
+            //if plant id and user id exist/match, else it will be null
+            if (_context.Plants.FirstOrDefault(p => p.PlantID == plantToken.PlantID
+                                                    && p.UserID == userID) == null)
+            {
+                return false;
+            }
+
+            _context.PlantTokens.Update(plantToken);
+            var result = await _context.SaveChangesAsync();
+
+            if (result == 0)
+            {
+                return false;
+            }
+
+            return true;
+
 
         }
 
