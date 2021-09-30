@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SmartPlant.Models;
+using SmartPlant.Models.Repository;
 
 namespace SmartPlant.Data
 {
@@ -12,6 +13,7 @@ namespace SmartPlant.Data
         //database table stuff
         public DbSet<Plant> Plants { get; set; }
         public DbSet<SensorData> SensorData { get; set; }
+        public DbSet<PlantToken> PlantTokens { get; set; }
 
 
         //fluent api
@@ -50,7 +52,7 @@ namespace SmartPlant.Data
                 .HasMany(x => x.Plants)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserID);
+            
         }
-
     }
 }
