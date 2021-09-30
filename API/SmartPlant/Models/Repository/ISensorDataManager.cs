@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using SmartPlant.Models.API_Model.SensorData;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using SmartPlant.Models.API_Model.SensorData;
 
 namespace SmartPlant.Models.Repository
 {

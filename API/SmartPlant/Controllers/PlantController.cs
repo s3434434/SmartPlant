@@ -8,7 +8,6 @@ using SmartPlant.Models.API_Model.Plant;
 using SmartPlant.Models.Repository;
 using System;
 using System.Threading.Tasks;
-using Org.BouncyCastle.Crypto.Digests;
 
 namespace SmartPlant.Controllers
 {

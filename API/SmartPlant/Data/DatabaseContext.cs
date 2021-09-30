@@ -52,7 +52,7 @@ namespace SmartPlant.Data
                 .HasMany(x => x.Plants)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserID);
-            
+
         }
     }
 }

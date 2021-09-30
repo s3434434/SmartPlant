@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartPlant.Data;
+using SmartPlant.Models.API_Model.SensorData;
 using SmartPlant.Models.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SmartPlant.Models.API_Model.SensorData;
 
 namespace SmartPlant.Models.DataManager
 {
@@ -262,7 +262,7 @@ namespace SmartPlant.Models.DataManager
             //var msg = "";
             return "added";
         }
-        
+
 
 
         //helper methods

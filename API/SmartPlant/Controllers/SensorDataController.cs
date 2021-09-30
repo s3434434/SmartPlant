@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using SmartPlant.Data;
 using SmartPlant.Models;
 using SmartPlant.Models.API_Model;
+using SmartPlant.Models.API_Model.SensorData;
 using SmartPlant.Models.Repository;
 using System;
 using System.Threading.Tasks;
-using SmartPlant.Models.API_Model.SensorData;
 
 namespace SmartPlant.Controllers
 {
@@ -231,7 +231,7 @@ namespace SmartPlant.Controllers
                 return Unauthorized();
             }
 
-            return Created("",dto);
+            return Created("", dto);
 
         }
 

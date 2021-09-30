@@ -7,7 +7,7 @@ namespace SmartPlant.Models.API_Model
     {
         public string PlantID { get; set; }
 
-        [Required] 
+        [Required]
         public string Token { get; set; }
 
         [Range(-30, 50.00), Required]

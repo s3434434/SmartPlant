@@ -4,8 +4,6 @@ using SmartPlant.Models.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
-using Microsoft.AspNetCore.Mvc;
 
 namespace SmartPlant.Models.DataManager
 {

@@ -1,4 +1,3 @@
-using System;
 using EmailService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +15,6 @@ using SmartPlant.Models.DataManager;
 using SmartPlant.Models.Repository;
 using System.IO;
 using System.Text;
-using Microsoft.AspNetCore.Authentication;
 
 namespace SmartPlant
 {
@@ -111,14 +109,6 @@ namespace SmartPlant
                     In = ParameterLocation.Header,
                     Scheme = "bearer"
                 });
-               /* c.AddSecurityDefinition("plant token", new OpenApiSecurityScheme
-                {
-                    Description = "To be used with creating SensorData [Post]",
-                    Type = SecuritySchemeType.ApiKey,
-                    In = ParameterLocation.Header,
-                    Name = "Plant Token",
-                    Scheme = "basic"
-                });*/
                 c.AddSecurityRequirement(
                     new OpenApiSecurityRequirement
                     {
