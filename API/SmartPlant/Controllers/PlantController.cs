@@ -8,6 +8,7 @@ using SmartPlant.Models.API_Model.Plant;
 using SmartPlant.Models.Repository;
 using System;
 using System.Threading.Tasks;
+using Org.BouncyCastle.Crypto.Digests;
 
 namespace SmartPlant.Controllers
 {
@@ -171,6 +172,31 @@ namespace SmartPlant.Controllers
         }
 
         /// <summary>
+        /// Gets a plants plant token, for use updating sensor data from the Arduino hardware
+        /// </summary>
+        /// <remarks>
+        /// For security purposes, this should only be shown if a user asks to see their token &#xA;
+        /// since this is used to for updating sensor data it is sensitive information.
+        /// </remarks>
+        /// <response code="200">Returns the token</response>
+        /// <response code="404">PlantID Not Found</response>
+        [HttpGet]
+        [Route("/api/Plants/Token/{plantID}")]
+        public async Task<IActionResult> GetToken(string plantID)
+        {
+            var userID = User.Identity.Name;
+
+            var result = await _repo.GetToken(plantID, userID);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Generates a new token for a plant
         /// </summary>
         /// <remarks>
@@ -180,8 +206,8 @@ namespace SmartPlant.Controllers
         /// </remarks>
         /// <response code="200">New token generated, returns new token</response>
         /// <response code="404">Something went wrong, probably invalid plantid</response>
-        [HttpPost]
-        [Route("/api/Plants/NewToken/{plantID}")]
+        [HttpPut]
+        [Route("/api/Plants/Token/{plantID}")]
         public async Task<IActionResult> GenerateNewPlantToken(string plantID)
         {
             var userID = User.Identity.Name;

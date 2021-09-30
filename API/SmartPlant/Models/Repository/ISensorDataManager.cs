@@ -17,6 +17,5 @@ namespace SmartPlant.Models.Repository
         Task<IEnumerable<SensorData>> AdminGetDaily(string plantID);
         Task<IEnumerable<SensorData>> AdminGetMonthly(string plantID);
         Task<string> AdminAdd(SensorData data);
-
     }
 }

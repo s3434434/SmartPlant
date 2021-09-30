@@ -148,14 +148,17 @@ namespace SmartPlant.Models.DataManager
             }
 
             //check for time of last update to stop spam
-            var last = await _context.SensorData.OrderBy(p => p.TimeStampUTC).LastOrDefaultAsync(p => p.PlantID == existingPlantToken.PlantID);
-            var timeCheck = last.TimeStampUTC.AddMinutes(5);
-
-            Console.WriteLine($"timeCHeck: {timeCheck}\nTIme Now: {DateTime.UtcNow}");
-            if (timeCheck > DateTime.UtcNow)
+            /*var last = await _context.SensorData.OrderBy(p => p.TimeStampUTC).LastOrDefaultAsync(p => p.PlantID == existingPlantToken.PlantID);
+            if (last != null)
             {
-                return false;
-            }
+                var timeCheck = last.TimeStampUTC.AddMinutes(5);
+
+                Console.WriteLine($"timeCHeck: {timeCheck}\nTIme Now: {DateTime.UtcNow}");
+                if (timeCheck > DateTime.UtcNow)
+                {
+                    return false;
+                }
+            }*/
 
             var sensorData = new SensorData
             {
@@ -259,7 +262,7 @@ namespace SmartPlant.Models.DataManager
             //var msg = "";
             return "added";
         }
-
+        
 
 
         //helper methods

@@ -105,6 +105,17 @@ namespace SmartPlant.Models.DataManager
             return -1;
         }
 
+        public async Task<string> GetToken(string plantID, string userID)
+        {
+            var plant = await _context.Plants.FirstOrDefaultAsync(p => p.PlantID == plantID &&
+                                                     p.UserID == userID);
+            if (plant == null)
+            {
+                return null;
+            }
+
+            return (await _context.PlantTokens.FirstOrDefaultAsync(p => p.PlantID == plantID))?.Token;
+        }
 
         public async Task<bool> GenerateNewPlantToken(string userID, PlantToken plantToken)
         {

@@ -158,7 +158,9 @@ namespace SmartPlant.Controllers
         /// <summary>
         /// Adds sensor data for a plant belonging to the user
         /// </summary>
-        /// <remarks>  
+        /// <remarks>
+        /// Don't use this &#xA;
+        /// ----------------------&#xA;
         /// Sensor data is stored as decimals, with 2 decimal places. &#xA; 
         /// For example: 12.446 becomes 12.45. &#xA; 
         ///              33.44469123 becomes 33.44.
@@ -214,7 +216,6 @@ namespace SmartPlant.Controllers
         /// <response code="201">Sensor Data Created</response>
         /// <response code="400">Bad Data / Format</response>
         /// <response code="401">Bad Plant Token or too soon for sensor update</response>
-        /// <response code="429">Wait at least 5 mins between updates</response>
         [HttpPost]
         [AllowAnonymous]
         [Route("/api/SensorData/WithToken")]
