@@ -171,5 +171,24 @@ namespace SmartPlant.Models.DataManager
             return true;
         }
 
+        public async Task<bool> AdminGenerateNewPlantToken(string userID, PlantToken plantToken)
+        {
+            //if plant id and user id exist/match, else it will be null
+            if (_context.Plants.FirstOrDefault(p => p.PlantID == plantToken.PlantID
+                                                    && p.UserID == userID) == null)
+            {
+                return false;
+            }
+
+            _context.PlantTokens.Update(plantToken);
+            var result = await _context.SaveChangesAsync();
+
+            if (result == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

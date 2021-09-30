@@ -345,6 +345,32 @@ namespace SmartPlant.Controllers
             }
         }
 
+        ///<summary>
+        /// Generates a new token for a plant
+        /// </summary>
+        /// <remarks>
+        /// This will invalidate the old token, &#xA;
+        /// On the frontend, a warning message should be displayed &#xA;
+        /// warning the user and confirming that they want to generate a new token.
+        /// </remarks>
+        /// <response code="200">New token generated, returns new token</response>
+        /// <response code="404">Something went wrong, probably invalid plantID or userID</response>
+        [HttpPost]
+        [Authorize(Roles = UserRoles.Admin)]
+        [Route("/api/Admin/Plants/NewToken/{userID}/{plantID}")]
+        public async Task<IActionResult> AdminGenerateNewPlantToken(string userID, string plantID)
+        {
+            var plantToken = GeneratePlantToken(plantID);
+            var result = await _repo.AdminGenerateNewPlantToken(userID, plantToken);
+
+            if (!result)
+            {
+                return BadRequest("Something went wrong, invalid inputs...");
+            }
+            return Ok(plantToken.Token);
+
+        }
+
 
 
         //helper methods
