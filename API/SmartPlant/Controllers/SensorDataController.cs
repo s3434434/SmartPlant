@@ -8,6 +8,7 @@ using SmartPlant.Models.API_Model;
 using SmartPlant.Models.Repository;
 using System;
 using System.Threading.Tasks;
+using SmartPlant.Models.API_Model.SensorData;
 
 namespace SmartPlant.Controllers
 {
@@ -157,8 +158,7 @@ namespace SmartPlant.Controllers
         /// <summary>
         /// Adds sensor data for a plant belonging to the user
         /// </summary>
-        /// <remarks> 
-        /// This should be used from the Arduino code to update the database with sensor data &#xA; 
+        /// <remarks>  
         /// Sensor data is stored as decimals, with 2 decimal places. &#xA; 
         /// For example: 12.446 becomes 12.45. &#xA; 
         ///              33.44469123 becomes 33.44.
@@ -202,6 +202,37 @@ namespace SmartPlant.Controllers
             return Created("", result);
         }
 
+        /// <summary>
+        /// Adds sensor data for a plant belonging to the user - using a plant token for authentication
+        /// </summary>
+        /// <remarks> 
+        /// This should be used from the Arduino code to update the database with sensor data &#xA; 
+        /// Sensor data is stored as decimals, with 2 decimal places. &#xA; 
+        /// For example: 12.446 becomes 12.45. &#xA; 
+        ///              33.44469123 becomes 33.44.
+        /// </remarks>
+        /// <response code="201">Sensor Data Created</response>
+        /// <response code="400">Bad Data / Format</response>
+        /// <response code="401">Bad Plant Token or too soon for sensor update</response>
+        /// <response code="429">Wait at least 5 mins between updates</response>
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/api/SensorData/WithToken")]
+        public async Task<IActionResult> PostWithToken(SensorDataWithTokenDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid inputs");
+            }
+
+            if (!await _repo.AddWithToken(dto))
+            {
+                return Unauthorized();
+            }
+
+            return Created("",dto);
+
+        }
 
         /* 
          * ADMIN ROLE REQUIRED ENDPOINTS

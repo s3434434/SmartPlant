@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using SmartPlant.Models.API_Model.SensorData;
 
 namespace SmartPlant.Models.Repository
 {
@@ -10,6 +11,7 @@ namespace SmartPlant.Models.Repository
         Task<IEnumerable<SensorData>> GetDaily(string userID, string plantID);
         Task<IEnumerable<SensorData>> GetMonthly(string userID, string plantID);
         Task<string> Add(string userID, SensorData data);
+        Task<bool> AddWithToken(SensorDataWithTokenDto dto);
         Task<IEnumerable<SensorData>> AdminGetAll();
         Task<IEnumerable<SensorData>> AdminGetAllForAPlant(string plantID);
         Task<IEnumerable<SensorData>> AdminGetDaily(string plantID);

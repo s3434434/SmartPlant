@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SmartPlant.Models.API_Model.SensorData;
 
 namespace SmartPlant.Models.DataManager
 {
@@ -135,6 +136,44 @@ namespace SmartPlant.Models.DataManager
             //var msg = "";
             return "added";
         }
+
+        public async Task<bool> AddWithToken(SensorDataWithTokenDto dto)
+        {
+            //Check if the plant token is valid / exists
+            var existingPlantToken = await _context.PlantTokens.FirstOrDefaultAsync(p => p.Token == dto.Token);
+
+            if (existingPlantToken == null)
+            {
+                return false;
+            }
+
+            //check for time of last update to stop spam
+            var last = await _context.SensorData.OrderBy(p => p.TimeStampUTC).LastOrDefaultAsync(p => p.PlantID == existingPlantToken.PlantID);
+            var timeCheck = last.TimeStampUTC.AddMinutes(5);
+
+            Console.WriteLine($"timeCHeck: {timeCheck}\nTIme Now: {DateTime.UtcNow}");
+            if (timeCheck > DateTime.UtcNow)
+            {
+                return false;
+            }
+
+            var sensorData = new SensorData
+            {
+                PlantID = existingPlantToken.PlantID,
+                Humidity = dto.Humidity,
+                Moisture = dto.Moisture,
+                LightIntensity = dto.LightIntensity,
+                Temp = dto.Temp,
+                TimeStampUTC = DateTime.UtcNow
+            };
+
+            _context.SensorData.Add(sensorData);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+
 
         /*
          * 

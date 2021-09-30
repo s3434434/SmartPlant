@@ -325,6 +325,20 @@
             <summary>
             Adds sensor data for a plant belonging to the user
             </summary>
+            <remarks>  
+            Sensor data is stored as decimals, with 2 decimal places. &#xA; 
+            For example: 12.446 becomes 12.45. &#xA; 
+                         33.44469123 becomes 33.44.
+            </remarks>
+            <response code="201">Sensor Data Created</response>
+            <response code="400">Bad Data / Format</response>
+            <response code="404">PlantID Not Found</response>
+            <response code="429">Wait at least 5 mins between updates</response>
+        </member>
+        <member name="M:SmartPlant.Controllers.SensorDataController.PostWithToken(SmartPlant.Models.API_Model.SensorData.SensorDataWithTokenDto)">
+            <summary>
+            Adds sensor data for a plant belonging to the user - using a plant token for authentication
+            </summary>
             <remarks> 
             This should be used from the Arduino code to update the database with sensor data &#xA; 
             Sensor data is stored as decimals, with 2 decimal places. &#xA; 
@@ -333,7 +347,7 @@
             </remarks>
             <response code="201">Sensor Data Created</response>
             <response code="400">Bad Data / Format</response>
-            <response code="404">PlantID Not Found</response>
+            <response code="401">Bad Plant Token or too soon for sensor update</response>
             <response code="429">Wait at least 5 mins between updates</response>
         </member>
         <member name="M:SmartPlant.Controllers.SensorDataController.AdminGetAll">

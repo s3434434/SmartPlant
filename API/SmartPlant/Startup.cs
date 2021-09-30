@@ -1,3 +1,4 @@
+using System;
 using EmailService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -15,6 +16,7 @@ using SmartPlant.Models.DataManager;
 using SmartPlant.Models.Repository;
 using System.IO;
 using System.Text;
+using Microsoft.AspNetCore.Authentication;
 
 namespace SmartPlant
 {
@@ -71,18 +73,19 @@ namespace SmartPlant
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings.GetSection("validIssuer").Value,
-                    ValidAudience = jwtSettings.GetSection("validAudience").Value,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.GetSection("securityKey").Value))
-                };
-            });
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtSettings.GetSection("validIssuer").Value,
+                        ValidAudience = jwtSettings.GetSection("validAudience").Value,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.GetSection("securityKey").Value))
+                    };
+                });
+
             services.AddScoped<JwtHandler>();
 
             //add DataManager Services
@@ -108,13 +111,14 @@ namespace SmartPlant
                     In = ParameterLocation.Header,
                     Scheme = "bearer"
                 });
-                c.AddSecurityDefinition("plant token", new OpenApiSecurityScheme
+               /* c.AddSecurityDefinition("plant token", new OpenApiSecurityScheme
                 {
                     Description = "To be used with creating SensorData [Post]",
                     Type = SecuritySchemeType.ApiKey,
                     In = ParameterLocation.Header,
+                    Name = "Plant Token",
                     Scheme = "basic"
-                });
+                });*/
                 c.AddSecurityRequirement(
                     new OpenApiSecurityRequirement
                     {

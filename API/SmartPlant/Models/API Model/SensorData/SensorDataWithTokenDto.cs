@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace SmartPlant.Models.API_Model
+namespace SmartPlant.Models.API_Model.SensorData
 {
-    public class SensorDataModel
+    public class SensorDataWithTokenDto
     {
-        public string PlantID { get; set; }
-
-        [Required] 
+        [Required]
         public string Token { get; set; }
 
         [Range(-30, 50.00), Required]
