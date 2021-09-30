@@ -34,7 +34,6 @@ namespace SmartPlant.Models.DataManager
             _jwtHandler = jwtHandler;
 
         }
-
         public async Task<RegistrationResponseDto> Register(ApplicationUser user, UserRegistrationDto userRegDto)
         {
             var result = await _userManager.CreateAsync(user, userRegDto.Password);

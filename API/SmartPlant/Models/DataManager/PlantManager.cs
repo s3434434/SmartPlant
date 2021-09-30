@@ -4,6 +4,7 @@ using SmartPlant.Models.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SmartPlant.Models.DataManager
 {
@@ -11,7 +12,7 @@ namespace SmartPlant.Models.DataManager
     {
         private readonly DatabaseContext _context;
 
-        //Sets the maximum plants allower per user.
+        //Sets the maximum plants allowed per user.
         private readonly int maxPlantsAllowed = 5;
 
 
@@ -39,7 +40,7 @@ namespace SmartPlant.Models.DataManager
 
         //used by both admins and normal users
         //adds plant to db, returns its ID
-        public async Task<int> Add(Plant plant)
+        public async Task<int> Add(Plant plant, PlantToken plantToken)
         {
             var exists = await _context.Plants.FirstOrDefaultAsync(p => p.PlantID == plant.PlantID);
 
@@ -54,7 +55,9 @@ namespace SmartPlant.Models.DataManager
             {
                 return -1;
             }
+
             _context.Add(plant);
+            _context.Add(plantToken);
             await _context.SaveChangesAsync();
 
             var msg = $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}";
@@ -99,6 +102,13 @@ namespace SmartPlant.Models.DataManager
 
             //else plant does not belong to the user
             return -1;
+        }
+        
+        
+        public async Task<bool> GenerateNewPlantToken(PlantToken plantToken)
+        {
+            
+            return false;
 
         }
 

@@ -97,8 +97,10 @@ namespace SmartPlant.Controllers
                 Name = dto.PlantName
             };
 
+            var plantToken = GeneratePlantToken(plant.PlantID);
 
-            var result = await _repo.Add(plant);
+
+            var result = await _repo.Add(plant, plantToken);
 
             if (result == 0)
             {
@@ -111,7 +113,7 @@ namespace SmartPlant.Controllers
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
 
             //else result == 1
-            return Created("", $"Success\n{plant}");
+            return Created("", $"Success\n{plant}\nToken: {plantToken.Token}");
         }
 
 
@@ -168,6 +170,16 @@ namespace SmartPlant.Controllers
 
         }
 
+        [HttpPost]
+        [Route("/api/Plants/NewToken/{plantID}")]
+        public async Task<IActionResult> GenerateNewPlantToken(string plantID)
+        {
+            var plantToken = GeneratePlantToken(plantID);
+            var result = await _repo.GenerateNewPlantToken(plantToken);
+
+            return Ok();
+
+        }
 
         /* 
          * ADMIN ROLE REQUIRED ENDPOINTS
@@ -251,7 +263,9 @@ namespace SmartPlant.Controllers
                 Name = plantDto.PlantName
             };
 
-            var result = await _repo.Add(plant);
+            var plantToken = GeneratePlantToken(plant.PlantID);
+
+            var result = await _repo.Add(plant, null);
 
             if (result == 0)
             {
@@ -265,7 +279,7 @@ namespace SmartPlant.Controllers
 
             //else result == 1
             //return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}\nPlant Name: {plant.Name}");
-            return Created("", $"Success\n{plant}");
+            return Created("", $"Success\n{plant}\nToken: {plantToken.Token}");
         }
 
         /// <summary>
@@ -292,8 +306,6 @@ namespace SmartPlant.Controllers
 
         }
 
-
-
         /// <summary>
         /// Deletes a plant
         /// </summary>
@@ -316,6 +328,20 @@ namespace SmartPlant.Controllers
             {
                 return NotFound("Plant does not exist");
             }
+        }
+
+
+
+        //helper methods
+        private PlantToken GeneratePlantToken(string plantID)
+        {
+            var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+            var plantToken = new PlantToken
+            {
+                PlantID = plantID,
+                Token = token
+            };
+            return plantToken;
         }
     }
 }

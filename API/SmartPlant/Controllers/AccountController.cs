@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.IdentityModel.Tokens.Jwt;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using SmartPlant.Models.API_Model.Admin;
 using SmartPlant.Models.Repository;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Net.Http.Headers;
 
 namespace SmartPlant.Controllers
 {
@@ -28,7 +30,6 @@ namespace SmartPlant.Controllers
             _mapper = mapper;
             _userManager = userManager;
         }
-
 
         /// <summary>
         /// Registers a user to the database, sends a confirmation email .

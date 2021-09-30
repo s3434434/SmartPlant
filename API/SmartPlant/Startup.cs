@@ -108,6 +108,13 @@ namespace SmartPlant
                     In = ParameterLocation.Header,
                     Scheme = "bearer"
                 });
+                c.AddSecurityDefinition("plant token", new OpenApiSecurityScheme
+                {
+                    Description = "To be used with creating SensorData [Post]",
+                    Type = SecuritySchemeType.ApiKey,
+                    In = ParameterLocation.Header,
+                    Scheme = "basic"
+                });
                 c.AddSecurityRequirement(
                     new OpenApiSecurityRequirement
                     {
