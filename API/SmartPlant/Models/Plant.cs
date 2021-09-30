@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using SmartPlant.Models.Repository;
 
 namespace SmartPlant.Models
 {
@@ -20,7 +21,7 @@ namespace SmartPlant.Models
 
         [JsonIgnore]
         public virtual ApplicationUser User { get; set; }
-
+        [JsonIgnore] public virtual PlantToken Token { get; set; }
 
         public override string ToString()
         {
