@@ -133,6 +133,39 @@ namespace SmartPlant.Data
                     UserID = guid,
                     PlantID = "p9813"
                 });
+            context.PlantTokens.AddRange(
+
+                new PlantToken
+                {
+                    PlantID = "plantIdOne",
+                    Token = "token1"
+                },
+                new PlantToken
+                {
+                    PlantID = "plantIdTwo",
+                    Token = "token2"
+                },
+                new PlantToken
+                {
+                    PlantID = "plantIdThree",
+                    Token = "token3"
+                },
+                new PlantToken
+                {
+                    PlantID = "p209",
+                    Token = "token4"
+                },
+                new PlantToken
+                {
+                    PlantID = "p315",
+                    Token = "token5"
+                },
+                new PlantToken
+                {
+                    PlantID = "p9813",
+                    Token = "token6"
+                }
+            );
 
             const string format = "dd/MM/yyyy hh:mm:ss tt";
 
@@ -320,9 +353,8 @@ namespace SmartPlant.Data
                     Moisture = 18,
                     TimeStampUTC = DateTime.ParseExact("30/03/2021 08:00:00 PM", format, null)
                 }
-
-
                 );
+
 
             context.SaveChanges();
         }

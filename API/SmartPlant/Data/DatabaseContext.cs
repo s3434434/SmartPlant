@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SmartPlant.Models;
-using SmartPlant.Models.Repository;
 
 namespace SmartPlant.Data
 {

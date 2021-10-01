@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace SmartPlant.Models.Repository
+namespace SmartPlant.Models
 {
     public class PlantToken
     {
