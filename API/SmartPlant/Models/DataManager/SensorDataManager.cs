@@ -18,7 +18,7 @@ namespace SmartPlant.Models.DataManager
             _context = context;
         }
 
-        //returns all sensor data, is this needed?
+        //returns all sensor data
         public async Task<IEnumerable<SensorData>> GetAll(string userID)
         {
             //if plant does not exist

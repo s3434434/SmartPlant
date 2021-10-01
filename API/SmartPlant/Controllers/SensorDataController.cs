@@ -159,7 +159,7 @@ namespace SmartPlant.Controllers
         /// Adds sensor data for a plant belonging to the user
         /// </summary>
         /// <remarks>
-        /// Don't use this &#xA;
+        /// For testing, use  &#xA;
         /// ----------------------&#xA;
         /// Sensor data is stored as decimals, with 2 decimal places. &#xA; 
         /// For example: 12.446 becomes 12.45. &#xA; 
@@ -218,7 +218,7 @@ namespace SmartPlant.Controllers
         /// <response code="401">Bad Plant Token or too soon for sensor update</response>
         [HttpPost]
         [AllowAnonymous]
-        [Route("/api/SensorData/WithToken")]
+        [Route("/api/SensorData/Token")]
         public async Task<IActionResult> PostWithToken(SensorDataWithTokenDto dto)
         {
             if (!ModelState.IsValid)
