@@ -6,5 +6,5 @@ export default function NotFound() {
     document.title = "Page not found | Demeter - The plant meter";
   }, []);
 
-  return <section className="text-center">Page not found.</section>;
+  return <section className="text-center gold">Page not found.</section>;
 }

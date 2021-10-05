@@ -12,7 +12,7 @@ export default function RegistrationSuccessful(props) {
     <section>
       <h1 className="gold text-center">Registration successful</h1>
       <div className="text-center mt-3">
-        <span className="text-center">
+        <span className="text-center gold">
           Be sure to check your email and verify your account.
         </span>
         <Link className="ms-1" key="landing-page" to="/">
