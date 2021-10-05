@@ -12,7 +12,7 @@ export default function Login(props) {
   });
 
   useEffect(() => {
-    document.title = "Login | Demeter: The Plant Meter";
+    document.title = "Login | Demeter - The plant meter";
 
     props.logOut();
     // eslint-disable-next-line
@@ -31,7 +31,7 @@ export default function Login(props) {
     setShowStatus(true);
 
     axios
-      .post("https://smart-plant.azurewebsites.net/api/Account/login", form)
+      .post("https://smart-plant.azurewebsites.net/api/Account/Login", form)
       .then((res) => {
         localStorage.setItem("demeter-user", res.body);
         window.location.pathname = "/";

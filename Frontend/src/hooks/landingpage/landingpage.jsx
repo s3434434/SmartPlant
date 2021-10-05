@@ -4,12 +4,12 @@ import "./landingpage.css";
 
 export default function LandingPage(props) {
   useEffect(() => {
-    document.title = "Demeter: The Plant Meter";
+    document.title = "Demeter - The plant meter";
     // eslint-disable-next-line
   }, []);
 
   return (
-    <section id="landing">
+    <section>
       <h1 className="gold text-center">
         Welcome to Demeter... The plant meter!
       </h1>

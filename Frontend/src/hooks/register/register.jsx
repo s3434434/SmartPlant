@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from "react";
 import "./register.css";
+import axios from "axios";
 import _ from "lodash";
 
-export default function Register() {
+export default function Register(props) {
   const [form, setForm] = useState({
     email: "",
+    phoneNumber: "",
+    firstName: "",
+    lastName: "",
     password: "",
+    confirmPassword: "",
   });
   const [showStatus, setShowStatus] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
 
   useEffect(() => {
-    document.title = "Register | Dependency Tracker";
+    document.title = "Register | Demeter - The plant meter";
+
+    props.logOut();
     // eslint-disable-next-line
   }, []);
 
@@ -26,68 +33,121 @@ export default function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setStatusMessage("Creating account...");
+    setStatusMessage("Registering account...");
     setShowStatus(true);
 
-    const { email, password } = form;
-
-    // UserPool.signUp(email, password, null, null, (err, data) => {
-    //   if (err) {
-    //     if (err.message.includes("password")) {
-    //       setStatusMessage(
-    //         "Password must be at least 8 characters long, and must contain at least one uppercase character, one lowercase character, one number and one symbol."
-    //       );
-    //     } else {
-    //       setStatusMessage(err.message);
-    //     }
-
-    //     setShowStatus(true);
-    //   } else {
-    //     const user = new CognitoUser({
-    //       Username: email,
-    //       Pool: UserPool,
-    //     });
-    //     const authenticationDetails = new AuthenticationDetails({
-    //       Username: email,
-    //       Password: password,
-    //     });
-
-    //     user.authenticateUser(authenticationDetails, {
-    //       onSuccess: (data) => {
-    //         window.location.pathname = "/";
-    //       },
-    //       onFailure: (err) => {
-    //         window.location.pathname = "/";
-    //       },
-    //     });
-    //   }
-    // });
+    axios
+      .post("https://smart-plant.azurewebsites.net/api/Account/Register", form)
+      .then((res) => {
+        window.location.pathname = "/registration-successful";
+      })
+      .catch((err) => {
+        setStatusMessage(err.message);
+        setShowStatus(true);
+      });
   };
 
   return (
-    <section id="register">
-      <h1>Register:</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email:</label>
-        <input
-          name="email"
-          type="text"
-          value={form.email}
-          onChange={handleChange}
-        />
-        <label htmlFor="password">Password:</label>
-        <input
-          name="password"
-          type="password"
-          value={form.password}
-          onChange={handleChange}
-        />
-        <div className={showStatus ? "visible-message" : "hidden-message"}>
+    <section>
+      <h1 className="gold text-center">Register</h1>
+      <form
+        className="w-50 m-auto mt-4"
+        style={{ marginBottom: "0.75em" }}
+        onSubmit={handleSubmit}
+      >
+        <div className="container p-0">
+          <div className="row">
+            <div className="col-sm-6">
+              <label className="form-label gold" htmlFor="email">
+                Email
+              </label>
+              <input
+                className="form-control"
+                name="email"
+                type="text"
+                required
+                value={form.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-sm-6">
+              <label className="form-label gold" htmlFor="phone">
+                Phone
+              </label>
+              <input
+                className="form-control"
+                name="phone"
+                type="text"
+                value={form.phone}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="row mt-2">
+            <div className="col-sm-6">
+              <label className="form-label gold" htmlFor="first-name">
+                First name
+              </label>
+              <input
+                className="form-control"
+                name="first-name"
+                type="text"
+                value={form.firstName}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-sm-6">
+              <label className="form-label gold" htmlFor="last-name">
+                Last name
+              </label>
+              <input
+                className="form-control"
+                name="last-name"
+                type="text"
+                value={form.lastName}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="row mt-2">
+            <div className="col-sm-6">
+              <label className="form-label gold" htmlFor="password">
+                Password
+              </label>
+              <input
+                className="form-control"
+                name="password"
+                type="password"
+                required
+                value={form.password}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-sm-6">
+              <label className="form-label gold" htmlFor="confirm-password">
+                Confirm password
+              </label>
+              <input
+                className="form-control"
+                name="confirm-password"
+                type="password"
+                required
+                value={form.confirmPassword}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className={"mt-3" + showStatus ? "visible-message" : "hidden-message"}
+        >
           <span>{statusMessage}</span>
         </div>
-        <button className="btn-blue" type="submit">
-          Register
-        </button>
+        <div className="text-center mt-3">
+          <button className="btn btn-primary" type="submit">
+            Register
+          </button>
+        </div>
       </form>
     </section>
   );
