@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import _ from "lodash";
-import { Link } from "react-router-dom";
+import axios from "axios";
 import "./login.css";
 
 export default function Login(props) {
@@ -12,7 +12,7 @@ export default function Login(props) {
   });
 
   useEffect(() => {
-    document.title = "Login | Dependency Tracker";
+    document.title = "Login | Demeter: The Plant Meter";
 
     props.logOut();
     // eslint-disable-next-line
@@ -30,57 +30,42 @@ export default function Login(props) {
     setStatusMessage("Please wait...");
     setShowStatus(true);
 
-    const user = 1;
-    // const user = new CognitoUser({
-    //   Username: form.email,
-    //   Pool: UserPool,
-    // });
-    // const authenticationDetails = new AuthenticationDetails({
-    //   Username: form.email,
-    //   Password: form.password,
-    // });
-
-    // user.authenticateUser(authenticationDetails, {
-    //   onSuccess: (data) => {
-    //     window.location.pathname = "/";
-    //   },
-    //   onFailure: (err) => {
-    //     if (err.message.includes("username")) {
-    //       setStatusMessage("Invalid email or password.");
-    //     } else {
-    //       setStatusMessage(err.message);
-    //     }
-
-    //     setShowStatus(true);
-    //   },
-    //   newPasswordRequired: (data) => {
-    //     console.log("New password required:", data);
-    //   },
-    // });
+    axios
+      .post("https://smart-plant.azurewebsites.net/api/Account/login", form)
+      .then((res) => {
+        localStorage.setItem("demeter-user", res.body);
+        window.location.pathname = "/";
+      })
+      .catch((err) => {
+        setStatusMessage(err.message);
+        setShowStatus(true);
+      });
   };
 
   return (
-    <section id="login">
-      <h1 className="gold text-center">Login:</h1>
+    <section>
+      <h1 className="gold text-center">Login</h1>
       <form
-        id="loginform"
+        className="w-50 m-auto mt-4"
         onSubmit={handleSubmit}
         style={{ marginBottom: "0.75em" }}
       >
-        <label className="gold" htmlFor="email">
-          Email:
+        <label className="form-label gold" htmlFor="email">
+          Email
         </label>
         <input
+          className="form-control"
           name="email"
           type="text"
           value={form.email}
           onChange={handleChange}
           required
         />
-        <label className="gold" htmlFor="password">
-          Password:
+        <label className="form-label mt-3 gold" htmlFor="password">
+          Password
         </label>
         <input
+          className="form-control"
           name="password"
           type="password"
           value={form.password}
@@ -90,15 +75,12 @@ export default function Login(props) {
         <div className={showStatus ? "visible-message" : "hidden-message"}>
           <span>{statusMessage}</span>
         </div>
-        <button className="btn btn-primary" type="submit">
-          Login
-        </button>
+        <div className="text-center mt-3">
+          <button className="btn btn-primary" type="submit">
+            Login
+          </button>
+        </div>
       </form>
-      <div className="text-center mt-3">
-        <Link key="register" to="/register">
-          <button className="btn btn-primary">Register</button>
-        </Link>
-      </div>
     </section>
   );
 }

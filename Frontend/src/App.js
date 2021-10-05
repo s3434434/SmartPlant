@@ -15,20 +15,21 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const checkLoggedIn = () => {
-    let currentUser = localStorage.getItem("current-user");
+    let currentUser = localStorage.getItem("demeter-user");
     let loggedIn = false;
     if (currentUser) {
       axios
         .get("https://smart-plant.azurewebsites.net/api/User", {
           headers: {
             Authorization: "Bearer " + currentUser,
+            "Content-Type": "application/json",
           },
         })
         .then((res) => {
           loggedIn = true;
         })
         .catch((err) => {
-          localStorage.removeItem("current-user");
+          localStorage.removeItem("demeter-user");
         });
     }
 
@@ -80,7 +81,7 @@ function App() {
 
   const logOut = () => {
     if (loggedIn) {
-      localStorage.removeItem("current-user");
+      localStorage.removeItem("demeter-user");
       setLoggedIn(false);
       window.location.pathname = "/landing";
     }
