@@ -266,7 +266,7 @@ function App() {
       <footer className="container-fluid justify-content-center">
         <div className="row">
           <div className="col-sm-4 text-center" style={{ cursor: "default" }}>
-            <span>Developed by Team 4 ©</span>
+            <span>Developed by Team 4, 2021©</span>
           </div>
           <div className="col-sm-4 text-center">
             <a
