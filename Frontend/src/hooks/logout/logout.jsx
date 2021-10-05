@@ -1,20 +1,19 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import "./registration_successful.css";
+import "./logout.css";
 
-export default function RegistrationSuccessful(props) {
+export default function Logout(props) {
   useEffect(() => {
-    document.title = "Registration successful | Demeter - The plant meter";
+    document.title = "Logout successful | Demeter - The plant meter";
+
+    props.logOut();
     // eslint-disable-next-line
   }, []);
 
   return (
     <section>
-      <h1 className="gold text-center">Registration successful</h1>
       <div className="text-center mt-3">
-        <span className="text-center">
-          Be sure to check your email and verify your account.
-        </span>
+        <span className="text-center">You have been logged out.</span>
         <Link className="ms-1" key="landing-page" to="/">
           <button className="btn btn-primary">Home</button>
         </Link>

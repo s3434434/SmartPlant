@@ -9,6 +9,7 @@ import Register from "./hooks/register/register";
 import RegistrationSuccessful from "./hooks/register/registration_successful/registration_successful";
 import ForgotPassword from "./hooks/forgot_password/forgot_password";
 import RequestProcessed from "./hooks/forgot_password/request_processed/request_processed";
+import Logout from "./hooks/logout/logout";
 import Settings from "./hooks/settings/settings";
 import NotFound from "./hooks/not_found/not_found";
 import AllPlants from "./hooks/all_plants/all_plants";
@@ -161,7 +162,12 @@ function App() {
                   </span>
                 </li>
                 <li className="nav-item">
-                  <span className="nav-link" onClick={logOut}>
+                  <span
+                    className="nav-link"
+                    onClick={() => {
+                      window.location.pathname = "/logout";
+                    }}
+                  >
                     <h5>Logout</h5>
                   </span>
                 </li>
@@ -241,6 +247,11 @@ function App() {
               exact
               path="/request-processed"
               component={RequestProcessed}
+            />
+            <Route
+              exact
+              path="/logout"
+              render={(props) => <Logout {...props} logOut={logOut} />}
             />
             <Route
               exact
