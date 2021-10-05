@@ -12,6 +12,11 @@ nav li {
   text-align: center;
 }
 
+span.nav-link,
+span.footer-link {
+  cursor: pointer;
+}
+
 main {
   min-height: calc(100vh - 8em);
 }
@@ -23,6 +28,9 @@ main > * {
 
 footer * {
   color: white;
+}
+footer span:hover {
+  color: rgb(255, 255, 255, 0.7) !important;
 }
 
 @media (max-width: 826px) {

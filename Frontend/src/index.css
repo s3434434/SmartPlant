@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto:light");
-
 body {
   scroll-behavior: smooth;
   background-image: url("assets/images/background.jpeg");
@@ -7,13 +5,11 @@ body {
   background-attachment: fixed;
   background-position: center;
 }
-
+h1 {
+  cursor: default;
+}
 .gold {
   color: rgb(243, 202, 0);
-}
-
-a {
-  cursor: pointer;
 }
 
 section {
@@ -39,13 +35,15 @@ p {
 
   border: none !important;
 }
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus {
   box-shadow: 0.11em 0.11em 0.19em rgb(243, 202, 0),
     -0.11em -0.11em 0.19em rgb(243, 202, 0),
     -0.11em 0.11em 0.19em rgb(243, 202, 0),
     0.11em -0.11em 0.19em rgb(243, 202, 0), 0.0832em 0.0832em black,
     -0.0832em -0.0832em black, -0.0832em 0.0832em black,
-    0.0832em -0.0832em black;
+    0.0832em -0.0832em black !important;
 }
 .btn-primary:focus {
   outline: none;
@@ -61,31 +59,17 @@ i:hover {
   color: #f1f1f1;
 }
 
-form {
-  margin: auto;
-  width: 50%;
-}
-form > * {
-  width: 100%;
-}
 input,
 textarea,
 select {
-  background-color: transparent;
-  color: white;
-  font-size: 1.3em;
-  font-family: "Courier New", Courier, monospace;
+  color: rgb(53, 0, 20) !important;
 }
-label {
-  font-size: 1.4em;
-}
-form .details {
+/* form .details {
   display: grid;
-}
+} */
 :-moz-ui-invalid {
   box-shadow: none;
 }
-
 form .hidden-message {
   opacity: 0;
   pointer-events: none;
@@ -93,13 +77,6 @@ form .hidden-message {
 form .visible-message {
   opacity: 1;
   pointer-events: unset;
-  font-size: 1.2em;
-}
-form .visible-message span {
-  font-size: 1.2em;
-}
-form label {
-  margin-bottom: 2em;
 }
 
 .content-gallery {
@@ -191,34 +168,8 @@ form label {
     margin-bottom: 3%;
   }
 }
-@media (max-width: 826px) {
-  section p {
-    font-size: 1.15em;
-  }
-
-  .btn-blue {
-    font-size: 1.1em;
-    width: 5.64em;
-    height: 2.11em;
-  }
-  input,
-  textarea,
-  select {
-    font-size: 1em;
-  }
-  label {
-    font-size: 1.077em;
-  }
-}
 
 @media (max-width: 743px) {
-  .normal-view {
-    display: none;
-  }
-
-  form {
-    width: 90%;
-  }
   .overlay .closeBtn {
     font-size: 48px;
     top: 12.5px;

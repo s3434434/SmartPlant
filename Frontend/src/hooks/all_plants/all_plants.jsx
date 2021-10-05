@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import "./allplants.css";
+import "./all_plants.css";
 import _ from "lodash";
 
 export default function AllPlants(props) {

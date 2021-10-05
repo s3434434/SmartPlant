@@ -3,32 +3,37 @@ import "./App.css";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import axios from "axios";
 import Plant from "./hooks/plant/plant";
-import LandingPage from "./hooks/landingpage/landingpage";
+import LandingPage from "./hooks/landing_page/landing_page";
 import Login from "./hooks/login/login";
 import Register from "./hooks/register/register";
+import RegistrationSuccessful from "./hooks/register/registration_successful/registration_successful";
+import ForgotPassword from "./hooks/forgot_password/forgot_password";
+import RequestProcessed from "./hooks/forgot_password/request_processed/request_processed";
+import Logout from "./hooks/logout/logout";
 import Settings from "./hooks/settings/settings";
-import NotFound from "./hooks/notfound/notfound";
-import AllPlants from "./hooks/allplants/allplants";
+import NotFound from "./hooks/not_found/not_found";
+import AllPlants from "./hooks/all_plants/all_plants";
 import logo from "./assets/images/logo.png";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const checkLoggedIn = () => {
-    let currentUser = localStorage.getItem("current-user");
+    let currentUser = localStorage.getItem("demeter-user");
     let loggedIn = false;
     if (currentUser) {
       axios
         .get("https://smart-plant.azurewebsites.net/api/User", {
           headers: {
             Authorization: "Bearer " + currentUser,
+            "Content-Type": "application/json",
           },
         })
         .then((res) => {
           loggedIn = true;
         })
         .catch((err) => {
-          localStorage.removeItem("current-user");
+          localStorage.removeItem("demeter-user");
         });
     }
 
@@ -80,7 +85,7 @@ function App() {
 
   const logOut = () => {
     if (loggedIn) {
-      localStorage.removeItem("current-user");
+      localStorage.removeItem("demeter-user");
       setLoggedIn(false);
       window.location.pathname = "/landing";
     }
@@ -127,82 +132,87 @@ function App() {
             {loggedIn ? (
               <>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/";
                     }}
                   >
                     <h5>Plants</h5>
-                  </a>
+                  </span>
                 </li>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/settings";
                     }}
                   >
                     <h5>Settings</h5>
-                  </a>
+                  </span>
                 </li>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/support";
                     }}
                   >
                     <h5>Support</h5>
-                  </a>
+                  </span>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" onClick={logOut}>
+                  <span
+                    className="nav-link"
+                    onClick={() => {
+                      window.location.pathname = "/logout";
+                    }}
+                  >
                     <h5>Logout</h5>
-                  </a>
+                  </span>
                 </li>
               </>
             ) : (
               <>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/";
                     }}
                   >
                     <h5>Home</h5>
-                  </a>
+                  </span>
                 </li>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/login";
                     }}
                   >
                     <h5>Login</h5>
-                  </a>
+                  </span>
                 </li>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/register";
                     }}
                   >
                     <h5>Register</h5>
-                  </a>
+                  </span>
                 </li>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/support";
                     }}
                   >
                     <h5>Support</h5>
-                  </a>
+                  </span>
                 </li>
               </>
             )}
@@ -222,7 +232,27 @@ function App() {
               path="/login"
               render={(props) => <Login {...props} logOut={logOut} />}
             />
-            <Route exact path="/register" component={Register} />
+            <Route
+              exact
+              path="/register"
+              render={(props) => <Register {...props} logOut={logOut} />}
+            />
+            <Route
+              exact
+              path="/registration-successful"
+              component={RegistrationSuccessful}
+            />
+            <Route exact path="/forgot-password" component={ForgotPassword} />
+            <Route
+              exact
+              path="/request-processed"
+              component={RequestProcessed}
+            />
+            <Route
+              exact
+              path="/logout"
+              render={(props) => <Logout {...props} logOut={logOut} />}
+            />
             <Route
               exact
               path="/plants"
@@ -269,22 +299,24 @@ function App() {
             <span>Developed by Team 4, 2021 ©</span>
           </div>
           <div className="col-sm-4 text-center">
-            <a
+            <span
+              className="footer-link"
               onClick={() => {
                 window.location.pathname = "/terms-of-use";
               }}
             >
               Terms of use
-            </a>
+            </span>
           </div>
           <div className="col-sm-4 text-center">
-            <a
+            <span
+              className="footer-link"
               onClick={() => {
                 window.location.pathname = "/privacy-policy";
               }}
             >
               Privacy policy
-            </a>
+            </span>
           </div>
         </div>
       </footer>
