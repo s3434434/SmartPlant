@@ -126,7 +126,7 @@ namespace SmartPlant.Tests.Controllers
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ApplicationUser());
 
-            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
+            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
 
             var test_AddPlantDto = new AddPlantDto();
@@ -153,7 +153,7 @@ namespace SmartPlant.Tests.Controllers
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ApplicationUser());
 
-            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
+            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
 
             var test_AddPlantDto = new AddPlantDto();
@@ -180,7 +180,7 @@ namespace SmartPlant.Tests.Controllers
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ApplicationUser());
 
-            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
+            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
 
             var test_AddPlantDto = new AddPlantDto();
@@ -441,7 +441,7 @@ namespace SmartPlant.Tests.Controllers
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ApplicationUser());
 
-            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
+            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
 
             var test_AddPlantDto = new AdminAddPlantDto();
@@ -468,7 +468,7 @@ namespace SmartPlant.Tests.Controllers
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ApplicationUser());
 
-            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
+            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
 
             var test_AddPlantDto = new AdminAddPlantDto();
@@ -495,7 +495,7 @@ namespace SmartPlant.Tests.Controllers
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ApplicationUser());
 
-            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>()))
+            mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
 
             var test_AddPlantDto = new AdminAddPlantDto();

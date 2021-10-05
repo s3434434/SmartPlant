@@ -74,10 +74,17 @@ namespace SmartPlant.Tests.Models.DataManager
         public async Task Add_WhenPlantIDAlreadyExists_Returns0()
         {
             // Arrange
-            Plant test_Plant = new Plant()
+            Plant test_Plant = new ()
             {
                 PlantID = "existing",
                 UserID = "existing"
+            };
+
+            PlantToken test_PlantToken = new ()
+            {
+                PlantID = "existing",
+                Token = "token",
+                Plant = test_Plant
             };
 
             var plantManager = new PlantManager(mock_DatabaseContext);
@@ -85,7 +92,7 @@ namespace SmartPlant.Tests.Models.DataManager
             var expected = 0;
 
             // Act
-            var result = await plantManager.Add(test_Plant);
+            var result = await plantManager.Add(test_Plant, test_PlantToken);
 
             // Assert
             Assert.AreEqual(expected, result);
@@ -101,10 +108,17 @@ namespace SmartPlant.Tests.Models.DataManager
             for (int i = 0; i < 4; i++)
                 existing_Plants.Add(new Plant() { PlantID = i.ToString(), UserID = existing_UserID });
 
-            Plant test_Plant = new Plant()
+            Plant test_Plant = new ()
             {
                 PlantID = "tooManyPlants",
                 UserID = existing_UserID
+            };
+
+            PlantToken test_PlantToken = new ()
+            {
+                PlantID = "existing",
+                Token = "token",
+                Plant = test_Plant
             };
 
             var plantManager = new PlantManager(mock_DatabaseContext);
@@ -114,11 +128,11 @@ namespace SmartPlant.Tests.Models.DataManager
             // Add existing plants
             foreach (Plant plant in existing_Plants)
             {
-                await plantManager.Add(plant);
+                await plantManager.Add(plant, test_PlantToken);
             }
 
             // Act
-            var result = await plantManager.Add(test_Plant);
+            var result = await plantManager.Add(test_Plant, test_PlantToken);
 
             // Assert
             Assert.AreEqual(expected, result);
@@ -128,10 +142,17 @@ namespace SmartPlant.Tests.Models.DataManager
         public async Task Add_WhenPlantSuccessfullyAdded_Returns1()
         {
             // Arrange
-            Plant test_Plant = new Plant()
+            Plant test_Plant = new ()
             {
                 PlantID = "newID",
                 UserID = "newID"
+            };
+
+            PlantToken test_PlantToken = new ()
+            {
+                PlantID = "existing",
+                Token = "token",
+                Plant = test_Plant
             };
 
             var plantManager = new PlantManager(mock_DatabaseContext);
@@ -139,7 +160,7 @@ namespace SmartPlant.Tests.Models.DataManager
             var expected = 1;
 
             // Act
-            var result = await plantManager.Add(test_Plant);
+            var result = await plantManager.Add(test_Plant, test_PlantToken);
 
             // Assert
             Assert.AreEqual(expected, result);
