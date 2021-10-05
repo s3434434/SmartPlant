@@ -72,6 +72,19 @@ export default function Login(props) {
           onChange={handleChange}
           required
         ></input>
+        <div className="form-text">
+          <a
+            id="forgot-password"
+            className="gold"
+            style={{ textDecoration: "none" }}
+            onClick={() => {
+              window.location.pathname = "/forgot-password";
+            }}
+          >
+            Forgot password?
+          </a>
+        </div>
+
         <div className={showStatus ? "visible-message" : "hidden-message"}>
           <span>{statusMessage}</span>
         </div>

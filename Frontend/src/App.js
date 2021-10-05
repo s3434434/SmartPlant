@@ -7,6 +7,8 @@ import LandingPage from "./hooks/landingpage/landingpage";
 import Login from "./hooks/login/login";
 import Register from "./hooks/register/register";
 import RegistrationSuccessful from "./hooks/register/registrationsuccessful/registrationsuccessful";
+import ForgotPassword from "./hooks/forgotpassword/forgotpassword";
+import RequestProcessed from "./hooks/forgotpassword/requestprocessed/requestprocessed";
 import Settings from "./hooks/settings/settings";
 import NotFound from "./hooks/notfound/notfound";
 import AllPlants from "./hooks/allplants/allplants";
@@ -233,6 +235,12 @@ function App() {
               exact
               path="/registration-successful"
               component={RegistrationSuccessful}
+            />
+            <Route exact path="/forgot-password" component={ForgotPassword} />
+            <Route
+              exact
+              path="/request-processed"
+              component={RequestProcessed}
             />
             <Route
               exact

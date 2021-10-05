@@ -4,36 +4,25 @@ import axios from "axios";
 import "./forgotpassword.css";
 
 export default function ForgotPassword(props) {
-  const [email, setForm] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     document.title = "Forgot password | Demeter - The plant meter";
 
-    props.logOut();
     // eslint-disable-next-line
   }, []);
 
   const handleChange = (e) => {
-    const input = e.target;
-    const tempForm = _.cloneDeep(form);
-    tempForm[input.name] = input.value;
-    setForm(tempForm);
+    setEmail(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setStatusMessage("Please wait...");
-    setShowStatus(true);
 
     axios
       .post("https://smart-plant.azurewebsites.net/api/Password/Forgot", email)
       .then((res) => {
-        localStorage.setItem("demeter-user", res.body);
-        window.location.pathname = "/";
-      })
-      .catch((err) => {
-        setStatusMessage(err.message);
-        setShowStatus(true);
+        window.location.pathname = "/request-successful";
       });
   };
 
@@ -52,11 +41,16 @@ export default function ForgotPassword(props) {
           className="form-control"
           name="email"
           type="text"
-          value={form.email}
+          value={email}
           onChange={handleChange}
           required
         />
-        <div className="text-center mt-3">
+        <div className="form-text">
+          <span className="gold" style={{ cursor: "default" }}>
+            Enter your email and we will send you a password reset link.
+          </span>
+        </div>
+        <div className="text-center mt-4">
           <button className="btn btn-primary" type="submit">
             Reset password
           </button>
