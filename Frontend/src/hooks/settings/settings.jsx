@@ -1,0 +1,325 @@
+import React, { useEffect, useState } from "react";
+import "./settings.css";
+import _ from "lodash";
+
+export default function Settings(props) {
+  const { getCurrentUser } = props;
+
+  const [account, setAccount] = useState({
+    email: "",
+    preferences: {
+      major: false,
+      minor: false,
+      patch: false,
+    },
+  });
+  const [initialPreferences, setInitialPreferences] = useState();
+  const [showAccountStatus, setShowAccountStatus] = useState(false);
+  const [accountStatusMessage, setAccountStatusMessage] = useState("");
+
+  const [passwords, setPasswords] = useState({
+    oldPassword: "",
+    newPassword: "",
+  });
+  const [passwordModifiable, setPasswordModifiable] = useState(false);
+  const [showPasswordStatus, setShowPasswordStatus] = useState(false);
+  const [passwordStatusMessage, setPasswordStatusMessage] = useState("");
+
+  useEffect(() => {
+    document.title = "Settings | Dependency Tracker";
+
+    getCurrentUser()
+      .then((user) => {
+        user.getSession((err, session) => {
+          if (!err) {
+            user.getUserAttributes((err, attributes) => {
+              if (!err) {
+                let tempAccount = {};
+                let email = "";
+                attributes.forEach((attribute) => {
+                  if (attribute.getName() === "email") {
+                    email = attribute.getValue();
+                  }
+                });
+                tempAccount["email"] = email;
+
+                const fetchPreferences = async () => {
+                  const response = await fetch(
+                    `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/preferences?email=${email}`,
+                    {
+                      method: "get",
+                      headers: {
+                        Authorization: session.getIdToken().getJwtToken(),
+                      },
+                    }
+                  );
+                  const json = await response.json();
+                  tempAccount["preferences"] = json;
+                  setInitialPreferences(json);
+
+                  const checkboxes = {
+                    major: document.getElementsByName("major")[0],
+                    minor: document.getElementsByName("minor")[0],
+                    patch: document.getElementsByName("patch")[0],
+                  };
+                  Object.keys(checkboxes).forEach((checkbox) => {
+                    if (tempAccount["preferences"][checkbox]) {
+                      checkboxes[checkbox].checked = true;
+                    }
+                  });
+
+                  setAccount(tempAccount);
+                };
+                fetchPreferences();
+              }
+            });
+          }
+        });
+      })
+      .catch((err) => {
+        window.location.pathname = "/login";
+      });
+    // eslint-disable-next-line
+  }, []);
+
+  const handleAccountChange = (e) => {
+    const input = e.target;
+    const tempAccount = _.cloneDeep(account);
+
+    if (input.type === "checkbox") {
+      tempAccount["preferences"][input.name] = input.checked;
+    } else {
+      tempAccount[input.name] = input.value;
+    }
+
+    setAccount(tempAccount);
+  };
+
+  const handleAccountSubmit = (e) => {
+    e.preventDefault();
+
+    const { major, minor, patch } = account.preferences;
+
+    getCurrentUser()
+      .then((user) => {
+        user.getSession((err, session) => {
+          if (!err) {
+            if (
+              major !== initialPreferences["major"] ||
+              minor !== initialPreferences["minor"] ||
+              patch !== initialPreferences["patch"]
+            ) {
+              setAccountStatusMessage("Please wait...");
+              setShowAccountStatus(true);
+
+              const updatePreferences = async () => {
+                let body = account.preferences;
+                body["email"] = account.email;
+
+                await fetch(
+                  "https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/preferences",
+                  {
+                    method: "post",
+                    body: JSON.stringify(body),
+                    headers: {
+                      Authorization: session.getIdToken().getJwtToken(),
+                    },
+                  }
+                );
+
+                window.location.reload();
+              };
+              updatePreferences();
+            }
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handlePasswordChange = (e) => {
+    const input = e.target;
+    const tempPasswords = _.cloneDeep(passwords);
+
+    tempPasswords[input.name] = input.value;
+    setPasswords(tempPasswords);
+  };
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    setPasswordStatusMessage("Please wait...");
+    setShowPasswordStatus(true);
+
+    if (passwords.newPassword !== passwords.confirmNewPassword) {
+      setPasswordStatusMessage("Passwords do not match.");
+    } else {
+      getCurrentUser()
+        .then((user) => {
+          user.getSession((err, session) => {
+            if (!err) {
+              user.changePassword(
+                passwords.oldPassword,
+                passwords.newPassword,
+                (err, result) => {
+                  if (err) {
+                    if (err.message.includes("username")) {
+                      setPasswordStatusMessage("Old password was incorrect.");
+                    } else {
+                      setPasswordStatusMessage(err.message);
+                    }
+                  } else {
+                    window.location.reload();
+                  }
+                }
+              );
+            }
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  return (
+    <section id="account">
+      <div style={{ display: account.email !== "" ? "unset" : "none" }}>
+        <h1>Account Settings:</h1>
+
+        <form onSubmit={handleAccountSubmit} style={{ marginBottom: "1em" }}>
+          <label htmlFor="email">Email:</label>
+          <input name="email" type="email" value={account.email}></input>
+          <div style={{ marginBottom: "1em" }}>
+            <h2 style={{ fontSize: "1.3em" }}>Version update notifications:</h2>
+            <div>
+              <label htmlFor="major" style={{ marginRight: "0.5em" }}>
+                Major:
+              </label>
+              <input
+                name="major"
+                type="checkbox"
+                onChange={handleAccountChange}
+              ></input>
+            </div>
+            <div>
+              <label htmlFor="minor" style={{ marginRight: "0.5em" }}>
+                Minor:
+              </label>
+              <input
+                name="minor"
+                type="checkbox"
+                onChange={handleAccountChange}
+              ></input>
+            </div>
+            <div>
+              <label htmlFor="patch" style={{ marginRight: "0.5em" }}>
+                Patch:
+              </label>
+              <input
+                name="patch"
+                type="checkbox"
+                onChange={handleAccountChange}
+              ></input>
+            </div>
+          </div>
+          <div
+            className={showAccountStatus ? "visible-message" : "hidden-message"}
+            style={{ margin: "0.5em 0em" }}
+          >
+            <span>{accountStatusMessage}</span>
+          </div>
+          <button className="btn-blue" type="submit">
+            Apply changes
+          </button>
+        </form>
+
+        <form onSubmit={handlePasswordSubmit}>
+          <div
+            className="password"
+            style={{
+              display: passwordModifiable ? "none" : "unset",
+            }}
+          >
+            <label htmlFor="password" style={{ marginRight: "0.5em" }}>
+              Password:
+            </label>
+            <input
+              name="password"
+              type="password"
+              value="password"
+              placeholder="password"
+              readOnly
+            ></input>
+          </div>
+          <div
+            className="modifyPassword"
+            style={{ display: passwordModifiable ? "unset" : "none" }}
+          >
+            <div style={{ display: "block" }}>
+              <label htmlFor="oldPassword" style={{ marginRight: "0.5em" }}>
+                Old password:
+              </label>
+              <input
+                name="oldPassword"
+                type="password"
+                value={passwords.oldPassword}
+                onChange={handlePasswordChange}
+                required={passwordModifiable ? true : false}
+              ></input>
+            </div>
+            <div style={{ display: "block" }}>
+              <label htmlFor="newPassword" style={{ marginRight: "0.5em" }}>
+                New password:
+              </label>
+              <input
+                name="newPassword"
+                type="password"
+                value={passwords.newPassword}
+                onChange={handlePasswordChange}
+                required={passwordModifiable ? true : false}
+              ></input>
+            </div>
+            <div style={{ display: "block" }}>
+              <label
+                htmlFor="confirmNewPassword"
+                style={{ marginRight: "0.5em" }}
+              >
+                Confirm new password:
+              </label>
+              <input
+                name="confirmNewPassword"
+                type="password"
+                value={passwords.confirmNewPassword}
+                onChange={handlePasswordChange}
+                required={passwordModifiable ? true : false}
+              ></input>
+            </div>
+          </div>
+          <div
+            className={
+              showPasswordStatus ? "visible-message" : "hidden-message"
+            }
+            style={{ margin: "0.5em 0em" }}
+          >
+            <span>{passwordStatusMessage}</span>
+          </div>
+          <button
+            className="btn-blue changePassBtn"
+            type={passwordModifiable ? "submit" : "button"}
+            onClick={
+              passwordModifiable
+                ? null
+                : () => {
+                    setPasswordModifiable(true);
+                  }
+            }
+          >
+            Change password
+          </button>
+        </form>
+      </div>
+    </section>
+  );
+}

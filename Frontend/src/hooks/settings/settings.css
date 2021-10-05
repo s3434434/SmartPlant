@@ -1,0 +1,40 @@
+#settings form {
+  text-align: center;
+  width: 30%;
+}
+
+#settings input,
+#settings select {
+  margin-bottom: 1em;
+}
+#settings select {
+  width: 102%;
+}
+#settings form button {
+  margin-top: 0.5em;
+}
+#settings form span {
+  font-size: 1.2em;
+}
+
+#settings button {
+  width: 9em;
+  display: block;
+  margin: auto;
+  margin-bottom: 1em;
+}
+
+#settings .password *,
+#settings .modifyPassword * {
+  display: block;
+  width: 100%;
+}
+
+@media (max-width: 743px) {
+  #settings form {
+    width: 80%;
+  }
+  #settings form span {
+    font-size: 1.05em;
+  }
+}

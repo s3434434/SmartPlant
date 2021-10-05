@@ -1,0 +1,25 @@
+#register form {
+  text-align: center;
+  width: 30%;
+}
+
+#register input {
+  margin-bottom: 1em;
+}
+#register form button {
+  margin-top: 0.5em;
+}
+#register button {
+  width: 9em;
+  display: block;
+  margin: auto;
+  margin-bottom: 1em;
+}
+@media (max-width: 743px) {
+  #register form {
+    width: 80%;
+  }
+  #register form span {
+    font-size: 1.05em;
+  }
+}

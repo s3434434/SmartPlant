@@ -1,0 +1,248 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:light");
+
+body {
+  scroll-behavior: smooth;
+  background-image: url("assets/images/background.jpeg");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+.gold {
+  color: rgb(243, 202, 0);
+}
+
+a {
+  cursor: pointer;
+}
+
+section {
+  background-color: rgba(37, 78, 47, 0.5);
+  margin: 1.5em 2em;
+  padding: 1.375em;
+  border-radius: 0.75em;
+  overflow: hidden;
+}
+
+p {
+  text-align: justify;
+  margin-top: 0;
+  hyphens: auto;
+  font-size: 1.5em;
+}
+
+.btn-primary {
+  background-color: rgba(0, 53, 11) !important;
+  border-radius: 0.85em !important;
+
+  color: white;
+
+  border: none !important;
+}
+.btn-primary:hover {
+  box-shadow: 0.11em 0.11em 0.19em rgb(243, 202, 0),
+    -0.11em -0.11em 0.19em rgb(243, 202, 0),
+    -0.11em 0.11em 0.19em rgb(243, 202, 0),
+    0.11em -0.11em 0.19em rgb(243, 202, 0), 0.0832em 0.0832em black,
+    -0.0832em -0.0832em black, -0.0832em 0.0832em black,
+    0.0832em -0.0832em black;
+}
+.btn-primary:focus {
+  outline: none;
+}
+.btn-primary:active {
+  opacity: 0.8;
+}
+
+i {
+  color: #818181;
+}
+i:hover {
+  color: #f1f1f1;
+}
+
+form {
+  margin: auto;
+  width: 50%;
+}
+form > * {
+  width: 100%;
+}
+input,
+textarea,
+select {
+  background-color: transparent;
+  color: white;
+  font-size: 1.3em;
+  font-family: "Courier New", Courier, monospace;
+}
+label {
+  font-size: 1.4em;
+}
+form .details {
+  display: grid;
+}
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+
+form .hidden-message {
+  opacity: 0;
+  pointer-events: none;
+}
+form .visible-message {
+  opacity: 1;
+  pointer-events: unset;
+  font-size: 1.2em;
+}
+form .visible-message span {
+  font-size: 1.2em;
+}
+form label {
+  margin-bottom: 2em;
+}
+
+.content-gallery {
+  margin-top: 0.5em;
+}
+.content-gallery > * {
+  margin: auto;
+  margin-bottom: 1%;
+}
+.cg-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-padding {
+  background-color: black;
+}
+
+.cg-container {
+  overflow: hidden;
+  background-position: center;
+  background-size: contain;
+  width: 15em;
+  height: 15em;
+  display: grid;
+  grid-template-columns: 100%;
+  align-items: center;
+  justify-content: center;
+  transition: 0.05s;
+  cursor: pointer;
+}
+.cg-container h1,
+.cg-container h2 {
+  padding-left: 0.3em;
+  padding-right: 0.3em;
+  text-shadow: 0.03em 0.03em black;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-wrap: break-word;
+  hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+}
+
+.overlay {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+  transition: 0.5s;
+  height: 75%;
+  width: 0;
+  border-radius: 0.75em;
+  z-index: 1;
+  top: 17.5%;
+  left: 9%;
+}
+.overlay i {
+  position: absolute;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 45px;
+  padding: 5px;
+}
+.overlay .closeBtn {
+  top: 20px;
+  right: 45px;
+}
+.overlay-content {
+  position: absolute;
+  top: 0%;
+  left: 10%;
+  width: 80%;
+  display: grid;
+  grid-template-columns: 100%;
+}
+.overlay-content form {
+  text-align: center;
+  font-size: 1.3em;
+  margin-top: 5em;
+}
+.overlay-content form > * {
+  margin-bottom: 1em;
+}
+
+@media (max-width: 881px) {
+  .content-gallery > * {
+    margin-bottom: 3%;
+  }
+}
+@media (max-width: 826px) {
+  section p {
+    font-size: 1.15em;
+  }
+
+  .btn-blue {
+    font-size: 1.1em;
+    width: 5.64em;
+    height: 2.11em;
+  }
+  input,
+  textarea,
+  select {
+    font-size: 1em;
+  }
+  label {
+    font-size: 1.077em;
+  }
+}
+
+@media (max-width: 743px) {
+  .normal-view {
+    display: none;
+  }
+
+  form {
+    width: 90%;
+  }
+  .overlay .closeBtn {
+    font-size: 48px;
+    top: 12.5px;
+    right: 14.5px;
+  }
+  .overlay-content {
+    left: 13.75%;
+    width: 72.5%;
+  }
+}
+
+@media (max-width: 526px) {
+  section {
+    padding: 0.5em;
+  }
+
+  .overlay .closeBtn {
+    top: 15px;
+    right: 20px;
+  }
+}
+@media (max-width: 524px) {
+  .cg-container {
+    width: 10em;
+    height: 10em;
+  }
+}
