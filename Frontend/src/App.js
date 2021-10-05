@@ -3,15 +3,15 @@ import "./App.css";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import axios from "axios";
 import Plant from "./hooks/plant/plant";
-import LandingPage from "./hooks/landingpage/landingpage";
+import LandingPage from "./hooks/landing_page/landing_page";
 import Login from "./hooks/login/login";
 import Register from "./hooks/register/register";
-import RegistrationSuccessful from "./hooks/register/registrationsuccessful/registrationsuccessful";
-import ForgotPassword from "./hooks/forgotpassword/forgotpassword";
-import RequestProcessed from "./hooks/forgotpassword/requestprocessed/requestprocessed";
+import RegistrationSuccessful from "./hooks/register/registration_successful/registration_successful";
+import ForgotPassword from "./hooks/forgot_password/forgot_password";
+import RequestProcessed from "./hooks/forgot_password/request_processed/request_processed";
 import Settings from "./hooks/settings/settings";
-import NotFound from "./hooks/notfound/notfound";
-import AllPlants from "./hooks/allplants/allplants";
+import NotFound from "./hooks/not_found/not_found";
+import AllPlants from "./hooks/all_plants/all_plants";
 import logo from "./assets/images/logo.png";
 
 function App() {
