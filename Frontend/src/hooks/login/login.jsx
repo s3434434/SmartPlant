@@ -73,16 +73,16 @@ export default function Login(props) {
           required
         ></input>
         <div className="form-text">
-          <a
+          <span
             id="forgot-password"
             className="gold"
-            style={{ textDecoration: "none" }}
+            style={{ textDecoration: "none", cursor: "pointer" }}
             onClick={() => {
               window.location.pathname = "/forgot-password";
             }}
           >
             Forgot password?
-          </a>
+          </span>
         </div>
 
         <div className={showStatus ? "visible-message" : "hidden-message"}>

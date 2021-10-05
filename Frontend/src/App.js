@@ -131,82 +131,82 @@ function App() {
             {loggedIn ? (
               <>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/";
                     }}
                   >
                     <h5>Plants</h5>
-                  </a>
+                  </span>
                 </li>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/settings";
                     }}
                   >
                     <h5>Settings</h5>
-                  </a>
+                  </span>
                 </li>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/support";
                     }}
                   >
                     <h5>Support</h5>
-                  </a>
+                  </span>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" onClick={logOut}>
+                  <span className="nav-link" onClick={logOut}>
                     <h5>Logout</h5>
-                  </a>
+                  </span>
                 </li>
               </>
             ) : (
               <>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/";
                     }}
                   >
                     <h5>Home</h5>
-                  </a>
+                  </span>
                 </li>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/login";
                     }}
                   >
                     <h5>Login</h5>
-                  </a>
+                  </span>
                 </li>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/register";
                     }}
                   >
                     <h5>Register</h5>
-                  </a>
+                  </span>
                 </li>
                 <li className="nav-item">
-                  <a
+                  <span
                     className="nav-link"
                     onClick={() => {
                       window.location.pathname = "/support";
                     }}
                   >
                     <h5>Support</h5>
-                  </a>
+                  </span>
                 </li>
               </>
             )}
@@ -288,22 +288,24 @@ function App() {
             <span>Developed by Team 4, 2021 ©</span>
           </div>
           <div className="col-sm-4 text-center">
-            <a
+            <span
+              className="footer-link"
               onClick={() => {
                 window.location.pathname = "/terms-of-use";
               }}
             >
               Terms of use
-            </a>
+            </span>
           </div>
           <div className="col-sm-4 text-center">
-            <a
+            <span
+              className="footer-link"
               onClick={() => {
                 window.location.pathname = "/privacy-policy";
               }}
             >
               Privacy policy
-            </a>
+            </span>
           </div>
         </div>
       </footer>
