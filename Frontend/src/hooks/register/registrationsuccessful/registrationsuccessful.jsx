@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import "./landingpage.css";
+import "./registrationsuccessful.css";
 
 export default function RegistrationSuccessful(props) {
   useEffect(() => {

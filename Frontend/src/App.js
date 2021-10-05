@@ -6,7 +6,7 @@ import Plant from "./hooks/plant/plant";
 import LandingPage from "./hooks/landingpage/landingpage";
 import Login from "./hooks/login/login";
 import Register from "./hooks/register/register";
-import RegistrationSuccessful from "./hooks/registrationsuccessful/registrationsuccessful";
+import RegistrationSuccessful from "./hooks/register/registrationsuccessful/registrationsuccessful";
 import Settings from "./hooks/settings/settings";
 import NotFound from "./hooks/notfound/notfound";
 import AllPlants from "./hooks/allplants/allplants";
