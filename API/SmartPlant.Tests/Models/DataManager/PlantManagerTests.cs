@@ -156,9 +156,8 @@ namespace SmartPlant.Tests.Models.DataManager
 
             PlantToken test_PlantToken = new ()
             {
-                PlantID = "existing",
-                Token = "token",
-                Plant = test_Plant
+                PlantID = "newID",
+                Token = "token"
             };
 
             var plantManager = new PlantManager(mock_DatabaseContext);
@@ -340,9 +339,8 @@ namespace SmartPlant.Tests.Models.DataManager
             var userID = "existing";
             PlantToken test_PlantToken = new()
             {
-                Plant = new() { PlantID = "existing", UserID = userID },
                 PlantID = "existing",
-                Token = "token"
+                Token = "newtoken"
             };
 
             var plantManager = new PlantManager(mock_DatabaseContext);
