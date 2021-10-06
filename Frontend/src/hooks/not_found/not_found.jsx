@@ -9,11 +9,9 @@ export default function NotFound() {
 
   return (
     <section className="text-center gold">
-      <div className="text-center mt-3">
-        <span className="text-center gold">Page not found.</span>
-      </div>
+      <h1 className="gold text-center">Page not found</h1>
       <Link key="home" to="/">
-        <button className="btn btn-primary mt-3">Home</button>
+        <button className="btn btn-primary mt-5">Home</button>
       </Link>
     </section>
   );
