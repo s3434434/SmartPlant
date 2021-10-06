@@ -33,7 +33,12 @@ export default function Login(props) {
     axios
       .post("https://smart-plant.azurewebsites.net/api/Account/Login", form)
       .then((res) => {
-        localStorage.setItem("demeter-user", res.body);
+        const login = JSON.stringify({
+          token: res.data,
+          expiry: Date.now() + 3600000,
+        });
+
+        localStorage.setItem("demeter-login", login);
         window.location.pathname = "/";
       })
       .catch((err) => {
@@ -85,7 +90,13 @@ export default function Login(props) {
           </span>
         </div>
 
-        <div className={showStatus ? "visible-message" : "hidden-message"}>
+        <div
+          className={
+            "text-center mt3" + showStatus
+              ? "visible-message"
+              : "hidden-message"
+          }
+        >
           <span>{statusMessage}</span>
         </div>
         <div className="text-center mt-3">

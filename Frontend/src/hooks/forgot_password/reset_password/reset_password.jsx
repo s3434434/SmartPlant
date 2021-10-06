@@ -80,7 +80,11 @@ export default function ResetPassword(props) {
           onChange={handleChange}
         />
         <div
-          className={"mt-3" + showStatus ? "visible-message" : "hidden-message"}
+          className={
+            "text-center mt3" + showStatus
+              ? "visible-message"
+              : "hidden-message"
+          }
         >
           <span>{statusMessage}</span>
         </div>
