@@ -3,7 +3,10 @@ import axios from "axios";
 import "./forgot_password.css";
 
 export default function ForgotPassword(props) {
-  const [email, setEmail] = useState("");
+  const [form, setForm] = useState({
+    email: "",
+    clientURI: "https://demeter.net.au/reset-password",
+  });
 
   useEffect(() => {
     document.title = "Forgot password | Demeter - The plant meter";

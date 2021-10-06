@@ -7,8 +7,11 @@ import LandingPage from "./hooks/landing_page/landing_page";
 import Login from "./hooks/login/login";
 import Register from "./hooks/register/register";
 import RegistrationSuccessful from "./hooks/register/registration_successful/registration_successful";
+import ConfirmEmail from "./hooks/register/confirm_email/confirm_email";
 import ForgotPassword from "./hooks/forgot_password/forgot_password";
 import RequestProcessed from "./hooks/forgot_password/request_processed/request_processed";
+import ResetPassword from "./hooks/forgot_password/reset_password/reset_password";
+import PasswordResetSuccessful from "./hooks/forgot_password/password-reset-successful/password_reset_successful";
 import Logout from "./hooks/logout/logout";
 import Settings from "./hooks/settings/settings";
 import NotFound from "./hooks/not_found/not_found";
@@ -242,11 +245,18 @@ function App() {
               path="/registration-successful"
               component={RegistrationSuccessful}
             />
+            <Route exact path="/confirm-email" component={ConfirmEmail} />
             <Route exact path="/forgot-password" component={ForgotPassword} />
             <Route
               exact
               path="/request-processed"
               component={RequestProcessed}
+            />
+            <Route exact path="/reset-password" component={ResetPassword} />
+            <Route
+              exact
+              path="/password-reset-successful"
+              component={PasswordResetSuccessful}
             />
             <Route
               exact
