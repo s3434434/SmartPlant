@@ -15,8 +15,8 @@ export default function PasswordResetSuccessful(props) {
         <span className="text-center gold">
           You can now login with you new password.
         </span>
-        <Link className="ms-1" key="login" to="/login">
-          <button className="btn btn-primary">Login</button>
+        <Link key="login" to="/login">
+          <button className="btn btn-primary mt-3">Login</button>
         </Link>
       </div>
     </section>

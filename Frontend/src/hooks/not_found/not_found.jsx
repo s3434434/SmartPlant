@@ -12,8 +12,8 @@ export default function NotFound() {
       <div className="text-center mt-3">
         <span className="text-center gold">Page not found.</span>
       </div>
-      <Link className="" key="landing-page" to="/">
-        <button className="btn btn-primary">Home</button>
+      <Link key="home" to="/">
+        <button className="btn btn-primary mt-3">Home</button>
       </Link>
     </section>
   );
