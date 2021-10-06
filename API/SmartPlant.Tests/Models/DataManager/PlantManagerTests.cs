@@ -20,10 +20,13 @@ namespace SmartPlant.Tests.Models.DataManager
         {
             var options = new DbContextOptionsBuilder<DatabaseContext>()
                 .UseInMemoryDatabase(databaseName: "Plants Test")
+                .EnableSensitiveDataLogging()
                 .Options;
 
             mock_DatabaseContext = new DatabaseContext(options);
-            mock_DatabaseContext.Plants.Add(new Plant { PlantID = "existing", UserID = "existing" });
+            Plant plant = new() { PlantID = "existing", UserID = "existing" };
+            mock_DatabaseContext.Plants.Add(plant);
+            mock_DatabaseContext.PlantTokens.Add(new PlantToken() { Plant =plant, PlantID = plant.PlantID, Token = "token"});
             mock_DatabaseContext.SaveChanges();
         }
 
@@ -102,11 +105,14 @@ namespace SmartPlant.Tests.Models.DataManager
         public async Task Add_WhenMaxPlantCountIsExceeded_ReturnsNegative1()
         {
             // Arrange
-            var existing_Plants = new List<Plant>();
+            var existing_PlantTokens = new List<PlantToken>();
             var existing_UserID = "existing";
 
             for (int i = 0; i < 4; i++)
-                existing_Plants.Add(new Plant() { PlantID = i.ToString(), UserID = existing_UserID });
+            {
+                Plant plant = new() { PlantID = i.ToString(), UserID = existing_UserID };
+                existing_PlantTokens.Add(new() { PlantID = i.ToString(), Token = i.ToString(), Plant = plant });
+            }
 
             Plant test_Plant = new ()
             {
@@ -126,9 +132,9 @@ namespace SmartPlant.Tests.Models.DataManager
             var expected = -1;
 
             // Add existing plants
-            foreach (Plant plant in existing_Plants)
+            foreach (PlantToken plantToken in existing_PlantTokens)
             {
-                await plantManager.Add(plant, test_PlantToken);
+                await plantManager.Add(plantToken.Plant, plantToken);
             }
 
             // Act
@@ -296,6 +302,53 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Act
             var result = await plantManager.AdminDelete(plantID);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+        #endregion
+
+        #region GeneratePlantToken
+
+        #endregion
+
+        #region AdminGenerateNewPlantToken
+        [Test]
+        public async Task AdminGenerateNewPlantToken_WhenPlantIDDoesNotExist_ReturnsFalse()
+        {
+            // Arrange
+            var userID = "doesNotExistUser";
+            PlantToken test_PlantToken = new()
+            {
+                PlantID = "doesNotExist",
+                Token = "token"
+            };
+
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            // Act
+            var result = await plantManager.AdminGenerateNewPlantToken(userID, test_PlantToken);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public async Task AdminGenerateNewPlantToken_WhenPlantTokenSuccessfullyCreated_ReturnsTrue()
+        {
+            // Arrange
+            var userID = "existing";
+            PlantToken test_PlantToken = new()
+            {
+                Plant = new() { PlantID = "existing", UserID = userID },
+                PlantID = "existing",
+                Token = "token"
+            };
+
+            var plantManager = new PlantManager(mock_DatabaseContext);
+
+            // Act
+            var result = await plantManager.AdminGenerateNewPlantToken(userID, test_PlantToken);
 
             // Assert
             Assert.IsTrue(result);
