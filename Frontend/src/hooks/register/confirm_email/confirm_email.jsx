@@ -23,15 +23,13 @@ export default function ConfirmEmail(props) {
   return (
     <section>
       <h1 className="gold text-center">Email confirmation successful</h1>
+      <div className="text-center mt-3" style={{ color: "white" }}>
+        Your email has been confirmed successfully.
+      </div>
       <div className="text-center mt-3">
-        <span className="text-center gold">
-          Your email has been confirmed successfully.
-        </span>
-        <div className="text-center mt-3">
-          <Link key="login" to="/login">
-            <button className="btn btn-primary">Login</button>
-          </Link>
-        </div>
+        <Link key="login" to="/login">
+          <button className="btn btn-primary">Login</button>
+        </Link>
       </div>
     </section>
   );

@@ -40,7 +40,10 @@ export default function ResetPassword(props) {
     setShowStatus(true);
 
     axios
-      .post("https://smart-plant.azurewebsites.net/api/Password/Reset", form)
+      .post(
+        "https://smart-plant.azurewebsites.net/api/Account/Password/Reset",
+        form
+      )
       .then((res) => {
         window.location.pathname = "/password-reset-successful";
       })

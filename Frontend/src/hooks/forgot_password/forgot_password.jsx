@@ -8,6 +8,8 @@ export default function ForgotPassword(props) {
     email: "",
     clientURI: "https://demeter.net.au/reset-password",
   });
+  const [showStatus, setShowStatus] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
 
   useEffect(() => {
     document.title = "Forgot password | Demeter - The plant meter";
@@ -26,11 +28,16 @@ export default function ForgotPassword(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setStatusMessage("Please wait...");
+    setShowStatus(true);
 
     axios
-      .post("https://smart-plant.azurewebsites.net/api/Password/Forgot", form)
+      .post(
+        "https://smart-plant.azurewebsites.net/api/Account/Password/Forgot",
+        form
+      )
       .then((res) => {
-        window.location.pathname = "/request-successful";
+        window.location.pathname = "/request-processed";
       });
   };
 
@@ -58,7 +65,10 @@ export default function ForgotPassword(props) {
             Enter your email and we will send you a password reset link.
           </span>
         </div>
-        <div className="text-center mt-4">
+        <div className={showStatus ? "visible-message" : "hidden-message"}>
+          <div className="text-center mt-3">{statusMessage}</div>
+        </div>
+        <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Reset password
           </button>
