@@ -75,6 +75,7 @@ form .hidden-message {
   pointer-events: none;
 }
 form .visible-message {
+  color: white;
   opacity: 1;
   pointer-events: unset;
 }

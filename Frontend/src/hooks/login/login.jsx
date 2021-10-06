@@ -89,15 +89,8 @@ export default function Login(props) {
             Forgot password?
           </span>
         </div>
-
-        <div
-          className={
-            "text-center mt3" + showStatus
-              ? "visible-message"
-              : "hidden-message"
-          }
-        >
-          <span>{statusMessage}</span>
+        <div className={showStatus ? "visible-message" : "hidden-message"}>
+          <div className="text-center mt-3">{statusMessage}</div>
         </div>
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">

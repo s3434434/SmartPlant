@@ -16,9 +16,11 @@ export default function RequestProcessed(props) {
           If an account with that email exists you will receive a password reset
           link shortly.
         </span>
-        <Link key="home" to="/">
-          <button className="btn btn-primary mt-3">Home</button>
-        </Link>
+        <div className="text-center mt-3">
+          <Link key="home" to="/">
+            <button className="btn btn-primary">Home</button>
+          </Link>
+        </div>
       </div>
     </section>
   );

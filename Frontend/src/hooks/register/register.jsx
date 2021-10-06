@@ -86,24 +86,24 @@ export default function Register(props) {
           </div>
           <div className="row mt-2">
             <div className="col-sm-6">
-              <label className="form-label gold" htmlFor="first-name">
+              <label className="form-label gold" htmlFor="firstName">
                 First name
               </label>
               <input
                 className="form-control"
-                name="first-name"
+                name="firstName"
                 type="text"
                 value={form.firstName}
                 onChange={handleChange}
               />
             </div>
             <div className="col-sm-6">
-              <label className="form-label gold" htmlFor="last-name">
+              <label className="form-label gold" htmlFor="lastName">
                 Last name
               </label>
               <input
                 className="form-control"
-                name="last-name"
+                name="lastName"
                 type="text"
                 value={form.lastName}
                 onChange={handleChange}
@@ -125,12 +125,12 @@ export default function Register(props) {
               />
             </div>
             <div className="col-sm-6">
-              <label className="form-label gold" htmlFor="confirm-password">
+              <label className="form-label gold" htmlFor="confirmPassword">
                 Confirm password
               </label>
               <input
                 className="form-control"
-                name="confirm-password"
+                name="confirmPassword"
                 type="password"
                 required
                 value={form.confirmPassword}
@@ -139,14 +139,8 @@ export default function Register(props) {
             </div>
           </div>
         </div>
-        <div
-          className={
-            "text-center mt-3" + showStatus
-              ? "visible-message"
-              : "hidden-message"
-          }
-        >
-          <span>{statusMessage}</span>
+        <div className={showStatus ? "visible-message" : "hidden-message"}>
+          <div className="text-center mt-3">{statusMessage}</div>
         </div>
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">

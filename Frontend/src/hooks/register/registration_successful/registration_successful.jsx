@@ -15,9 +15,11 @@ export default function RegistrationSuccessful(props) {
         <span className="text-center gold">
           Be sure to check your email and verify your account.
         </span>
-        <Link key="home" to="/">
-          <button className="btn btn-primary mt-3">Home</button>
-        </Link>
+        <div className="text-center mt-3">
+          <Link key="home" to="/">
+            <button className="btn btn-primary">Home</button>
+          </Link>
+        </div>
       </div>
     </section>
   );

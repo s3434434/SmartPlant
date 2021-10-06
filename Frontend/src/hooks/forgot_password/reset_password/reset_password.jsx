@@ -58,35 +58,29 @@ export default function ResetPassword(props) {
         style={{ marginBottom: "0.75em" }}
         onSubmit={handleSubmit}
       >
-        <label className="form-label gold" htmlFor="new-password">
+        <label className="form-label gold" htmlFor="newPassword">
           New password
         </label>
         <input
           className="form-control"
-          name="new-password"
+          name="newPassword"
           type="password"
           required
           value={form.newPassword}
           onChange={handleChange}
         />
-        <label className="form-label gold" htmlFor="confirm-new-password">
+        <label className="form-label gold" htmlFor="confirmNewPassword">
           Confirm new password
         </label>
         <input
           className="form-control"
-          name="confirm-new-password"
+          name="confirmNewPassword"
           type="password"
           value={form.confirmNewPassword}
           onChange={handleChange}
         />
-        <div
-          className={
-            "text-center mt3" + showStatus
-              ? "visible-message"
-              : "hidden-message"
-          }
-        >
-          <span>{statusMessage}</span>
+        <div className={showStatus ? "visible-message" : "hidden-message"}>
+          <div className="text-center mt-3">{statusMessage}</div>
         </div>
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">

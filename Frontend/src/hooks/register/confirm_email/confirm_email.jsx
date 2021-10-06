@@ -27,9 +27,11 @@ export default function ConfirmEmail(props) {
         <span className="text-center gold">
           Your email has been confirmed successfully.
         </span>
-        <Link key="login" to="/login">
-          <button className="btn btn-primary mt-3">Login</button>
-        </Link>
+        <div className="text-center mt-3">
+          <Link key="login" to="/login">
+            <button className="btn btn-primary">Login</button>
+          </Link>
+        </div>
       </div>
     </section>
   );
