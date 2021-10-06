@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using SmartPlant.Models.DataManager;
 using SmartPlant.Data;
 using SmartPlant.Models;
+using System;
 
 namespace SmartPlant.Tests.Models.DataManager
 {
@@ -19,14 +20,19 @@ namespace SmartPlant.Tests.Models.DataManager
         public void Setup()
         {
             var options = new DbContextOptionsBuilder<DatabaseContext>()
-                .UseInMemoryDatabase(databaseName: "Plants Test")
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .EnableSensitiveDataLogging()
                 .Options;
 
             mock_DatabaseContext = new DatabaseContext(options);
             Plant plant = new() { PlantID = "existing", UserID = "existing" };
+            PlantToken plantToken = new() { PlantID = plant.PlantID, Token = "token" };
             mock_DatabaseContext.Plants.Add(plant);
-            mock_DatabaseContext.PlantTokens.Add(new PlantToken() { Plant =plant, PlantID = plant.PlantID, Token = "token"});
+            mock_DatabaseContext.PlantTokens.Add(plantToken);
+
+            //mock_DatabaseContext.Entry<Plant>(plant).State = EntityState.Detached;
+            //mock_DatabaseContext.Entry<PlantToken>(plantToken).State = EntityState.Detached;
+
             mock_DatabaseContext.SaveChanges();
         }
 
@@ -108,7 +114,7 @@ namespace SmartPlant.Tests.Models.DataManager
             var existing_PlantTokens = new List<PlantToken>();
             var existing_UserID = "existing";
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 Plant plant = new() { PlantID = i.ToString(), UserID = existing_UserID };
                 existing_PlantTokens.Add(new() { PlantID = i.ToString(), Token = i.ToString(), Plant = plant });
@@ -156,9 +162,8 @@ namespace SmartPlant.Tests.Models.DataManager
 
             PlantToken test_PlantToken = new ()
             {
-                PlantID = "existing",
-                Token = "token",
-                Plant = test_Plant
+                PlantID = "newID",
+                Token = "token"
             };
 
             var plantManager = new PlantManager(mock_DatabaseContext);
@@ -261,7 +266,7 @@ namespace SmartPlant.Tests.Models.DataManager
         }
 
         [Test]
-        public async Task AdminUpdate_WhenPlantIDIsDeletedSuccessfully_ReturnsOne()
+        public async Task AdminUpdate_WhenPlantIDIsUpdatededSuccessfully_ReturnsOne()
         {
             // Arrange
             var test_Plant = new Plant() { PlantID = "existing" };
@@ -340,12 +345,12 @@ namespace SmartPlant.Tests.Models.DataManager
             var userID = "existing";
             PlantToken test_PlantToken = new()
             {
-                Plant = new() { PlantID = "existing", UserID = userID },
                 PlantID = "existing",
-                Token = "token"
+                Token = "newtoken"
             };
 
             var plantManager = new PlantManager(mock_DatabaseContext);
+            mock_DatabaseContext.ChangeTracker.Clear();
 
             // Act
             var result = await plantManager.AdminGenerateNewPlantToken(userID, test_PlantToken);
