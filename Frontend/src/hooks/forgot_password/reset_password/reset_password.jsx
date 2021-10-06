@@ -21,6 +21,7 @@ export default function ResetPassword(props) {
   useEffect(() => {
     document.title = "Reset password | Demeter - The plant meter";
 
+    props.logOut();
     // eslint-disable-next-line
   }, []);
 

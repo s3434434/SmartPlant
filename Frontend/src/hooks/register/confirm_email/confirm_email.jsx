@@ -12,10 +12,11 @@ export default function ConfirmEmail(props) {
     document.title =
       "Email confirmation successful | Demeter - The plant meter";
 
+    props.logOut();
+
     axios.get(
       `https://smart-plant.azurewebsites.net/api/Account/ConfirmEmail?token=${token}&email=${email}`
     );
-
     // eslint-disable-next-line
   }, []);
 

@@ -245,14 +245,22 @@ function App() {
               path="/registration-successful"
               component={RegistrationSuccessful}
             />
-            <Route exact path="/confirm-email" component={ConfirmEmail} />
+            <Route
+              exact
+              path="/confirm-email"
+              render={(props) => <ConfirmEmail {...props} logOut={logOut} />}
+            />
             <Route exact path="/forgot-password" component={ForgotPassword} />
             <Route
               exact
               path="/request-processed"
               component={RequestProcessed}
             />
-            <Route exact path="/reset-password" component={ResetPassword} />
+            <Route
+              exact
+              path="/reset-password"
+              render={(props) => <ResetPassword {...props} logOut={logOut} />}
+            />
             <Route
               exact
               path="/password-reset-successful"
