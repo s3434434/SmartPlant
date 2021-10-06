@@ -11,7 +11,7 @@ import ConfirmEmail from "./hooks/register/confirm_email/confirm_email";
 import ForgotPassword from "./hooks/forgot_password/forgot_password";
 import RequestProcessed from "./hooks/forgot_password/request_processed/request_processed";
 import ResetPassword from "./hooks/forgot_password/reset_password/reset_password";
-import PasswordResetSuccessful from "./hooks/forgot_password/password-reset-successful/password_reset_successful";
+import PasswordResetSuccessful from "./hooks/forgot_password/password_reset_successful/password_reset_successful";
 import Logout from "./hooks/logout/logout";
 import Settings from "./hooks/settings/settings";
 import NotFound from "./hooks/not_found/not_found";
