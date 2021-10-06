@@ -26,7 +26,7 @@ namespace SmartPlant.Tests.Models.DataManager
             mock_DatabaseContext = new DatabaseContext(options);
             Plant plant = new() { PlantID = "existing", UserID = "existing" };
             mock_DatabaseContext.Plants.Add(plant);
-            mock_DatabaseContext.PlantTokens.Add(new PlantToken() { Plant =plant, PlantID = plant.PlantID, Token = "token"});
+            mock_DatabaseContext.PlantTokens.Add(new PlantToken() { PlantID = plant.PlantID, Token = "token"});
             mock_DatabaseContext.SaveChanges();
         }
 
