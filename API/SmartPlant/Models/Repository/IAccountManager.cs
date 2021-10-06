@@ -18,6 +18,7 @@ namespace SmartPlant.Models.Repository
         Task<IdentityResult> UpdateDetails(string userID, UpdateUserDetailsDto details);
         Task<IdentityResult> UpdateEmail(string userID, UpdateEmailDto emailDto);
         Task<IdentityResult> UpdatePassword(string userID, UpdatePasswordDto passwordDto);
+        Task<bool> ContactSupport(string userID, SupportEmailDto dto);
         Task<List<AdminGetAllUsersDto>> AdminGetAllUsers();
         Task<UserDetailsDto> AdminGetUserDetails(string userID);
         Task<AdminUpdateUserDetailsDto> AdminUpdateUserDetails(AdminUpdateUserDetailsDto detailsDto);

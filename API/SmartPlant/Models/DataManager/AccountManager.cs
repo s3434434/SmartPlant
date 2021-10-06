@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using EmailService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace SmartPlant.Models.DataManager
 {
@@ -23,15 +25,18 @@ namespace SmartPlant.Models.DataManager
         private readonly DatabaseContext _context;
         private readonly IEmailSender _emailSender;
         private readonly JwtHandler _jwtHandler;
+        private readonly IConfiguration _configuration;
 
         public AccountManager(UserManager<ApplicationUser> userManager, IMapper mapper,
-            DatabaseContext context, IEmailSender emailSender, JwtHandler jwtHandler)
+            DatabaseContext context, IEmailSender emailSender, JwtHandler jwtHandler,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _mapper = mapper;
             _context = context;
             _emailSender = emailSender;
             _jwtHandler = jwtHandler;
+            _configuration = configuration;
 
         }
         public async Task<RegistrationResponseDto> Register(ApplicationUser user, UserRegistrationDto userRegDto)
@@ -136,6 +141,29 @@ namespace SmartPlant.Models.DataManager
             return result;
         }
 
+
+        public async Task<bool> ContactSupport(string userID, SupportEmailDto dto)
+        {
+            var user = await _userManager.FindByIdAsync(userID);
+            
+            if (user == null)
+            {
+                return false;
+            }
+            //var name = user.FirstName ?? "";
+
+            var subject = $"{user.FirstName}  | {user.Email} | {user.Id} -- {dto.EmailSubject} ";
+            var content = dto.EmailBody;
+            var receivingEmail = _configuration.GetSection("SupportEmailConfig").GetSection("ReceivingEmail").Value;
+
+            /*Console.WriteLine("Email :" + receivingEmail);
+            Console.WriteLine("Name :" + (user.FirstName ?? "" ));*/
+
+            var message = new Message(new string[] {receivingEmail}, subject, content);
+            await _emailSender.SendEmailAsync(message);
+
+            return true;
+        }
 
 
         /*    

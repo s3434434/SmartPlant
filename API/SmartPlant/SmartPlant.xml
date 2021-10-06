@@ -102,6 +102,16 @@
             <response code="400">Passwords don't match</response>
             <response code="401">Old password Incorrect</response>
         </member>
+        <member name="M:SmartPlant.Controllers.AccountController.ContactSupport(SmartPlant.Models.API_Model.SupportEmailDto)">
+            <summary>
+            Sends an email to support -- currently the email used is SmartPlantTeam4@gmail.com
+            </summary>
+            <remarks>
+            </remarks>
+            <response code="200">Email Sent</response>
+            <response code="400">Something went wrong</response>
+            <response code="401"></response>
+        </member>
         <member name="M:SmartPlant.Controllers.AccountController.AdminGetAllUsers">
             <summary>
             Gets a list of all Users and their details (User Id, Email)

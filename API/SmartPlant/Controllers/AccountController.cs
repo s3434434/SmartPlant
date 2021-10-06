@@ -302,6 +302,30 @@ namespace SmartPlant.Controllers
             return Ok("Password Changed");
         }
 
+        /// <summary>
+        /// Sends an email to support -- currently the email used is SmartPlantTeam4@gmail.com
+        /// </summary>
+        /// <remarks>
+        /// This requires a logged in user to use.
+        /// </remarks>
+        /// <response code="200">Email Sent</response>
+        /// <response code="400">Something went wrong</response>
+        /// <response code="401"></response>
+        [HttpPost]
+        [Authorize]
+        [Route("/api/User/ContactSupport")]
+        public async Task<IActionResult> ContactSupport(SupportEmailDto dto)
+        {
+            string userID = User.Identity.Name;
+
+            var result =  await _repo.ContactSupport(userID, dto);
+
+            if (!result)
+            {
+                return BadRequest("Something went wrong.");
+            }
+            return Ok("Email Sent");
+        }
 
 
         /* 
