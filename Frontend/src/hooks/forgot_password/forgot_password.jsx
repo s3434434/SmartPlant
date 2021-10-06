@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import _ from "lodash";
 import axios from "axios";
 import "./forgot_password.css";
 
@@ -15,14 +16,19 @@ export default function ForgotPassword(props) {
   }, []);
 
   const handleChange = (e) => {
-    setEmail(e.target.value);
+    const input = e.target;
+    const tempForm = _.cloneDeep(form);
+
+    tempForm[input.name] = input.value;
+
+    setForm(tempForm);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     axios
-      .post("https://smart-plant.azurewebsites.net/api/Password/Forgot", email)
+      .post("https://smart-plant.azurewebsites.net/api/Password/Forgot", form)
       .then((res) => {
         window.location.pathname = "/request-successful";
       });
@@ -43,7 +49,7 @@ export default function ForgotPassword(props) {
           className="form-control"
           name="email"
           type="text"
-          value={email}
+          value={form.email}
           onChange={handleChange}
           required
         />
