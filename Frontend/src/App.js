@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import axios from "axios";
 import Plant from "./hooks/plant/plant";
 import LandingPage from "./hooks/landing_page/landing_page";
 import Login from "./hooks/login/login";
@@ -22,29 +21,24 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const checkLoggedIn = () => {
-    let currentUser = localStorage.getItem("demeter-user");
-    let loggedIn = false;
-    if (currentUser) {
-      axios
-        .get("https://smart-plant.azurewebsites.net/api/User", {
-          headers: {
-            Authorization: "Bearer " + currentUser,
-            "Content-Type": "application/json",
-          },
-        })
-        .then((res) => {
-          loggedIn = true;
-        })
-        .catch((err) => {
-          localStorage.removeItem("demeter-user");
-        });
+    const login = localStorage.getItem("demeter-login");
+    let loginStatus = false;
+
+    if (login) {
+      const { expiry } = JSON.parse(login);
+
+      if (expiry >= Date.now()) {
+        loginStatus = true;
+      } else {
+        localStorage.removeItem("demeter-login");
+      }
     }
 
-    setLoggedIn(loggedIn);
+    return loginStatus;
   };
 
   useEffect(() => {
-    checkLoggedIn();
+    setLoggedIn(checkLoggedIn());
     // eslint-disable-next-line
   }, []);
 
@@ -87,10 +81,9 @@ function App() {
   };
 
   const logOut = () => {
-    if (loggedIn) {
-      localStorage.removeItem("demeter-user");
+    if (checkLoggedIn()) {
+      localStorage.removeItem("demeter-login");
       setLoggedIn(false);
-      window.location.pathname = "/landing";
     }
   };
 

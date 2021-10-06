@@ -140,7 +140,11 @@ export default function Register(props) {
           </div>
         </div>
         <div
-          className={"mt-3" + showStatus ? "visible-message" : "hidden-message"}
+          className={
+            "text-center mt-3" + showStatus
+              ? "visible-message"
+              : "hidden-message"
+          }
         >
           <span>{statusMessage}</span>
         </div>
