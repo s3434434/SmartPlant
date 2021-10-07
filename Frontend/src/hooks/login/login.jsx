@@ -79,9 +79,8 @@ export default function Login(props) {
         ></input>
         <div className="form-text">
           <span
-            id="forgot-password"
-            className="gold"
-            style={{ textDecoration: "none", cursor: "pointer" }}
+            className="gold light-gold-hover"
+            style={{ textDecoration: "none" }}
             onClick={() => {
               window.location.pathname = "/forgot-password";
             }}

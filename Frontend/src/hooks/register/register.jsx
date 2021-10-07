@@ -58,7 +58,7 @@ export default function Register(props) {
       >
         <div className="container p-0">
           <div className="row">
-            <div className="col-sm-6">
+            <div className="col-md-6">
               <label className="form-label gold" htmlFor="email">
                 Email
               </label>
@@ -71,7 +71,7 @@ export default function Register(props) {
                 onChange={handleChange}
               />
             </div>
-            <div className="col-sm-6">
+            <div className="col-md-6">
               <label className="form-label gold" htmlFor="phone">
                 Phone
               </label>
@@ -85,7 +85,7 @@ export default function Register(props) {
             </div>
           </div>
           <div className="row mt-2">
-            <div className="col-sm-6">
+            <div className="col-md-6">
               <label className="form-label gold" htmlFor="firstName">
                 First name
               </label>
@@ -97,7 +97,7 @@ export default function Register(props) {
                 onChange={handleChange}
               />
             </div>
-            <div className="col-sm-6">
+            <div className="col-md-6">
               <label className="form-label gold" htmlFor="lastName">
                 Last name
               </label>
@@ -111,7 +111,7 @@ export default function Register(props) {
             </div>
           </div>
           <div className="row mt-2">
-            <div className="col-sm-6">
+            <div className="col-md-6">
               <label className="form-label gold" htmlFor="password">
                 Password
               </label>
@@ -124,7 +124,7 @@ export default function Register(props) {
                 onChange={handleChange}
               />
             </div>
-            <div className="col-sm-6">
+            <div className="col-md-6">
               <label className="form-label gold" htmlFor="confirmPassword">
                 Confirm password
               </label>

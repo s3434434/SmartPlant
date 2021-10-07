@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import axios from "axios";
 import "./settings.css";
@@ -55,6 +57,10 @@ export default function Settings(props) {
       });
     // eslint-disable-next-line
   }, []);
+
+  const handleEmailChange = (e) => {};
+
+  const handleEmailSubmit = (e) => {};
 
   // const handleAccountChange = (e) => {
   //   const input = e.target;
@@ -158,8 +164,174 @@ export default function Settings(props) {
   // };
 
   return (
-    <section id="account">
-      {/* <div style={{ display: account.email !== "" ? "unset" : "none" }}>
+    <section>
+      <h1 className="text-center gold">Settings</h1>
+
+      {emailModifiable ? (
+        <form
+          className="w-50 m-auto mt-4"
+          style={{ marginBottom: "0.75em" }}
+          onSubmit={handleEmailSubmit}
+        >
+          <label className="form-label gold" htmlFor="email">
+            Email
+          </label>
+          <input
+            className="form-control"
+            name="email"
+            type="text"
+            required
+            value={emailForm.email}
+            onChange={handleEmailChange}
+          />
+          <label className="form-label gold" htmlFor="email">
+            Confirm email
+          </label>
+          <input
+            className="form-control"
+            name="confirmEmail"
+            type="text"
+            required
+            value={emailForm.confirmEmail}
+            onChange={handleEmailChange}
+          />
+          <div className="text-center mt-3">
+            <button className="btn btn-primary" type="submit">
+              Apply change
+            </button>
+          </div>
+        </form>
+      ) : (
+        <div className="w-50 m-auto mt-4">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-6">
+                <div className="container p-0">
+                  <div className="row">
+                    <div className="col-sm-10">
+                      <span className="gold ms-1">Email</span>
+                    </div>
+                    <div className="col-sm-2 text-end">
+                      <FontAwesomeIcon
+                        className="me-1 gold light-gold-hover"
+                        icon={faPen}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setEmailModifiable(true);
+                        }}
+                      ></FontAwesomeIcon>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-1 overflow-hidden setting">
+                  <span className="ms-1"> {emailForm.email}</span>
+                </div>
+              </div>
+              <div className="col-lg-6"></div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* 
+      <form
+        className="w-50 m-auto mt-4"
+        style={{ marginBottom: "0.75em" }}
+        onSubmit={handleSubmit}
+      >
+        <div className="container p-0">
+          <div className="row">
+            <div className="col-sm-6">
+              <label className="form-label gold" htmlFor="email">
+                Email
+              </label>
+              <input
+                className="form-control"
+                name="email"
+                type="text"
+                required
+                value={form.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-sm-6">
+              <label className="form-label gold" htmlFor="phone">
+                Phone
+              </label>
+              <input
+                className="form-control"
+                name="phone"
+                type="text"
+                value={form.phone}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="row mt-2">
+            <div className="col-sm-6">
+              <label className="form-label gold" htmlFor="firstName">
+                First name
+              </label>
+              <input
+                className="form-control"
+                name="firstName"
+                type="text"
+                value={form.firstName}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-sm-6">
+              <label className="form-label gold" htmlFor="lastName">
+                Last name
+              </label>
+              <input
+                className="form-control"
+                name="lastName"
+                type="text"
+                value={form.lastName}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="row mt-2">
+            <div className="col-sm-6">
+              <label className="form-label gold" htmlFor="password">
+                Password
+              </label>
+              <input
+                className="form-control"
+                name="password"
+                type="password"
+                required
+                value={form.password}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-sm-6">
+              <label className="form-label gold" htmlFor="confirmPassword">
+                Confirm password
+              </label>
+              <input
+                className="form-control"
+                name="confirmPassword"
+                type="password"
+                required
+                value={form.confirmPassword}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+        </div>
+        <div className={showStatus ? "visible-message" : "hidden-message"}>
+          <div className="text-center mt-3">{status}</div>
+        </div>
+        <div className="text-center mt-3">
+          <button className="btn btn-primary" type="submit">
+            Register
+          </button>
+        </div>
+      </form>
+
+      <div style={{ display: account.email !== "" ? "unset" : "none" }}>
         <h1>Account Settings:</h1>
 
         <form onSubmit={handleAccountSubmit} style={{ marginBottom: "1em" }}>

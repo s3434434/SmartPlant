@@ -5,11 +5,17 @@ body {
   background-attachment: fixed;
   background-position: center;
 }
-h1 {
+h1,
+span,
+div {
   cursor: default;
 }
 .gold {
   color: rgb(243, 202, 0);
+}
+
+.light-gold-hover:hover {
+  color: rgb(247, 215, 59);
 }
 
 section {

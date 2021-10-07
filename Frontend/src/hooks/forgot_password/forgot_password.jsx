@@ -64,7 +64,7 @@ export default function ForgotPassword(props) {
           required
         />
         <div className="form-text">
-          <span className="gold" style={{ cursor: "default" }}>
+          <span className="gold">
             Enter your email and we will send you a password reset link.
           </span>
         </div>
