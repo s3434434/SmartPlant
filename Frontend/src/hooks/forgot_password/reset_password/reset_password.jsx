@@ -16,7 +16,7 @@ export default function ResetPassword(props) {
     confirmNewPassword: "",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     document.title = "Reset password | Demeter - The plant meter";
@@ -36,7 +36,7 @@ export default function ResetPassword(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setStatusMessage("Please wait...");
+    setStatus("Please wait...");
     setShowStatus(true);
 
     axios
@@ -48,7 +48,7 @@ export default function ResetPassword(props) {
         window.location.pathname = "/password-reset-successful";
       })
       .catch((err) => {
-        setStatusMessage(err.message);
+        setStatus(err.response.data);
         setShowStatus(true);
       });
   };
@@ -83,7 +83,7 @@ export default function ResetPassword(props) {
           onChange={handleChange}
         />
         <div className={showStatus ? "visible-message" : "hidden-message"}>
-          <div className="text-center mt-3">{statusMessage}</div>
+          <div className="text-center mt-3">{status}</div>
         </div>
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">

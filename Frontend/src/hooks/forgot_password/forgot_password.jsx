@@ -9,7 +9,7 @@ export default function ForgotPassword(props) {
     clientURI: "https://demeter.net.au/reset-password",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     document.title = "Forgot password | Demeter - The plant meter";
@@ -28,7 +28,7 @@ export default function ForgotPassword(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setStatusMessage("Please wait...");
+    setStatus("Please wait...");
     setShowStatus(true);
 
     axios
@@ -37,6 +37,9 @@ export default function ForgotPassword(props) {
         form
       )
       .then((res) => {
+        window.location.pathname = "/request-processed";
+      })
+      .catch((err) => {
         window.location.pathname = "/request-processed";
       });
   };
@@ -66,7 +69,7 @@ export default function ForgotPassword(props) {
           </span>
         </div>
         <div className={showStatus ? "visible-message" : "hidden-message"}>
-          <div className="text-center mt-3">{statusMessage}</div>
+          <div className="text-center mt-3">{status}</div>
         </div>
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">

@@ -5,7 +5,7 @@ import "./login.css";
 
 export default function Login(props) {
   const [showStatus, setShowStatus] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
+  const [status, setStatus] = useState("");
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -27,7 +27,7 @@ export default function Login(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setStatusMessage("Please wait...");
+    setStatus("Please wait...");
     setShowStatus(true);
 
     axios
@@ -42,7 +42,7 @@ export default function Login(props) {
         window.location.pathname = "/";
       })
       .catch((err) => {
-        setStatusMessage(err.message);
+        setStatus(err.response.data);
         setShowStatus(true);
       });
   };
@@ -90,7 +90,7 @@ export default function Login(props) {
           </span>
         </div>
         <div className={showStatus ? "visible-message" : "hidden-message"}>
-          <div className="text-center mt-3">{statusMessage}</div>
+          <div className="text-center mt-3">{status}</div>
         </div>
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">

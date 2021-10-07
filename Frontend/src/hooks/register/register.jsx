@@ -14,7 +14,7 @@ export default function Register(props) {
     clientURI: "https://demeter.net.au/confirm-email",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     document.title = "Register | Demeter - The plant meter";
@@ -34,7 +34,7 @@ export default function Register(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setStatusMessage("Registering account...");
+    setStatus("Registering account...");
     setShowStatus(true);
 
     axios
@@ -43,7 +43,7 @@ export default function Register(props) {
         window.location.pathname = "/registration-successful";
       })
       .catch((err) => {
-        setStatusMessage(err.message);
+        setStatus(err.response.data.errors[0]);
         setShowStatus(true);
       });
   };
@@ -140,7 +140,7 @@ export default function Register(props) {
           </div>
         </div>
         <div className={showStatus ? "visible-message" : "hidden-message"}>
-          <div className="text-center mt-3">{statusMessage}</div>
+          <div className="text-center mt-3">{status}</div>
         </div>
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">

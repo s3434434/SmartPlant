@@ -3,189 +3,188 @@ import "./settings.css";
 import _ from "lodash";
 
 export default function Settings(props) {
-  const { getCurrentUser } = props;
-
-  const [account, setAccount] = useState({
-    email: "",
-    preferences: {
-      major: false,
-      minor: false,
-      patch: false,
-    },
-  });
-  const [initialPreferences, setInitialPreferences] = useState();
-  const [showAccountStatus, setShowAccountStatus] = useState(false);
-  const [accountStatusMessage, setAccountStatusMessage] = useState("");
-
-  const [passwords, setPasswords] = useState({
-    oldPassword: "",
-    newPassword: "",
-  });
-  const [passwordModifiable, setPasswordModifiable] = useState(false);
-  const [showPasswordStatus, setShowPasswordStatus] = useState(false);
-  const [passwordStatusMessage, setPasswordStatusMessage] = useState("");
+  const [emailForm, setEmailForm] = useState({
+      email: "",
+      confirmEmail: "",
+    }),
+    [detailsForm, setDetailsForm] = useState({
+      phoneNumber: "",
+      firstName: "",
+      lastName: "",
+    }),
+    [passwordform, setPasswordForm] = useState({
+      oldPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    }),
+    [emailModifiable, setEmailModifiable] = useState(false),
+    [detailsModifiable, setDetailsModifiable] = useState(false),
+    [passwordModifiable, setPasswordModifiable] = useState(false),
+    [showEmailStatus, setShowEmailStatus] = useState(false),
+    [emailStatus, setEmailStatus] = useState(""),
+    [showDetailsStatus, setShowDetailsStatus] = useState(false),
+    [detailsStatus, setDetailsStatus] = useState(""),
+    [showPasswordStatus, setShowPasswordStatus] = useState(false),
+    [passwordStatus, setPasswordStatus] = useState("");
 
   useEffect(() => {
     document.title = "Settings | Dependency Tracker";
 
-    getCurrentUser()
-      .then((user) => {
-        user.getSession((err, session) => {
-          if (!err) {
-            user.getUserAttributes((err, attributes) => {
-              if (!err) {
-                let tempAccount = {};
-                let email = "";
-                attributes.forEach((attribute) => {
-                  if (attribute.getName() === "email") {
-                    email = attribute.getValue();
-                  }
-                });
-                tempAccount["email"] = email;
+    // getCurrentUser()
+    //   .then((user) => {
+    //     user.getSession((err, session) => {
+    //       if (!err) {
+    //         user.getUserAttributes((err, attributes) => {
+    //           if (!err) {
+    //             let tempAccount = {};
+    //             let email = "";
+    //             attributes.forEach((attribute) => {
+    //               if (attribute.getName() === "email") {
+    //                 email = attribute.getValue();
+    //               }
+    //             });
+    //             tempAccount["email"] = email;
 
-                const fetchPreferences = async () => {
-                  const response = await fetch(
-                    `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/preferences?email=${email}`,
-                    {
-                      method: "get",
-                      headers: {
-                        Authorization: session.getIdToken().getJwtToken(),
-                      },
-                    }
-                  );
-                  const json = await response.json();
-                  tempAccount["preferences"] = json;
-                  setInitialPreferences(json);
+    //             const fetchPreferences = async () => {
+    //               const response = await fetch(
+    //                 `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/preferences?email=${email}`,
+    //                 {
+    //                   method: "get",
+    //                   headers: {
+    //                     Authorization: session.getIdToken().getJwtToken(),
+    //                   },
+    //                 }
+    //               );
+    //               const json = await response.json();
+    //               tempAccount["preferences"] = json;
+    //               setInitialPreferences(json);
 
-                  const checkboxes = {
-                    major: document.getElementsByName("major")[0],
-                    minor: document.getElementsByName("minor")[0],
-                    patch: document.getElementsByName("patch")[0],
-                  };
-                  Object.keys(checkboxes).forEach((checkbox) => {
-                    if (tempAccount["preferences"][checkbox]) {
-                      checkboxes[checkbox].checked = true;
-                    }
-                  });
+    //               const checkboxes = {
+    //                 major: document.getElementsByName("major")[0],
+    //                 minor: document.getElementsByName("minor")[0],
+    //                 patch: document.getElementsByName("patch")[0],
+    //               };
+    //               Object.keys(checkboxes).forEach((checkbox) => {
+    //                 if (tempAccount["preferences"][checkbox]) {
+    //                   checkboxes[checkbox].checked = true;
+    //                 }
+    //               });
 
-                  setAccount(tempAccount);
-                };
-                fetchPreferences();
-              }
-            });
-          }
-        });
-      })
-      .catch((err) => {
-        window.location.pathname = "/login";
-      });
+    //               setAccount(tempAccount);
+    //             };
+    //             fetchPreferences();
+    //           }
+    //         });
+    //       }
+    //     });
+    //   })
+    // .catch((err) => {
+    //   window.location.pathname = "/login";
+    // });
     // eslint-disable-next-line
   }, []);
 
   const handleAccountChange = (e) => {
-    const input = e.target;
-    const tempAccount = _.cloneDeep(account);
-
-    if (input.type === "checkbox") {
-      tempAccount["preferences"][input.name] = input.checked;
-    } else {
-      tempAccount[input.name] = input.value;
-    }
-
-    setAccount(tempAccount);
+    // const input = e.target;
+    // const tempAccount = _.cloneDeep(account);
+    // if (input.type === "checkbox") {
+    //   tempAccount["preferences"][input.name] = input.checked;
+    // } else {
+    //   tempAccount[input.name] = input.value;
+    // }
+    // setAccount(tempAccount);
   };
 
   const handleAccountSubmit = (e) => {
     e.preventDefault();
 
-    const { major, minor, patch } = account.preferences;
+    // const { major, minor, patch } = account.preferences;
 
-    getCurrentUser()
-      .then((user) => {
-        user.getSession((err, session) => {
-          if (!err) {
-            if (
-              major !== initialPreferences["major"] ||
-              minor !== initialPreferences["minor"] ||
-              patch !== initialPreferences["patch"]
-            ) {
-              setAccountStatusMessage("Please wait...");
-              setShowAccountStatus(true);
+    // getCurrentUser()
+    //   .then((user) => {
+    //     user.getSession((err, session) => {
+    //       if (!err) {
+    //         if (
+    //           major !== initialPreferences["major"] ||
+    //           minor !== initialPreferences["minor"] ||
+    //           patch !== initialPreferences["patch"]
+    //         ) {
+    //           setAccountStatusMessage("Please wait...");
+    //           setShowAccountStatus(true);
 
-              const updatePreferences = async () => {
-                let body = account.preferences;
-                body["email"] = account.email;
+    //           const updatePreferences = async () => {
+    //             let body = account.preferences;
+    //             body["email"] = account.email;
 
-                await fetch(
-                  "https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/preferences",
-                  {
-                    method: "post",
-                    body: JSON.stringify(body),
-                    headers: {
-                      Authorization: session.getIdToken().getJwtToken(),
-                    },
-                  }
-                );
+    //             await fetch(
+    //               "https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/preferences",
+    //               {
+    //                 method: "post",
+    //                 body: JSON.stringify(body),
+    //                 headers: {
+    //                   Authorization: session.getIdToken().getJwtToken(),
+    //                 },
+    //               }
+    //             );
 
-                window.location.reload();
-              };
-              updatePreferences();
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    //             window.location.reload();
+    //           };
+    //           updatePreferences();
+    //         }
+    //       }
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
 
   const handlePasswordChange = (e) => {
-    const input = e.target;
-    const tempPasswords = _.cloneDeep(passwords);
-
-    tempPasswords[input.name] = input.value;
-    setPasswords(tempPasswords);
+    // const input = e.target;
+    // const tempPasswords = _.cloneDeep(passwords);
+    // tempPasswords[input.name] = input.value;
+    // setPasswords(tempPasswords);
   };
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
-    setPasswordStatusMessage("Please wait...");
-    setShowPasswordStatus(true);
+    // setPasswordStatusMessage("Please wait...");
+    // setShowPasswordStatus(true);
 
-    if (passwords.newPassword !== passwords.confirmNewPassword) {
-      setPasswordStatusMessage("Passwords do not match.");
-    } else {
-      getCurrentUser()
-        .then((user) => {
-          user.getSession((err, session) => {
-            if (!err) {
-              user.changePassword(
-                passwords.oldPassword,
-                passwords.newPassword,
-                (err, result) => {
-                  if (err) {
-                    if (err.message.includes("username")) {
-                      setPasswordStatusMessage("Old password was incorrect.");
-                    } else {
-                      setPasswordStatusMessage(err.message);
-                    }
-                  } else {
-                    window.location.reload();
-                  }
-                }
-              );
-            }
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    // if (passwords.newPassword !== passwords.confirmNewPassword) {
+    //   setPasswordStatusMessage("Passwords do not match.");
+    // } else {
+    //   getCurrentUser()
+    //     .then((user) => {
+    //       user.getSession((err, session) => {
+    //         if (!err) {
+    //           user.changePassword(
+    //             passwords.oldPassword,
+    //             passwords.newPassword,
+    //             (err, result) => {
+    //               if (err) {
+    //                 if (err.message.includes("username")) {
+    //                   setPasswordStatusMessage("Old password was incorrect.");
+    //                 } else {
+    //                   setPasswordStatusMessage(err.message);
+    //                 }
+    //               } else {
+    //                 window.location.reload();
+    //               }
+    //             }
+    //           );
+    //         }
+    //       });
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // }
   };
 
   return (
     <section id="account">
-      <div style={{ display: account.email !== "" ? "unset" : "none" }}>
+      {/* <div style={{ display: account.email !== "" ? "unset" : "none" }}>
         <h1>Account Settings:</h1>
 
         <form onSubmit={handleAccountSubmit} style={{ marginBottom: "1em" }}>
@@ -319,7 +318,7 @@ export default function Settings(props) {
             Change password
           </button>
         </form>
-      </div>
+      </div> */}
     </section>
   );
 }
