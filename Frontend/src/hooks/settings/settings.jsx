@@ -173,28 +173,37 @@ export default function Settings(props) {
           style={{ marginBottom: "0.75em" }}
           onSubmit={handleEmailSubmit}
         >
-          <label className="form-label gold" htmlFor="email">
-            Email
-          </label>
-          <input
-            className="form-control"
-            name="email"
-            type="text"
-            required
-            value={emailForm.email}
-            onChange={handleEmailChange}
-          />
-          <label className="form-label gold" htmlFor="email">
-            Confirm email
-          </label>
-          <input
-            className="form-control"
-            name="confirmEmail"
-            type="text"
-            required
-            value={emailForm.confirmEmail}
-            onChange={handleEmailChange}
-          />
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6">
+                <label className="form-label gold" htmlFor="email">
+                  Email
+                </label>
+                <input
+                  className="form-control"
+                  name="email"
+                  type="text"
+                  required
+                  value={emailForm.email}
+                  onChange={handleEmailChange}
+                />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label gold" htmlFor="email">
+                  Confirm email
+                </label>
+                <input
+                  className="form-control"
+                  name="confirmEmail"
+                  type="text"
+                  required
+                  value={emailForm.confirmEmail}
+                  onChange={handleEmailChange}
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="text-center mt-3">
             <button className="btn btn-primary" type="submit">
               Apply change
@@ -209,11 +218,11 @@ export default function Settings(props) {
                 <div className="container p-0">
                   <div className="row">
                     <div className="col-sm-10">
-                      <span className="gold ms-1">Email</span>
+                      <span className="gold">Email</span>
                     </div>
                     <div className="col-sm-2 text-end">
                       <FontAwesomeIcon
-                        className="me-1 gold light-gold-hover"
+                        className="gold light-gold-hover"
                         icon={faPen}
                         style={{ cursor: "pointer" }}
                         onClick={() => {
@@ -223,7 +232,7 @@ export default function Settings(props) {
                     </div>
                   </div>
                 </div>
-                <div className="mt-1 overflow-hidden setting">
+                <div className="mt-1 py-1 overflow-hidden setting">
                   <span className="ms-1"> {emailForm.email}</span>
                 </div>
               </div>
