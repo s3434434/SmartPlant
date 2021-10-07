@@ -233,7 +233,7 @@ export default function Settings(props) {
                   </div>
                 </div>
                 <div className="mt-1 py-1 overflow-hidden setting">
-                  <span className="ms-1"> {emailForm.email}</span>
+                  <span className="ms-1">{emailForm.email}</span>
                 </div>
               </div>
               <div className="col-lg-6"></div>
