@@ -288,7 +288,11 @@ function App() {
                 />
               )}
             />
-            <Route exact path="/settings" component={Settings} />
+            <Route
+              exact
+              path="/settings"
+              render={(props) => <Settings {...props} logOut={logOut} />}
+            />
             <Route
               exact
               path="/"

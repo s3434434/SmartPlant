@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "./settings.css";
 import _ from "lodash";
+import axios from "axios";
+import "./settings.css";
 
 export default function Settings(props) {
   const [emailForm, setEmailForm] = useState({
@@ -28,159 +29,133 @@ export default function Settings(props) {
     [passwordStatus, setPasswordStatus] = useState("");
 
   useEffect(() => {
-    document.title = "Settings | Dependency Tracker";
+    document.title = "Settings | Demeter - The plant meter";
 
-    // getCurrentUser()
-    //   .then((user) => {
-    //     user.getSession((err, session) => {
-    //       if (!err) {
-    //         user.getUserAttributes((err, attributes) => {
-    //           if (!err) {
-    //             let tempAccount = {};
-    //             let email = "";
-    //             attributes.forEach((attribute) => {
-    //               if (attribute.getName() === "email") {
-    //                 email = attribute.getValue();
-    //               }
-    //             });
-    //             tempAccount["email"] = email;
+    const login = localStorage.getItem("demeter-login");
+    const { token } = JSON.parse(login);
+    axios
+      .get("https://smart-plant.azurewebsites.net/api/User", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        const settings = res.data;
 
-    //             const fetchPreferences = async () => {
-    //               const response = await fetch(
-    //                 `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/preferences?email=${email}`,
-    //                 {
-    //                   method: "get",
-    //                   headers: {
-    //                     Authorization: session.getIdToken().getJwtToken(),
-    //                   },
-    //                 }
-    //               );
-    //               const json = await response.json();
-    //               tempAccount["preferences"] = json;
-    //               setInitialPreferences(json);
-
-    //               const checkboxes = {
-    //                 major: document.getElementsByName("major")[0],
-    //                 minor: document.getElementsByName("minor")[0],
-    //                 patch: document.getElementsByName("patch")[0],
-    //               };
-    //               Object.keys(checkboxes).forEach((checkbox) => {
-    //                 if (tempAccount["preferences"][checkbox]) {
-    //                   checkboxes[checkbox].checked = true;
-    //                 }
-    //               });
-
-    //               setAccount(tempAccount);
-    //             };
-    //             fetchPreferences();
-    //           }
-    //         });
-    //       }
-    //     });
-    //   })
-    // .catch((err) => {
-    //   window.location.pathname = "/login";
-    // });
+        setEmailForm({ email: settings.email, confirmEmail: "" });
+        setDetailsForm({
+          phoneNumber: settings.phoneNumber,
+          firstName: settings.firstName,
+          lastName: settings.lastName,
+        });
+      })
+      .catch((err) => {
+        props.logOut();
+        window.location.pathname = "/";
+      });
     // eslint-disable-next-line
   }, []);
 
-  const handleAccountChange = (e) => {
-    // const input = e.target;
-    // const tempAccount = _.cloneDeep(account);
-    // if (input.type === "checkbox") {
-    //   tempAccount["preferences"][input.name] = input.checked;
-    // } else {
-    //   tempAccount[input.name] = input.value;
-    // }
-    // setAccount(tempAccount);
-  };
+  // const handleAccountChange = (e) => {
+  //   const input = e.target;
+  //   const tempAccount = _.cloneDeep(account);
 
-  const handleAccountSubmit = (e) => {
-    e.preventDefault();
+  //   if (input.type === "checkbox") {
+  //     tempAccount["preferences"][input.name] = input.checked;
+  //   } else {
+  //     tempAccount[input.name] = input.value;
+  //   }
 
-    // const { major, minor, patch } = account.preferences;
+  //   setAccount(tempAccount);
+  // };
 
-    // getCurrentUser()
-    //   .then((user) => {
-    //     user.getSession((err, session) => {
-    //       if (!err) {
-    //         if (
-    //           major !== initialPreferences["major"] ||
-    //           minor !== initialPreferences["minor"] ||
-    //           patch !== initialPreferences["patch"]
-    //         ) {
-    //           setAccountStatusMessage("Please wait...");
-    //           setShowAccountStatus(true);
+  // const handleAccountSubmit = (e) => {
+  //   e.preventDefault();
 
-    //           const updatePreferences = async () => {
-    //             let body = account.preferences;
-    //             body["email"] = account.email;
+  //   const { major, minor, patch } = account.preferences;
 
-    //             await fetch(
-    //               "https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/preferences",
-    //               {
-    //                 method: "post",
-    //                 body: JSON.stringify(body),
-    //                 headers: {
-    //                   Authorization: session.getIdToken().getJwtToken(),
-    //                 },
-    //               }
-    //             );
+  //   getCurrentUser()
+  //     .then((user) => {
+  //       user.getSession((err, session) => {
+  //         if (!err) {
+  //           if (
+  //             major !== initialPreferences["major"] ||
+  //             minor !== initialPreferences["minor"] ||
+  //             patch !== initialPreferences["patch"]
+  //           ) {
+  //             setAccountStatusMessage("Please wait...");
+  //             setShowAccountStatus(true);
 
-    //             window.location.reload();
-    //           };
-    //           updatePreferences();
-    //         }
-    //       }
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-  };
+  //             const updatePreferences = async () => {
+  //               let body = account.preferences;
+  //               body["email"] = account.email;
 
-  const handlePasswordChange = (e) => {
-    // const input = e.target;
-    // const tempPasswords = _.cloneDeep(passwords);
-    // tempPasswords[input.name] = input.value;
-    // setPasswords(tempPasswords);
-  };
+  //               await fetch(
+  //                 "https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/preferences",
+  //                 {
+  //                   method: "post",
+  //                   body: JSON.stringify(body),
+  //                   headers: {
+  //                     Authorization: session.getIdToken().getJwtToken(),
+  //                   },
+  //                 }
+  //               );
 
-  const handlePasswordSubmit = (e) => {
-    e.preventDefault();
-    // setPasswordStatusMessage("Please wait...");
-    // setShowPasswordStatus(true);
+  //               window.location.reload();
+  //             };
+  //             updatePreferences();
+  //           }
+  //         }
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
-    // if (passwords.newPassword !== passwords.confirmNewPassword) {
-    //   setPasswordStatusMessage("Passwords do not match.");
-    // } else {
-    //   getCurrentUser()
-    //     .then((user) => {
-    //       user.getSession((err, session) => {
-    //         if (!err) {
-    //           user.changePassword(
-    //             passwords.oldPassword,
-    //             passwords.newPassword,
-    //             (err, result) => {
-    //               if (err) {
-    //                 if (err.message.includes("username")) {
-    //                   setPasswordStatusMessage("Old password was incorrect.");
-    //                 } else {
-    //                   setPasswordStatusMessage(err.message);
-    //                 }
-    //               } else {
-    //                 window.location.reload();
-    //               }
-    //             }
-    //           );
-    //         }
-    //       });
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // }
-  };
+  // const handlePasswordChange = (e) => {
+  //   const input = e.target;
+  //   const tempPasswords = _.cloneDeep(passwords);
+
+  //   tempPasswords[input.name] = input.value;
+  //   setPasswords(tempPasswords);
+  // };
+
+  // const handlePasswordSubmit = (e) => {
+  //   e.preventDefault();
+  //   setPasswordStatusMessage("Please wait...");
+  //   setShowPasswordStatus(true);
+
+  //   if (passwords.newPassword !== passwords.confirmNewPassword) {
+  //     setPasswordStatusMessage("Passwords do not match.");
+  //   } else {
+  //     getCurrentUser()
+  //       .then((user) => {
+  //         user.getSession((err, session) => {
+  //           if (!err) {
+  //             user.changePassword(
+  //               passwords.oldPassword,
+  //               passwords.newPassword,
+  //               (err, result) => {
+  //                 if (err) {
+  //                   if (err.message.includes("username")) {
+  //                     setPasswordStatusMessage("Old password was incorrect.");
+  //                   } else {
+  //                     setPasswordStatusMessage(err.message);
+  //                   }
+  //                 } else {
+  //                   window.location.reload();
+  //                 }
+  //               }
+  //             );
+  //           }
+  //         });
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }
+  // };
 
   return (
     <section id="account">
