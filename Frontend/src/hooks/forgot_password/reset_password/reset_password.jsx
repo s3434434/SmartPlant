@@ -72,7 +72,7 @@ export default function ResetPassword(props) {
           value={form.newPassword}
           onChange={handleChange}
         />
-        <label className="form-label gold" htmlFor="confirmNewPassword">
+        <label className="form-label gold mt-3" htmlFor="confirmNewPassword">
           Confirm new password
         </label>
         <input
