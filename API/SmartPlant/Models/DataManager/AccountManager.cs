@@ -153,7 +153,14 @@ namespace SmartPlant.Models.DataManager
             //var name = user.FirstName ?? "";
 
             var subject = $"{user.FirstName}  | {user.Email} | {user.Id} -- {dto.EmailSubject} ";
-            var content = dto.EmailBody;
+
+            var content = $"=================================================================\n\n" +
+                          $"Name:\t\t {user.FirstName ?? "N/A"}\n" +
+                          $"Email:\t\t {user.Email},\n" +
+                          $"UserID:\t\t {user.Id}\n\n" +
+                          $"=================================================================\n" +
+                          $"\n\n{dto.EmailBody}";
+
             var receivingEmail = _configuration.GetSection("SupportEmailConfig").GetSection("ReceivingEmail").Value;
 
             /*Console.WriteLine("Email :" + receivingEmail);

@@ -34,6 +34,7 @@ namespace SmartPlant.Tests.Models.DataManager
         private Mock<IEmailSender> mock_EmailSender;
         private Mock<JwtHandler> mock_JWTHandler;
         private Mock<IPasswordHasher<ApplicationUser>> mock_PasswordHasher;
+        private Mock<IConfiguration> mock_Configuration;
 
         [SetUp]
         public void Setup()
@@ -57,8 +58,9 @@ namespace SmartPlant.Tests.Models.DataManager
 
             mock_EmailSender = new Mock<IEmailSender>();
             mock_JWTHandler = new Mock<JwtHandler>(Mock.Of<IConfiguration>(), mock_UserManager.Object);
+            mock_Configuration = new Mock<IConfiguration>();
 
-            
+
         }
 
         [TearDown]
@@ -84,7 +86,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -119,7 +122,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -150,7 +154,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -177,7 +182,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -203,7 +209,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -232,7 +239,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -264,7 +272,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -303,7 +312,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -329,7 +339,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -363,7 +374,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -399,7 +411,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -435,7 +448,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -461,7 +475,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -490,7 +505,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -519,7 +535,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -543,7 +560,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -571,7 +589,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -597,7 +616,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -641,7 +661,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -682,7 +703,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -708,7 +730,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -753,7 +776,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -790,7 +814,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -827,7 +852,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -853,7 +879,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -890,7 +917,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -926,7 +954,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -981,7 +1010,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -1023,7 +1053,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -1056,7 +1087,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -1098,7 +1130,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -1140,7 +1173,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -1175,7 +1209,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -1208,7 +1243,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -1239,7 +1275,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -1285,7 +1322,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -1318,7 +1356,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
@@ -1349,7 +1388,8 @@ namespace SmartPlant.Tests.Models.DataManager
                 mock_Mapper.Object,
                 mock_DatabaseContext,
                 mock_EmailSender.Object,
-                mock_JWTHandler.Object
+                mock_JWTHandler.Object,
+                mock_Configuration.Object
                 );
 
             // Act
