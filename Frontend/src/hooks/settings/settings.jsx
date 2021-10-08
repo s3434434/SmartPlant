@@ -401,9 +401,9 @@ export default function Settings(props) {
         onSubmit={handlePasswordSubmit}
       >
         <div className="container">
-          <div className="row">
-            {passwordModifiable ? (
-              <>
+          {passwordModifiable ? (
+            <>
+              <div className="row">
                 <div className="col-lg-6">
                   <label className="form-label gold" htmlFor="oldPassword">
                     Old password
@@ -430,6 +430,8 @@ export default function Settings(props) {
                     onChange={handlePasswordChange}
                   />
                 </div>
+              </div>
+              <div className="row mt-2">
                 <div className="col-lg-6">
                   <label
                     className="form-label gold"
@@ -447,35 +449,35 @@ export default function Settings(props) {
                   />
                 </div>
                 <div className="col-lg-6"></div>
-              </>
-            ) : (
-              <>
-                <div className="col-lg-6">
-                  <div className="container p-0">
-                    <div className="row">
-                      <div className="col-sm-10">
-                        <span className="gold">Password</span>
-                      </div>
-                      <div className="col-sm-2 text-end">
-                        <FontAwesomeIcon
-                          className="gold light-gold-hover"
-                          icon={faPen}
-                          style={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setPasswordModifiable(true);
-                          }}
-                        ></FontAwesomeIcon>
-                      </div>
+              </div>
+            </>
+          ) : (
+            <div className="row">
+              <div className="col-lg-6">
+                <div className="container p-0">
+                  <div className="row">
+                    <div className="col-sm-10">
+                      <span className="gold">Password</span>
+                    </div>
+                    <div className="col-sm-2 text-end">
+                      <FontAwesomeIcon
+                        className="gold light-gold-hover"
+                        icon={faPen}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setPasswordModifiable(true);
+                        }}
+                      ></FontAwesomeIcon>
                     </div>
                   </div>
-                  <div className="mt-1 py-1 overflow-hidden setting">
-                    <span className="ms-1">●●●●●●●●</span>
-                  </div>
                 </div>
-                <div className="col-lg-6"></div>
-              </>
-            )}
-          </div>
+                <div className="mt-1 py-1 overflow-hidden setting">
+                  <span className="ms-1">••••••••</span>
+                </div>
+              </div>
+              <div className="col-lg-6"></div>
+            </div>
+          )}
         </div>
         {passwordModifiable && (
           <>
