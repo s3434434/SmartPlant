@@ -15,7 +15,7 @@ export default function Settings(props) {
       firstName: "",
       lastName: "",
     }),
-    [passwordform, setPasswordForm] = useState({
+    [passwordForm, setPasswordForm] = useState({
       oldPassword: "",
       newPassword: "",
       confirmNewPassword: "",
@@ -123,49 +123,47 @@ export default function Settings(props) {
       });
   };
 
-  // const handlePasswordChange = (e) => {
-  //   const input = e.target;
-  //   const tempPasswords = _.cloneDeep(passwords);
+  const handlePasswordChange = (e) => {
+    const input = e.target;
+    const tempPasswordForm = _.cloneDeep(passwordForm);
 
-  //   tempPasswords[input.name] = input.value;
-  //   setPasswords(tempPasswords);
-  // };
+    tempPasswordForm[input.name] = input.value;
 
-  // const handlePasswordSubmit = (e) => {
-  //   e.preventDefault();
-  //   setPasswordStatusMessage("Please wait...");
-  //   setShowPasswordStatus(true);
+    setPasswordForm(tempPasswordForm);
+  };
 
-  //   if (passwords.newPassword !== passwords.confirmNewPassword) {
-  //     setPasswordStatusMessage("Passwords do not match.");
-  //   } else {
-  //     getCurrentUser()
-  //       .then((user) => {
-  //         user.getSession((err, session) => {
-  //           if (!err) {
-  //             user.changePassword(
-  //               passwords.oldPassword,
-  //               passwords.newPassword,
-  //               (err, result) => {
-  //                 if (err) {
-  //                   if (err.message.includes("username")) {
-  //                     setPasswordStatusMessage("Old password was incorrect.");
-  //                   } else {
-  //                     setPasswordStatusMessage(err.message);
-  //                   }
-  //                 } else {
-  //                   window.location.reload();
-  //                 }
-  //               }
-  //             );
-  //           }
-  //         });
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  // };
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    setPasswordStatus("Please wait...");
+    setShowPasswordStatus(true);
+
+    if (passwordForm.newPassword !== passwordForm.confirmNewPassword) {
+      setPasswordStatus("Passwords do not match.");
+    } else {
+      const login = localStorage.getItem("demeter-login");
+      const { token } = JSON.parse(login);
+
+      axios
+        .put(
+          "https://smart-plant.azurewebsites.net/api/User/Password",
+          passwordForm,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          setPasswordStatus("Password updated successfully.");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        })
+        .catch((err) => {
+          setDetailsStatus(err.response.data.errors[0]);
+        });
+    }
+  };
 
   return (
     <section>
@@ -397,240 +395,105 @@ export default function Settings(props) {
         )}
       </form>
 
-      {/* 
       <form
         className="w-50 m-auto mt-4"
         style={{ marginBottom: "0.75em" }}
-        onSubmit={handleSubmit}
+        onSubmit={handlePasswordSubmit}
       >
-        <div className="container p-0">
+        <div className="container">
           <div className="row">
-            <div className="col-sm-6">
-              <label className="form-label gold" htmlFor="email">
-                Email
-              </label>
-              <input
-                className="form-control"
-                name="email"
-                type="text"
-                required
-                value={form.email}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-sm-6">
-              <label className="form-label gold" htmlFor="phone">
-                Phone
-              </label>
-              <input
-                className="form-control"
-                name="phone"
-                type="text"
-                value={form.phone}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          <div className="row mt-2">
-            <div className="col-sm-6">
-              <label className="form-label gold" htmlFor="firstName">
-                First name
-              </label>
-              <input
-                className="form-control"
-                name="firstName"
-                type="text"
-                value={form.firstName}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-sm-6">
-              <label className="form-label gold" htmlFor="lastName">
-                Last name
-              </label>
-              <input
-                className="form-control"
-                name="lastName"
-                type="text"
-                value={form.lastName}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          <div className="row mt-2">
-            <div className="col-sm-6">
-              <label className="form-label gold" htmlFor="password">
-                Password
-              </label>
-              <input
-                className="form-control"
-                name="password"
-                type="password"
-                required
-                value={form.password}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-sm-6">
-              <label className="form-label gold" htmlFor="confirmPassword">
-                Confirm password
-              </label>
-              <input
-                className="form-control"
-                name="confirmPassword"
-                type="password"
-                required
-                value={form.confirmPassword}
-                onChange={handleChange}
-              />
-            </div>
+            {passwordModifiable ? (
+              <>
+                <div className="col-lg-6">
+                  <label className="form-label gold" htmlFor="oldPassword">
+                    Old password
+                  </label>
+                  <input
+                    className="form-control"
+                    name="oldPassword"
+                    type="password"
+                    required
+                    value={passwordForm.oldPassword}
+                    onChange={handlePasswordChange}
+                  />
+                </div>
+                <div className="col-lg-6">
+                  <label className="form-label gold" htmlFor="newPassword">
+                    New password
+                  </label>
+                  <input
+                    className="form-control"
+                    name="newPassword"
+                    type="password"
+                    required
+                    value={passwordForm.newPassword}
+                    onChange={handlePasswordChange}
+                  />
+                </div>
+                <div className="col-lg-6">
+                  <label
+                    className="form-label gold"
+                    htmlFor="confirmNewPassword"
+                  >
+                    Confirm new password
+                  </label>
+                  <input
+                    className="form-control"
+                    name="confirmNewPassword"
+                    type="password"
+                    required
+                    value={passwordForm.confirmNewPassword}
+                    onChange={handlePasswordChange}
+                  />
+                </div>
+                <div className="col-lg-6"></div>
+              </>
+            ) : (
+              <>
+                <div className="col-lg-6">
+                  <div className="container p-0">
+                    <div className="row">
+                      <div className="col-sm-10">
+                        <span className="gold">Password</span>
+                      </div>
+                      <div className="col-sm-2 text-end">
+                        <FontAwesomeIcon
+                          className="gold light-gold-hover"
+                          icon={faPen}
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setPasswordModifiable(true);
+                          }}
+                        ></FontAwesomeIcon>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-1 py-1 overflow-hidden setting">
+                    <span className="ms-1">●●●●●●●●</span>
+                  </div>
+                </div>
+                <div className="col-lg-6"></div>
+              </>
+            )}
           </div>
         </div>
-        <div className={showStatus ? "visible-message" : "hidden-message"}>
-          <div className="text-center mt-3">{status}</div>
-        </div>
-        <div className="text-center mt-3">
-          <button className="btn btn-primary" type="submit">
-            Register
-          </button>
-        </div>
+        {passwordModifiable && (
+          <>
+            <div
+              className={
+                showPasswordStatus ? "visible-message" : "hidden-message"
+              }
+            >
+              <div className="text-center mt-3">{passwordStatus}</div>
+            </div>
+            <div className="text-center mt-3">
+              <button className="btn btn-primary" type="submit">
+                Change password
+              </button>
+            </div>
+          </>
+        )}
       </form>
-
-      <div style={{ display: account.email !== "" ? "unset" : "none" }}>
-        <h1>Account Settings:</h1>
-
-        <form onSubmit={handleAccountSubmit} style={{ marginBottom: "1em" }}>
-          <label htmlFor="email">Email:</label>
-          <input name="email" type="email" value={account.email}></input>
-          <div style={{ marginBottom: "1em" }}>
-            <h2 style={{ fontSize: "1.3em" }}>Version update notifications:</h2>
-            <div>
-              <label htmlFor="major" style={{ marginRight: "0.5em" }}>
-                Major:
-              </label>
-              <input
-                name="major"
-                type="checkbox"
-                onChange={handleAccountChange}
-              ></input>
-            </div>
-            <div>
-              <label htmlFor="minor" style={{ marginRight: "0.5em" }}>
-                Minor:
-              </label>
-              <input
-                name="minor"
-                type="checkbox"
-                onChange={handleAccountChange}
-              ></input>
-            </div>
-            <div>
-              <label htmlFor="patch" style={{ marginRight: "0.5em" }}>
-                Patch:
-              </label>
-              <input
-                name="patch"
-                type="checkbox"
-                onChange={handleAccountChange}
-              ></input>
-            </div>
-          </div>
-          <div
-            className={showAccountStatus ? "visible-message" : "hidden-message"}
-            style={{ margin: "0.5em 0em" }}
-          >
-            <span>{accountStatusMessage}</span>
-          </div>
-          <button className="btn-blue" type="submit">
-            Apply changes
-          </button>
-        </form>
-
-        <form onSubmit={handlePasswordSubmit}>
-          <div
-            className="password"
-            style={{
-              display: passwordModifiable ? "none" : "unset",
-            }}
-          >
-            <label htmlFor="password" style={{ marginRight: "0.5em" }}>
-              Password:
-            </label>
-            <input
-              name="password"
-              type="password"
-              value="password"
-              placeholder="password"
-              readOnly
-            ></input>
-          </div>
-          <div
-            className="modifyPassword"
-            style={{ display: passwordModifiable ? "unset" : "none" }}
-          >
-            <div style={{ display: "block" }}>
-              <label htmlFor="oldPassword" style={{ marginRight: "0.5em" }}>
-                Old password:
-              </label>
-              <input
-                name="oldPassword"
-                type="password"
-                value={passwords.oldPassword}
-                onChange={handlePasswordChange}
-                required={passwordModifiable ? true : false}
-              ></input>
-            </div>
-            <div style={{ display: "block" }}>
-              <label htmlFor="newPassword" style={{ marginRight: "0.5em" }}>
-                New password:
-              </label>
-              <input
-                name="newPassword"
-                type="password"
-                value={passwords.newPassword}
-                onChange={handlePasswordChange}
-                required={passwordModifiable ? true : false}
-              ></input>
-            </div>
-            <div style={{ display: "block" }}>
-              <label
-                htmlFor="confirmNewPassword"
-                style={{ marginRight: "0.5em" }}
-              >
-                Confirm new password:
-              </label>
-              <input
-                name="confirmNewPassword"
-                type="password"
-                value={passwords.confirmNewPassword}
-                onChange={handlePasswordChange}
-                required={passwordModifiable ? true : false}
-              ></input>
-            </div>
-          </div>
-          <div
-            className={
-              showPasswordStatus ? "visible-message" : "hidden-message"
-            }
-            style={{ margin: "0.5em 0em" }}
-          >
-            <span>{passwordStatusMessage}</span>
-          </div>
-          <button
-            className="btn-blue changePassBtn"
-            type={passwordModifiable ? "submit" : "button"}
-            onClick={
-              passwordModifiable
-                ? null
-                : () => {
-                    setPasswordModifiable(true);
-                  }
-            }
-          >
-            Change password
-          </button>
-        </form>
-      </div> */}
     </section>
   );
 }
