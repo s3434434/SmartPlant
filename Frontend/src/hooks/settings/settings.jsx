@@ -88,7 +88,7 @@ export default function Settings(props) {
         window.location.reload();
       })
       .catch((err) => {
-        setEmailStatus(err.response.data);
+        setEmailStatus(err.response.data.errors[0]);
       });
   };
 
@@ -119,66 +119,9 @@ export default function Settings(props) {
         window.location.reload();
       })
       .catch((err) => {
-        setDetailsStatus(err.response.data);
+        setDetailsStatus(err.response.data.errors[0]);
       });
   };
-
-  // const handleAccountChange = (e) => {
-  //   const input = e.target;
-  //   const tempAccount = _.cloneDeep(account);
-
-  //   if (input.type === "checkbox") {
-  //     tempAccount["preferences"][input.name] = input.checked;
-  //   } else {
-  //     tempAccount[input.name] = input.value;
-  //   }
-
-  //   setAccount(tempAccount);
-  // };
-
-  // const handleAccountSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   const { major, minor, patch } = account.preferences;
-
-  //   getCurrentUser()
-  //     .then((user) => {
-  //       user.getSession((err, session) => {
-  //         if (!err) {
-  //           if (
-  //             major !== initialPreferences["major"] ||
-  //             minor !== initialPreferences["minor"] ||
-  //             patch !== initialPreferences["patch"]
-  //           ) {
-  //             setAccountStatusMessage("Please wait...");
-  //             setShowAccountStatus(true);
-
-  //             const updatePreferences = async () => {
-  //               let body = account.preferences;
-  //               body["email"] = account.email;
-
-  //               await fetch(
-  //                 "https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/preferences",
-  //                 {
-  //                   method: "post",
-  //                   body: JSON.stringify(body),
-  //                   headers: {
-  //                     Authorization: session.getIdToken().getJwtToken(),
-  //                   },
-  //                 }
-  //               );
-
-  //               window.location.reload();
-  //             };
-  //             updatePreferences();
-  //           }
-  //         }
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
 
   // const handlePasswordChange = (e) => {
   //   const input = e.target;
@@ -294,11 +237,18 @@ export default function Settings(props) {
           </div>
         </div>
         {emailModifiable && (
-          <div className="text-center mt-3">
-            <button className="btn btn-primary" type="submit">
-              Apply change
-            </button>
-          </div>
+          <>
+            <div
+              className={showEmailStatus ? "visible-message" : "hidden-message"}
+            >
+              <div className="text-center mt-3">{emailStatus}</div>
+            </div>
+            <div className="text-center mt-3">
+              <button className="btn btn-primary" type="submit">
+                Apply change
+              </button>
+            </div>
+          </>
         )}
       </form>
 
@@ -430,11 +380,20 @@ export default function Settings(props) {
           </div>
         </div>
         {detailsModifiable && (
-          <div className="text-center mt-3">
-            <button className="btn btn-primary" type="submit">
-              Apply changes
-            </button>
-          </div>
+          <>
+            <div
+              className={
+                showDetailsStatus ? "visible-message" : "hidden-message"
+              }
+            >
+              <div className="text-center mt-3">{detailsStatus}</div>
+            </div>
+            <div className="text-center mt-3">
+              <button className="btn btn-primary" type="submit">
+                Apply changes
+              </button>
+            </div>
+          </>
         )}
       </form>
 
