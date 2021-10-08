@@ -72,14 +72,14 @@ export default function Register(props) {
               />
             </div>
             <div className="col-md-6">
-              <label className="form-label gold" htmlFor="phone">
+              <label className="form-label gold" htmlFor="phoneNumber">
                 Phone
               </label>
               <input
                 className="form-control"
-                name="phone"
+                name="phoneNumber"
                 type="text"
-                value={form.phone}
+                value={form.phoneNumber}
                 onChange={handleChange}
               />
             </div>
