@@ -13,7 +13,7 @@ jobs:
   test-frontend:
     defaults:
       run:
-        working-directory: Frontend
+        working-directory: ./Frontend
 
     runs-on: ubuntu-latest
 
