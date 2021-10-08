@@ -58,21 +58,11 @@ p {
   opacity: 0.8;
 }
 
-i {
-  color: #818181;
-}
-i:hover {
-  color: #f1f1f1;
-}
-
 input,
 textarea,
 select {
-  color: rgb(53, 0, 20) !important;
+  color: rgba(0, 53, 11) !important;
 }
-/* form .details {
-  display: grid;
-} */
 :-moz-ui-invalid {
   box-shadow: none;
 }
@@ -86,6 +76,12 @@ form .visible-message {
   pointer-events: unset;
 }
 
+i {
+  color: #818181;
+}
+i:hover {
+  color: #f1f1f1;
+}
 .content-gallery {
   margin-top: 0.5em;
 }
