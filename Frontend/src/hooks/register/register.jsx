@@ -11,7 +11,7 @@ export default function Register(props) {
     lastName: "",
     password: "",
     confirmPassword: "",
-    clientURI: "https://demeter.net.au/confirm-email",
+    clientURI: "http://localhost:3000/confirm-email",
   });
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("");

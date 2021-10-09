@@ -12,7 +12,7 @@ export default function Logout(props) {
 
   return (
     <section>
-      <h1 className="gold text-center">You have been logged out</h1>
+      <h1 className="gold text-center">You have been logged out.</h1>
       <div className="text-center mt-5">
         <Link key="home" to="/">
           <button className="btn btn-primary">Home</button>

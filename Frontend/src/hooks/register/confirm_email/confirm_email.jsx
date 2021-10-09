@@ -14,8 +14,12 @@ export default function ConfirmEmail(props) {
 
     props.logOut();
 
-    axios.get(
-      `https://smart-plant.azurewebsites.net/api/Account/ConfirmEmail?token=${token}&email=${email}`
+    axios.put(
+      "https://smart-plant.azurewebsites.net/api/Account/ConfirmEmail",
+      {
+        email: email,
+        token: token,
+      }
     );
     // eslint-disable-next-line
   }, []);

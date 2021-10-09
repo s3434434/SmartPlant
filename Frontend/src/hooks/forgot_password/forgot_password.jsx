@@ -6,7 +6,7 @@ import "./forgot_password.css";
 export default function ForgotPassword(props) {
   const [form, setForm] = useState({
     email: "",
-    clientURI: "https://demeter.net.au/reset-password",
+    clientURI: "http://localhost:3000/reset-password",
   });
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("");
@@ -63,7 +63,7 @@ export default function ForgotPassword(props) {
           onChange={handleChange}
           required
         />
-        <div className="form-text">
+        <div className="form-text mt-1">
           <span className="gold">
             Enter your email and we will send you a password reset link.
           </span>
