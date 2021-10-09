@@ -5,11 +5,17 @@ body {
   background-attachment: fixed;
   background-position: center;
 }
-h1 {
+h1,
+span,
+div {
   cursor: default;
 }
 .gold {
   color: rgb(243, 202, 0);
+}
+
+.light-gold-hover:hover {
+  color: rgb(247, 215, 59);
 }
 
 section {
@@ -38,10 +44,10 @@ p {
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary:focus {
-  box-shadow: 0.11em 0.11em 0.19em rgb(243, 202, 0),
-    -0.11em -0.11em 0.19em rgb(243, 202, 0),
-    -0.11em 0.11em 0.19em rgb(243, 202, 0),
-    0.11em -0.11em 0.19em rgb(243, 202, 0), 0.0832em 0.0832em black,
+  box-shadow: 0.11em 0.11em 0.19em rgb(247, 215, 59),
+    -0.11em -0.11em 0.19em rgb(247, 215, 59),
+    -0.11em 0.11em 0.19em rgb(247, 215, 59),
+    0.11em -0.11em 0.19em rgb(247, 215, 59), 0.0832em 0.0832em black,
     -0.0832em -0.0832em black, -0.0832em 0.0832em black,
     0.0832em -0.0832em black !important;
 }
@@ -52,21 +58,11 @@ p {
   opacity: 0.8;
 }
 
-i {
-  color: #818181;
-}
-i:hover {
-  color: #f1f1f1;
-}
-
 input,
 textarea,
 select {
-  color: rgb(53, 0, 20) !important;
+  color: rgba(0, 53, 11) !important;
 }
-/* form .details {
-  display: grid;
-} */
 :-moz-ui-invalid {
   box-shadow: none;
 }
@@ -75,10 +71,17 @@ form .hidden-message {
   pointer-events: none;
 }
 form .visible-message {
+  color: white;
   opacity: 1;
   pointer-events: unset;
 }
 
+i {
+  color: #818181;
+}
+i:hover {
+  color: #f1f1f1;
+}
 .content-gallery {
   margin-top: 0.5em;
 }

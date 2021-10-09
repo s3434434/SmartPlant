@@ -11,12 +11,12 @@ export default function RegistrationSuccessful(props) {
   return (
     <section>
       <h1 className="gold text-center">Registration successful</h1>
+      <div className="text-center mt-3" style={{ color: "white" }}>
+        Be sure to check your email and verify your account.
+      </div>
       <div className="text-center mt-3">
-        <span className="text-center gold">
-          Be sure to check your email and verify your account.
-        </span>
         <Link key="home" to="/">
-          <button className="btn btn-primary mt-3">Home</button>
+          <button className="btn btn-primary">Home</button>
         </Link>
       </div>
     </section>

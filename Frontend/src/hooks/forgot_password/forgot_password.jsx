@@ -6,8 +6,10 @@ import "./forgot_password.css";
 export default function ForgotPassword(props) {
   const [form, setForm] = useState({
     email: "",
-    clientURI: "https://demeter.net.au/reset-password",
+    clientURI: "http://localhost:3000/reset-password",
   });
+  const [showStatus, setShowStatus] = useState(false);
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     document.title = "Forgot password | Demeter - The plant meter";
@@ -26,11 +28,19 @@ export default function ForgotPassword(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setStatus("Please wait...");
+    setShowStatus(true);
 
     axios
-      .post("https://smart-plant.azurewebsites.net/api/Password/Forgot", form)
+      .post(
+        "https://smart-plant.azurewebsites.net/api/Account/Password/Forgot",
+        form
+      )
       .then((res) => {
-        window.location.pathname = "/request-successful";
+        window.location.pathname = "/request-processed";
+      })
+      .catch((err) => {
+        window.location.pathname = "/request-processed";
       });
   };
 
@@ -53,12 +63,15 @@ export default function ForgotPassword(props) {
           onChange={handleChange}
           required
         />
-        <div className="form-text">
-          <span className="gold" style={{ cursor: "default" }}>
+        <div className="form-text mt-1">
+          <span className="gold">
             Enter your email and we will send you a password reset link.
           </span>
         </div>
-        <div className="text-center mt-4">
+        <div className={showStatus ? "visible-message" : "hidden-message"}>
+          <div className="text-center mt-3">{status}</div>
+        </div>
+        <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Reset password
           </button>
