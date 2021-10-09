@@ -44,10 +44,10 @@ p {
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary:focus {
-  box-shadow: 0.11em 0.11em 0.19em rgb(243, 202, 0),
-    -0.11em -0.11em 0.19em rgb(243, 202, 0),
-    -0.11em 0.11em 0.19em rgb(243, 202, 0),
-    0.11em -0.11em 0.19em rgb(243, 202, 0), 0.0832em 0.0832em black,
+  box-shadow: 0.11em 0.11em 0.19em rgb(247, 215, 59),
+    -0.11em -0.11em 0.19em rgb(247, 215, 59),
+    -0.11em 0.11em 0.19em rgb(247, 215, 59),
+    0.11em -0.11em 0.19em rgb(247, 215, 59), 0.0832em 0.0832em black,
     -0.0832em -0.0832em black, -0.0832em 0.0832em black,
     0.0832em -0.0832em black !important;
 }
