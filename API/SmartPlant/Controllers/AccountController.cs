@@ -71,18 +71,18 @@ namespace SmartPlant.Controllers
         /// <remarks>Required to login</remarks>        
         /// <response code="200">Successfully Logged In</response>
         /// <response code="400">Failed to login</response>
-        [HttpGet]
+        [HttpPut]
         [Route("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail([FromQuery] string email, [FromQuery] string token)
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto dto)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(dto.Email);
 
             if (user == null)
             {
                 return BadRequest("User Not Found");
             }
 
-            var result = await _repo.ConfirmEmail(user, token);
+            var result = await _repo.ConfirmEmail(user, dto.Token);
 
             if (!result.Succeeded)
             {

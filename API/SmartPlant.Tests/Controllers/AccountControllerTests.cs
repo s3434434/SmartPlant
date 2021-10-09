@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using Moq;
 using AutoMapper;
 using EmailService;
@@ -150,6 +151,8 @@ namespace SmartPlant.Tests.Controllers
         public async Task ConfirmEmail_WhenUserNotFound_ReturnsBadRequest()
         {
             // Arrange
+            var mock_ConfirmEmailDto = new ConfirmEmailDto();
+
             mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
 
@@ -157,12 +160,10 @@ namespace SmartPlant.Tests.Controllers
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
                 mock_UserManager.Object
-
-
                 );
 
             // Act
-            var result = await accountController.ConfirmEmail(It.IsAny<string>(), It.IsAny<string>());
+            var result = await accountController.ConfirmEmail(mock_ConfirmEmailDto);
 
             // Assert
             Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
@@ -172,6 +173,7 @@ namespace SmartPlant.Tests.Controllers
         public async Task ConfirmEmail_WhenUserEmailTokenInvalid_ReturnsBadRequest()
         {
             // Arrange
+            var mock_ConfirmEmailDto = new ConfirmEmailDto();
             var mock_ApplicationUser = new ApplicationUser();
 
             mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
@@ -189,7 +191,7 @@ namespace SmartPlant.Tests.Controllers
                 );
 
             // Act
-            var result = await accountController.ConfirmEmail(It.IsAny<string>(), It.IsAny<string>());
+            var result = await accountController.ConfirmEmail(mock_ConfirmEmailDto);
 
             // Assert
             Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
@@ -199,6 +201,7 @@ namespace SmartPlant.Tests.Controllers
         public async Task ConfirmEmail_WhenUserEmailConfirmedSuccessfully_ReturnsOkRequest()
         {
             // Arrange
+            var mock_ConfirmEmailDto = new ConfirmEmailDto();
             var mock_ApplicationUser = new ApplicationUser();
 
             mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
@@ -214,7 +217,7 @@ namespace SmartPlant.Tests.Controllers
                 );
 
             // Act
-            var result = await accountController.ConfirmEmail(It.IsAny<string>(), It.IsAny<string>());
+            var result = await accountController.ConfirmEmail(mock_ConfirmEmailDto);
 
             // Assert
             Assert.That(result, Is.TypeOf<OkObjectResult>());

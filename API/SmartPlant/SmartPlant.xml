@@ -19,7 +19,7 @@
             <response code="200">Successfully Registers User</response>
             <response code="400">Invalid Registration input</response>
         </member>
-        <member name="M:SmartPlant.Controllers.AccountController.ConfirmEmail(System.String,System.String)">
+        <member name="M:SmartPlant.Controllers.AccountController.ConfirmEmail(SmartPlant.Models.API_Model.Account.ConfirmEmailDto)">
             <summary>
             Confirms a user's email 
             </summary>
