@@ -75,21 +75,29 @@ export default function Settings(props) {
     setEmailStatus("Please wait...");
     setShowEmailStatus(true);
 
-    const login = localStorage.getItem("demeter-login");
-    const { token } = JSON.parse(login);
+    if (emailForm.email !== emailForm.confirmEmail) {
+      setEmailStatus("Email do not match.");
+    } else {
+      const login = localStorage.getItem("demeter-login");
+      const { token } = JSON.parse(login);
 
-    axios
-      .put("https://smart-plant.azurewebsites.net/api/User/Email", emailForm, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        window.location.reload();
-      })
-      .catch((err) => {
-        setEmailStatus(err.response.data.errors[0]);
-      });
+      axios
+        .put(
+          "https://smart-plant.azurewebsites.net/api/User/Email",
+          emailForm,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          window.location.reload();
+        })
+        .catch((err) => {
+          setEmailStatus(err.response.data.errors.ConfirmEmail[0]);
+        });
+    }
   };
 
   const handleDetailsChange = (e) => {
@@ -119,7 +127,21 @@ export default function Settings(props) {
         window.location.reload();
       })
       .catch((err) => {
-        setDetailsStatus(err.response.data.errors[0]);
+        const data = err.response.data;
+        let errorMessage = "";
+
+        if (data.error !== undefined) {
+          errorMessage = data.error[0];
+        } else {
+          const errors = data.errors;
+          Object.keys(errors).forEach((error) => {
+            if (errors[error] !== undefined) {
+              errorMessage = errors[error][0];
+            }
+          });
+        }
+
+        setDetailsStatus(errorMessage);
       });
   };
 
@@ -160,7 +182,7 @@ export default function Settings(props) {
           }, 1000);
         })
         .catch((err) => {
-          setDetailsStatus(err.response.data.errors[0]);
+          setPasswordStatus(err.response.data);
         });
     }
   };

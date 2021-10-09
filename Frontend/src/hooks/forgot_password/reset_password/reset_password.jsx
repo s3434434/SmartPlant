@@ -48,8 +48,21 @@ export default function ResetPassword(props) {
         window.location.pathname = "/password-reset-successful";
       })
       .catch((err) => {
-        setStatus(err.response.data);
-        setShowStatus(true);
+        const data = err.response.data;
+        let errorMessage = "";
+
+        if (data.error !== undefined) {
+          errorMessage = data.error[0];
+        } else {
+          const errors = data.errors;
+          Object.keys(errors).forEach((error) => {
+            if (errors[error] !== undefined) {
+              errorMessage = errors[error][0];
+            }
+          });
+        }
+
+        setStatus(errorMessage);
       });
   };
 

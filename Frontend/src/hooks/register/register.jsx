@@ -37,15 +37,40 @@ export default function Register(props) {
     setStatus("Registering account...");
     setShowStatus(true);
 
-    axios
-      .post("https://smart-plant.azurewebsites.net/api/Account/Register", form)
-      .then((res) => {
-        window.location.pathname = "/registration-successful";
-      })
-      .catch((err) => {
-        setStatus(err.response.data.errors[0]);
-        setShowStatus(true);
-      });
+    if (form.password !== form.confirmPassword) {
+      setStatus("Passwords do not match.");
+    } else {
+      axios
+        .post(
+          "https://smart-plant.azurewebsites.net/api/Account/Register",
+          form
+        )
+        .then((res) => {
+          window.location.pathname = "/registration-successful";
+        })
+        .catch((err) => {
+          const data = err.response.data;
+          let errorMessage = "";
+
+          if (data.error !== undefined) {
+            errorMessage = data.error[0];
+          } else {
+            const errors = data.errors;
+
+            if (errors instanceof Array) {
+              errorMessage = errors[0];
+            } else {
+              Object.keys(errors).forEach((error) => {
+                if (errors[error] !== undefined) {
+                  errorMessage = errors[error][0];
+                }
+              });
+            }
+          }
+
+          setStatus(errorMessage);
+        });
+    }
   };
 
   return (
