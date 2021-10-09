@@ -57,7 +57,7 @@ export default function ResetPassword(props) {
           const errors = data.errors;
           Object.keys(errors).forEach((error) => {
             if (errors[error] !== undefined) {
-              errorMessage = errors[error][0];
+              errorMessage = errors[error];
             }
           });
         }

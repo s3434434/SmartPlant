@@ -56,13 +56,12 @@ export default function Register(props) {
             errorMessage = data.error[0];
           } else {
             const errors = data.errors;
-
             if (errors instanceof Array) {
               errorMessage = errors[0];
             } else {
               Object.keys(errors).forEach((error) => {
                 if (errors[error] !== undefined) {
-                  errorMessage = errors[error][0];
+                  errorMessage = errors[error];
                 }
               });
             }
