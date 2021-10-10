@@ -16,7 +16,7 @@ export default function ResetPassword(props) {
     confirmNewPassword: "",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("none");
 
   useEffect(() => {
     document.title = "Reset password | Demeter - The plant meter";
@@ -95,8 +95,10 @@ export default function ResetPassword(props) {
           value={form.confirmNewPassword}
           onChange={handleChange}
         />
-        <div className={showStatus ? "visible-message" : "hidden-message"}>
-          <div className="text-center mt-3">{status}</div>
+        <div className={showStatus || "hidden-field"}>
+          <div className="text-center mt-3">
+            <span>{status}</span>
+          </div>
         </div>
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">

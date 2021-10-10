@@ -66,14 +66,13 @@ select {
 :-moz-ui-invalid {
   box-shadow: none;
 }
-form .hidden-message {
+form span {
+  color: white;
+}
+form .hidden-field {
   opacity: 0;
   pointer-events: none;
-}
-form .visible-message {
-  color: white;
-  opacity: 1;
-  pointer-events: unset;
+  user-select: none;
 }
 
 i {
