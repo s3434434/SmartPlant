@@ -273,6 +273,47 @@ export default function Settings(props) {
       >
         <div className="container">
           <div className="row">
+            {phoneNumberModifiable ? (
+              <div className="col-lg-6">
+                <label className="form-label gold" htmlFor="phoneNumber">
+                  Phone
+                </label>
+                <input
+                  className="form-control"
+                  name="phoneNumber"
+                  type="text"
+                  value={detailsForm.phoneNumber}
+                  onChange={handleDetailsChange}
+                />
+              </div>
+            ) : (
+              <div className="col-lg-6">
+                <div className="container p-0">
+                  <div className="row">
+                    <div className="col-sm-10">
+                      <span className="gold">Phone</span>
+                    </div>
+                    <div className="col-sm-2 text-end">
+                      <FontAwesomeIcon
+                        className="gold light-gold-hover"
+                        icon={faPen}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setPhoneNumberModifiable(true);
+                          setDetailsModifiable(true);
+                        }}
+                      ></FontAwesomeIcon>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-1 py-1 overflow-hidden setting">
+                  <span className="ms-1">{detailsForm.phoneNumber}</span>
+                </div>
+              </div>
+            )}
+            <div className="col-lg-6"></div>
+          </div>
+          <div className="row mt-2">
             {firstNameModifiable ? (
               <div className="col-lg-6">
                 <label className="form-label gold" htmlFor="firstName">
@@ -350,48 +391,6 @@ export default function Settings(props) {
               </div>
             )}
           </div>
-          <div className="row mt-2">
-            {phoneNumberModifiable ? (
-              <div className="col-lg-6">
-                <label className="form-label gold" htmlFor="phoneNumber">
-                  Phone
-                </label>
-                <input
-                  className="form-control"
-                  name="phoneNumber"
-                  type="text"
-                  value={detailsForm.phoneNumber}
-                  onChange={handleDetailsChange}
-                />
-              </div>
-            ) : (
-              <div className="col-lg-6">
-                <div className="container p-0">
-                  <div className="row">
-                    <div className="col-sm-10">
-                      <span className="gold">Phone</span>
-                    </div>
-                    <div className="col-sm-2 text-end">
-                      <FontAwesomeIcon
-                        className="gold light-gold-hover"
-                        icon={faPen}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          setPhoneNumberModifiable(true);
-                          setDetailsModifiable(true);
-                        }}
-                      ></FontAwesomeIcon>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-1 py-1 overflow-hidden setting">
-                  <span className="ms-1">{detailsForm.phoneNumber}</span>
-                </div>
-              </div>
-            )}
-
-            <div className="col-lg-6"></div>
-          </div>
         </div>
         <div
           className={showDetailsStatus ? "text-center mt-3" : "hidden-field"}
@@ -429,6 +428,9 @@ export default function Settings(props) {
                     onChange={handlePasswordChange}
                   />
                 </div>
+                <div className="col-lg-6"></div>
+              </div>
+              <div className="row mt-2">
                 <div className="col-lg-6">
                   <label className="form-label gold" htmlFor="newPassword">
                     New password
@@ -442,8 +444,6 @@ export default function Settings(props) {
                     onChange={handlePasswordChange}
                   />
                 </div>
-              </div>
-              <div className="row mt-2">
                 <div className="col-lg-6">
                   <label
                     className="form-label gold"
@@ -460,7 +460,6 @@ export default function Settings(props) {
                     onChange={handlePasswordChange}
                   />
                 </div>
-                <div className="col-lg-6"></div>
               </div>
             </>
           ) : (
