@@ -21,9 +21,9 @@ export default function AllPlants(props) {
   const [statusMessage, setStatusMessage] = useState("");
 
   useEffect(() => {
-    document.title = "Plants | Dependency Tracker";
+    document.title = "Plants | Demeter - The plant meter";
 
-    getPlants(setPlants);
+    // getPlants(setPlants);
     // eslint-disable-next-line
   }, []);
 
@@ -141,11 +141,13 @@ export default function AllPlants(props) {
 
   return (
     <section id="all-plants">
+      <h1 className="text-center gold">Plants</h1>
+      {/* 
       <div style={{ display: "none" }}>
-        {/* <img src={npm_05} alt=""></img>
+        <img src={npm_05} alt=""></img>
         <img src={npm_07} alt=""></img>
         <img src={pypi_05} alt=""></img>
-        <img src={pypi_07} alt=""></img> */}
+        <img src={pypi_07} alt=""></img>
       </div>
       <div id="overlay-form" className="overlay">
         <i
@@ -253,7 +255,7 @@ export default function AllPlants(props) {
             )}
           </div>
         </Fragment>
-      ) : null}
+      ) : null} */}
     </section>
   );
 }

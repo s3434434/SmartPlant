@@ -297,7 +297,7 @@ function App() {
               exact
               path="/"
               render={() => {
-                return loggedIn ? (
+                return checkLoggedIn() ? (
                   <Redirect to="/plants" />
                 ) : (
                   <Redirect to="/landing" />
