@@ -30,7 +30,7 @@ namespace SmartPlant.Models.API_Model
     public class RegistrationResponseDto
     {
         public bool isSuccessfulRegistration { get; set; }
-        public IEnumerable<string> Errors { get; set; }
+        public Dictionary<string, string> Errors { get; set; }
     }
 
 }

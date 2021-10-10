@@ -13,6 +13,7 @@ using SmartPlant.Models.Repository;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
@@ -45,7 +46,15 @@ namespace SmartPlant.Models.DataManager
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);
-                return new RegistrationResponseDto { isSuccessfulRegistration = false, Errors = errors };
+                var errorDictionary = new Dictionary<string, string>();
+
+                errors.ToList().ForEach(e => errorDictionary.Add(Regex.Match(e, @"^([\w\-]+)").Value, e));
+
+                return new RegistrationResponseDto
+                {
+                    isSuccessfulRegistration = false,
+                    Errors = errorDictionary
+                };
             };
 
             //send confirmation email
@@ -62,7 +71,11 @@ namespace SmartPlant.Models.DataManager
 
             await _userManager.AddToRoleAsync(user, UserRoles.User);
 
-            return new RegistrationResponseDto { isSuccessfulRegistration = true, Errors = new string[] { "The token is added here for easier testing", token } };
+            return new RegistrationResponseDto
+            {
+                isSuccessfulRegistration = true,
+                Errors = new Dictionary<string, string>() { { "The token is added here for easier testing", token } }
+            };
 
         }
 
@@ -145,7 +158,7 @@ namespace SmartPlant.Models.DataManager
         public async Task<bool> ContactSupport(string userID, SupportEmailDto dto)
         {
             var user = await _userManager.FindByIdAsync(userID);
-            
+
             if (user == null)
             {
                 return false;
@@ -166,7 +179,7 @@ namespace SmartPlant.Models.DataManager
             /*Console.WriteLine("Email :" + receivingEmail);
             Console.WriteLine("Name :" + (user.FirstName ?? "" ));*/
 
-            var message = new Message(new string[] {receivingEmail}, subject, content);
+            var message = new Message(new string[] { receivingEmail }, subject, content);
             await _emailSender.SendEmailAsync(message);
 
             return true;
