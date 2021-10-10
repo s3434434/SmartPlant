@@ -9,7 +9,7 @@ export default function ForgotPassword(props) {
     clientURI: "http://localhost:3000/reset-password",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("none");
 
   useEffect(() => {
     document.title = "Forgot password | Demeter - The plant meter";
@@ -68,8 +68,10 @@ export default function ForgotPassword(props) {
             Enter your email and we will send you a password reset link.
           </span>
         </div>
-        <div className={showStatus ? "visible-message" : "hidden-message"}>
-          <div className="text-center mt-3">{status}</div>
+        <div className={showStatus || "hidden-field"}>
+          <div className="text-center mt-3">
+            <span>{status}</span>
+          </div>
         </div>
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">

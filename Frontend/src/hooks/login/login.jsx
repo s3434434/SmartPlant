@@ -4,12 +4,12 @@ import axios from "axios";
 import "./login.css";
 
 export default function Login(props) {
-  const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("");
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+  const [showStatus, setShowStatus] = useState(false);
+  const [status, setStatus] = useState("none");
 
   useEffect(() => {
     document.title = "Login | Demeter - The plant meter";
@@ -88,8 +88,10 @@ export default function Login(props) {
             Forgot password?
           </span>
         </div>
-        <div className={showStatus ? "visible-message" : "hidden-message"}>
-          <div className="text-center mt-3">{status}</div>
+        <div className={showStatus || "hidden-field"}>
+          <div className="text-center mt-3">
+            <span>{status}</span>
+          </div>
         </div>
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">

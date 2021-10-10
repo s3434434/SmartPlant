@@ -14,7 +14,7 @@ export default function Register(props) {
     clientURI: "http://localhost:3000/confirm-email",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("none");
 
   useEffect(() => {
     document.title = "Register | Demeter - The plant meter";
@@ -163,8 +163,10 @@ export default function Register(props) {
             </div>
           </div>
         </div>
-        <div className={showStatus ? "visible-message" : "hidden-message"}>
-          <div className="text-center mt-3">{status}</div>
+        <div className={showStatus || "hidden-field"}>
+          <div className="text-center mt-3">
+            <span>{status}</span>
+          </div>
         </div>
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
