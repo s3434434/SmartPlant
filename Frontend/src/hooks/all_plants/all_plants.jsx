@@ -1,151 +1,152 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./all_plants.css";
-import _ from "lodash";
 
 export default function AllPlants(props) {
-  const {
-    getCurrentUser,
-    getPlants,
-    openOverlay,
-    closeOverlay,
-    getFileInputLabel,
-  } = props;
-  const [plants, setPlants] = useState();
-  const [form, setForm] = useState({
-    name: "",
-    type: "Select a package manager",
-    dependencies: "",
-  });
-  const [fileInputLabel, setFileInputLabel] = useState("");
-  const [showStatus, setShowStatus] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
+  // const {
+  //   getCurrentUser,
+  //   getPlants,
+  //   openOverlay,
+  //   closeOverlay,
+  //   getFileInputLabel,
+  // } = props;
+  // const [plants, setPlants] = useState();
+  // const [form, setForm] = useState({
+  //   name: "",
+  //   type: "Select a package manager",
+  //   dependencies: "",
+  // });
+  // const [fileInputLabel, setFileInputLabel] = useState("");
+  // const [showStatus, setShowStatus] = useState(false);
+  // const [statusMessage, setStatusMessage] = useState("");
 
   useEffect(() => {
-    document.title = "Plants | Dependency Tracker";
+    document.title = "Plants | Demeter - The plant meter";
 
-    getPlants(setPlants);
+    // getPlants(setPlants);
     // eslint-disable-next-line
   }, []);
 
-  const getImage = (type, mouseOver) => {
-    let image;
+  // const getImage = (type, mouseOver) => {
+  //   let image;
 
-    // switch (type) {
-    //   case "npm":
-    //     if (mouseOver) {
-    //       image = npm_05;
-    //     } else {
-    //       image = npm_07;
-    //     }
-    //     break;
-    //   case "pypi":
-    //     if (mouseOver) {
-    //       image = pypi_05;
-    //     } else {
-    //       image = pypi_07;
-    //     }
-    //     break;
-    //   default:
-    //     break;
-    // }
+  // switch (type) {
+  //   case "npm":
+  //     if (mouseOver) {
+  //       image = npm_05;
+  //     } else {
+  //       image = npm_07;
+  //     }
+  //     break;
+  //   case "pypi":
+  //     if (mouseOver) {
+  //       image = pypi_05;
+  //     } else {
+  //       image = pypi_07;
+  //     }
+  //     break;
+  //   default:
+  //     break;
+  // }
 
-    return image;
-  };
+  //   return image;
+  // };
 
-  const handleChange = (e) => {
-    const input = e.target,
-      name = e.target.name,
-      value = e.target.value;
-    const tempForm = _.cloneDeep(form);
+  // const handleChange = (e) => {
+  //   const input = e.target,
+  //     name = e.target.name,
+  //     value = e.target.value;
+  //   const tempForm = _.cloneDeep(form);
 
-    if (name === "dependencies") {
-      tempForm[name] = input.files[0];
-    } else {
-      if (name === "type") {
-        setFileInputLabel(getFileInputLabel(value));
-      }
-      tempForm[name] = value;
-    }
+  //   if (name === "dependencies") {
+  //     tempForm[name] = input.files[0];
+  //   } else {
+  //     if (name === "type") {
+  //       setFileInputLabel(getFileInputLabel(value));
+  //     }
+  //     tempForm[name] = value;
+  //   }
 
-    setForm(tempForm);
-  };
+  //   setForm(tempForm);
+  // };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setShowStatus(false);
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   setShowStatus(false);
 
-    const { name, type, dependencies } = form;
+  //   const { name, type, dependencies } = form;
 
-    if (type === "Select a package manager") {
-      setStatusMessage("A package manager must be selected.");
-      setShowStatus(true);
-    } else if (
-      (type === "npm" && dependencies.name !== "package.json") ||
-      (type === "pypi" && dependencies.name !== "requirements.txt")
-    ) {
-      setStatusMessage("Please upload the correct file format.");
-      setShowStatus(true);
-    } else {
-      setStatusMessage("Creating plant...");
-      setShowStatus(true);
+  //   if (type === "Select a package manager") {
+  //     setStatusMessage("A package manager must be selected.");
+  //     setShowStatus(true);
+  //   } else if (
+  //     (type === "npm" && dependencies.name !== "package.json") ||
+  //     (type === "pypi" && dependencies.name !== "requirements.txt")
+  //   ) {
+  //     setStatusMessage("Please upload the correct file format.");
+  //     setShowStatus(true);
+  //   } else {
+  //     setStatusMessage("Creating plant...");
+  //     setShowStatus(true);
 
-      getCurrentUser()
-        .then((user) => {
-          user.getSession((err, session) => {
-            if (!err) {
-              user.getUserAttributes((err, attributes) => {
-                if (!err) {
-                  let email = "";
+  //     getCurrentUser()
+  //       .then((user) => {
+  //         user.getSession((err, session) => {
+  //           if (!err) {
+  //             user.getUserAttributes((err, attributes) => {
+  //               if (!err) {
+  //                 let email = "";
 
-                  attributes.forEach((attribute) => {
-                    if (attribute.getName() === "email") {
-                      email = attribute.getValue();
-                    }
-                  });
+  //                 attributes.forEach((attribute) => {
+  //                   if (attribute.getName() === "email") {
+  //                     email = attribute.getValue();
+  //                   }
+  //                 });
 
-                  const createPlant = async () => {
-                    const response = await fetch(
-                      `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/plants?email=${email}&name=${name}&type=${type}&update=false`,
-                      {
-                        method: "post",
-                        headers: {
-                          Authorization: session.getIdToken().getJwtToken(),
-                        },
-                        body: dependencies,
-                      }
-                    );
+  //                 const createPlant = async () => {
+  //                   const response = await fetch(
+  //                     `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/plants?email=${email}&name=${name}&type=${type}&update=false`,
+  //                     {
+  //                       method: "post",
+  //                       headers: {
+  //                         Authorization: session.getIdToken().getJwtToken(),
+  //                       },
+  //                       body: dependencies,
+  //                     }
+  //                   );
 
-                    const json = await response.json();
+  //                   const json = await response.json();
 
-                    if (response.ok) {
-                      setShowStatus(false);
-                      setPlants(json);
+  //                   if (response.ok) {
+  //                     setShowStatus(false);
+  //                     setPlants(json);
 
-                      closeOverlay("overlay-form");
-                    } else {
-                      setStatusMessage(json);
-                    }
-                  };
-                  createPlant();
-                }
-              });
-            }
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-          window.location.pathname = "/login";
-        });
-    }
-  };
+  //                     closeOverlay("overlay-form");
+  //                   } else {
+  //                     setStatusMessage(json);
+  //                   }
+  //                 };
+  //                 createPlant();
+  //               }
+  //             });
+  //           }
+  //         });
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //         window.location.pathname = "/login";
+  //       });
+  //   }
+  // };
 
   return (
     <section id="all-plants">
+      <h1 className="text-center gold">Plants</h1>
+      {/* 
       <div style={{ display: "none" }}>
-        {/* <img src={npm_05} alt=""></img>
+        <img src={npm_05} alt=""></img>
         <img src={npm_07} alt=""></img>
         <img src={pypi_05} alt=""></img>
-        <img src={pypi_07} alt=""></img> */}
+        <img src={pypi_07} alt=""></img>
       </div>
       <div id="overlay-form" className="overlay">
         <i
@@ -253,7 +254,7 @@ export default function AllPlants(props) {
             )}
           </div>
         </Fragment>
-      ) : null}
+      ) : null} */}
     </section>
   );
 }

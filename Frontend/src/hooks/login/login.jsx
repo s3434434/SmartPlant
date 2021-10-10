@@ -4,12 +4,12 @@ import axios from "axios";
 import "./login.css";
 
 export default function Login(props) {
-  const [showStatus, setShowStatus] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+  const [showStatus, setShowStatus] = useState(false);
+  const [status, setStatus] = useState("none");
 
   useEffect(() => {
     document.title = "Login | Demeter - The plant meter";
@@ -27,7 +27,7 @@ export default function Login(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setStatusMessage("Please wait...");
+    setStatus("Please wait...");
     setShowStatus(true);
 
     axios
@@ -42,7 +42,7 @@ export default function Login(props) {
         window.location.pathname = "/";
       })
       .catch((err) => {
-        setStatusMessage(err.message);
+        setStatus(err.response.data);
         setShowStatus(true);
       });
   };
@@ -51,9 +51,8 @@ export default function Login(props) {
     <section>
       <h1 className="gold text-center">Login</h1>
       <form
-        className="w-50 m-auto mt-4"
+        className="w-25 m-auto mt-4 d-none d-lg-block"
         onSubmit={handleSubmit}
-        style={{ marginBottom: "0.75em" }}
       >
         <label className="form-label gold" htmlFor="email">
           Email
@@ -79,8 +78,7 @@ export default function Login(props) {
         ></input>
         <div className="form-text">
           <span
-            id="forgot-password"
-            className="gold"
+            className="gold light-gold-hover"
             style={{ textDecoration: "none", cursor: "pointer" }}
             onClick={() => {
               window.location.pathname = "/forgot-password";
@@ -89,15 +87,56 @@ export default function Login(props) {
             Forgot password?
           </span>
         </div>
+        <div className={showStatus || "hidden-field"}>
+          <div className="text-center mt-3">
+            <span>{status}</span>
+          </div>
+        </div>
+        <div className="text-center mt-3">
+          <button className="btn btn-primary" type="submit">
+            Login
+          </button>
+        </div>
+      </form>
 
-        <div
-          className={
-            "text-center mt3" + showStatus
-              ? "visible-message"
-              : "hidden-message"
-          }
-        >
-          <span>{statusMessage}</span>
+      <form className="m-auto mt-4 px-2 d-lg-none" onSubmit={handleSubmit}>
+        <label className="form-label gold" htmlFor="email">
+          Email
+        </label>
+        <input
+          className="form-control"
+          name="email"
+          type="text"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+        <label className="form-label mt-3 gold" htmlFor="password">
+          Password
+        </label>
+        <input
+          className="form-control"
+          name="password"
+          type="password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        ></input>
+        <div className="form-text">
+          <span
+            className="gold light-gold-hover"
+            style={{ textDecoration: "none", cursor: "pointer" }}
+            onClick={() => {
+              window.location.pathname = "/forgot-password";
+            }}
+          >
+            Forgot password?
+          </span>
+        </div>
+        <div className={showStatus || "hidden-field"}>
+          <div className="text-center mt-3">
+            <span>{status}</span>
+          </div>
         </div>
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">

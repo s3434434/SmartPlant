@@ -6,8 +6,10 @@ import "./forgot_password.css";
 export default function ForgotPassword(props) {
   const [form, setForm] = useState({
     email: "",
-    clientURI: "https://demeter.net.au/reset-password",
+    clientURI: "http://localhost:3000/reset-password",
   });
+  const [showStatus, setShowStatus] = useState(false);
+  const [status, setStatus] = useState("none");
 
   useEffect(() => {
     document.title = "Forgot password | Demeter - The plant meter";
@@ -26,11 +28,19 @@ export default function ForgotPassword(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setStatus("Please wait...");
+    setShowStatus(true);
 
     axios
-      .post("https://smart-plant.azurewebsites.net/api/Password/Forgot", form)
+      .post(
+        "https://smart-plant.azurewebsites.net/api/Account/Password/Forgot",
+        form
+      )
       .then((res) => {
-        window.location.pathname = "/request-successful";
+        window.location.pathname = "/request-processed";
+      })
+      .catch((err) => {
+        window.location.pathname = "/request-processed";
       });
   };
 
@@ -38,9 +48,8 @@ export default function ForgotPassword(props) {
     <section>
       <h1 className="gold text-center">Forgot password</h1>
       <form
-        className="w-50 m-auto mt-4"
+        className="w-25 m-auto mt-4 d-none d-lg-block"
         onSubmit={handleSubmit}
-        style={{ marginBottom: "0.75em" }}
       >
         <label className="form-label gold" htmlFor="email">
           Email
@@ -53,12 +62,46 @@ export default function ForgotPassword(props) {
           onChange={handleChange}
           required
         />
-        <div className="form-text">
-          <span className="gold" style={{ cursor: "default" }}>
+        <div className="form-text mt-1">
+          <span className="gold">
             Enter your email and we will send you a password reset link.
           </span>
         </div>
-        <div className="text-center mt-4">
+        <div className={showStatus || "hidden-field"}>
+          <div className="text-center mt-3">
+            <span>{status}</span>
+          </div>
+        </div>
+        <div className="text-center mt-3">
+          <button className="btn btn-primary" type="submit">
+            Reset password
+          </button>
+        </div>
+      </form>
+
+      <form className="m-auto mt-4 px-2 d-lg-none" onSubmit={handleSubmit}>
+        <label className="form-label gold" htmlFor="email">
+          Email
+        </label>
+        <input
+          className="form-control"
+          name="email"
+          type="text"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+        <div className="form-text mt-1">
+          <span className="gold">
+            Enter your email and we will send you a password reset link.
+          </span>
+        </div>
+        <div className={showStatus || "hidden-field"}>
+          <div className="text-center mt-3">
+            <span>{status}</span>
+          </div>
+        </div>
+        <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Reset password
           </button>

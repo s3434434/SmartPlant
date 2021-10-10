@@ -11,12 +11,12 @@ export default function PasswordResetSuccessful(props) {
   return (
     <section>
       <h1 className="gold text-center">Password reset successfully</h1>
+      <div className="text-center mt-3" style={{ color: "white" }}>
+        You can now login with you new password.
+      </div>
       <div className="text-center mt-3">
-        <span className="text-center gold">
-          You can now login with you new password.
-        </span>
         <Link key="login" to="/login">
-          <button className="btn btn-primary mt-3">Login</button>
+          <button className="btn btn-primary">Login</button>
         </Link>
       </div>
     </section>

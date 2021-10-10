@@ -16,7 +16,7 @@ export default function ResetPassword(props) {
     confirmNewPassword: "",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
+  const [status, setStatus] = useState("none");
 
   useEffect(() => {
     document.title = "Reset password | Demeter - The plant meter";
@@ -36,17 +36,33 @@ export default function ResetPassword(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setStatusMessage("Please wait...");
+    setStatus("Please wait...");
     setShowStatus(true);
 
     axios
-      .post("https://smart-plant.azurewebsites.net/api/Password/Reset", form)
+      .post(
+        "https://smart-plant.azurewebsites.net/api/Account/Password/Reset",
+        form
+      )
       .then((res) => {
         window.location.pathname = "/password-reset-successful";
       })
       .catch((err) => {
-        setStatusMessage(err.message);
-        setShowStatus(true);
+        const data = err.response.data;
+        let errorMessage = "";
+
+        if (data.error !== undefined) {
+          errorMessage = data.error[0];
+        } else {
+          const errors = data.errors;
+          Object.keys(errors).forEach((error) => {
+            if (errors[error] !== undefined) {
+              errorMessage = errors[error];
+            }
+          });
+        }
+
+        setStatus(errorMessage);
       });
   };
 
@@ -54,39 +70,68 @@ export default function ResetPassword(props) {
     <section>
       <h1 className="gold text-center">Reset password</h1>
       <form
-        className="w-50 m-auto mt-4"
-        style={{ marginBottom: "0.75em" }}
+        className="w-25 m-auto mt-4 d-none d-lg-block"
         onSubmit={handleSubmit}
       >
-        <label className="form-label gold" htmlFor="new-password">
+        <label className="form-label gold" htmlFor="newPassword">
           New password
         </label>
         <input
           className="form-control"
-          name="new-password"
+          name="newPassword"
           type="password"
           required
           value={form.newPassword}
           onChange={handleChange}
         />
-        <label className="form-label gold" htmlFor="confirm-new-password">
+        <label className="form-label gold mt-3" htmlFor="confirmNewPassword">
           Confirm new password
         </label>
         <input
           className="form-control"
-          name="confirm-new-password"
+          name="confirmNewPassword"
           type="password"
           value={form.confirmNewPassword}
           onChange={handleChange}
         />
-        <div
-          className={
-            "text-center mt3" + showStatus
-              ? "visible-message"
-              : "hidden-message"
-          }
-        >
-          <span>{statusMessage}</span>
+        <div className={showStatus || "hidden-field"}>
+          <div className="text-center mt-3">
+            <span>{status}</span>
+          </div>
+        </div>
+        <div className="text-center mt-3">
+          <button className="btn btn-primary" type="submit">
+            Reset password
+          </button>
+        </div>
+      </form>
+
+      <form className="m-auto mt-4 px-2 d-lg-none" onSubmit={handleSubmit}>
+        <label className="form-label gold" htmlFor="newPassword">
+          New password
+        </label>
+        <input
+          className="form-control"
+          name="newPassword"
+          type="password"
+          required
+          value={form.newPassword}
+          onChange={handleChange}
+        />
+        <label className="form-label gold mt-3" htmlFor="confirmNewPassword">
+          Confirm new password
+        </label>
+        <input
+          className="form-control"
+          name="confirmNewPassword"
+          type="password"
+          value={form.confirmNewPassword}
+          onChange={handleChange}
+        />
+        <div className={showStatus || "hidden-field"}>
+          <div className="text-center mt-3">
+            <span>{status}</span>
+          </div>
         </div>
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">

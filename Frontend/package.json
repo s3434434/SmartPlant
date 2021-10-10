@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.15",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.22.0",
     "bootstrap": "^5.1.1",
-    "font-awesome": "^4.7.0",
     "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -19,7 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "start npm start && start cypress open",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -39,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cypress": "^8.5.0"
   }
 }

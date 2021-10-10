@@ -14,8 +14,12 @@ export default function ConfirmEmail(props) {
 
     props.logOut();
 
-    axios.get(
-      `https://smart-plant.azurewebsites.net/api/Account/ConfirmEmail?token=${token}&email=${email}`
+    axios.put(
+      "https://smart-plant.azurewebsites.net/api/Account/ConfirmEmail",
+      {
+        email: email,
+        token: token,
+      }
     );
     // eslint-disable-next-line
   }, []);
@@ -23,12 +27,12 @@ export default function ConfirmEmail(props) {
   return (
     <section>
       <h1 className="gold text-center">Email confirmation successful</h1>
+      <div className="text-center mt-3" style={{ color: "white" }}>
+        Your email has been confirmed successfully.
+      </div>
       <div className="text-center mt-3">
-        <span className="text-center gold">
-          Your email has been confirmed successfully.
-        </span>
         <Link key="login" to="/login">
-          <button className="btn btn-primary mt-3">Login</button>
+          <button className="btn btn-primary">Login</button>
         </Link>
       </div>
     </section>
