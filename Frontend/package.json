@@ -20,7 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "cypress open",
+    "test": "start npm start && start cypress open",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
