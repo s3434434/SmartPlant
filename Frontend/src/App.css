@@ -29,7 +29,7 @@ main > * {
 footer * {
   color: white;
 }
-footer span:hover {
+footer span.footer-link:hover {
   color: rgb(255, 255, 255, 0.7) !important;
 }
 
