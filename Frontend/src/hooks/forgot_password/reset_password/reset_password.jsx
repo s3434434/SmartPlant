@@ -70,7 +70,7 @@ export default function ResetPassword(props) {
     <section>
       <h1 className="gold text-center">Reset password</h1>
       <form
-        className="w-50 m-auto mt-4 d-none d-lg-block"
+        className="w-25 m-auto mt-4 d-none d-lg-block"
         onSubmit={handleSubmit}
       >
         <label className="form-label gold" htmlFor="newPassword">

@@ -76,7 +76,7 @@ export default function Register(props) {
     <section>
       <h1 className="gold text-center">Register</h1>
       <form
-        className="w-50 m-auto mt-4 d-none d-lg-block"
+        className="w-25 m-auto mt-4 d-none d-lg-block"
         onSubmit={handleSubmit}
       >
         <label className="form-label gold" htmlFor="email">

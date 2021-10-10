@@ -192,7 +192,7 @@ export default function Settings(props) {
       <h1 className="text-center gold">Settings</h1>
 
       <form
-        className="w-50 m-auto mt-4 d-none d-lg-block"
+        className="w-25 m-auto mt-4 d-none d-lg-block"
         onSubmit={handleEmailSubmit}
       >
         {emailModifiable ? (
@@ -316,7 +316,7 @@ export default function Settings(props) {
       </form>
 
       <form
-        className="w-50 m-auto mt-5 d-none d-lg-block"
+        className="w-25 m-auto mt-5 d-none d-lg-block"
         onSubmit={handleDetailsSubmit}
       >
         {phoneNumberModifiable ? (
@@ -579,7 +579,7 @@ export default function Settings(props) {
       </form>
 
       <form
-        className="w-50 m-auto mt-5 d-none d-lg-block"
+        className="w-25 m-auto mt-5 d-none d-lg-block"
         onSubmit={handlePasswordSubmit}
       >
         {passwordModifiable ? (
