@@ -70,10 +70,43 @@ export default function ResetPassword(props) {
     <section>
       <h1 className="gold text-center">Reset password</h1>
       <form
-        className="w-50 m-auto mt-4"
-        style={{ marginBottom: "0.75em" }}
+        className="w-50 m-auto mt-4 d-none d-lg-block"
         onSubmit={handleSubmit}
       >
+        <label className="form-label gold" htmlFor="newPassword">
+          New password
+        </label>
+        <input
+          className="form-control"
+          name="newPassword"
+          type="password"
+          required
+          value={form.newPassword}
+          onChange={handleChange}
+        />
+        <label className="form-label gold mt-3" htmlFor="confirmNewPassword">
+          Confirm new password
+        </label>
+        <input
+          className="form-control"
+          name="confirmNewPassword"
+          type="password"
+          value={form.confirmNewPassword}
+          onChange={handleChange}
+        />
+        <div className={showStatus || "hidden-field"}>
+          <div className="text-center mt-3">
+            <span>{status}</span>
+          </div>
+        </div>
+        <div className="text-center mt-3">
+          <button className="btn btn-primary" type="submit">
+            Reset password
+          </button>
+        </div>
+      </form>
+
+      <form className="m-auto mt-4 px-2 d-lg-none" onSubmit={handleSubmit}>
         <label className="form-label gold" htmlFor="newPassword">
           New password
         </label>
