@@ -9,8 +9,6 @@
 
 #Frontend
 Frontend/node_modules
-Frontend/cypress/integration/1-getting-started
-Frontend/cypress/integration/2-advanced-examples
 
 # User-specific files
 *.rsuser
