@@ -80,9 +80,9 @@ export default function Register(props) {
         style={{ marginBottom: "0.75em" }}
         onSubmit={handleSubmit}
       >
-        <div className="container p-0">
-          <div className="row">
-            <div className="col-md-6">
+        <div className="container">
+          <div className="row gy-3">
+            <div className="col-lg-6">
               <label className="form-label gold" htmlFor="email">
                 Email
               </label>
@@ -95,7 +95,7 @@ export default function Register(props) {
                 onChange={handleChange}
               />
             </div>
-            <div className="col-md-6">
+            <div className="col-lg-6">
               <label className="form-label gold" htmlFor="phoneNumber">
                 Phone
               </label>
@@ -107,9 +107,7 @@ export default function Register(props) {
                 onChange={handleChange}
               />
             </div>
-          </div>
-          <div className="row mt-2">
-            <div className="col-md-6">
+            <div className="col-lg-6">
               <label className="form-label gold" htmlFor="firstName">
                 First name
               </label>
@@ -121,7 +119,7 @@ export default function Register(props) {
                 onChange={handleChange}
               />
             </div>
-            <div className="col-md-6">
+            <div className="col-lg-6">
               <label className="form-label gold" htmlFor="lastName">
                 Last name
               </label>
@@ -133,9 +131,8 @@ export default function Register(props) {
                 onChange={handleChange}
               />
             </div>
-          </div>
-          <div className="row mt-2">
-            <div className="col-md-6">
+
+            <div className="col-lg-6">
               <label className="form-label gold" htmlFor="password">
                 Password
               </label>
@@ -148,7 +145,7 @@ export default function Register(props) {
                 onChange={handleChange}
               />
             </div>
-            <div className="col-md-6">
+            <div className="col-lg-6">
               <label className="form-label gold" htmlFor="confirmPassword">
                 Confirm password
               </label>
