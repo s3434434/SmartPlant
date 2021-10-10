@@ -176,9 +176,6 @@ namespace SmartPlant.Models.DataManager
 
             var receivingEmail = _configuration.GetSection("SupportEmailConfig").GetSection("ReceivingEmail").Value;
 
-            /*Console.WriteLine("Email :" + receivingEmail);
-            Console.WriteLine("Name :" + (user.FirstName ?? "" ));*/
-
             var message = new Message(new string[] { receivingEmail }, subject, content);
             await _emailSender.SendEmailAsync(message);
 

@@ -153,8 +153,7 @@ namespace SmartPlant.Controllers
         /// <remarks>
         /// This takes in a password and confirmed password, and the token + email from the 'forgot password' email.&#xA;
         /// The token is probably html encoded e.g. '/' becomes %2F in the URL  &#xA;
-        /// so you need to decode it before using it, since this takes the token in the request body not as a query parameter.&#xA; 
-        /// I think you can use decodeURIComponent() in javascript?
+        /// needs to be decoded before using
         /// </remarks>
         /// <response code="200">Password Reset</response>
         /// <response code="400">Something went wrong, incorrect info</response>
