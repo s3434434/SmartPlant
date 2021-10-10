@@ -197,7 +197,7 @@ export default function Settings(props) {
         onSubmit={handleEmailSubmit}
       >
         <div className="container">
-          <div className="row">
+          <div className="row gy-3">
             {emailModifiable ? (
               <>
                 <div className="col-lg-6">
@@ -251,7 +251,7 @@ export default function Settings(props) {
                     <span className="ms-1">{emailForm.email}</span>
                   </div>
                 </div>
-                <div className="col-lg-6"></div>
+                <div className="col-lg-6 d-none d-lg-block"></div>
               </>
             )}
           </div>
@@ -272,7 +272,7 @@ export default function Settings(props) {
         onSubmit={handleDetailsSubmit}
       >
         <div className="container">
-          <div className="row">
+          <div className="row gy-3">
             {phoneNumberModifiable ? (
               <div className="col-lg-6">
                 <label className="form-label gold" htmlFor="phoneNumber">
@@ -311,9 +311,7 @@ export default function Settings(props) {
                 </div>
               </div>
             )}
-            <div className="col-lg-6"></div>
-          </div>
-          <div className="row mt-2">
+            <div className="col-lg-6 d-none d-lg-block"></div>
             {firstNameModifiable ? (
               <div className="col-lg-6">
                 <label className="form-label gold" htmlFor="firstName">
@@ -413,55 +411,48 @@ export default function Settings(props) {
       >
         <div className="container">
           {passwordModifiable ? (
-            <>
-              <div className="row">
-                <div className="col-lg-6">
-                  <label className="form-label gold" htmlFor="oldPassword">
-                    Old password
-                  </label>
-                  <input
-                    className="form-control"
-                    name="oldPassword"
-                    type="password"
-                    required
-                    value={passwordForm.oldPassword}
-                    onChange={handlePasswordChange}
-                  />
-                </div>
-                <div className="col-lg-6"></div>
+            <div className="row gy-3">
+              <div className="col-lg-6">
+                <label className="form-label gold" htmlFor="oldPassword">
+                  Old password
+                </label>
+                <input
+                  className="form-control"
+                  name="oldPassword"
+                  type="password"
+                  required
+                  value={passwordForm.oldPassword}
+                  onChange={handlePasswordChange}
+                />
               </div>
-              <div className="row mt-2">
-                <div className="col-lg-6">
-                  <label className="form-label gold" htmlFor="newPassword">
-                    New password
-                  </label>
-                  <input
-                    className="form-control"
-                    name="newPassword"
-                    type="password"
-                    required
-                    value={passwordForm.newPassword}
-                    onChange={handlePasswordChange}
-                  />
-                </div>
-                <div className="col-lg-6">
-                  <label
-                    className="form-label gold"
-                    htmlFor="confirmNewPassword"
-                  >
-                    Confirm new password
-                  </label>
-                  <input
-                    className="form-control"
-                    name="confirmNewPassword"
-                    type="password"
-                    required
-                    value={passwordForm.confirmNewPassword}
-                    onChange={handlePasswordChange}
-                  />
-                </div>
+              <div className="col-lg-6 d-none d-lg-block"></div>
+              <div className="col-lg-6">
+                <label className="form-label gold" htmlFor="newPassword">
+                  New password
+                </label>
+                <input
+                  className="form-control"
+                  name="newPassword"
+                  type="password"
+                  required
+                  value={passwordForm.newPassword}
+                  onChange={handlePasswordChange}
+                />
               </div>
-            </>
+              <div className="col-lg-6">
+                <label className="form-label gold" htmlFor="confirmNewPassword">
+                  Confirm new password
+                </label>
+                <input
+                  className="form-control"
+                  name="confirmNewPassword"
+                  type="password"
+                  required
+                  value={passwordForm.confirmNewPassword}
+                  onChange={handlePasswordChange}
+                />
+              </div>
+            </div>
           ) : (
             <div className="row">
               <div className="col-lg-6">
@@ -486,11 +477,10 @@ export default function Settings(props) {
                   <span className="ms-1">••••••••</span>
                 </div>
               </div>
-              <div className="col-lg-6"></div>
+              <div className="col-lg-6 d-none d-lg-block"></div>
             </div>
           )}
         </div>
-
         <div
           className={showPasswordStatus ? "text-center mt-3" : "hidden-field"}
         >
