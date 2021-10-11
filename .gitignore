@@ -375,3 +375,5 @@ FodyWeavers.xsd
 .vscode/launch.json
 .vscode/ipch
 Arduino/.vscode/
+
+Frontend/cypress/videos/
