@@ -20,6 +20,12 @@ namespace SmartPlant.Data
         {
             base.OnModelCreating(builder);
 
+            //
+            builder.Entity<ApplicationUser>()
+                .HasCheckConstraint("CH_User_PhoneNumber", "len(PhoneNumber) = 10")
+                .HasCheckConstraint("CH_User_FirstName", "len(FirstName) <= 50")
+                .HasCheckConstraint("CH_User_LastName", "len(LastName) <= 50");
+
             //set CHECK constraint -> humidity cannot be negative. Needed? light level, moisture %
             builder.Entity<SensorData>()
                 .HasCheckConstraint("CH_SensorData_Humidity", "(Humidity >= 0 and Humidity <= 100.00)")

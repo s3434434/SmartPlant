@@ -37,7 +37,11 @@ namespace SmartPlant.Controllers
         /// gets sent as the confirmation link in the email and should be routed to the frontend confirmation webpage. &#xA;
         /// The only required inputs are the Email, Password, Confirmation Password. &#xA;
         /// &#xA;
-        /// First name, last name, address, and phone number are optional and can be left blank.
+        /// First name, last name, and phone number are optional and can be left blank.&#xA;
+        /// &#xA;
+        /// If included, &#xA;
+        /// First Name and Last Name can only contain letters, no special characters or numbers, max length of 50. &#xA;
+        /// Phone Numbers must begin with [02, 03, 04, 07, 08] followed by 8 digits. Length must equal 10.
         /// </remarks>
         /// <param name="userRegDto"></param>
         /// <response code="200">Successfully Registers User</response>
@@ -218,6 +222,9 @@ namespace SmartPlant.Controllers
         /// Updates non-important details (First name, last name, address, phone number)
         /// </summary>
         /// <remarks>This is used for updating non-important user details. Since the email address is used to login, it has its own method
+        /// &#xA;
+        /// First Name and Last Name can only contain letters, no special characters or numbers, max length of 50. &#xA;
+        /// Phone Numbers must begin with [02, 03, 04, 07, 08] followed by 8 digits. Length must equal 10.
         /// </remarks>
         /// <response code="200">Success</response>
         /// <response code="400">Something went wrong, user not found</response>
@@ -382,6 +389,10 @@ namespace SmartPlant.Controllers
         /// Used to update a user's details (First name, last name, address, phone number, email)
         /// </summary>
         /// <remarks>Since this is an admin action, no verification needed for changing emails
+        /// &#xA;
+        /// If included, &#xA;
+        /// First Name and Last Name can only contain letters, no special characters or numbers, max length of 50. &#xA;
+        /// Phone Numbers must begin with [02, 03, 04, 07, 08] followed by 8 digits. Length must equal 10.
         /// </remarks>
         /// <response code="200">Details successfully updated</response>
         /// <response code="400">User Not Found or email already in use</response>

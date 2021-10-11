@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartPlant.Data;
 
 namespace SmartPlant.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211011080425_changes to user detail constraints")]
+    partial class changestouserdetailconstraints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,12 +224,6 @@ namespace SmartPlant.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasCheckConstraint("CH_User_PhoneNumber", "len(PhoneNumber) = 10");
-
-                    b.HasCheckConstraint("CH_User_FirstName", "len(FirstName) <= 50");
-
-                    b.HasCheckConstraint("CH_User_LastName", "len(LastName) <= 50");
                 });
 
             modelBuilder.Entity("SmartPlant.Models.Plant", b =>

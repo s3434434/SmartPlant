@@ -205,7 +205,6 @@ namespace SmartPlant.Models.DataManager
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Address = user.Address,
                 PhoneNumber = user.PhoneNumber
             };
             return details;
@@ -222,7 +221,6 @@ namespace SmartPlant.Models.DataManager
 
             user.FirstName = details.FirstName;
             user.LastName = details.LastName;
-            user.Address = details.Address;
             user.PhoneNumber = details.PhoneNumber;
 
             await _userManager.UpdateAsync(user);
@@ -337,7 +335,6 @@ namespace SmartPlant.Models.DataManager
             user.FirstName = detailsDto.FirstName;
             user.LastName = detailsDto.LastName;
             user.Email = detailsDto.Email;
-            user.Address = detailsDto.Address;
             user.PhoneNumber = detailsDto.PhoneNumber;
 
             var result = await _userManager.UpdateAsync(user);
