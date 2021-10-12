@@ -55,9 +55,9 @@ export default function ResetPassword(props) {
           let errorMessage = "";
 
           if (errors.Passwords !== undefined) {
-            errorMessage = errors.Passwords;
+            errorMessage = errors.Passwords[0];
           } else if (errors.ConfirmNewPassword !== undefined) {
-            errorMessage = errors.ConfirmNewPassword;
+            errorMessage = errors.ConfirmNewPassword[0];
           }
 
           setStatus(errorMessage);

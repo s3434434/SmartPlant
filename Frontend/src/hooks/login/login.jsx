@@ -42,7 +42,7 @@ export default function Login(props) {
         window.location.pathname = "/";
       })
       .catch((err) => {
-        setStatus(err.response.data.errors["Login Details"]);
+        setStatus(err.response.data.errors["Login Details"][0]);
       });
   };
 
