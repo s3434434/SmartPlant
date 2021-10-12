@@ -52,7 +52,7 @@ export default function ResetPassword(props) {
         })
         .catch((err) => {
           const errors = err.response.data.errors;
-          let errorMessage = "";
+          let errorMessage = "Server error. Please try again later.";
 
           if (errors.Passwords !== undefined) {
             errorMessage = errors.Passwords[0];

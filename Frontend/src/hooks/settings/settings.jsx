@@ -96,7 +96,7 @@ export default function Settings(props) {
         })
         .catch((err) => {
           const errors = err.response.data.errors;
-          let errorMessage = "";
+          let errorMessage = "Server error. Please try again later.";
 
           if (errors.Email !== undefined) {
             errorMessage = errors.Email[0];
@@ -137,7 +137,7 @@ export default function Settings(props) {
       })
       .catch((err) => {
         const errors = err.response.data.errors;
-        let errorMessage = "";
+        let errorMessage = "Server error. Please try again later.";
 
         if (errors.Phone !== undefined) {
           errorMessage = errors.Phone[0];
@@ -189,7 +189,7 @@ export default function Settings(props) {
         })
         .catch((err) => {
           const errors = err.response.data.errors;
-          let errorMessage = "";
+          let errorMessage = "Server error. Please try again later.";
 
           if (errors.PasswordMismatch !== undefined) {
             errorMessage = errors.PasswordMismatch[0];

@@ -42,7 +42,14 @@ export default function Login(props) {
         window.location.pathname = "/";
       })
       .catch((err) => {
-        setStatus(err.response.data.errors["Login Details"][0]);
+        let errorMessage = "Server error. Please try again later.";
+        const errors = err.response.data.errors;
+
+        if (errors["Login Details"] !== undefined) {
+          errorMessage = errors["Login Details"][0];
+        }
+
+        setStatus(errorMessage);
       });
   };
 

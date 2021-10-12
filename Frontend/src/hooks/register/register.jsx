@@ -50,7 +50,7 @@ export default function Register(props) {
         })
         .catch((err) => {
           const errors = err.response.data.errors;
-          let errorMessage = "";
+          let errorMessage = "Server error. Please try again later.";
 
           if (errors.Email !== undefined) {
             errorMessage = errors.Email[0];
