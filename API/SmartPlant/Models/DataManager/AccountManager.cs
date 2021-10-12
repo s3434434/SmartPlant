@@ -42,7 +42,7 @@ namespace SmartPlant.Models.DataManager
         }
         public async Task<RegistrationResponseDto> Register(ApplicationUser user, UserRegistrationDto userRegDto)
         {
-            user.PhoneNumber = user.PhoneNumber.Length > 0 ? user.PhoneNumber : null;
+            user.PhoneNumber = user.PhoneNumber?.Length > 0 ? user.PhoneNumber : null;
 
             var result = await _userManager.CreateAsync(user, userRegDto.Password);
             if (!result.Succeeded)
