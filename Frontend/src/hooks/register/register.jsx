@@ -49,22 +49,21 @@ export default function Register(props) {
           window.location.pathname = "/registration-successful";
         })
         .catch((err) => {
-          const data = err.response.data;
+          const errors = err.response.data.errors;
           let errorMessage = "";
 
-          if (data.error !== undefined) {
-            errorMessage = data.error[0];
-          } else {
-            const errors = data.errors;
-            if (errors instanceof Array) {
-              errorMessage = errors[0];
-            } else {
-              Object.keys(errors).forEach((error) => {
-                if (errors[error] !== undefined) {
-                  errorMessage = errors[error];
-                }
-              });
-            }
+          if (errors.Email !== undefined) {
+            errorMessage = errors.Email[0];
+          } else if (errors.Phone !== undefined) {
+            errorMessage = errors.Phone[0];
+          } else if (errors.FirstName !== undefined) {
+            errorMessage = errors.FirstName[0];
+          } else if (errors.LastName !== undefined) {
+            errorMessage = errors.LastName[0];
+          } else if (errors.Passwords !== undefined) {
+            errorMessage = errors.Passwords[0];
+          } else if (errors.ConfirmPassword !== undefined) {
+            errorMessage = errors.ConfirmPassword[0];
           }
 
           setStatus(errorMessage);
@@ -142,11 +141,15 @@ export default function Register(props) {
           value={form.confirmPassword}
           onChange={handleChange}
         />
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Register
@@ -218,11 +221,15 @@ export default function Register(props) {
           value={form.confirmPassword}
           onChange={handleChange}
         />
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Register

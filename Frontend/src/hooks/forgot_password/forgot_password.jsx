@@ -67,11 +67,15 @@ export default function ForgotPassword(props) {
             Enter your email and we will send you a password reset link.
           </span>
         </div>
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Reset password
@@ -96,11 +100,15 @@ export default function ForgotPassword(props) {
             Enter your email and we will send you a password reset link.
           </span>
         </div>
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Reset password
