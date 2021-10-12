@@ -7,7 +7,7 @@ namespace SmartPlant.Models.API_Model
         [Required]
         [MaxLength(450)]
         public string UserID { get; set; }
-        [MaxLength(250)]
+        [MaxLength(250), Required]
         public string PlantName { get; set; }
     }
 }

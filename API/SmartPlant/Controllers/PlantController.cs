@@ -7,6 +7,7 @@ using SmartPlant.Models.API_Model;
 using SmartPlant.Models.API_Model.Plant;
 using SmartPlant.Models.Repository;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SmartPlant.Controllers
@@ -293,9 +294,12 @@ namespace SmartPlant.Controllers
         {
             var user = await _userManager.FindByIdAsync(plantDto.UserID);
 
+            var genericError = new GenericErrorDto();
+
             if (user == null)
             {
-                return NotFound("User does not exist");
+                genericError.errors.Add("User", new List<string>{"User does not exist"});
+                return NotFound(genericError);
             }
 
             var plant = new Plant
@@ -311,11 +315,13 @@ namespace SmartPlant.Controllers
 
             if (result == 0)
             {
-                return Conflict("Plant id exists"); //409 , 400?
+                genericError.errors.Add("Plant", new List<string> { "Plant ID already exists" });
+                return Conflict(genericError); //409 , 400?
             }
             if (result == -1)
             {
-                return Conflict("Max Plant Limit Hit");
+                genericError.errors.Add("Limit", new List<string> { "Max plant limit reached" });
+                return Conflict(genericError);
             }
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
 
@@ -368,7 +374,9 @@ namespace SmartPlant.Controllers
             }
             else
             {
-                return NotFound("Plant does not exist");
+                var genericError = new GenericErrorDto();
+                genericError.errors.Add("Plant", new List<string>{"Plant does not exist"});
+                return NotFound(genericError);
             }
         }
 
@@ -392,7 +400,9 @@ namespace SmartPlant.Controllers
 
             if (!result)
             {
-                return BadRequest("Something went wrong, invalid inputs...");
+                var genericError = new GenericErrorDto();
+                genericError.errors.Add("Invalid", new List<string> { "Something went wrong, invalid inputs..." });
+                return BadRequest(genericError);
             }
             return Ok(plantToken.Token);
 

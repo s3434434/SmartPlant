@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using SmartPlant.Models.API_Model.Account;
 using SmartPlant.Models.API_Model.Admin;
 using SmartPlant.Models.Repository;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SmartPlant.Controllers
@@ -117,7 +119,7 @@ namespace SmartPlant.Controllers
 
             if (!result.IsAuthSuccessful)
             {
-                return Unauthorized(result.ErrorMessage);
+                return Unauthorized(result);
             }
 
             return Ok(result.Token);
@@ -145,8 +147,15 @@ namespace SmartPlant.Controllers
 
             if (result == null)
             {
-                return BadRequest("Email not found");
+                return BadRequest(new GenericErrorDto
+                {
+                    errors = new Dictionary<string, List<string>>
+                {
+                    {"Email", new List<string>{"Email not found"}}
+                }
+                });
             }
+
             return Ok(result);
         }
 
@@ -174,13 +183,26 @@ namespace SmartPlant.Controllers
 
             if (result == null)
             {
-                return BadRequest("Email not found");
+                return BadRequest(new GenericErrorDto
+                {
+                    errors = new Dictionary<string, List<string>>
+                    {
+                        {"Email", new List<string>{"Email not found"}}
+                    }
+                });
             }
 
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);
-                return BadRequest(new { Error = errors });
+
+                var genericErrors = new GenericErrorDto();
+                foreach (string e in errors)
+                {
+                    genericErrors.errors.Add(Regex.Match(e, @"^([\w\-]+)").Value, new List<string>{e});
+                }
+
+                return BadRequest(genericErrors);
             }
             return Ok();
         }
@@ -269,8 +291,12 @@ namespace SmartPlant.Controllers
 
             if (!result.Succeeded)
             {
-                foreach (IdentityError error in result.Errors)
-                    return BadRequest(error.Description);
+                var genericErrors = new GenericErrorDto();
+                foreach (IdentityError e in result.Errors)
+                {
+                    genericErrors.errors.Add(Regex.Match(e.Code, @"^([\w\-]+)").Value, new List<string>{e.Description});
+                }
+                    return BadRequest(genericErrors);
             }
 
             return Ok("Success");
@@ -301,8 +327,12 @@ namespace SmartPlant.Controllers
 
             if (!result.Succeeded)
             {
-                foreach (IdentityError error in result.Errors)
-                    return Unauthorized(error.Description);
+                var genericErrors = new GenericErrorDto();
+                foreach (IdentityError e in result.Errors)
+                {
+                    genericErrors.errors.Add(Regex.Match(e.Code, @"^([\w\-]+)").Value, new List<string> { e.Description });
+                }
+                return Unauthorized(genericErrors);
             }
 
             return Ok("Password Changed");
@@ -324,7 +354,7 @@ namespace SmartPlant.Controllers
         {
             string userID = User.Identity.Name;
 
-            var result =  await _repo.ContactSupport(userID, dto);
+            var result = await _repo.ContactSupport(userID, dto);
 
             if (!result)
             {
@@ -410,7 +440,10 @@ namespace SmartPlant.Controllers
 
             if (result == null)
             {
-                return BadRequest("Email already exists or user does not exist");
+                var genericError = new GenericErrorDto();
+                genericError.errors.Add("Email", new List<string>{"Email already exists or user does not exist"});
+
+                return BadRequest(genericError);
             }
             return Ok(result);
         }

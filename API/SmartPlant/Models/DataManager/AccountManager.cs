@@ -48,7 +48,7 @@ namespace SmartPlant.Models.DataManager
                 var errors = result.Errors.Select(e => e.Description);
                 var errorDictionary = new Dictionary<string, List<String>>();
 
-                errors.ToList().ForEach(e => errorDictionary.Add(Regex.Match(e, @"^([\w\-]+)").Value, new List<string>{e}) );
+                errors.ToList().ForEach(e => errorDictionary.Add(Regex.Match(e, @"^([\w\-]+)").Value, new List<string> { e }));
 
                 return new RegistrationResponseDto
                 {
@@ -82,27 +82,34 @@ namespace SmartPlant.Models.DataManager
         public async Task<IdentityResult> ConfirmEmail(ApplicationUser user, string token)
         {
             return await _userManager.ConfirmEmailAsync(user, token);
-
-            /*if (!result.Succeeded)
-            {
-                return false;
-            }
-
-            return true;*/
         }
 
         public async Task<AuthResponseDto> Login(UserForAuthenticationDto loginUser)
         {
             var user = await _userManager.FindByEmailAsync(loginUser.Email);
 
-            //if user doens't exist or password is incorrect
+            //if user doesn't exist or password is incorrect
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginUser.Password))
             {
-                return (new AuthResponseDto { IsAuthSuccessful = false, ErrorMessage = "Incorrect Login Details" });
+                return (new AuthResponseDto
+                {
+                    IsAuthSuccessful = false,
+                    errors = new Dictionary<string, List<string>>
+                    {
+                        {"Login Details", new List<string>{"Incorrect Login Details"} }
+                    }
+                });
             }
             if (!await _userManager.IsEmailConfirmedAsync(user)) // if the user hasn't confirmed their email
             {
-                return (new AuthResponseDto { IsAuthSuccessful = false, ErrorMessage = "Email is not confirmed" });
+                return (new AuthResponseDto
+                {
+                    IsAuthSuccessful = false,
+                    errors = new Dictionary<string, List<string>>
+                    {
+                        {"Email", new List<string> {"Email is not confirmed"}}
+                    }
+                });
             }
 
             var signingCredentials = _jwtHandler.GetSigningCredentials();
@@ -233,25 +240,23 @@ namespace SmartPlant.Models.DataManager
             var id_user = await _userManager.FindByIdAsync(userID);
 
             if (id_user == null)
-                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
+                return IdentityResult.Failed(new IdentityError() { Code = "NotFound", Description = "User not found." });
 
             var email_user = await _userManager.FindByEmailAsync(emailDto.Email);
 
             if (email_user != null)
             {
                 if (email_user.Id == id_user.Id)
-                    return IdentityResult.Failed(new IdentityError() { Code = "2", Description = "New email is the same as existing email." });
+                    return IdentityResult.Failed(new IdentityError() { Code = "Same", Description = "New email is the same as existing email." });
 
                 if (email_user.Id != id_user.Id)
-                    return IdentityResult.Failed(new IdentityError() { Code = "1", Description = "Email already in use." });
+                    return IdentityResult.Failed(new IdentityError() { Code = "Exists", Description = "Email already in use." });
             }
 
             id_user.Email = emailDto.Email;
             id_user.UserName = emailDto.Email;
 
-            await _userManager.UpdateAsync(id_user);
-
-            return IdentityResult.Success;
+            return await _userManager.UpdateAsync(id_user);
 
             /* _userManager.GenerateChangeEmailTokenAsync
              * 
@@ -278,7 +283,7 @@ namespace SmartPlant.Models.DataManager
 
             if (user == null)
             {
-                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
+                return IdentityResult.Failed(new IdentityError() { Code = "NotFound", Description = "User not found." });
             }
 
             var result = await _userManager.ChangePasswordAsync(user, passwordDto.OldPassword, passwordDto.NewPassword);
