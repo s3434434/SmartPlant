@@ -4,6 +4,8 @@ using SmartPlant.Models.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using SmartPlant.Models.API_Model.Plant;
 
 namespace SmartPlant.Models.DataManager
 {
@@ -22,7 +24,7 @@ namespace SmartPlant.Models.DataManager
 
         //used by both admins and normal users
         //returns all plants belonging to a specific user (userID, plantID)
-        public async Task<IEnumerable<Plant>> GetAllForUser(string userID)
+        public async Task<IEnumerable<UserGetPlantDto>> GetAllForUser(string userID)
         {
             //if user doesn't exist return error?
             var userExists = await _context.Plants.FirstOrDefaultAsync(p => p.UserID == userID);
@@ -34,7 +36,10 @@ namespace SmartPlant.Models.DataManager
 
             var plants = await _context.Plants.Where(p => p.UserID == userID).ToListAsync();
 
-            return plants;
+            var userPlants = new List<UserGetPlantDto>();
+            plants.ForEach(p => userPlants.Add(new UserGetPlantDto{PlantID = p.PlantID, Name = p.Name}));
+
+            return userPlants;
         }
 
         //used by both admins and normal users

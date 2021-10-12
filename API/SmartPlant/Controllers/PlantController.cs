@@ -32,9 +32,11 @@ namespace SmartPlant.Controllers
 
 
         /// <summary>
-        /// Gets all plants belonging to the current user
+        /// Gets all plants belonging to the current user, Returns plant Name and ID
         /// </summary>
         /// <remarks>
+        /// The plant ID shouldn't be shown to the user, since it's not easy to read and they don't need to know about it&#xA;
+        /// the plant ID is used with the other api endpoints.
         /// </remarks>
         /// <response code="200">Success</response>
         /// <response code="404">No Plants Found</response>
@@ -65,9 +67,9 @@ namespace SmartPlant.Controllers
         /// Adds a plant
         /// </summary>
         /// <remarks>
-        /// Takes in a plant name (maxlength 250 - nullable) - this can be excluded but is intended help user readabillity  e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily" &#xA;
-        /// This should be used when the user chooses to add a plant. Autogenerates the plant ID. &#xA;
-        /// The user should then copy and paste the new plant ID into an arduino setup file?
+        /// Takes in a plant name (maxlength 250, any special char and numbers allowed) -  e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily" &#xA;
+        /// This should be used when the user chooses to add a plant. Autogenerates the plant ID and Plant Token. &#xA;
+        /// The Plant Token is what should be put into the Arduino setup file so that it can known which plant to update data for.
         /// </remarks>
         /// <response code="201">Plant Created</response>
         /// <response code="400">Bad Data</response>
@@ -121,7 +123,7 @@ namespace SmartPlant.Controllers
         /// Updates a plants name
         /// </summary>
         /// <remarks>
-        /// This takes in a plant ID and a string name --this can be excluded, making the name param null (no name)
+        /// This takes in a plant ID and a string name.
         /// </remarks>
         /// <response code="200">Name changed</response>        
         /// <response code="404">Plant Not Found</response>
@@ -278,7 +280,7 @@ namespace SmartPlant.Controllers
         /// Adds a plant for a specific user
         /// </summary>
         /// <remarks>
-        /// Takes in a plant name (maxlength 250 - nullable) - this can be excluded but is intended help user readabillity  e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily"
+        /// Takes in a plant name (maxlength 250) e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily"
         /// and user ID
         /// </remarks>
         /// <response code="201">Plant Created</response>
@@ -305,7 +307,7 @@ namespace SmartPlant.Controllers
 
             var plantToken = GeneratePlantToken(plant.PlantID);
 
-            var result = await _repo.Add(plant, null);
+            var result = await _repo.Add(plant, plantToken);
 
             if (result == 0)
             {
@@ -326,7 +328,7 @@ namespace SmartPlant.Controllers
         /// Updates a plants name
         /// </summary>
         /// <remarks>
-        /// This takes in a plant ID and a string name --this can be excluded, making the name param null (no name)
+        /// This takes in a plant ID and a string name
         /// </remarks>
         /// <response code="200">Name changed</response>        
         /// <response code="404">Plant Not Found</response>

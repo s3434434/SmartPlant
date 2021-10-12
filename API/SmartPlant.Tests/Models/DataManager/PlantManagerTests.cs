@@ -9,6 +9,7 @@ using SmartPlant.Models.DataManager;
 using SmartPlant.Data;
 using SmartPlant.Models;
 using System;
+using SmartPlant.Models.API_Model.Plant;
 
 namespace SmartPlant.Tests.Models.DataManager
 {
@@ -67,11 +68,11 @@ namespace SmartPlant.Tests.Models.DataManager
             var plantManager = new PlantManager(mock_DatabaseContext);
 
             // Act
-            IEnumerable<Plant> result = await plantManager.GetAllForUser(test_UserID);
+            IEnumerable<UserGetPlantDto> result = await plantManager.GetAllForUser(test_UserID);
 
             // Assert
             Assert.IsNotNull(result);
-            foreach (Plant plant in result)
+            foreach (UserGetPlantDto plant in result)
             {
                 Assert.AreEqual(plant.PlantID, "existing");
             }

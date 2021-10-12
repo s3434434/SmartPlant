@@ -159,7 +159,7 @@ namespace SmartPlant.Controllers
         /// Adds sensor data for a plant belonging to the user
         /// </summary>
         /// <remarks>
-        /// For testing, use  &#xA;
+        /// DEPRECATED, ONLY USE FOR TESTING, use /api/SensorData/Token for production&#xA;
         /// ----------------------&#xA;
         /// Sensor data is stored as decimals, with 2 decimal places. &#xA; 
         /// For example: 12.446 becomes 12.45. &#xA; 

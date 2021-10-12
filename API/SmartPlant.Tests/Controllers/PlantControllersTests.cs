@@ -54,7 +54,7 @@ namespace SmartPlant.Tests.Controllers
         public async Task Get_WhenUserHasPlants_ReturnsOKAsync()
         {
             // Arrange
-            var testValue = new List<Plant>();
+            var testValue = new List<UserGetPlantDto>();
 
             mock_PlantManager.Setup(_repo => _repo.GetAllForUser(It.IsAny<string>()))
                 .ReturnsAsync(testValue);
@@ -370,7 +370,7 @@ namespace SmartPlant.Tests.Controllers
         public async Task AdminGet_WhenParameterIDUserHasPlants_ReturnsOKAsync()
         {
             // Arrange
-            var testValue = new List<Plant>();
+            var testValue = new List<UserGetPlantDto>();
 
             mock_PlantManager.Setup(_repo => _repo.GetAllForUser(It.IsAny<string>()))
                 .ReturnsAsync(testValue);

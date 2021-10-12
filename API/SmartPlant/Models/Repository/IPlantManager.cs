@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using SmartPlant.Models.API_Model.Plant;
 
 namespace SmartPlant.Models.Repository
 {
     public interface IPlantManager
     {
-        Task<IEnumerable<Plant>> GetAllForUser(string userID);
+        Task<IEnumerable<UserGetPlantDto>> GetAllForUser(string userID);
         Task<int> Add(Plant plant, PlantToken plantToken);
         Task<int> Update(Plant plant);
         Task<int> Delete(string plantID, string userID);
