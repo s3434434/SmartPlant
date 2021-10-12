@@ -46,9 +46,9 @@ namespace SmartPlant.Models.DataManager
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);
-                var errorDictionary = new Dictionary<string, string>();
+                var errorDictionary = new Dictionary<string, List<String>>();
 
-                errors.ToList().ForEach(e => errorDictionary.Add(Regex.Match(e, @"^([\w\-]+)").Value, e));
+                errors.ToList().ForEach(e => errorDictionary.Add(Regex.Match(e, @"^([\w\-]+)").Value, new List<string>{e}) );
 
                 return new RegistrationResponseDto
                 {
@@ -74,7 +74,7 @@ namespace SmartPlant.Models.DataManager
             return new RegistrationResponseDto
             {
                 isSuccessfulRegistration = true,
-                Errors = new Dictionary<string, string>() { { "The token is added here for easier testing", token } }
+                Errors = new Dictionary<string, List<string>>() { { "The token is added here for easier testing", new List<string> { token } } }
             };
 
         }
