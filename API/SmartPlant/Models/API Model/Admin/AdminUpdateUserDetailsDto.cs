@@ -7,10 +7,10 @@ namespace SmartPlant.Models.API_Model.Admin
         [Required(ErrorMessage = "ID is required")]
         public string ID { get; set; }
 
-        [RegularExpression(@"^[a-z]{0,50}$", ErrorMessage = "Name can only contain letters, no special characters or numbers. 50 Characters max.")]
+        [RegularExpression(@"^[A-Za-z]{0,50}$", ErrorMessage = "Name can only contain letters, no special characters or numbers. 50 Characters max.")]
         public string FirstName { get; set; }
 
-        [RegularExpression(@"^[a-z]{0,50}$", ErrorMessage = "Name can only contain letters, no special characters or numbers. 50 Characters max.")]
+        [RegularExpression(@"^[A-Za-z]{0,50}$", ErrorMessage = "Name can only contain letters, no special characters or numbers. 50 Characters max.")]
         public string LastName { get; set; }
 
         [MaxLength(256), EmailAddress, Required(ErrorMessage = "Email required.")]

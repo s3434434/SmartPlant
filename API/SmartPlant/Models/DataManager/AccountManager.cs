@@ -42,6 +42,8 @@ namespace SmartPlant.Models.DataManager
         }
         public async Task<RegistrationResponseDto> Register(ApplicationUser user, UserRegistrationDto userRegDto)
         {
+            user.PhoneNumber = user.PhoneNumber.Length > 0 ? user.PhoneNumber : null;
+
             var result = await _userManager.CreateAsync(user, userRegDto.Password);
             if (!result.Succeeded)
             {
@@ -228,11 +230,9 @@ namespace SmartPlant.Models.DataManager
 
             user.FirstName = details.FirstName;
             user.LastName = details.LastName;
-            user.PhoneNumber = details.PhoneNumber;
+            user.PhoneNumber = details.PhoneNumber?.Length > 0 ? details.PhoneNumber : null;
 
-            await _userManager.UpdateAsync(user);
-
-            return IdentityResult.Success;
+            return await _userManager.UpdateAsync(user);
         }
 
         public async Task<IdentityResult> UpdateEmail(string userID, UpdateEmailDto emailDto)
@@ -340,7 +340,7 @@ namespace SmartPlant.Models.DataManager
             user.FirstName = detailsDto.FirstName;
             user.LastName = detailsDto.LastName;
             user.Email = detailsDto.Email;
-            user.PhoneNumber = detailsDto.PhoneNumber;
+            user.PhoneNumber = detailsDto.PhoneNumber?.Length > 0 ? detailsDto.PhoneNumber : null;
 
             var result = await _userManager.UpdateAsync(user);
 

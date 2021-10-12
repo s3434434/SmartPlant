@@ -199,7 +199,7 @@ namespace SmartPlant.Controllers
                 var genericErrors = new GenericErrorDto();
                 foreach (string e in errors)
                 {
-                    genericErrors.errors.Add(Regex.Match(e, @"^([\w\-]+)").Value, new List<string>{e});
+                    genericErrors.errors.Add(Regex.Match(e, @"^([\w\-]+)").Value, new List<string> { e });
                 }
 
                 return BadRequest(genericErrors);
@@ -264,7 +264,18 @@ namespace SmartPlant.Controllers
 
             var results = await _repo.UpdateDetails(userID, userDetailsDto);
 
-            return Ok(results);
+            if (results.Succeeded)
+            {
+                return Ok(results);
+            }
+
+            var genericError = new GenericErrorDto();
+
+            foreach (var e in results.Errors)
+            {
+                genericError.errors.Add(e.Code, new List<string>{e.Description});
+            }
+            return BadRequest(results.Errors);
         }
 
 
@@ -294,9 +305,9 @@ namespace SmartPlant.Controllers
                 var genericErrors = new GenericErrorDto();
                 foreach (IdentityError e in result.Errors)
                 {
-                    genericErrors.errors.Add(Regex.Match(e.Code, @"^([\w\-]+)").Value, new List<string>{e.Description});
+                    genericErrors.errors.Add(Regex.Match(e.Code, @"^([\w\-]+)").Value, new List<string> { e.Description });
                 }
-                    return BadRequest(genericErrors);
+                return BadRequest(genericErrors);
             }
 
             return Ok("Success");
@@ -441,7 +452,7 @@ namespace SmartPlant.Controllers
             if (result == null)
             {
                 var genericError = new GenericErrorDto();
-                genericError.errors.Add("Email", new List<string>{"Email already exists or user does not exist"});
+                genericError.errors.Add("Email", new List<string> { "Email already exists or user does not exist" });
 
                 return BadRequest(genericError);
             }
