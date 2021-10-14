@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 //import { Link } from "react-router-dom";
-import "./privacy_policy.css";
+import "./terms_of_use.css";
 
-export default function PrivacyPolicy(props) {
+export default function TermsOfUse(props) {
   useEffect(() => {
     document.title = "Demeter - The plant meter";
     // eslint-disable-next-line
@@ -11,7 +11,7 @@ export default function PrivacyPolicy(props) {
   return (
     <section>
       <h1 className="gold text-center">
-        Privacy Policy
+        Terms of Use
       </h1>
       <div className="text-center mt-3">
       Products derived from the Copyright Holder's procedures. Program, or be made available under 
