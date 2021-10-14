@@ -39,31 +39,30 @@ export default function ResetPassword(props) {
     setStatus("Please wait...");
     setShowStatus(true);
 
-    axios
-      .post(
-        "https://smart-plant.azurewebsites.net/api/Account/Password/Reset",
-        form
-      )
-      .then((res) => {
-        window.location.pathname = "/password-reset-successful";
-      })
-      .catch((err) => {
-        const data = err.response.data;
-        let errorMessage = "";
+    if (form.newPassword !== form.confirmNewPassword) {
+      setStatus("Passwords do not match.");
+    } else {
+      axios
+        .post(
+          "https://smart-plant.azurewebsites.net/api/Account/Password/Reset",
+          form
+        )
+        .then((res) => {
+          window.location.pathname = "/password-reset-successful";
+        })
+        .catch((err) => {
+          const errors = err.response.data.errors;
+          let errorMessage = "Server error. Please try again later.";
 
-        if (data.error !== undefined) {
-          errorMessage = data.error[0];
-        } else {
-          const errors = data.errors;
-          Object.keys(errors).forEach((error) => {
-            if (errors[error] !== undefined) {
-              errorMessage = errors[error];
-            }
-          });
-        }
+          if (errors.Passwords !== undefined) {
+            errorMessage = errors.Passwords[0];
+          } else if (errors.ConfirmNewPassword !== undefined) {
+            errorMessage = errors.ConfirmNewPassword[0];
+          }
 
-        setStatus(errorMessage);
-      });
+          setStatus(errorMessage);
+        });
+    }
   };
 
   return (
@@ -94,11 +93,15 @@ export default function ResetPassword(props) {
           value={form.confirmNewPassword}
           onChange={handleChange}
         />
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Reset password
@@ -128,11 +131,15 @@ export default function ResetPassword(props) {
           value={form.confirmNewPassword}
           onChange={handleChange}
         />
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Reset password

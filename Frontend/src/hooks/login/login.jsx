@@ -42,8 +42,14 @@ export default function Login(props) {
         window.location.pathname = "/";
       })
       .catch((err) => {
-        setStatus(err.response.data.error);
-        setShowStatus(true);
+        let errorMessage = "Server error. Please try again later.";
+        const errors = err.response.data.errors;
+
+        if (errors["Login Details"] !== undefined) {
+          errorMessage = errors["Login Details"][0];
+        }
+
+        setStatus(errorMessage);
       });
   };
 
@@ -87,11 +93,15 @@ export default function Login(props) {
             Forgot password?
           </span>
         </div>
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Login
@@ -133,11 +143,15 @@ export default function Login(props) {
             Forgot password?
           </span>
         </div>
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Login
