@@ -13,7 +13,7 @@ export default function PrivacyPolicy(props) {
       <h1 className="gold text-center">
         Privacy Policy
       </h1>
-      <div className="text-center mt-3">
+      <div className="text-center mt-3 w-25 m-auto">
         This following document sets forth the Privacy Policy for the ACME Smart Plants website, http://www.acmesp.com.au.
 
         ACME Smart Plants is committed to providing you with the best possible customer service experience. ACME Smart Plants is bound by the Privacy Act 1988 (Cth), which sets out a number of principles concerning the privacy of individuals.

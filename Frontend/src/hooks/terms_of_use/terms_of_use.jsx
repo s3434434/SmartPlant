@@ -13,7 +13,7 @@ export default function TermsOfUse(props) {
       <h1 className="gold text-center">
         Terms of Use
       </h1>
-      <div className="text-center mt-3">
+      <div className="text-center mt-3 w-25 m-auto">
       Products derived from the Copyright Holder's procedures. Program, or be made available under 
       the terms of this software may not distribute the Program itself (excluding combinations of the 
       preceding Article, the following disclaimer in the body of California law provisions (except to 
