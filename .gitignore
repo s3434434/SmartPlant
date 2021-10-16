@@ -9,6 +9,10 @@
 
 #Frontend
 Frontend/node_modules
+Frontend/.elasticbeanstalk/*
+Frontend/!.elasticbeanstalk/*.cfg.yml
+Frontend/!.elasticbeanstalk/*.global.yml
+
 
 # User-specific files
 *.rsuser
