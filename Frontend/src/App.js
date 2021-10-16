@@ -16,6 +16,8 @@ import Settings from "./hooks/settings/settings";
 import NotFound from "./hooks/not_found/not_found";
 import AllPlants from "./hooks/all_plants/all_plants";
 import logo from "./assets/images/logo.png";
+import PrivacyPolicy from "./hooks/privacy_policy/privacy_policy";
+import TermsOfUse from "./hooks/terms_of_use/terms_of_use";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -292,6 +294,16 @@ function App() {
               exact
               path="/settings"
               render={(props) => <Settings {...props} logOut={logOut} />}
+            />
+            <Route
+              exact
+              path="/privacy-policy"
+              render={(props) => <PrivacyPolicy {...props} logOut={logOut} />}
+            />
+            <Route
+              exact
+              path="/terms-of-use"
+              render={(props) => <TermsOfUse {...props} logOut={logOut} />}
             />
             <Route
               exact
