@@ -6,7 +6,7 @@ import "./forgot_password.css";
 export default function ForgotPassword(props) {
   const [form, setForm] = useState({
     email: "",
-    clientURI: "http://localhost:3000/reset-password",
+    clientURI: "https://www.demeter.onl/reset-password",
   });
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("none");
