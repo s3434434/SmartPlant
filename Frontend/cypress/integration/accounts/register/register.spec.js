@@ -28,5 +28,4 @@ describe('Register page', () => {
         cy.get('input:invalid').should('have.length', 6)
 
     })
-
 })
