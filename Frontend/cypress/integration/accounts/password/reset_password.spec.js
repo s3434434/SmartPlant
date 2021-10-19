@@ -10,9 +10,11 @@ describe('Reset password page', () => {
     it('Displays required fields', () => {
 
         cy.visit(route)
-        cy.get('form').within(() => {
+        cy.get('.gold.text-center').should('have.text', 'Reset password')
+        cy.get('form').first().within(() => {
             cy.get('input[name="newPassword"]')
             cy.get('input[name="confirmNewPassword"]')
+            cy.get('.btn').should('have.text', 'Reset password')
         })
     })
 
