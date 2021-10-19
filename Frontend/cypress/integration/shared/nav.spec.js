@@ -29,4 +29,32 @@ describe('Nav bar', () => {
         cy.get('#nav-options').contains('Register')
         cy.get('#nav-options').contains('Support')
     })
+
+    it('Redirects to landing page when nav.home clicked', () => {
+
+        cy.visit(route)
+        cy.contains('.nav-link > h5', 'Home').click()
+        cy.url().should('be.equal', Cypress.config("baseUrl") + '/landing')
+    })
+
+    it('Redirects to login page when nav.login clicked', () => {
+
+        cy.visit(route)
+        cy.contains('.nav-link > h5', 'Login').click()
+        cy.url().should('be.equal', Cypress.config("baseUrl") + '/login')
+    })
+
+    it('Redirects to register page when nav.register clicked', () => {
+
+        cy.visit(route)
+        cy.contains('.nav-link > h5', 'Register').click()
+        cy.url().should('be.equal', Cypress.config("baseUrl") + '/register')
+    })
+
+    it('Redirects to support page when nav.support clicked', () => {
+
+        cy.visit(route)
+        cy.contains('.nav-link > h5', 'Support').click()
+        cy.url().should('be.equal', Cypress.config("baseUrl") + '/support')
+    })
 })
