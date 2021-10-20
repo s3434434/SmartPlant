@@ -98,7 +98,7 @@ function App() {
   };
 
   return (
-    <>
+    <div className="bg-image">
       <nav
         className="navbar navbar-expand-sm sticky-top navbar-dark px-2 py-0"
         id="navbar"
@@ -347,7 +347,7 @@ function App() {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
 

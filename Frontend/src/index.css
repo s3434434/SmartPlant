@@ -1,9 +1,5 @@
 body {
   scroll-behavior: smooth;
-  background-image: url("assets/images/background.jpeg");
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
 }
 h1,
 span,
