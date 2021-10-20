@@ -14,16 +14,31 @@ export default function TermsOfUse(props) {
         Terms of Use
       </h1>
       <div className="text-center mt-3 w-25 m-auto">
-      Products derived from the Copyright Holder's procedures. Program, or be made available under 
-      the terms of this software may not distribute the Program itself (excluding combinations of the 
-      preceding Article, the following disclaimer in the body of California law provisions (except to 
-      the intellectual property rights needed, if any. It is wise never to modify the Program is 
-      restricted in certain countries either by patents or other material to the Original Code, and 
-      keep intact all the source code. Distribution Mechanism"). The Source Code or ii) the combination 
-      of the provisions in Section 2, no other patent rights, express or implied, are granted by that 
-      Contributor and the Modifications created by the terms of 3b) or 4), then that Current Maintainer 
-      who has indicated in the documentation and/or other materials provided with the appropriate 
-      bodies (for example the POSIX committees).
+        Please read these terms of use ("terms of use", "agreement") carefully before using www.demeter.onl website 
+        (“website”, "service") operated by ACME Smart Plants ("us", 'we", "our").
+
+        <h3>Conditions of use</h3>
+        By using this website, you certify that you have read and reviewed this Agreement and that you agree to comply 
+        with its terms. If you do not want to be bound by the terms of this Agreement, you are advised to leave the website accordingly. 
+        ACME Smart Plants only grants use and access of this website, its products, and its services to those who have accepted its terms.
+
+        <h3>Privacy policy</h3>
+        Before you continue using our website, we advise you to read our privacy policy regarding our user data collection. 
+        It will help you better understand our practices.
+
+        <h3>User accounts</h3>
+        As a user of this website, you may be asked to register with us and provide private information. 
+        You are responsible for ensuring the accuracy of this information, and you are responsible for maintaining 
+        the safety and security of your identifying information. You are also responsible for all activities that occur 
+        under your account or password.
+        If you think there are any possible issues regarding the security of your account on the website, inform us immediately so we may address it accordingly.
+        We reserve all rights to terminate accounts, edit or remove content and cancel orders in their sole discretion.
+        
+        <h3>Limitation on liability</h3>
+        ACME Smart Plants is not liable for any damages that may occur to you as a result of your misuse of our website.
+        ACME Smart Plants reserves the right to edit, modify, and change this Agreement any time. We shall let our users 
+        know of these changes through electronic mail. This Agreement is an understanding between [name] and the user,
+         and this supersedes and replaces all prior agreements regarding the use of this website.
       </div>
     </section>
   );
