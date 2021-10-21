@@ -6,12 +6,7 @@ import container_background_07 from "../../assets/images/container_background_07
 import "./all_plants.css";
 
 export default function AllPlants(props) {
-  const [plants, setPlants] = useState({
-    daisy: { name: "Daisy" },
-    rose: { name: "Rose" },
-    marigold: { name: "Marigold" },
-    violet: { name: "Violet" },
-  });
+  const [plants, setPlants] = useState({});
 
   useEffect(() => {
     document.title = "Plants | Demeter - The plant meter";
@@ -86,7 +81,7 @@ export default function AllPlants(props) {
                   );
                 })
             ) : (
-              <p>No current plants.</p>
+              <p style={{ color: "white" }}>No current plants.</p>
             )}
           </div>
         </>
