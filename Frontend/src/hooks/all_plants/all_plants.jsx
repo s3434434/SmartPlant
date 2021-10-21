@@ -25,6 +25,7 @@ export default function AllPlants(props) {
         },
       })
       .then((res) => {
+        console.log(JSON.stringify(res));
         // setPlants(res.data);
       })
       .catch((err) => {
@@ -40,10 +41,17 @@ export default function AllPlants(props) {
       <h1 className="text-center gold">Plants</h1>
       {plants ? (
         <>
-          <div className="text-left">
-            <Link key="add-plant" to="/add-plant">
-              <button className="btn btn-primary">Add plant</button>
-            </Link>
+          <div className="container mt-3">
+            <div className="row">
+              <div className="col-sm-3 text-center">
+                <Link key="add-plant" to="/add-plant">
+                  <button className="btn btn-primary">Add plant</button>
+                </Link>
+              </div>
+              <div className="col-sm-3"></div>
+              <div className="col-sm-3"></div>
+              <div className="col-sm-3"></div>
+            </div>
           </div>
           <div className="content-gallery mt-3">
             {Object.keys(plants).length > 0 ? (
