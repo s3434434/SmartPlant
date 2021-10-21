@@ -1,22 +1,54 @@
-#all-projects h1 {
-  margin-top: 0em;
-  margin-bottom: 0.5em;
+.content-gallery {
+  display: flex;
+  flex-wrap: wrap;
+}
+.content-gallery > * {
+  margin: auto;
+  margin-bottom: 1%;
 }
 
-#all-projects .cg-container h1 {
-  color: white;
-  font-size: 3.25em;
+.flex-padding {
+  background-color: black;
+}
+
+.cg-container {
+  overflow: hidden;
+  background-position: center;
+  background-size: contain;
+  width: 14em;
+  height: 14em;
+  display: grid;
+  grid-template-columns: 100%;
+  align-items: center;
+  justify-content: center;
+  transition: 0.05s;
+  cursor: pointer;
+}
+.cg-container h1 {
+  color: rgb(0, 109, 24);
+  cursor: pointer;
   -webkit-line-clamp: 2;
+  padding-left: 0.3em;
+  padding-right: 0.3em;
+  /* text-shadow: 0.03em 0.03em black; */
+  text-align: center;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-wrap: break-word;
+  hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
 }
 
-@media (max-width: 734px) {
-  #all-projects h1 {
-    font-size: 2.85em;
+@media (max-width: 881px) {
+  .content-gallery > * {
+    margin-bottom: 3%;
   }
 }
-
 @media (max-width: 524px) {
-  #all-projects h1 {
-    font-size: 2.05em;
+  .cg-container {
+    width: 9.33em;
+    height: 9.33em;
   }
 }

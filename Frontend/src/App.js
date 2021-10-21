@@ -275,6 +275,7 @@ function App() {
                   getPlants={getPlants}
                   openOverlay={openOverlay}
                   closeOverlay={closeOverlay}
+                  logOut={logOut}
                 />
               )}
             />
