@@ -54,7 +54,7 @@ export default function AllPlants(props) {
         </div>
       </div>
       {Object.keys(plants).length > 0 ? (
-        <div className="content-gallery mt-3">
+        <div className="content-gallery mt-4">
           {Object.keys(plants)
             .sort()
             .map((plant) => {
