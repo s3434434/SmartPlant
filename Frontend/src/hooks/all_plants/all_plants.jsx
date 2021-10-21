@@ -6,7 +6,12 @@ import container_background_07 from "../../assets/images/container_background_07
 import "./all_plants.css";
 
 export default function AllPlants(props) {
-  const [plants, setPlants] = useState({});
+  const [plants, setPlants] = useState({
+    daisy: { name: "Daisy" },
+    rose: { name: "Rose" },
+    violet: { name: "Violet" },
+    marigold: { name: "Marigold" },
+  });
 
   useEffect(() => {
     document.title = "Plants | Demeter - The plant meter";
@@ -36,21 +41,9 @@ export default function AllPlants(props) {
       <h1 className="text-center gold">Plants</h1>
       {plants ? (
         <>
-          <div className="container mt-3">
-            <div className="row">
-              <div className="col-sm-3 text-center">
-                <Link key="add-plant" to="/add-plant">
-                  <button className="btn btn-primary">Add plant</button>
-                </Link>
-              </div>
-              <div className="col-sm-3"></div>
-              <div className="col-sm-3"></div>
-              <div className="col-sm-3"></div>
-            </div>
-          </div>
-          <div className="content-gallery mt-3">
-            {Object.keys(plants).length > 0 ? (
-              Object.keys(plants)
+          {Object.keys(plants).length > 0 ? (
+            <div className="content-gallery mt-3">
+              {Object.keys(plants)
                 .sort()
                 .map((plant) => {
                   return (
@@ -79,10 +72,17 @@ export default function AllPlants(props) {
                       </div>
                     </div>
                   );
-                })
-            ) : (
-              <p style={{ color: "white" }}>No current plants.</p>
-            )}
+                })}
+            </div>
+          ) : (
+            <div className="text-center mt-3" style={{ color: "white" }}>
+              No current plants.
+            </div>
+          )}
+          <div className="text-center mt-3">
+            <Link key="add-plant" to="/add-plant">
+              <button className="btn btn-primary">Add plant</button>
+            </Link>
           </div>
         </>
       ) : null}
