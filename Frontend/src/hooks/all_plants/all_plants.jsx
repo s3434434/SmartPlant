@@ -39,53 +39,49 @@ export default function AllPlants(props) {
   return (
     <section>
       <h1 className="text-center gold">Plants</h1>
-      {plants ? (
-        <>
-          {Object.keys(plants).length > 0 ? (
-            <div className="content-gallery mt-3">
-              {Object.keys(plants)
-                .sort()
-                .map((plant) => {
-                  return (
-                    <div className="flex-padding" key={plants[plant].name}>
-                      <div
-                        id={plant}
-                        className="cg-container"
-                        style={{
-                          backgroundImage: `url(${container_background})`,
-                        }}
-                        onMouseEnter={() => {
-                          document.getElementById(
-                            plant
-                          ).style.backgroundImage = `url(${container_background_07})`;
-                        }}
-                        onMouseLeave={() => {
-                          document.getElementById(
-                            plant
-                          ).style.backgroundImage = `url(${container_background})`;
-                        }}
-                        onClick={(e) => {
-                          window.location.pathname = `/plant/${plant}`;
-                        }}
-                      >
-                        <h1>{plant}</h1>
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-          ) : (
-            <div className="text-center mt-3" style={{ color: "white" }}>
-              No current plants.
-            </div>
-          )}
-          <div className="text-center mt-3">
-            <Link key="add-plant" to="/add-plant">
-              <button className="btn btn-primary">Add plant</button>
-            </Link>
-          </div>
-        </>
-      ) : null}
+      {Object.keys(plants).length > 0 ? (
+        <div className="content-gallery mt-3">
+          {Object.keys(plants)
+            .sort()
+            .map((plant) => {
+              return (
+                <div className="flex-padding" key={plants[plant].name}>
+                  <div
+                    id={plant}
+                    className="cg-container"
+                    style={{
+                      backgroundImage: `url(${container_background})`,
+                    }}
+                    onMouseEnter={() => {
+                      document.getElementById(
+                        plant
+                      ).style.backgroundImage = `url(${container_background_07})`;
+                    }}
+                    onMouseLeave={() => {
+                      document.getElementById(
+                        plant
+                      ).style.backgroundImage = `url(${container_background})`;
+                    }}
+                    onClick={(e) => {
+                      window.location.pathname = `/plant/${plant}`;
+                    }}
+                  >
+                    <h1>{plant}</h1>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      ) : (
+        <div className="text-center mt-3" style={{ color: "white" }}>
+          No current plants.
+        </div>
+      )}
+      <div className="text-center mt-3">
+        <Link key="add-plant" to="/add-plant">
+          <button className="btn btn-primary">Add plant</button>
+        </Link>
+      </div>
     </section>
   );
 }
