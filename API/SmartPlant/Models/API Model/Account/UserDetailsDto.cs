@@ -10,8 +10,7 @@ namespace SmartPlant.Models.API_Model.Account
         [RegularExpression(@"^[A-Za-z]{0,50}$", ErrorMessage = "Name can only contain letters, no special characters or numbers. 50 Characters max.")]
         public string LastName { get; set; }
 
-        [MaxLength(256)]
-        [Required(ErrorMessage = "Email required.")]
+        [MaxLength(256), EmailAddress, Required(ErrorMessage = "Email required.")]
 
         public string Email { get; set; }
 

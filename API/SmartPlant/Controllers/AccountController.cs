@@ -52,11 +52,6 @@ namespace SmartPlant.Controllers
         // [Route("api/Register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto userRegDto)
         {
-            if (userRegDto == null || !ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var user = _mapper.Map<ApplicationUser>(userRegDto);
 
             var result = await _repo.Register(user, userRegDto);
@@ -138,11 +133,6 @@ namespace SmartPlant.Controllers
         [Route("Password/Forgot")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto passwordDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var result = await _repo.ForgotPassword(passwordDto);
 
             if (result == null)
@@ -174,11 +164,6 @@ namespace SmartPlant.Controllers
         [Route("Password/Reset")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto passwordDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var result = await _repo.ResetPassword(passwordDto);
 
             if (result == null)
@@ -255,10 +240,6 @@ namespace SmartPlant.Controllers
         [Route("/api/User")]
         public async Task<IActionResult> UpdateDetails([FromBody] UpdateUserDetailsDto userDetailsDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
 
             var userID = User.Identity.Name;
 
@@ -291,11 +272,6 @@ namespace SmartPlant.Controllers
         [Route("/api/User/Email")]
         public async Task<IActionResult> UpdateEmail([FromBody] UpdateEmailDto emailDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var userID = User.Identity.Name;
 
             IdentityResult result = await _repo.UpdateEmail(userID, emailDto);
@@ -327,11 +303,6 @@ namespace SmartPlant.Controllers
         [Route("/api/User/Password")]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordDto passwordDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var userID = User.Identity.Name;
 
             var result = await _repo.UpdatePassword(userID, passwordDto);
@@ -442,11 +413,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/User")]
         public async Task<IActionResult> AdminUpdateDetails([FromBody] AdminUpdateUserDetailsDto DetailsDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var result = await _repo.AdminUpdateUserDetails(DetailsDto);
 
             if (result == null)
@@ -490,11 +456,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/User/Role")]
         public async Task<IActionResult> AdminUpdateRole([FromBody] AdminUpdateUserRoleDto updateRoleDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var result = await _repo.AdminUpdateRole(updateRoleDto);
 
             return Ok(result);
@@ -518,7 +479,6 @@ namespace SmartPlant.Controllers
             {
                 return BadRequest();
             }
-
             var result = await _repo.AdminUpdatePassword(passwordDto);
 
             if (!result.Succeeded)

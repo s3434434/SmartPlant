@@ -71,27 +71,6 @@ namespace SmartPlant.Tests.Controllers
             // Assert
             Assert.That(result, Is.TypeOf<OkObjectResult>());
         }
-
-        [Test]
-        public async Task Get_WhenUserHasPlants_ReturnsNotFound()
-        {
-            // Arrange
-            mock_PlantManager.Setup(_repo => _repo.GetAllForUser(It.IsAny<string>()))
-                .ReturnsAsync(() => null);
-
-            var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object);
-            plantController.ControllerContext.HttpContext = new DefaultHttpContext()
-            {
-                User = mock_Principal.Object
-            };
-
-            // Act
-            var result = await plantController.Get();
-
-            // Assert
-            Assert.That(result, Is.TypeOf<NotFoundResult>());
-        }
-
         #endregion
 
         #region Post

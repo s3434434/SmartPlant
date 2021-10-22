@@ -15,7 +15,7 @@ namespace SmartPlant.Models.API_Model
         [RegularExpression(@"^0[23478]\d{8}$", ErrorMessage = "Must begin with a valid area code and be 10 digits: 02, 03, 04, 07, 08 ")]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Email required.")]
+        [MaxLength(256), EmailAddress, Required(ErrorMessage = "Email required.")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password required")]

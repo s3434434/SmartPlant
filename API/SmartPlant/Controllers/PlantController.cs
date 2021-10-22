@@ -57,7 +57,8 @@ namespace SmartPlant.Controllers
 
             if (plants == null)
             {
-                return NotFound(); //404
+                //return NotFound(); //404
+                return Ok(new List<Plant>());
             }
 
             return Ok(plants); //200
@@ -81,12 +82,7 @@ namespace SmartPlant.Controllers
         {
             var userID = User.Identity.Name;
             var user = await _userManager.FindByIdAsync(userID);
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
+            
             //it really shouldn't be null
             if (user == null)
             {

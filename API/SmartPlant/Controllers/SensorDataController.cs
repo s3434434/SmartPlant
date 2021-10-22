@@ -173,11 +173,6 @@ namespace SmartPlant.Controllers
         [Route("/api/SensorData")]
         public async Task<IActionResult> Post([FromBody] SensorDataModel dataModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             //use automapper to map from DTO to Model, then add current time UTC .
             var userID = User.Identity.Name;
             var user = await _userManager.FindByIdAsync(userID);
@@ -221,11 +216,6 @@ namespace SmartPlant.Controllers
         [Route("/api/SensorData/Token")]
         public async Task<IActionResult> PostWithToken(SensorDataWithTokenDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Invalid inputs");
-            }
-
             if (!await _repo.AddWithToken(dto))
             {
                 return Unauthorized();
@@ -343,11 +333,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/ForTesting/SensorData")]
         public async Task<IActionResult> AdminPost([FromBody] SensorDataModel dataModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Model state invalid");
-            }
-
             //use automapper to map from DTO to Model, then add current time UTC .
             var userID = User.Identity.Name;
             var user = await _userManager.FindByIdAsync(userID);
