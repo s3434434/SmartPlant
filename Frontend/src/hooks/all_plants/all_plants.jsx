@@ -86,7 +86,11 @@ export default function AllPlants(props) {
             No current plants.
           </div>
         )
-      ) : null}
+      ) : (
+        <div className="text-center mt-3" style={{ color: "white" }}>
+          Loading plants...
+        </div>
+      )}
     </section>
   );
 }
