@@ -6,12 +6,7 @@ import container_background_07 from "../../assets/images/container_background_07
 import "./all_plants.css";
 
 export default function AllPlants(props) {
-  const [plants, setPlants] = useState({
-    daisy: { name: "Daisy" },
-    rose: { name: "Rose" },
-    violet: { name: "Violet" },
-    marigold: { name: "Marigold" },
-  });
+  const [plants, setPlants] = useState(null);
 
   useEffect(() => {
     document.title = "Plants | Demeter - The plant meter";
@@ -25,12 +20,11 @@ export default function AllPlants(props) {
         },
       })
       .then((res) => {
-        console.log(JSON.stringify(res));
-        // setPlants(res.data);
+        setPlants(res.data);
       })
       .catch((err) => {
-        // props.logOut();
-        // window.location.pathname = "/";
+        props.logOut();
+        window.location.pathname = "/";
       });
 
     // eslint-disable-next-line
@@ -53,44 +47,46 @@ export default function AllPlants(props) {
           <div className="col-md-2"></div>
         </div>
       </div>
-      {Object.keys(plants).length > 0 ? (
-        <div className="content-gallery mt-4">
-          {Object.keys(plants)
-            .sort()
-            .map((plant) => {
-              return (
-                <div className="flex-padding" key={plants[plant].name}>
-                  <div
-                    id={plant}
-                    className="cg-container"
-                    style={{
-                      backgroundImage: `url(${container_background})`,
-                    }}
-                    onMouseEnter={() => {
-                      document.getElementById(
-                        plant
-                      ).style.backgroundImage = `url(${container_background_07})`;
-                    }}
-                    onMouseLeave={() => {
-                      document.getElementById(
-                        plant
-                      ).style.backgroundImage = `url(${container_background})`;
-                    }}
-                    onClick={(e) => {
-                      window.location.pathname = `/plant/${plant}`;
-                    }}
-                  >
-                    <h1>{plant}</h1>
+      {plants ? (
+        Object.keys(plants).length > 0 ? (
+          <div className="content-gallery mt-4">
+            {Object.keys(plants)
+              .sort()
+              .map((plant) => {
+                return (
+                  <div className="flex-padding" key={plants[plant].name}>
+                    <div
+                      id={plant}
+                      className="cg-container"
+                      style={{
+                        backgroundImage: `url(${container_background})`,
+                      }}
+                      onMouseEnter={() => {
+                        document.getElementById(
+                          plant
+                        ).style.backgroundImage = `url(${container_background_07})`;
+                      }}
+                      onMouseLeave={() => {
+                        document.getElementById(
+                          plant
+                        ).style.backgroundImage = `url(${container_background})`;
+                      }}
+                      onClick={(e) => {
+                        window.location.pathname = `/plant/${plant}`;
+                      }}
+                    >
+                      <h1>{plant}</h1>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-        </div>
-      ) : (
-        <div className="text-center mt-3" style={{ color: "white" }}>
-          No current plants.
-        </div>
-      )}
+                );
+              })}
+          </div>
+        ) : (
+          <div className="text-center mt-3" style={{ color: "white" }}>
+            No current plants.
+          </div>
+        )
+      ) : null}
     </section>
   );
 }
