@@ -48,38 +48,38 @@ export default function AllPlants(props) {
         </div>
       </div>
       {plants ? (
-        Object.keys(plants).length > 0 ? (
+        plants.length > 0 ? (
           <div className="content-gallery mt-4">
-            {Object.keys(plants)
-              .sort()
-              .map((plant) => {
-                return (
-                  <div className="flex-padding" key={plants[plant].name}>
-                    <div
-                      id={plant}
-                      className="cg-container"
-                      style={{
-                        backgroundImage: `url(${container_background})`,
-                      }}
-                      onMouseEnter={() => {
-                        document.getElementById(
-                          plant
-                        ).style.backgroundImage = `url(${container_background_07})`;
-                      }}
-                      onMouseLeave={() => {
-                        document.getElementById(
-                          plant
-                        ).style.backgroundImage = `url(${container_background})`;
-                      }}
-                      onClick={(e) => {
-                        window.location.pathname = `/plant/${plant}`;
-                      }}
-                    >
-                      <h1>{plant}</h1>
-                    </div>
+            {plants.map((plant) => {
+              const { name, plantID } = plant;
+
+              return (
+                <div className="flex-padding" key={plantID}>
+                  <div
+                    id={plantID}
+                    className="cg-container"
+                    style={{
+                      backgroundImage: `url(${container_background})`,
+                    }}
+                    onMouseEnter={() => {
+                      document.getElementById(
+                        plantID
+                      ).style.backgroundImage = `url(${container_background_07})`;
+                    }}
+                    onMouseLeave={() => {
+                      document.getElementById(
+                        plantID
+                      ).style.backgroundImage = `url(${container_background})`;
+                    }}
+                    onClick={(e) => {
+                      window.location.pathname = `/plant/${plantID}`;
+                    }}
+                  >
+                    <h1>{name}</h1>
                   </div>
-                );
-              })}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="text-center mt-3" style={{ color: "white" }}>
