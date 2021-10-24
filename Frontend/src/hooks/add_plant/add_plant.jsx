@@ -65,8 +65,10 @@ export default function AddPlant(props) {
 
           if (errors.PlantName !== undefined) {
             errorMessage = errors.PlantName[0];
-          } else if (errors.MaxPlants !== undefined) {
-            errorMessage = errors.MaxPlants[0];
+          } else if (errors["Named Taken"] !== undefined) {
+            errorMessage = errors["Named Taken"][0];
+          } else if (errors.Limit !== undefined) {
+            errorMessage = errors.Limit[0];
           }
 
           setStatus(errorMessage);
