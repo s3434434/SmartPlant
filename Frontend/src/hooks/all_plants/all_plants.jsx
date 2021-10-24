@@ -12,26 +12,30 @@ export default function AllPlants(props) {
     document.title = "Plants | Demeter - The plant meter";
 
     const login = localStorage.getItem("demeter-login");
-    const { token } = JSON.parse(login);
-    axios
-      .get("https://smart-plant.azurewebsites.net/api/Plants", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        const sortedPlants = res.data.sort((a, b) => {
-          const nameA = a.name,
-            nameB = b.name;
-          return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
-        });
+    if (login) {
+      const { token } = JSON.parse(login);
+      axios
+        .get("https://smart-plant.azurewebsites.net/api/Plants", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          const sortedPlants = res.data.sort((a, b) => {
+            const nameA = a.name,
+              nameB = b.name;
+            return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+          });
 
-        setPlants(sortedPlants);
-      })
-      .catch((err) => {
-        props.logOut();
-        window.location.pathname = "/";
-      });
+          setPlants(sortedPlants);
+        })
+        .catch((err) => {
+          props.logOut();
+          window.location.pathname = "/";
+        });
+    } else {
+      window.location.pathname = "/";
+    }
 
     // eslint-disable-next-line
   }, []);

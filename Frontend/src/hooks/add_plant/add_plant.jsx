@@ -11,17 +11,22 @@ export default function AddPlant(props) {
     document.title = "Add plant | Demeter - The plant meter";
 
     const login = localStorage.getItem("demeter-login");
-    const { token } = JSON.parse(login);
-    axios
-      .get("https://smart-plant.azurewebsites.net/api/Plants", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .catch((err) => {
-        props.logOut();
-        window.location.pathname = "/";
-      });
+    if (login) {
+      const { token } = JSON.parse(login);
+
+      axios
+        .get("https://smart-plant.azurewebsites.net/api/Plants", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .catch((err) => {
+          props.logOut();
+          window.location.pathname = "/";
+        });
+    } else {
+      window.location.pathname = "/";
+    }
 
     // eslint-disable-next-line
   }, []);

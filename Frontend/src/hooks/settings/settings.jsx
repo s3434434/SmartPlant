@@ -37,27 +37,32 @@ export default function Settings(props) {
     document.title = "Settings | Demeter - The plant meter";
 
     const login = localStorage.getItem("demeter-login");
-    const { token } = JSON.parse(login);
-    axios
-      .get("https://smart-plant.azurewebsites.net/api/User", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        const settings = res.data;
+    if (login) {
+      const { token } = JSON.parse(login);
+      axios
+        .get("https://smart-plant.azurewebsites.net/api/User", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          const settings = res.data;
 
-        setEmailForm({ email: settings.email, confirmEmail: "" });
-        setDetailsForm({
-          phoneNumber: settings.phoneNumber,
-          firstName: settings.firstName,
-          lastName: settings.lastName,
+          setEmailForm({ email: settings.email, confirmEmail: "" });
+          setDetailsForm({
+            phoneNumber: settings.phoneNumber,
+            firstName: settings.firstName,
+            lastName: settings.lastName,
+          });
+        })
+        .catch((err) => {
+          props.logOut();
+          window.location.pathname = "/";
         });
-      })
-      .catch((err) => {
-        props.logOut();
-        window.location.pathname = "/";
-      });
+    } else {
+      window.location.pathname = "/";
+    }
+
     // eslint-disable-next-line
   }, []);
 
