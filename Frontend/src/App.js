@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import Plant from "./hooks/plant/plant";
+
 import LandingPage from "./hooks/landing_page/landing_page";
 import Login from "./hooks/login/login";
 import Register from "./hooks/register/register";
@@ -15,6 +15,8 @@ import Logout from "./hooks/logout/logout";
 import Settings from "./hooks/settings/settings";
 import NotFound from "./hooks/not_found/not_found";
 import AllPlants from "./hooks/all_plants/all_plants";
+import AddPlant from "./hooks/add_plant/add_plant";
+import Plant from "./hooks/plant/plant";
 import logo from "./assets/images/logo.png";
 import PrivacyPolicy from "./hooks/privacy_policy/privacy_policy";
 import TermsOfUse from "./hooks/terms_of_use/terms_of_use";
@@ -44,57 +46,11 @@ function App() {
     // eslint-disable-next-line
   }, []);
 
-  const getPlants = (callback) => {
-    // getCurrentUser()
-    //   .then((user) => {
-    //     user.getSession((err, session) => {
-    //       if (!err) {
-    //         user.getUserAttributes((err, attributes) => {
-    //           if (!err) {
-    //             let email = "";
-    //             attributes.forEach((attribute) => {
-    //               if (attribute.getName() === "email") {
-    //                 email = attribute.getValue();
-    //               }
-    //             });
-    //             const fetchPlants = async () => {
-    //               const response = await fetch(
-    //                 `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/plants?email=${email}`,
-    //                 {
-    //                   headers: {
-    //                     Authorization: session.getIdToken().getJwtToken(),
-    //                   },
-    //                 }
-    //               );
-    //               const json = await response.json();
-    //               callback(json);
-    //             };
-    //             fetchPlants();
-    //           }
-    //         });
-    //       }
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     window.location.pathname = "/login";
-    //   });
-    // eslint-disable-next-line
-  };
-
   const logOut = () => {
     if (checkLoggedIn()) {
       localStorage.removeItem("demeter-login");
       setLoggedIn(false);
     }
-  };
-
-  const openOverlay = (id) => {
-    document.getElementById(id).style.width = "82%";
-  };
-
-  const closeOverlay = (id) => {
-    document.getElementById(id).style.width = "0%";
   };
 
   return (
@@ -269,27 +225,17 @@ function App() {
             <Route
               exact
               path="/plants"
-              render={(props) => (
-                <AllPlants
-                  {...props}
-                  getPlants={getPlants}
-                  openOverlay={openOverlay}
-                  closeOverlay={closeOverlay}
-                  logOut={logOut}
-                />
-              )}
+              render={(props) => <AllPlants {...props} logOut={logOut} />}
+            />
+            <Route
+              exact
+              path="/add-plant"
+              render={(props) => <AddPlant {...props} logOut={logOut} />}
             />
             <Route
               exact
               path="/plant/:plant_name"
-              render={(props) => (
-                <Plant
-                  {...props}
-                  getPlants={getPlants}
-                  openOverlay={openOverlay}
-                  closeOverlay={closeOverlay}
-                />
-              )}
+              render={(props) => <Plant {...props} />}
             />
             <Route
               exact

@@ -20,7 +20,13 @@ export default function AllPlants(props) {
         },
       })
       .then((res) => {
-        setPlants(res.data);
+        const sortedPlants = res.data.sort((a, b) => {
+          const nameA = a.name,
+            nameB = b.name;
+          return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+        });
+
+        setPlants(sortedPlants);
       })
       .catch((err) => {
         props.logOut();
