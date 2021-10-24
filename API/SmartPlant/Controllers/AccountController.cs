@@ -114,7 +114,8 @@ namespace SmartPlant.Controllers
 
             if (!result.IsAuthSuccessful)
             {
-                return Unauthorized(result);
+                var genericError = new GenericErrorDto {errors = result.errors};
+                return Unauthorized(genericError);
             }
 
             return Ok(result.Token);

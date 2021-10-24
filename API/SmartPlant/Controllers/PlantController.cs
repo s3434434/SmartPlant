@@ -107,7 +107,8 @@ namespace SmartPlant.Controllers
             }
             if (result == -1)
             {
-                return Conflict("Max Plant Limit Hit");
+                var genericError = new GenericErrorDto{ errors= new Dictionary<string, List<string>>{ {"Limit", new List<String>{"Max Plant Limit Hit"}}}};
+                return Conflict(genericError);
             }
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
 
