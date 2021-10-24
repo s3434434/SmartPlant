@@ -41,33 +41,40 @@ export default function AddPlant(props) {
     setShowStatus(true);
 
     const login = localStorage.getItem("demeter-login");
-    const { token } = JSON.parse(login);
+    if (login) {
+      const { token } = JSON.parse(login);
 
-    axios
-      .post(
-        "https://smart-plant.azurewebsites.net/api/Plants",
-        {
-          plantName: plantName,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      axios
+        .post(
+          "https://smart-plant.azurewebsites.net/api/Plants",
+          {
+            plantName: plantName,
           },
-        }
-      )
-      .then((res) => {
-        window.location.pathname = "/plants";
-      })
-      .catch((err) => {
-        const errors = err.response.data.errors;
-        let errorMessage = "Server error. Please try again later.";
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          window.location.pathname = "/plants";
+        })
+        .catch((err) => {
+          const errors = err.response.data.errors;
+          let errorMessage = "Server error. Please try again later.";
 
-        if (errors.PlantName !== undefined) {
-          errorMessage = errors.PlantName[0];
-        }
+          if (errors.PlantName !== undefined) {
+            errorMessage = errors.PlantName[0];
+          }
 
-        setStatus(errorMessage);
-      });
+          setStatus(errorMessage);
+        });
+    } else {
+      setStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
+    }
   };
 
   return (

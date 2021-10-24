@@ -81,11 +81,11 @@ export default function Settings(props) {
     setShowEmailStatus(true);
 
     const login = localStorage.getItem("demeter-login");
-    const { token } = JSON.parse(login);
-
     if (emailForm.email !== emailForm.confirmEmail) {
       setEmailStatus("Emails do not match.");
-    } else {
+    } else if (login) {
+      const { token } = JSON.parse(login);
+
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/User/Email",
@@ -111,6 +111,11 @@ export default function Settings(props) {
 
           setEmailStatus(errorMessage);
         });
+    } else {
+      setEmailStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
     }
   };
 
@@ -129,31 +134,37 @@ export default function Settings(props) {
     setShowDetailsStatus(true);
 
     const login = localStorage.getItem("demeter-login");
-    const { token } = JSON.parse(login);
+    if (login) {
+      const { token } = JSON.parse(login);
+      axios
+        .put("https://smart-plant.azurewebsites.net/api/User", detailsForm, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          window.location.reload();
+        })
+        .catch((err) => {
+          const errors = err.response.data.errors;
+          let errorMessage = "Server error. Please try again later.";
 
-    axios
-      .put("https://smart-plant.azurewebsites.net/api/User", detailsForm, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        window.location.reload();
-      })
-      .catch((err) => {
-        const errors = err.response.data.errors;
-        let errorMessage = "Server error. Please try again later.";
+          if (errors.Phone !== undefined) {
+            errorMessage = errors.Phone[0];
+          } else if (errors.FirstName !== undefined) {
+            errorMessage = errors.FirstName[0];
+          } else if (errors.LastName !== undefined) {
+            errorMessage = errors.LastName[0];
+          }
 
-        if (errors.Phone !== undefined) {
-          errorMessage = errors.Phone[0];
-        } else if (errors.FirstName !== undefined) {
-          errorMessage = errors.FirstName[0];
-        } else if (errors.LastName !== undefined) {
-          errorMessage = errors.LastName[0];
-        }
-
-        setDetailsStatus(errorMessage);
-      });
+          setDetailsStatus(errorMessage);
+        });
+    } else {
+      setDetailsStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
+    }
   };
 
   const handlePasswordChange = (e) => {
@@ -171,11 +182,11 @@ export default function Settings(props) {
     setShowPasswordStatus(true);
 
     const login = localStorage.getItem("demeter-login");
-    const { token } = JSON.parse(login);
-
     if (passwordForm.newPassword !== passwordForm.confirmNewPassword) {
       setPasswordStatus("New passwords do not match.");
-    } else {
+    } else if (login) {
+      const { token } = JSON.parse(login);
+
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/User/Password",
@@ -207,6 +218,11 @@ export default function Settings(props) {
 
           setPasswordStatus(errorMessage);
         });
+    } else {
+      setPasswordStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
     }
   };
 
