@@ -65,8 +65,8 @@ export default function AddPlant(props) {
 
           if (errors.PlantName !== undefined) {
             errorMessage = errors.PlantName[0];
-          } else if (errors["Named Taken"] !== undefined) {
-            errorMessage = errors["Named Taken"][0];
+          } else if (errors["Name Taken"] !== undefined) {
+            errorMessage = errors["Name Taken"][0];
           } else if (errors.Limit !== undefined) {
             errorMessage = errors.Limit[0];
           }
