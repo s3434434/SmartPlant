@@ -65,6 +65,8 @@ export default function AddPlant(props) {
 
           if (errors.PlantName !== undefined) {
             errorMessage = errors.PlantName[0];
+          } else if (errors.MaxPlants !== undefined) {
+            errorMessage = errors.MaxPlants[0];
           }
 
           setStatus(errorMessage);
