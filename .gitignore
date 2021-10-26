@@ -384,3 +384,4 @@ Frontend/cypress/videos/
 Frontend/instrumented/
 Frontend/coverage/
 Frontend/cypress/screenshots/
+Frontend/.nyc_output
