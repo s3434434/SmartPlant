@@ -21,6 +21,7 @@ import logo from "./assets/images/logo.png";
 import PrivacyPolicy from "./hooks/privacy_policy/privacy_policy";
 import TermsOfUse from "./hooks/terms_of_use/terms_of_use";
 import Support from "./hooks/support/support";
+import SupportSuccessful from "./hooks/support/support_successful/support_successful"
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -248,6 +249,11 @@ function App() {
               exact
               path="/support"
               render={(props) => <Support {...props} logOut={logOut} />}
+            />
+            <Route
+              exact
+              path="/support-successful"
+              component={SupportSuccessful}
             />
             <Route
               exact
