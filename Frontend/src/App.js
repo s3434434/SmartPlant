@@ -20,6 +20,7 @@ import Plant from "./hooks/plant/plant";
 import logo from "./assets/images/logo.png";
 import PrivacyPolicy from "./hooks/privacy_policy/privacy_policy";
 import TermsOfUse from "./hooks/terms_of_use/terms_of_use";
+import Support from "./hooks/support/support";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -162,7 +163,8 @@ function App() {
                   <span
                     className="nav-link"
                     onClick={() => {
-                      window.location.pathname = "/support";
+                      // mailto link
+                      window.open('mailto:email@example.com?subject=Help%With%Demeter')
                     }}
                   >
                     <h5>Support</h5>
@@ -241,6 +243,11 @@ function App() {
               exact
               path="/settings"
               render={(props) => <Settings {...props} logOut={logOut} />}
+            />
+            <Route
+              exact
+              path="/support"
+              render={(props) => <Support {...props} logOut={logOut} />}
             />
             <Route
               exact
