@@ -21,7 +21,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "cy:start": "react-scripts -r @cypress/instrument-cra start",
+    "cy:cover": "react-scripts -r @cypress/instrument-cra start",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
     "test": "start-server-and-test start http://localhost:3000 cy:run",
