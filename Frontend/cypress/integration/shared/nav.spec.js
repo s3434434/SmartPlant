@@ -51,10 +51,10 @@ describe('Nav bar', () => {
         cy.url().should('be.equal', Cypress.config("baseUrl") + '/register')
     })
 
-    it('Redirects to support page when nav.support clicked', () => {
+    /*it('Redirects to support page when nav.support clicked', () => {
 
         cy.visit(route)
         cy.contains('.nav-link > h5', 'Support').click()
         cy.url().should('be.equal', Cypress.config("baseUrl") + '/support')
-    })
+    })*/
 })
