@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./add_plant.css";
+import _ from "lodash";
 import axios from "axios";
 
 export default function AddPlant(props) {
-  const [plantName, setPlantName] = useState("");
+  const [form, setForm] = useState({
+    plantName: "",
+    image: null,
+  });
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("none");
 
@@ -273,7 +277,16 @@ export default function AddPlant(props) {
   };
 
   const handleChange = (e) => {
-    setPlantName(e.target.value);
+    const input = e.target;
+    const tempForm = _.cloneDeep(form);
+
+    if (input.name === "plantName") {
+      tempForm[input.name] = input.value;
+    } else {
+      tempForm[input.name] = input.files[0];
+    }
+
+    setForm(tempForm);
   };
 
   const handleSubmit = (e) => {
@@ -286,17 +299,11 @@ export default function AddPlant(props) {
       const { token } = JSON.parse(login);
 
       axios
-        .post(
-          "https://smart-plant.azurewebsites.net/api/Plants",
-          {
-            plantName: plantName,
+        .post("https://smart-plant.azurewebsites.net/api/Plants", form, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        })
         .then((res) => {
           window.location.pathname = "/plants";
         })
@@ -343,6 +350,15 @@ export default function AddPlant(props) {
           </option>
           {getPlantOptions()}
         </select>
+        <label className="form-label gold" htmlFor="plantImage">
+          Image
+        </label>
+        <input
+          className="form-control"
+          name="plantImage"
+          onChange={handleChange}
+          type="file"
+        ></input>
         {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
@@ -374,6 +390,15 @@ export default function AddPlant(props) {
           </option>
           {getPlantOptions()}
         </select>
+        <label className="form-label gold" htmlFor="plantImage">
+          Image
+        </label>
+        <input
+          className="form-control"
+          name="plantImage"
+          onChange={handleChange}
+          type="file"
+        ></input>
         {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>

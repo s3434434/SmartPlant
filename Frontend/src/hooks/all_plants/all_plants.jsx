@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import container_background from "../../assets/images/container_background.png";
-import container_background_07 from "../../assets/images/container_background_07.png";
 import "./all_plants.css";
 
 export default function AllPlants(props) {
@@ -42,7 +41,6 @@ export default function AllPlants(props) {
 
   return (
     <section>
-      <img className="d-none" src={container_background_07} alt="" />
       <h1 className="text-center gold">Plants</h1>
       <div className="container mt-3">
         <div className="row">
@@ -63,31 +61,35 @@ export default function AllPlants(props) {
           <div className="content-gallery mt-4">
             {plants.map((plant) => {
               const { name, plantID } = plant;
+              let plantImage = container_background;
+              if (plant.plantImage !== undefined) {
+                plantImage = plant.plantImage;
+              }
 
               return (
-                <div className="flex-padding" key={plantID}>
-                  <div
-                    id={plantID}
-                    className="cg-container"
-                    style={{
-                      backgroundImage: `url(${container_background})`,
-                    }}
-                    onMouseEnter={() => {
-                      document.getElementById(
-                        plantID
-                      ).style.backgroundImage = `url(${container_background_07})`;
-                    }}
-                    onMouseLeave={() => {
-                      document.getElementById(
-                        plantID
-                      ).style.backgroundImage = `url(${container_background})`;
-                    }}
-                    onClick={(e) => {
-                      window.location.pathname = `/plant/${plantID}`;
-                    }}
-                  >
-                    <h1>{name}</h1>
-                  </div>
+                <div
+                  id={plantID}
+                  key={plantID}
+                  className="cg-container"
+                  style={{
+                    backgroundImage: `url(${plantImage})`,
+                    backgroundBlendMode: "overlay",
+                  }}
+                  onMouseEnter={() => {
+                    document.getElementById(
+                      plantID
+                    ).style.backgroundImage = `url(${plantImage}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
+                  }}
+                  onMouseLeave={() => {
+                    document.getElementById(
+                      plantID
+                    ).style.backgroundImage = `url(${plantImage})`;
+                  }}
+                  onClick={(e) => {
+                    window.location.pathname = `/plant/${plantID}`;
+                  }}
+                >
+                  <h1>{name}</h1>
                 </div>
               );
             })}
