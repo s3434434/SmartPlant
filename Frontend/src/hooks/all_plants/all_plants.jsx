@@ -42,6 +42,7 @@ export default function AllPlants(props) {
 
   return (
     <section>
+      <img className="d-none" src={container_background_07} alt="" />
       <h1 className="text-center gold">Plants</h1>
       <div className="container mt-3">
         <div className="row">

@@ -31,6 +31,247 @@ export default function AddPlant(props) {
     // eslint-disable-next-line
   }, []);
 
+  const getPlantOptions = () => {
+    return [
+      "Flowering Maple",
+      "Chenile Plant",
+      "Magic Flower",
+      "Sweet Flag",
+      "Miniature Sweet Flag",
+      "Maidenhair Fern",
+      "Crinkle-Leaf Plant",
+      "Plover Eggs",
+      "Silver Vase",
+      "Purplish Coral Berry",
+      "Royal Wine Bromeliad",
+      "Zebra Basket Vine",
+      "Lipstick Vine",
+      "Variegated Century Plant",
+      "Queen Agave",
+      "Chinese Evergreen",
+      "Silver King",
+      "Silver Queen",
+      "Allamanda",
+      "Miniature Pouch Flower",
+      "Candelabra Plant",
+      "Medicine Plant",
+      "Brevifolia Aloe",
+      "Pineapple",
+      "Dwarf Crystal Anthurium",
+      "Bird’s Nest Anthurium",
+      "Flamingo Flower",
+      "Norfolk Island Pine",
+      "Ardisia",
+      "Plume Asparagus",
+      "Foxtail Fern",
+      "Sickle Thorn",
+      "Cast Iron Plant",
+      "Mother Fern",
+      "Bird’s Nest Fern",
+      "Bishop’s Cap",
+      "Ponytail",
+      "Cuban Holly",
+      "Metallic Leaf Begonia",
+      "Rex Begonia",
+      "Wax Begonia",
+      "Queen’s Tears",
+      "Urn Plant",
+      "Zebra Plant",
+      "Bougainvillea",
+      "Schefflera",
+      "Dwarf Schefflera",
+      "Caladium",
+      "Rattlesnake Plant",
+      "Peacock Plant",
+      "Miniature Maranta",
+      "Rose Calathea",
+      "Slipperwort",
+      "Striped Inch Plant",
+      "Bonsai Natal Plum",
+      "Boxwood Beauty",
+      "Fishtail Palm",
+      "Madagascar Periwinkle",
+      "Peruvian Apple Cactus",
+      "Rosary Vine",
+      "Parlor Palm",
+      "Bamboo Palm",
+      "European Fan Palm",
+      "Hindustan Gentian",
+      "Variegated Spider Plant",
+      "Spider Plant",
+      "Areca Palm",
+      "Chrysanthemum",
+      "Kangaroo Vine",
+      "Grape Leaf Ivy",
+      "Wax Cissus",
+      "Miniature Grape Ivy",
+      "Calamondin Orange",
+      "Kafir Lily",
+      "Croton",
+      "Coffee",
+      "Coleus",
+      "Goldfish Plant",
+      "Ti Plant",
+      "Jade Plant",
+      "Propeller Plant",
+      "Arab’s Turban",
+      "Toy Cypress",
+      "Red Flowering Crassula",
+      "Rattlesnake Tail",
+      "Crossandra",
+      "Dwarf Rose Stripe Star",
+      "Stiff Pheasant Leaf",
+      "House Holly Fern",
+      "Rabbit’s Foot Fern",
+      "Exotica Perfection",
+      "Spotted Dumb Cane",
+      "False Aralia",
+      "Janet Craig",
+      "Warneckii",
+      "Corn Plant",
+      "Marginata",
+      "Gold Dust Dracaena",
+      "Miniature Agave",
+      "Silver and Gold Dyckia",
+      "Molded Wax",
+      "Mexican Snowball",
+      "Lace Cactus",
+      "Spice Orchid",
+      "Orchid Cacti",
+      "Golden Pothos",
+      "Marble Queen",
+      "Flame Violet",
+      "Lace-Flower Vine",
+      "Scarlet Violet",
+      "Blue Euphorbia",
+      "Corncob Cactus",
+      "Crown-of-Thorns",
+      "Poinsettia",
+      "Milkbush",
+      "Botanical Wonder Plant",
+      "Japanese Aralia",
+      "Weeping Fig",
+      "Mistletoe Ficus",
+      "Rubber Plant",
+      "Fiddle-Leaf Fig",
+      "Dwarf Creeping Fig",
+      "Cuban Laurel",
+      "Rooting Fig",
+      "Dwarf Fiddle-Leaf Fig",
+      "Red-Nerved Fittonia",
+      "Silver-Nerved Fittonia",
+      "Fuchsias",
+      "Ox Tongue",
+      "Jewel Leaf Plant",
+      "Scarlet Star",
+      "Striped Torch",
+      "Purple Passion",
+      "Star Window Plant",
+      "Zebra Haworthia",
+      "Little Zebra Plant",
+      "Clipped Window Plant",
+      "Algerian Ivy",
+      "English Ivy",
+      "Waffle Plant",
+      "Chinese Hibiscus",
+      "Amaryllis",
+      "Belmore Sentry Palm",
+      "Kentia Palm",
+      "Wax Plant",
+      "Sweetheart Hoya",
+      "Hyacinth",
+      "Busy Lizzie Impatiens",
+      "Ixora",
+      "Peregrian",
+      "Shrimp Plant",
+      "Christmas Kalanchoe",
+      "Dwarf Purple Kalanchoe",
+      "Panda Plant",
+      "Turk’s Cap",
+      "Powder Puff",
+      "Firecracker Plant",
+      "Red Nerve Plant",
+      "Prayer Plant",
+      "Plush Vine",
+      "Philodendron Pertusum",
+      "Window Leaf",
+      "Black Alloplectus",
+      "Tricolor Bromeliad",
+      "Fingernail Plant",
+      "Zonata",
+      "Boston Fern",
+      "Fluffy Ruffles",
+      "Miniature Bird’s Nest",
+      "Little Tree Cactus",
+      "Irish Mittens",
+      "Finger Oxalis",
+      "Red Oxalis",
+      "Pearly Moonstones",
+      "Yellow Shrimp Plant",
+      "Ladyslipper Orchids",
+      "Devil’s Backbone",
+      "House Geranium",
+      "Ivy Geranium",
+      "Button Fern",
+      "Satin Pellionia",
+      "Egyptian Star Cluster",
+      "Emerald Ripple",
+      "Leather Peperomia",
+      "Baby Rubber Tree",
+      "Fiddle-Leaf Philodendron",
+      "Emerald Queen",
+      "Florida",
+      "Heart-Leaf Philodendron",
+      "Selloum",
+      "Pigmy Date Palm",
+      "Aluminum Plant",
+      "Artillery Plant",
+      "Staghorn Fern",
+      "Swedish Ivy",
+      "Candle Plant",
+      "Podocarpus",
+      "Variegated Balfour Aralia",
+      "Ming Aralia",
+      "Lady Palm",
+      "Azaleas",
+      "Red-Spray Ruellia",
+      "African Violets",
+      "Parva Sansevieria",
+      "Birdsnest Sansevieria",
+      "Gold-Banded Sansevieria",
+      "Strawberry Geranium",
+      "Christmas Cactus",
+      "Silver Pothos",
+      "Showy Sedum",
+      "Cow Web Houseleek",
+      "Purple Heart",
+      "Gloxinia",
+      "Baby Tears",
+      "Peace Lily",
+      "Mauna Loa",
+      "Carrion Flower",
+      "Cape Primrose",
+      "Persian Shield",
+      "Nephthytis",
+      "Dancing Bulb",
+      "Blue-Flowered Torch",
+      "Piggyback Plant",
+      "Flowering Inch Plant",
+      "White Velvet",
+      "Flaming Sword",
+      "Spineless Yucca",
+      "Wandering Jew",
+    ]
+      .sort()
+      .map((plantOption) => {
+        return (
+          <option key={plantOption} value={plantOption}>
+            {plantOption}
+          </option>
+        );
+      });
+  };
+
   const handleChange = (e) => {
     setPlantName(e.target.value);
   };
@@ -91,14 +332,17 @@ export default function AddPlant(props) {
         <label className="form-label gold" htmlFor="plantName">
           Name
         </label>
-        <input
+        <select
           className="form-control"
           name="plantName"
-          type="text"
-          required
-          value={plantName}
           onChange={handleChange}
-        />
+          required
+        >
+          <option key="default" value="">
+            Please select a plant
+          </option>
+          {getPlantOptions()}
+        </select>
         {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
@@ -119,14 +363,17 @@ export default function AddPlant(props) {
         <label className="form-label gold" htmlFor="plantName">
           Name
         </label>
-        <input
+        <select
           className="form-control"
           name="plantName"
-          type="text"
-          required
-          value={plantName}
           onChange={handleChange}
-        />
+          required
+        >
+          <option key="default" value="">
+            Please select a plant
+          </option>
+          {getPlantOptions()}
+        </select>
         {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
