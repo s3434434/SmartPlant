@@ -20,11 +20,9 @@
   transition: 0.05s;
   cursor: pointer;
 }
-.cg-container h1,
-.cg-container h2 {
+.cg-container * {
   color: white;
   cursor: pointer;
-  -webkit-line-clamp: 2;
   padding-left: 0.3em;
   padding-right: 0.3em;
   /* text-shadow: 0.03em 0.03em black; */
@@ -36,6 +34,12 @@
   hyphens: auto;
   -ms-hyphens: auto;
   -moz-hyphens: auto;
+}
+.cg-container h1 {
+  -webkit-line-clamp: 2;
+}
+.cg-container h2 {
+  -webkit-line-clamp: 3;
 }
 
 @media (max-width: 881px) {
