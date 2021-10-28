@@ -187,6 +187,22 @@
             <response code="400">Bad Data</response>
             <response code="404">UserID Not Found</response>
         </member>
+        <member name="M:SmartPlant.Controllers.PlantController.UploadImage(SmartPlant.Models.API_Model.Plant.PlantImageDto)">
+            <summary>
+            Used for testing
+            </summary>
+            <remarks>
+            </remarks>
+            <response code="200">Success</response>
+        </member>
+        <member name="M:SmartPlant.Controllers.PlantController.DeleteImage(SmartPlant.Models.API_Model.Plant.PlantImageDto)">
+            <summary>
+            Used for testing
+            </summary>
+            <remarks>
+            </remarks>
+            <response code="200">Success</response>
+        </member>
         <member name="M:SmartPlant.Controllers.PlantController.Get">
             <summary>
             Gets all plants belonging to the current user, Returns plant Name and ID
@@ -254,6 +270,22 @@
             <response code="200">New token generated, returns new token</response>
             <response code="404">Something went wrong, probably invalid plantid</response>
         </member>
+        <member name="M:SmartPlant.Controllers.PlantController.GetPresetPlantList">
+            <summary>
+            Gets the preset list of plant types
+            </summary>
+            <remarks>
+            </remarks>
+            <response code="200">Success</response>
+        </member>
+        <member name="M:SmartPlant.Controllers.PlantController.DeletePlantImage(System.String)">
+            <summary>
+            Used to delete a plant image
+            </summary>
+            <remarks>
+            </remarks>
+            <response code="200">Success</response>
+        </member>
         <member name="M:SmartPlant.Controllers.PlantController.AdminGetAll">
             <summary>
             Gets a list of all plants (plantID, userID)
@@ -314,6 +346,14 @@
              </remarks>
              <response code="200">New token generated, returns new token</response>
              <response code="404">Something went wrong, probably invalid plantID or userID</response>
+        </member>
+        <member name="M:SmartPlant.Controllers.PlantController.AdminDeletePlantImage(System.String,System.String)">
+            <summary>
+            Used to delete a plant image\
+            </summary>
+            <remarks>
+            </remarks>
+            <response code="200">Success</response>
         </member>
         <member name="M:SmartPlant.Controllers.SensorDataController.GetAll">
             <summary>

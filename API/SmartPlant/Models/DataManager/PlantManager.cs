@@ -1,10 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using SmartPlant.Data;
 using SmartPlant.Models.Repository;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Newtonsoft.Json;
+using RestSharp;
+using SmartPlant.Models.API_Model.Admin;
 using SmartPlant.Models.API_Model.Plant;
 
 namespace SmartPlant.Models.DataManager
@@ -37,7 +42,13 @@ namespace SmartPlant.Models.DataManager
             var plants = await _context.Plants.Where(p => p.UserID == userID).ToListAsync();
 
             var userPlants = new List<UserGetPlantDto>();
-            plants.ForEach(p => userPlants.Add(new UserGetPlantDto{PlantID = p.PlantID, Name = p.Name, PlantType = p.PlantType}));
+            plants.ForEach(p => userPlants.Add(new UserGetPlantDto
+            {
+                PlantID = p.PlantID,
+                Name = p.Name,
+                PlantType = p.PlantType,
+                ImgurURL = (_context.PlantImages.FirstOrDefault(p1 => p1.PlantID == p.PlantID))?.ImageURL
+            }));
 
             return userPlants;
         }
@@ -150,17 +161,117 @@ namespace SmartPlant.Models.DataManager
 
         }
 
+        public async Task<bool> UploadAndAddPlantImage(string clientID, string img, string plantID, string userID)
+        {
+
+            Console.WriteLine("in upload");
+            //check if plant + userid combo exists.
+            if (_context.Plants.FirstOrDefaultAsync(p => p.PlantID == plantID && p.UserID == userID) == null)
+            {
+                Trace.WriteLine("plant doesn't exist");
+                Console.WriteLine("plant doesn't exist");
+                return false;
+            }
+
+            var client = new RestClient("https://api.imgur.com/3/image");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Authorization", $"Client-ID {clientID}");
+            request.AlwaysMultipartFormData = true;
+            request.AddParameter("image", img);
+            IRestResponse response = client.Execute(request);
+
+            Console.WriteLine($"Content: {response.Content}");
+            if (!response.IsSuccessful)
+            {
+                return false;
+            }
+
+            /*var imageLink = response.Content
+            var plantImage = new PlantImage{}*/
+            var data = JsonConvert.DeserializeObject<ImgurApiSuccessResponse>(response.Content);
+            var url = data?.Data.link;
+            var deleteHash = data?.Data.deletehash;
+
+            var newPlantImage = new PlantImage { PlantID = plantID, ImageURL = url, DeleteHash = deleteHash };
+
+            Console.WriteLine(data?.Data.link);
+            Trace.WriteLine(data?.Data.link);
+            Console.WriteLine(data?.Data.deletehash);
+            Trace.WriteLine(data?.Data.deletehash);
+
+            var existingPlantImage = await _context.PlantImages.FirstOrDefaultAsync(p => p.PlantID == plantID);
+
+            if (existingPlantImage != null)
+            {
+                Console.WriteLine("deleting existing image first");
+                //delete old image from imgur using the delete hash.
+                var result = await DeletePlantImage(clientID, plantID, userID);
+                _context.PlantImages.Add(newPlantImage);
+            }
+            else
+            {
+                _context.PlantImages.Add(newPlantImage);
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
+        public async Task<bool> DeletePlantImage(string clientID, string plantID, string userID)
+        {
+            //check if plant + userid combo exists.
+            if (_context.Plants.FirstOrDefaultAsync(p => p.PlantID == plantID && p.UserID == userID) == null)
+            {
+                return false;
+            }
+
+            var plantImage = await _context.PlantImages.FirstOrDefaultAsync(p => p.PlantID == plantID);
+
+            if (plantImage != null)
+            {
+                var client = new RestClient($"https://api.imgur.com/3/image/{plantImage.DeleteHash}");
+                client.Timeout = -1;
+                var request = new RestRequest(Method.DELETE);
+                request.AddHeader("Authorization", $"Client-ID {clientID}");
+                request.AlwaysMultipartFormData = true;
+                IRestResponse response = client.Execute(request);
+                Console.WriteLine(response.Content);
+                Trace.WriteLine(response.Content);
+
+                _context.PlantImages.Remove(plantImage);
+                await _context.SaveChangesAsync();
+                return response.IsSuccessful;
+            }
+
+            return false;
+        }
+
         /* 
          * ADMIN ROLE REQUIRED ENDPOINTS
          *           BELOW
          */
 
         //returns all plants (userID, plantID)
-        public async Task<IEnumerable<Plant>> AdminGetAll()
+        public async Task<IEnumerable<AdminGetPlantDto>> AdminGetAll()
         {
             var plants = await _context.Plants.ToListAsync();
 
-            return plants;
+            var adminGetDto = new List<AdminGetPlantDto>();
+            foreach (var p in plants)
+            {
+                adminGetDto.Add(new AdminGetPlantDto
+                {
+                    PlantID = p.PlantID,
+                    UserID = p.UserID,
+                    Name = p.Name,
+                    PlantType = p.PlantType,
+                    ImgurURL = (_context.PlantImages.FirstOrDefault(p1 => p1.PlantID == p.PlantID))?.ImageURL
+                });
+            }
+
+            return adminGetDto;
         }
 
         public async Task<int> AdminUpdate(Plant plant)

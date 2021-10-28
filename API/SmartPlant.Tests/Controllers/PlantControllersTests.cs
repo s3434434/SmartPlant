@@ -16,6 +16,7 @@ using SmartPlant.Models;
 using SmartPlant.Controllers;
 using SmartPlant.Models.API_Model.Plant;
 using SmartPlant.Models.API_Model;
+using SmartPlant.Models.API_Model.Admin;
 
 namespace SmartPlant.Tests.Controllers
 {
@@ -285,7 +286,7 @@ namespace SmartPlant.Tests.Controllers
         public async Task AdminGetAll_WhenRepoHasPlants_ReturnsOKAsync()
         {
             // Arrange
-            var testValue = new List<Plant>();
+            var testValue = new List<AdminGetPlantDto>();
 
             mock_PlantManager.Setup(_repo => _repo.AdminGetAll())
                 .ReturnsAsync(testValue);

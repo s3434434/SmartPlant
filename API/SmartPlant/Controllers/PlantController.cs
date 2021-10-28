@@ -10,11 +10,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting.Internal;
+using Newtonsoft.Json;
 using RestSharp;
+using RestSharp.Serialization.Json;
 
 namespace SmartPlant.Controllers
 {
@@ -26,12 +30,14 @@ namespace SmartPlant.Controllers
         private readonly IPlantManager _repo;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly string clientID;
 
         public PlantController(IPlantManager repo, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _repo = repo;
             _userManager = userManager;
             _configuration = configuration;
+            clientID = _configuration.GetSection("Imgur").GetSection("Client-ID").Value;
         }
 
         /*           
@@ -39,35 +45,60 @@ namespace SmartPlant.Controllers
          *             BELOW
          */
 
+        /// <summary>
+        /// Used for testing
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
         [HttpPost]
-        [Route("/api/Plants/image")]
+        [AllowAnonymous]
+        [Route("/api/Plants/TEST/image")]
         public IActionResult UploadImage([FromBody] PlantImageDto img)
         {
-           // Byte[] img = Convert.FromBase64String(base64ImgFile);
-
-           var clientID = _configuration.GetSection("Imgur").GetSection("Client_ID").Value;
+            Console.WriteLine($"ClientID : {clientID}");
 
             var client = new RestClient("https://api.imgur.com/3/image");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
-            request.AddHeader($"Authorization", "Client-ID {clientID}");
+            request.AddHeader("Authorization", $"Client-ID {clientID}");
             request.AlwaysMultipartFormData = true;
             request.AddParameter("image", img.Base64ImgString);
             IRestResponse response = client.Execute(request);
             Console.WriteLine(response.Content);
             Trace.WriteLine(response.Content);
+
+
+            var data = JsonConvert.DeserializeObject<ImgurApiSuccessResponse>(response.Content);
+
+                Console.WriteLine(data.Data.link);
+                Console.WriteLine(data.Data.deletehash);
+            
+
+
+            Console.WriteLine(data);
+
             return Ok(response.Content);
 
         }
 
+        /// <summary>
+        /// Used for testing
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
         [HttpDelete]
-        [Route("/api/Plants/Image")]
+        [AllowAnonymous]
+        [Route("/api/Plants/TEST/Image")]
         public IActionResult DeleteImage([FromBody] PlantImageDto img)
         {
+            Console.WriteLine(clientID);
+
             var client = new RestClient($"https://api.imgur.com/3/image/{img.Base64ImgString}");
             client.Timeout = -1;
             var request = new RestRequest(Method.DELETE);
-            request.AddHeader($"Authorization", "Client-ID {clientID}");
+            request.AddHeader("Authorization", $"Client-ID {clientID}");
             request.AlwaysMultipartFormData = true;
             IRestResponse response = client.Execute(request);
             Console.WriteLine(response.Content);
@@ -171,6 +202,13 @@ namespace SmartPlant.Controllers
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
 
             //else result == 1
+
+            Console.WriteLine(dto.Base64ImgString != null);
+            if (dto.Base64ImgString != null)
+            {
+                await _repo.UploadAndAddPlantImage(clientID, dto.Base64ImgString, plant.PlantID, userID);
+            }
+
             return Created("", $"Success\n{plant}\nToken: {plantToken.Token}");
         }
 
@@ -193,6 +231,12 @@ namespace SmartPlant.Controllers
 
             if (result == 1)
             {
+                if (dto.Base64ImgString != null)
+                {
+                    var clientID = _configuration.GetSection("Imgur").GetSection("Client-ID").Value;
+                    await _repo.UploadAndAddPlantImage(clientID, dto.Base64ImgString, dto.PlantID, User.Identity.Name);
+                }
+
                 return Ok();
             }
 
@@ -218,6 +262,7 @@ namespace SmartPlant.Controllers
         public async Task<IActionResult> Delete(string plantID)
         {
             var userID = User.Identity.Name;
+            await _repo.DeletePlantImage(clientID, plantID, userID);
             var result = await _repo.Delete(plantID, userID);
 
             if (result == 1)
@@ -285,12 +330,36 @@ namespace SmartPlant.Controllers
 
         }
 
+        /// <summary>
+        /// Gets the preset list of plant types
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
         [HttpGet]
         [Route("/api/Plants/List")]
         public IActionResult GetPresetPlantList()
         {
             return Ok(PlantCareData.PlantCareDict.Keys);
         }
+
+
+        /// <summary>
+        /// Used to delete a plant image
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
+        [HttpDelete]
+        [Route("/api/Plants/Image")]
+        public async Task<IActionResult> DeletePlantImage(string plantID)
+        {
+            var userID = User.Identity.Name;
+
+            var result = await _repo.DeletePlantImage(clientID, plantID, userID);
+            return Ok(result);
+        }
+
 
         /* 
          * ADMIN ROLE REQUIRED ENDPOINTS
@@ -498,6 +567,20 @@ namespace SmartPlant.Controllers
             }
             return Ok(plantToken.Token);
 
+        }
+
+        /// <summary>
+        /// Used to delete a plant image\
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
+        [HttpDelete]
+        [Route("/api/Admin/Plants/Image")]
+        public async Task<IActionResult> AdminDeletePlantImage(string userID, string plantID)
+        {
+            var result = await _repo.DeletePlantImage(clientID, plantID, userID);
+            return Ok(result);
         }
 
 

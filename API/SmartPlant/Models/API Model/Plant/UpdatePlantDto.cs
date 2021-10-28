@@ -9,5 +9,6 @@ namespace SmartPlant.Models.API_Model.Plant
         [Required]
         [MaxLength(450)]
         public string PlantID { get; set; }
+        public string Base64ImgString { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SmartPlant.Models;
+using SmartPlant.Models.Repository;
 
 namespace SmartPlant.Data
 {
@@ -13,6 +14,7 @@ namespace SmartPlant.Data
         public DbSet<Plant> Plants { get; set; }
         public DbSet<SensorData> SensorData { get; set; }
         public DbSet<PlantToken> PlantTokens { get; set; }
+        public DbSet<PlantImage> PlantImages { get; set; }
 
 
         //fluent api

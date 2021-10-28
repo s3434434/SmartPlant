@@ -11,5 +11,7 @@ namespace SmartPlant.Models.API_Model.Plant
         [Required, MaxLength(100)]
         public string PlantType { get; set; }
 
+        public string Base64ImgString { get; set; }
+
     }
 }
