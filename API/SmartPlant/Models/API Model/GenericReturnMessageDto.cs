@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace SmartPlant.Models.API_Model
 {
-    public class GenericErrorDto
+    public class GenericReturnMessageDto
     {
         public Dictionary<string, List<string>> errors { get; set; }
 
-        public GenericErrorDto()
+        public GenericReturnMessageDto()
         {
             this.errors = new Dictionary<string, List<string>>();   
         }

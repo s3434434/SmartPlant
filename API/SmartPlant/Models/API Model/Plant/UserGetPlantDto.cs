@@ -9,5 +9,6 @@ namespace SmartPlant.Models.API_Model.Plant
     {
         public string PlantID { get; set; }
         public string Name { get; set; }
+        public string PlantType { get; set; }
     }
 }

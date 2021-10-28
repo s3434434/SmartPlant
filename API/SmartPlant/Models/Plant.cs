@@ -17,6 +17,9 @@ namespace SmartPlant.Models
         [Required, MaxLength(250)]
         public string Name { get; set; }
 
+        [Required, MaxLength(100)]
+        public string PlantType { get; set; }
+
         [JsonIgnore]
         public virtual ApplicationUser User { get; set; }
         [JsonIgnore] public virtual PlantToken Token { get; set; }

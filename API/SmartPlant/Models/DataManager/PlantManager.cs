@@ -37,7 +37,7 @@ namespace SmartPlant.Models.DataManager
             var plants = await _context.Plants.Where(p => p.UserID == userID).ToListAsync();
 
             var userPlants = new List<UserGetPlantDto>();
-            plants.ForEach(p => userPlants.Add(new UserGetPlantDto{PlantID = p.PlantID, Name = p.Name}));
+            plants.ForEach(p => userPlants.Add(new UserGetPlantDto{PlantID = p.PlantID, Name = p.Name, PlantType = p.PlantType}));
 
             return userPlants;
         }

@@ -7,5 +7,9 @@ namespace SmartPlant.Models.API_Model.Plant
         //name of the plant chosen by the user e.g. COMPANY NAME - LOC - FLOOR 2 - MEETING ROOM 1
         [Required, MaxLength(250)]
         public string PlantName { get; set; }
+        
+        [Required, MaxLength(100)]
+        public string PlantType { get; set; }
+
     }
 }

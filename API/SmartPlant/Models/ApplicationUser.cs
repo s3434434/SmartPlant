@@ -7,10 +7,10 @@ namespace SmartPlant.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        [RegularExpression(@"^[A-Za-z]{0,50}$", ErrorMessage = "Name can only contain letters, no special characters or numbers. 50 Characters max.")]
+        [MaxLength(50), RegularExpression(@"^[A-Za-z]{0,50}$", ErrorMessage = "Name can only contain letters, no special characters or numbers. 50 Characters max.")]
         public string FirstName { get; set; }
 
-        [RegularExpression(@"^[A-Za-z]{0,50}$", ErrorMessage = "Name can only contain letters, no special characters or numbers. 50 Characters max.")]
+        [MaxLength(50), RegularExpression(@"^[A-Za-z]{0,50}$", ErrorMessage = "Name can only contain letters, no special characters or numbers. 50 Characters max.")]
         public string LastName { get; set; }
 
         [MaxLength(10), MinLength(10), RegularExpression(@"^0[23478]\d{8}$", ErrorMessage = "Must begin with a valid area code and be 10 digits: 02, 03, 04, 07, 08 ")]
