@@ -110,6 +110,12 @@ namespace SmartPlant.Controllers
                 var genericError = new GenericErrorDto{ errors= new Dictionary<string, List<string>>{ {"Limit", new List<String>{"Max Plant Limit Hit"}}}};
                 return Conflict(genericError);
             }
+
+            if (result == -2)
+            {
+                var genericError = new GenericErrorDto { errors = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
+                return Conflict(genericError);
+            }
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
 
             //else result == 1
@@ -136,6 +142,12 @@ namespace SmartPlant.Controllers
             if (result == 1)
             {
                 return Ok();
+            }
+
+            if (result == -2)
+            {
+                var genericError = new GenericErrorDto { errors = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
+                return Conflict(genericError);
             }
             return NotFound();
 
@@ -320,6 +332,11 @@ namespace SmartPlant.Controllers
                 genericError.errors.Add("Limit", new List<string> { "Max plant limit reached" });
                 return Conflict(genericError);
             }
+            if (result == -2)
+            {
+                genericError = new GenericErrorDto { errors = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
+                return Conflict(genericError);
+            }
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
 
             //else result == 1
@@ -346,6 +363,12 @@ namespace SmartPlant.Controllers
             if (result == 1)
             {
                 return Ok();
+            }
+
+            if (result == -2)
+            {
+                var genericError = new GenericErrorDto { errors = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
+                return Conflict(genericError);
             }
             return NotFound();
 

@@ -53,6 +53,11 @@ namespace SmartPlant.Models.DataManager
                 return 0;
             }
 
+            if (IsPlantNameTaken(plant))
+            {
+                return -2;
+            }
+
             var totalCount = await _context.Plants.Where(p => p.UserID == plant.UserID).ToListAsync();
 
             if (totalCount.Count >= maxPlantsAllowed)
@@ -76,7 +81,10 @@ namespace SmartPlant.Models.DataManager
             {
                 return -1;
             }
-
+            if (IsPlantNameTaken(plant))
+            {
+                return -2;
+            }
             plantToUpdate.Name = plant.Name;
 
             _context.Plants.Update(plantToUpdate);
@@ -163,6 +171,11 @@ namespace SmartPlant.Models.DataManager
                 return -1;
             }
 
+            if (IsPlantNameTaken(plant))
+            {
+                return -2;
+            }
+
             plantToUpdate.Name = plant.Name;
 
             _context.Plants.Update(plantToUpdate);
@@ -204,5 +217,13 @@ namespace SmartPlant.Models.DataManager
 
             return true;
         }
+
+        //helpers
+
+        private bool IsPlantNameTaken(Plant plant)
+        {
+            return _context.Plants.FirstOrDefault(p => p.UserID == plant.UserID && p.Name == plant.Name) != null;
+        }
+
     }
 }
