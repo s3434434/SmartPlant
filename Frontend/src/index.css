@@ -52,11 +52,6 @@ p {
   opacity: 0.8;
 }
 
-input,
-textarea,
-select {
-  color: rgb(0, 53, 11) !important;
-}
 :-moz-ui-invalid {
   box-shadow: none;
 }
