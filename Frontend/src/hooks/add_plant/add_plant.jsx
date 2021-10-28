@@ -28,7 +28,11 @@ export default function AddPlant(props) {
         })
         .then((res) => {
           axios
-            .get("https://smart-plant.azurewebsites.net/api/Plants/List")
+            .get("https://smart-plant.azurewebsites.net/api/Plants/List", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
             .then((res) => {
               setPlantTypes(res.data);
             });
