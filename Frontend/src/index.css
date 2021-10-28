@@ -28,7 +28,7 @@ p {
 }
 
 .btn-primary {
-  background-color: rgba(0, 53, 11) !important;
+  background-color: rgb(0, 53, 11) !important;
   border-radius: 0.85em !important;
 
   color: white;
@@ -55,7 +55,7 @@ p {
 input,
 textarea,
 select {
-  color: rgba(0, 53, 11) !important;
+  color: rgb(0, 53, 11) !important;
 }
 :-moz-ui-invalid {
   box-shadow: none;
