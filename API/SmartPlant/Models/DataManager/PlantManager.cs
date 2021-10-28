@@ -333,7 +333,7 @@ namespace SmartPlant.Models.DataManager
 
         private bool IsPlantNameTaken(Plant plant)
         {
-            return _context.Plants.FirstOrDefault(p => p.UserID == plant.UserID && p.Name == plant.Name) != null;
+            return _context.Plants.FirstOrDefault(p => p.UserID == plant.UserID && p.Name == plant.Name && p.PlantID != plant.PlantID) != null;
         }
 
     }
