@@ -8,7 +8,13 @@ using SmartPlant.Models.API_Model.Plant;
 using SmartPlant.Models.Repository;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting.Internal;
+using RestSharp;
 
 namespace SmartPlant.Controllers
 {
@@ -19,17 +25,56 @@ namespace SmartPlant.Controllers
     {
         private readonly IPlantManager _repo;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public PlantController(IPlantManager repo, UserManager<ApplicationUser> userManager)
+        public PlantController(IPlantManager repo, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _repo = repo;
             _userManager = userManager;
+            _configuration = configuration;
         }
 
-        /*            (user)
-         *   ANY ROLE REQUIRED ENDPOINTS
+        /*           
+         *   USER ROLE REQUIRED ENDPOINTS
          *             BELOW
          */
+
+        [HttpPost]
+        [Route("/api/Plants/image")]
+        public IActionResult UploadImage([FromBody] PlantImageDto img)
+        {
+           // Byte[] img = Convert.FromBase64String(base64ImgFile);
+
+           var clientID = _configuration.GetSection("Imgur").GetSection("Client_ID").Value;
+
+            var client = new RestClient("https://api.imgur.com/3/image");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader($"Authorization", "Client-ID {clientID}");
+            request.AlwaysMultipartFormData = true;
+            request.AddParameter("image", img.Base64ImgString);
+            IRestResponse response = client.Execute(request);
+            Console.WriteLine(response.Content);
+            Trace.WriteLine(response.Content);
+            return Ok(response.Content);
+
+        }
+
+        [HttpDelete]
+        [Route("/api/Plants/Image")]
+        public IActionResult DeleteImage([FromBody] PlantImageDto img)
+        {
+            var client = new RestClient($"https://api.imgur.com/3/image/{img.Base64ImgString}");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.DELETE);
+            request.AddHeader($"Authorization", "Client-ID {clientID}");
+            request.AlwaysMultipartFormData = true;
+            IRestResponse response = client.Execute(request);
+            Console.WriteLine(response.Content);
+            Trace.WriteLine(response.Content);
+            return Ok(response.Content);
+
+        }
 
 
         /// <summary>
