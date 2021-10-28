@@ -20,7 +20,8 @@
   transition: 0.05s;
   cursor: pointer;
 }
-.cg-container h1 {
+.cg-container h1,
+.cg-container h2 {
   color: rgb(0, 109, 24);
   cursor: pointer;
   -webkit-line-clamp: 2;

@@ -60,7 +60,7 @@ export default function AllPlants(props) {
         plants.length > 0 ? (
           <div className="content-gallery mt-4">
             {plants.map((plant) => {
-              const { name, plantID } = plant;
+              const { name, type, plantID } = plant;
               let plantImage = container_background;
               if (plant.plantImage !== undefined) {
                 plantImage = plant.plantImage;
@@ -90,6 +90,7 @@ export default function AllPlants(props) {
                   }}
                 >
                   <h1>{name}</h1>
+                  <h2>{type}</h2>
                 </div>
               );
             })}

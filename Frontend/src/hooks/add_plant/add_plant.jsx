@@ -6,7 +6,8 @@ import axios from "axios";
 export default function AddPlant(props) {
   const [form, setForm] = useState({
     plantName: "",
-    image: null,
+    plantType: "",
+    plantImage: null,
   });
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("none");
@@ -35,7 +36,7 @@ export default function AddPlant(props) {
     // eslint-disable-next-line
   }, []);
 
-  const getPlantOptions = () => {
+  const getPlantTypes = () => {
     return [
       "Flowering Maple",
       "Chenile Plant",
@@ -280,10 +281,10 @@ export default function AddPlant(props) {
     const input = e.target;
     const tempForm = _.cloneDeep(form);
 
-    if (input.name === "plantName") {
-      tempForm[input.name] = input.value;
-    } else {
+    if (input.name === "plantImage") {
       tempForm[input.name] = input.files[0];
+    } else {
+      tempForm[input.name] = input.value;
     }
 
     setForm(tempForm);
@@ -339,18 +340,29 @@ export default function AddPlant(props) {
         <label className="form-label gold" htmlFor="plantName">
           Name
         </label>
-        <select
+        <input
+          type="text"
           className="form-control"
           name="plantName"
+          value={form.plantName}
+          onChange={handleChange}
+          required
+        />
+        <label className="form-label gold mt-3" htmlFor="plantType">
+          Variety
+        </label>
+        <select
+          className="form-control"
+          name="plantType"
           onChange={handleChange}
           required
         >
           <option key="default" value="">
             Please select a plant
           </option>
-          {getPlantOptions()}
+          {getPlantTypes()}
         </select>
-        <label className="form-label gold" htmlFor="plantImage">
+        <label className="form-label gold mt-3" htmlFor="plantImage">
           Image
         </label>
         <input
@@ -379,18 +391,29 @@ export default function AddPlant(props) {
         <label className="form-label gold" htmlFor="plantName">
           Name
         </label>
-        <select
+        <input
+          type="text"
           className="form-control"
           name="plantName"
+          value={form.plantName}
+          onChange={handleChange}
+          required
+        />
+        <label className="form-label gold mt-3" htmlFor="plantType">
+          Variety
+        </label>
+        <select
+          className="form-control"
+          name="plantType"
           onChange={handleChange}
           required
         >
           <option key="default" value="">
             Please select a plant
           </option>
-          {getPlantOptions()}
+          {getPlantTypes()}
         </select>
-        <label className="form-label gold" htmlFor="plantImage">
+        <label className="form-label gold mt-3" htmlFor="plantImage">
           Image
         </label>
         <input
