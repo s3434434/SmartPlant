@@ -1,564 +1,507 @@
-import React, { Fragment, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import "./plant.css";
+import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
+import axios from "axios";
+import container_background from "../../assets/images/container_background.png";
+import "./plant.css";
 
 export default function Plant(props) {
-  const {
-    getCurrentUser,
-    getPlants,
-    openOverlay,
-    closeOverlay,
-    getFileInputLabel,
-  } = props;
-  const { plant_name } = useParams();
-
-  const [plant, setPlant] = useState({});
-  const [currentDependency, setCurrentDependency] = useState({
-    dependency: "",
-    version: {
-      prefix: "",
-      major: "",
-      minor: "",
-      patch: "",
-    },
-    latest_version: {
-      major: "",
-      minor: "",
-      patch: "",
-    },
-  });
-  const [currentDependencyLoading, setCurrentDependencyLoading] =
-    useState(false);
-
   const [form, setForm] = useState({
-    dependencies: "",
-  });
-  const [showStatus, setShowStatus] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
+      plantName: "",
+      plantType: "",
+      base64ImgString: "",
+    }),
+    [imageModifiable, setImageModifiable] = useState(false),
+    [detailsModifiable, setDetailsModifiable] = useState(false),
+    [nameModifiable, setNameModifiable] = useState(false),
+    [typeModifiable, setTypeModifiable] = useState(false),
+    [showImageStatus, setShowImageStatus] = useState(false),
+    [imageStatus, setImageStatus] = useState("none"),
+    [showDetailsStatus, setShowDetailsStatus] = useState(false),
+    [detailsStatus, setDetailsStatus] = useState("none"),
+    [plantImage, setPlantImage] = useState(container_background),
+    [plantTypes, setPlantTypes] = useState([]);
 
   useEffect(() => {
-    const callback = (plants) => {
-      let plantFound = false;
+    document.title = "Demeter - The plant meter";
 
-      let tempPlant;
+    const login = localStorage.getItem("demeter-login");
+    if (login) {
+      const { token } = JSON.parse(login);
 
-      Object.keys(plants).forEach((key) => {
-        if (key === plant_name) {
-          tempPlant = plants[key];
-          plantFound = true;
-        }
-      });
+      axios
+        .get("https://smart-plant.azurewebsites.net/api/Plants", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          const startIndex = window.location.pathname.lastIndexOf("/") + 1;
+          const plantID = window.location.pathname.substr(startIndex);
 
-      if (plantFound) {
-        document.title = `${plant_name} | Dependency Tracker`;
+          res.data.forEach((plant) => {
+            if (plant.plantID === plantID) {
+              document.title = `${plant.name} | Demeter - The plant meter`;
 
-        setPlant(tempPlant);
-      } else {
-        window.location.pathname = "/notfound";
-      }
-    };
-    getPlants(callback);
+              let tempForm = _.cloneDeep(form);
+              tempForm.plantName = plant.name;
+              tempForm.plantType = plant.plantType;
+
+              setForm(tempForm);
+
+              if (plant.imgurURL !== null) {
+                setPlantImage(plant.imgurURL);
+              }
+            }
+          });
+        })
+        .catch((err) => {
+          props.logOut();
+          window.location.pathname = "/";
+        });
+
+      axios
+        .get("https://smart-plant.azurewebsites.net/api/Plants", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          axios
+            .get("https://smart-plant.azurewebsites.net/api/Plants/List", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((res) => {
+              setPlantTypes(res.data);
+            });
+        })
+        .catch((err) => {
+          props.logOut();
+          window.location.pathname = "/";
+        });
+    } else {
+      window.location.pathname = "/";
+    }
+
     // eslint-disable-next-line
   }, []);
-
-  useEffect(() => {
-    if (currentDependencyLoading) {
-      closeOverlay("overlay-form");
-      openOverlay("overlay-dependency");
-    }
-  }, [currentDependencyLoading, openOverlay, closeOverlay]);
-
-  const getImage = (type) => {
-    let image;
-
-    // switch (type) {
-    //   case "npm":
-    //     image = npm;
-    //     break;
-    //   case "pypi":
-    //     image = pypi;
-    //     break;
-    //   default:
-    //     break;
-    // }
-
-    return image;
-  };
-
-  const getVersionString = (version) => {
-    let prefix = "";
-    if (version["prefix"] !== undefined) {
-      prefix = version["prefix"];
-    }
-
-    return `${prefix}${version["major"]}.${version["minor"]}.${version["patch"]}`;
-  };
-
-  const compareVersions = (version, latest_version) => {
-    let versionDifference = "none";
-
-    if (version["major"] < latest_version["major"]) {
-      versionDifference = "major";
-    } else if (
-      version["minor"] < latest_version["minor"] &&
-      version["prefix"] !== "^"
-    ) {
-      versionDifference = "minor";
-    } else if (
-      version["patch"] < latest_version["patch"] &&
-      version["prefix"] === ""
-    ) {
-      versionDifference = "patch";
-    }
-
-    return versionDifference;
-  };
-
-  const getUpdateMessage = (version, latest_version) => {
-    let updateMessage = "No updates available.";
-
-    switch (compareVersions(version, latest_version)) {
-      case "patch":
-        updateMessage =
-          "Patch update available. Check the repository for bug fixes.";
-        break;
-      case "minor":
-        updateMessage =
-          "Minor update available. Check the repository for backwards compatible changes and deprecations.";
-        break;
-      case "major":
-        updateMessage =
-          "Major update available. Check the repository for backwards incompatible changes, backwards compatible changes and deprecations.";
-        break;
-      default:
-        break;
-    }
-
-    return updateMessage;
-  };
-
-  const getUpdateIndicator = (version, latest_version) => {
-    let versionDifference = compareVersions(version, latest_version),
-      updateClass = "no-updates",
-      updateIndicator = "✓";
-
-    if (versionDifference !== "none") {
-      updateClass = versionDifference;
-    }
-
-    switch (updateClass) {
-      case "patch":
-        updateIndicator = "p";
-        break;
-      case "minor":
-        updateIndicator = "m";
-        break;
-      case "major":
-        updateIndicator = "M";
-        break;
-      default:
-        break;
-    }
-
-    return <strong className={updateClass}>{updateIndicator}</strong>;
-  };
-
-  const getLatestDependency = async (dependency, version) => {
-    setCurrentDependencyLoading(true);
-
-    getCurrentUser()
-      .then((user) => {
-        user.getSession((err, session) => {
-          if (!err) {
-            user.getUserAttributes((err, attributes) => {
-              if (!err) {
-                let email = "";
-
-                attributes.forEach((attribute) => {
-                  if (attribute.getName() === "email") {
-                    email = attribute.getValue();
-                  }
-                });
-
-                const fetchLatestDependency = async () => {
-                  const response = await fetch(
-                    `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/latest-version?email=${email}&name=${plant_name}&type=${
-                      plant["type"]
-                    }&dependency=${dependency.replace("/", "~")}`,
-                    {
-                      method: "get",
-                      headers: {
-                        Authorization: session.getIdToken().getJwtToken(),
-                      },
-                    }
-                  );
-
-                  const json = await response.json();
-
-                  setCurrentDependency({
-                    dependency: dependency,
-                    version: plant["dependencies"][dependency]["version"],
-                    latest_version: json,
-                  });
-
-                  setCurrentDependencyLoading(false);
-                };
-                fetchLatestDependency();
-              }
-            });
-          }
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        window.location.pathname = "/login";
-      });
-  };
 
   const handleChange = (e) => {
     const input = e.target;
     const tempForm = _.cloneDeep(form);
 
-    tempForm[input.name] = input.files[0];
+    if (input.name === "base64ImgString") {
+      const fileReader = new FileReader();
+      fileReader.onload = function (fileLoadedEvent) {
+        let base64 = fileLoadedEvent.target.result;
+        const startIndex = base64.indexOf(",") + 1;
+        base64 = base64.substr(startIndex);
+
+        tempForm[input.name] = base64;
+      };
+
+      fileReader.readAsDataURL(input.files[0]);
+    } else {
+      tempForm[input.name] = input.value;
+    }
 
     setForm(tempForm);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, setStatus, setShowStatus) => {
     e.preventDefault();
-    setShowStatus(false);
+    setStatus("Please wait...");
+    setShowStatus(true);
 
-    const { dependencies } = form,
-      type = plant["type"];
+    const login = localStorage.getItem("demeter-login");
+    if (login) {
+      const { token } = JSON.parse(login);
 
-    if (
-      (type === "npm" && dependencies.name !== "package.json") ||
-      (type === "pypi" && dependencies.name !== "requirements.txt")
-    ) {
-      setStatusMessage("Please upload the correct file format.");
-      setShowStatus(true);
-    } else {
-      setStatusMessage("Updating dependencies...");
-      setShowStatus(true);
-
-      getCurrentUser()
-        .then((user) => {
-          user.getSession((err, session) => {
-            if (!err) {
-              user.getUserAttributes((err, attributes) => {
-                if (!err) {
-                  let email = "";
-
-                  attributes.forEach((attribute) => {
-                    if (attribute.getName() === "email") {
-                      email = attribute.getValue();
-                    }
-                  });
-
-                  const updateDependencies = async () => {
-                    const response = await fetch(
-                      `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/plants?email=${email}&name=${plant_name}&type=${type}&update=true`,
-                      {
-                        method: "post",
-                        headers: {
-                          Authorization: session.getIdToken().getJwtToken(),
-                        },
-                        body: dependencies,
-                      }
-                    );
-
-                    const json = await response.json();
-
-                    if (response.ok) {
-                      setShowStatus(false);
-                      setPlant(json[plant_name]);
-
-                      closeOverlay("overlay-form");
-                    } else {
-                      setStatusMessage(json);
-                    }
-                  };
-                  updateDependencies();
-                }
-              });
-            }
-          });
+      axios
+        .put("https://smart-plant.azurewebsites.net/api/Plants", form, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          window.location.reload();
         })
         .catch((err) => {
-          console.log(err);
-          window.location.pathname = "/login";
+          const errors = err.response.data.errors;
+          let errorMessage = "Server error. Please try again later.";
+
+          if (errors.PlantName !== undefined) {
+            errorMessage = errors.PlantName[0];
+          } else if (errors["Name Taken"] !== undefined) {
+            errorMessage = errors["Name Taken"][0];
+          } else if (errors["Plant Type"] !== undefined) {
+            errorMessage = errors["Plant Type"][0];
+          } else if (errors.Limit !== undefined) {
+            errorMessage = errors.Limit[0];
+          }
+
+          setStatus(errorMessage);
         });
+    } else {
+      setStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
     }
   };
 
-  const deletePlant = async () => {
-    getCurrentUser()
-      .then((user) => {
-        user.getSession((err, session) => {
-          if (!err) {
-            user.getUserAttributes((err, attributes) => {
-              if (!err) {
-                let email = "";
-
-                attributes.forEach((attribute) => {
-                  if (attribute.getName() === "email") {
-                    email = attribute.getValue();
-                  }
-                });
-
-                const removePlant = async () => {
-                  const response = await fetch(
-                    `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/plants/delete?email=${email}&name=${plant_name}`,
-                    {
-                      method: "get",
-                      headers: {
-                        Authorization: session.getIdToken().getJwtToken(),
-                      },
-                    }
-                  );
-
-                  if (response.ok) {
-                    window.location.pathname = "/";
-                  }
-                };
-                removePlant();
-              }
-            });
-          }
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        window.location.pathname = "/login";
-      });
-  };
-
   return (
-    <section id="plant">
-      <div id="overlay-form" className="overlay">
-        <i
-          className="fa fa-close closeBtn"
-          onClick={() => {
-            closeOverlay("overlay-form");
-          }}
-        ></i>
-        <div className="overlay-content">
-          {Object.keys(plant).length > 0 ? (
-            <form onSubmit={handleSubmit}>
-              <label htmlFor="dependencies">{`Dependencies file${getFileInputLabel(
-                plant["type"]
-              )}:`}</label>
-              <input
-                name="dependencies"
-                type="file"
-                onChange={handleChange}
-                required
-              ></input>
-              <div
-                className={showStatus ? "visible-message" : "hidden-message"}
-              >
-                <span>{statusMessage}</span>
-              </div>
-              <button className="btn-blue" type="submit">
-                Update
-              </button>
-            </form>
-          ) : null}
-        </div>
-      </div>
-      <div
-        id="overlay-dependency"
-        className="overlay"
-        style={{ overflow: "auto" }}
+    <section>
+      <h1 className="text-center gold">{form.plantName}</h1>
+
+      <form
+        className="w-25 m-auto mt-4 d-none d-lg-block"
+        onSubmit={(e) => {
+          handleSubmit(e, setImageStatus, setShowImageStatus);
+        }}
       >
-        <i
-          className="fa fa-close closeBtn"
-          onClick={() => {
-            closeOverlay("overlay-dependency");
-          }}
-        ></i>
-        <div className="overlay-content">
-          <h1
-            className="heading"
-            style={{ fontSize: "3em", marginTop: "1em", marginBottom: "0em" }}
-          >
-            {currentDependencyLoading ? (
-              "Loading dependency details..."
-            ) : (
-              <Fragment>
-                <strong>{currentDependency["dependency"]}</strong>
-                <strong
-                  className="plant-version"
-                  style={{ marginLeft: "0.5em" }}
-                >
-                  {Object.keys(plant).length > 0
-                    ? getVersionString(currentDependency["version"])
-                    : null}
-                </strong>
-                {compareVersions(
-                  currentDependency["version"],
-                  currentDependency["latest_version"]
-                ) === "none" ? (
-                  <strong className="equals" style={{ marginLeft: "0.5em" }}>
-                    ==
-                  </strong>
-                ) : (
-                  <strong className="less-than" style={{ marginLeft: "0.5em" }}>
-                    {"<"}
-                  </strong>
-                )}
-                <strong id="latest-version" style={{ marginLeft: "0.5em" }}>
-                  {Object.keys(plant).length > 0
-                    ? getVersionString(currentDependency["latest_version"])
-                    : null}
-                </strong>
-              </Fragment>
-            )}
-          </h1>
-          {currentDependencyLoading ? null : (
-            <Fragment>
-              <h3
+        {imageModifiable ? (
+          <>
+            <label className="form-label gold" htmlFor="base64ImgString">
+              Image
+            </label>
+            <input
+              className="form-control"
+              name="base64ImgString"
+              type="file"
+              required
+              onChange={handleChange}
+            />
+          </>
+        ) : (
+          <>
+            <div className="container p-0">
+              <div className="row">
+                <div className="col-sm-10"></div>
+                <div className="col-sm-2 text-end">
+                  <FontAwesomeIcon
+                    className="gold light-gold-hover"
+                    icon={faPen}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setImageModifiable(true);
+                    }}
+                  ></FontAwesomeIcon>
+                </div>
+              </div>
+            </div>
+            <div className="mt-1 p-1 gold-border">
+              <div
+                className="cg-container"
                 style={{
-                  textAlign: "center",
-                  margin: "auto",
-                  marginTop: "1em",
-                  marginBottom: "1.4em",
-                  fontSize: "1.35em",
-                  width: "70%",
+                  backgroundImage: `url(${plantImage})`,
+                  backgroundSize: "cover",
                 }}
               >
-                {getUpdateMessage(
-                  currentDependency["version"],
-                  currentDependency["latest_version"]
-                )}
-              </h3>
-              <p style={{ whiteSpace: "pre-wrap" }}>
-                {currentDependency["latest_version"]["info"]}
-              </p>
-            </Fragment>
-          )}
+                {plantImage === container_background ? (
+                  <h1>No current image</h1>
+                ) : null}
+              </div>
+            </div>
+          </>
+        )}
+        <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>
+          <span>{imageStatus}</span>
         </div>
-      </div>
-      {Object.keys(plant).length > 0 ? (
-        <Fragment>
-          <div
-            style={{
-              width: "100%",
-              height: "10em",
-              backgroundColor: "white",
-              marginBottom: "1em",
-            }}
-          >
-            <img
-              src={getImage(plant["type"])}
-              alt={plant["type"]}
-              style={{ margin: "auto", display: "block", height: "inherit" }}
+        <div className={imageModifiable ? "text-center mt-3" : "hidden-field"}>
+          <button className="btn btn-primary" type="submit">
+            Update image
+          </button>
+        </div>
+      </form>
+      <form
+        className="m-auto mt-4 px-2 d-lg-none"
+        onSubmit={(e) => {
+          handleSubmit(e, setImageStatus, setShowImageStatus);
+        }}
+      >
+        {imageModifiable ? (
+          <>
+            <label className="form-label gold" htmlFor="base64ImgString">
+              Image
+            </label>
+            <input
+              className="form-control"
+              name="base64ImgString"
+              type="file"
+              required
+              onChange={handleChange}
             />
-          </div>
-          <h1 className="heading" style={{ marginBottom: "0em" }}>
-            <strong>{plant_name}</strong>
-          </h1>
-          <div
-            style={{
-              display: "inline-flex",
-              marginBottom: "2em",
-            }}
-          >
-            <button
-              className="btn-blue"
-              onClick={() => {
-                closeOverlay("overlay-dependency");
-                openOverlay("overlay-form");
-              }}
-              style={{ marginRight: "1em" }}
+          </>
+        ) : (
+          <>
+            <div className="container p-0">
+              <div className="row">
+                <div className="col-sm-10"></div>
+                <div className="col-sm-2 text-end">
+                  <FontAwesomeIcon
+                    className="gold light-gold-hover"
+                    icon={faPen}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setImageModifiable(true);
+                    }}
+                  ></FontAwesomeIcon>
+                </div>
+              </div>
+            </div>
+            <div className="mt-1 p-1 gold-border">
+              <div
+                className="cg-container"
+                style={{
+                  backgroundImage: `url(${plantImage})`,
+                  backgroundSize: "cover",
+                }}
+              >
+                {plantImage === container_background ? (
+                  <h1>No current image</h1>
+                ) : null}
+              </div>
+            </div>
+          </>
+        )}
+        <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>
+          <span>{imageStatus}</span>
+        </div>
+        <div className={imageModifiable ? "text-center mt-3" : "hidden-field"}>
+          <button className="btn btn-primary" type="submit">
+            Update image
+          </button>
+        </div>
+      </form>
+
+      <form
+        className="w-25 m-auto mt-5 d-none d-lg-block"
+        onSubmit={(e) => {
+          handleSubmit(e, setDetailsStatus, setShowDetailsStatus);
+        }}
+      >
+        {nameModifiable ? (
+          <>
+            <label className="form-label gold" htmlFor="plantName">
+              Name
+            </label>
+            <input
+              className="form-control"
+              name="plantName"
+              type="text"
+              value={form.plantName}
+              onChange={handleChange}
+            />
+          </>
+        ) : (
+          <>
+            <div className="container p-0">
+              <div className="row">
+                <div className="col-sm-10">
+                  <span className="gold">Name</span>
+                </div>
+                <div className="col-sm-2 text-end">
+                  <FontAwesomeIcon
+                    className="gold light-gold-hover"
+                    icon={faPen}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setNameModifiable(true);
+                      setDetailsModifiable(true);
+                    }}
+                  ></FontAwesomeIcon>
+                </div>
+              </div>
+            </div>
+            <div className="mt-1 py-1 overflow-hidden gold-border">
+              <span className="ms-1">{form.plantName}</span>
+            </div>
+          </>
+        )}
+        {typeModifiable ? (
+          <>
+            <label className="form-label gold mt-2" htmlFor="plantType">
+              Variety
+            </label>
+            <select
+              className="form-control"
+              name="plantType"
+              onChange={handleChange}
             >
-              Update dependencies
-            </button>
-            <button className="btn-blue" onClick={deletePlant}>
-              Delete plant
-            </button>
-          </div>
-          <div style={{ marginBottom: "2em", textAlign: "center" }}>
-            <h3 style={{ display: "inline", marginRight: "1em" }}>
-              <strong className="no-updates">✓</strong>
-              <span className="equals"> == </span>
-              <span>No updates available</span>
-            </h3>
-            <h3 style={{ display: "inline", marginRight: "1em" }}>
-              <strong className="patch">p</strong>
-              <span className="equals"> == </span>
-              <span>Patch update available</span>
-            </h3>
-            <h3 style={{ display: "inline", marginRight: "1em" }}>
-              <strong className="minor">m</strong>
-              <span className="equals"> == </span>
-              <span> Minor update available</span>
-            </h3>
-            <h3 style={{ display: "inline" }}>
-              <strong className="major">M</strong>
-              <span className="equals"> == </span>
-              <span> Major update available</span>
-            </h3>
-          </div>
-          <div className={"content-gallery cg-flex"}>
-            {Object.keys(plant["dependencies"])
-              .sort()
-              .map((dependency) => {
-                return (
-                  <div className="flex-padding" key={dependency}>
-                    <div
-                      id={dependency}
-                      className="cg-container"
-                      style={{
-                        backgroundColor: "white",
-                      }}
-                      onMouseEnter={() => {
-                        document.getElementById(
-                          dependency
-                        ).style.backgroundColor = "lightgrey";
-                      }}
-                      onMouseLeave={() => {
-                        document.getElementById(
-                          dependency
-                        ).style.backgroundColor = "white";
-                      }}
-                      onClick={(e) => {
-                        getLatestDependency(
-                          dependency,
-                          plant["dependencies"][dependency]["version"]
-                        );
-                      }}
-                    >
-                      <h2
-                        style={{
-                          textAlign: "right",
-                          width: "6em",
-                          position: "absolute",
-                          margin: "0em",
-                          marginLeft: "0.5em",
-                          padding: "0em",
-                          fontSize: "2.2em",
-                        }}
-                      >
-                        {getUpdateIndicator(
-                          plant["dependencies"][dependency]["version"],
-                          plant["dependencies"][dependency]["latest_version"]
-                        )}
-                      </h2>
-                      <h2>{dependency}</h2>
-                      <h2 className="plant-version">
-                        {getVersionString(
-                          plant["dependencies"][dependency]["version"]
-                        )}
-                      </h2>
-                    </div>
-                  </div>
-                );
-              })}
-          </div>
-        </Fragment>
-      ) : null}
+              {plantTypes.length === 0 ? (
+                <option key="default" value="">
+                  Loading plant varieties...
+                </option>
+              ) : (
+                <>
+                  <option key="default" value="">
+                    Please select a plant
+                  </option>
+                  {plantTypes.sort().map((plantType) => {
+                    return (
+                      <option key={plantType} value={plantType}>
+                        {plantType}
+                      </option>
+                    );
+                  })}
+                </>
+              )}
+            </select>
+          </>
+        ) : (
+          <>
+            <div className="container p-0 mt-2">
+              <div className="row">
+                <div className="col-sm-10">
+                  <span className="gold">Variety</span>
+                </div>
+                <div className="col-sm-2 text-end">
+                  <FontAwesomeIcon
+                    className="gold light-gold-hover"
+                    icon={faPen}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setTypeModifiable(true);
+                      setDetailsModifiable(true);
+                    }}
+                  ></FontAwesomeIcon>
+                </div>
+              </div>
+            </div>
+            <div className="mt-1 py-1 overflow-hidden gold-border">
+              <span className="ms-1">{form.plantType}</span>
+            </div>
+          </>
+        )}
+        <div
+          className={showDetailsStatus ? "text-center mt-3" : "hidden-field"}
+        >
+          <span>{detailsStatus}</span>
+        </div>
+        <div
+          className={detailsModifiable ? "text-center mt-3" : "hidden-field"}
+        >
+          <button className="btn btn-primary" type="submit">
+            Apply changes
+          </button>
+        </div>
+      </form>
+      <form
+        className="m-auto mt-5 px-2 d-lg-none"
+        onSubmit={(e) => {
+          handleSubmit(e, setDetailsStatus, setShowDetailsStatus);
+        }}
+      >
+        {nameModifiable ? (
+          <>
+            <label className="form-label gold" htmlFor="plantName">
+              Name
+            </label>
+            <input
+              className="form-control"
+              name="plantName"
+              type="text"
+              value={form.plantName}
+              onChange={handleChange}
+            />
+          </>
+        ) : (
+          <>
+            <div className="container p-0">
+              <div className="row">
+                <div className="col-sm-10">
+                  <span className="gold">Name</span>
+                </div>
+                <div className="col-sm-2 text-end">
+                  <FontAwesomeIcon
+                    className="gold light-gold-hover"
+                    icon={faPen}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setNameModifiable(true);
+                      setDetailsModifiable(true);
+                    }}
+                  ></FontAwesomeIcon>
+                </div>
+              </div>
+            </div>
+            <div className="mt-1 py-1 overflow-hidden gold-border">
+              <span className="ms-1">{form.plantName}</span>
+            </div>
+          </>
+        )}
+        {typeModifiable ? (
+          <>
+            <label className="form-label gold mt-2" htmlFor="plantType">
+              Variety
+            </label>
+            <select
+              className="form-control"
+              name="plantType"
+              onChange={handleChange}
+            >
+              {plantTypes.length === 0 ? (
+                <option key="default" value="">
+                  Loading plant varieties...
+                </option>
+              ) : (
+                <>
+                  <option key="default" value="">
+                    Please select a plant
+                  </option>
+                  {plantTypes.sort().map((plantType) => {
+                    return (
+                      <option key={plantType} value={plantType}>
+                        {plantType}
+                      </option>
+                    );
+                  })}
+                </>
+              )}
+            </select>
+          </>
+        ) : (
+          <>
+            <div className="container p-0 mt-2">
+              <div className="row">
+                <div className="col-sm-10">
+                  <span className="gold">Variety</span>
+                </div>
+                <div className="col-sm-2 text-end">
+                  <FontAwesomeIcon
+                    className="gold light-gold-hover"
+                    icon={faPen}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setTypeModifiable(true);
+                      setDetailsModifiable(true);
+                    }}
+                  ></FontAwesomeIcon>
+                </div>
+              </div>
+            </div>
+            <div className="mt-1 py-1 overflow-hidden gold-border">
+              <span className="ms-1">{form.plantType}</span>
+            </div>
+          </>
+        )}
+        <div
+          className={showDetailsStatus ? "text-center mt-3" : "hidden-field"}
+        >
+          <span>{detailsStatus}</span>
+        </div>
+        <div
+          className={detailsModifiable ? "text-center mt-3" : "hidden-field"}
+        >
+          <button className="btn btn-primary" type="submit">
+            Apply changes
+          </button>
+        </div>
+      </form>
     </section>
   );
 }

@@ -279,7 +279,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{emailForm.email}</span>
             </div>
           </>
@@ -339,7 +339,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{emailForm.email}</span>
             </div>
           </>
@@ -391,7 +391,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.phoneNumber}</span>
             </div>
           </>
@@ -429,7 +429,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.firstName}</span>
             </div>
           </>
@@ -467,7 +467,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.lastName}</span>
             </div>
           </>
@@ -522,7 +522,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.phoneNumber}</span>
             </div>
           </>
@@ -560,7 +560,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.firstName}</span>
             </div>
           </>
@@ -598,7 +598,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.lastName}</span>
             </div>
           </>
@@ -679,7 +679,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">••••••••</span>
             </div>
           </>
@@ -759,7 +759,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">••••••••</span>
             </div>
           </>
