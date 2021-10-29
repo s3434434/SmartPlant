@@ -156,9 +156,11 @@ export default function Plant(props) {
   return (
     <section>
       <h1 className="text-center gold">{form.plantName}</h1>
-
+      <h4 className="text-center" style={{ color: "white" }}>
+        {form.plantType}
+      </h4>
       <form
-        className="w-25 m-auto mt-4 d-none d-lg-block"
+        className="w-25 m-auto mt-5 d-none d-lg-block"
         onSubmit={(e) => {
           handleSubmit(e, setImageStatus, setShowImageStatus);
         }}
@@ -193,18 +195,15 @@ export default function Plant(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 p-1 gold-border">
-              <div
-                className="cg-container"
-                style={{
-                  backgroundImage: `url(${plantImage})`,
-                  backgroundSize: "cover",
-                }}
-              >
-                {plantImage === container_background ? (
-                  <h1>No current image</h1>
-                ) : null}
-              </div>
+            <div
+              className="cg-container gold-border m-auto mt-1"
+              style={{
+                backgroundImage: `url(${plantImage})`,
+              }}
+            >
+              {plantImage === container_background ? (
+                <h2>No current image</h2>
+              ) : null}
             </div>
           </>
         )}
@@ -218,7 +217,7 @@ export default function Plant(props) {
         </div>
       </form>
       <form
-        className="m-auto mt-4 px-2 d-lg-none"
+        className="m-auto mt-5 px-2 d-lg-none"
         onSubmit={(e) => {
           handleSubmit(e, setImageStatus, setShowImageStatus);
         }}
@@ -253,18 +252,15 @@ export default function Plant(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 p-1 gold-border">
-              <div
-                className="cg-container"
-                style={{
-                  backgroundImage: `url(${plantImage})`,
-                  backgroundSize: "cover",
-                }}
-              >
-                {plantImage === container_background ? (
-                  <h1>No current image</h1>
-                ) : null}
-              </div>
+            <div
+              className="cg-container gold-border m-auto mt-1"
+              style={{
+                backgroundImage: `url(${plantImage})`,
+              }}
+            >
+              {plantImage === container_background ? (
+                <h2>No current image</h2>
+              ) : null}
             </div>
           </>
         )}

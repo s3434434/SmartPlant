@@ -73,8 +73,7 @@ export default function AllPlants(props) {
                   className="cg-container"
                   style={{
                     backgroundImage: `url(${plantImage})`,
-                    backgroundSize: "cover",
-                    backgroundBlendMode: "overlay",
+                    cursor: "pointer",
                   }}
                   onMouseEnter={() => {
                     document.getElementById(
@@ -90,8 +89,8 @@ export default function AllPlants(props) {
                     window.location.pathname = `/plant/${plantID}`;
                   }}
                 >
-                  <h1>{name}</h1>
-                  <h2>{plantType}</h2>
+                  <h1 style={{ cursor: "pointer" }}>{name}</h1>
+                  <h2 style={{ cursor: "pointer" }}>{plantType}</h2>
                 </div>
               );
             })}
