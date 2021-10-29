@@ -8,7 +8,7 @@ export default function AddPlant(props) {
   const [form, setForm] = useState({
     plantName: "",
     plantType: "",
-    plantImage: null,
+    base64ImgString: "",
   });
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("none");
@@ -52,8 +52,17 @@ export default function AddPlant(props) {
     const input = e.target;
     const tempForm = _.cloneDeep(form);
 
-    if (input.name === "plantImage") {
-      tempForm[input.name] = input.files[0];
+    if (input.name === "base64ImgString") {
+      const fileReader = new FileReader();
+      fileReader.onload = function (fileLoadedEvent) {
+        let base64 = fileLoadedEvent.target.result;
+        const startIndex = base64.indexOf(",") + 1;
+        base64 = base64.substr(startIndex);
+
+        tempForm[input.name] = base64;
+      };
+
+      fileReader.readAsDataURL(input.files[0]);
     } else {
       tempForm[input.name] = input.value;
     }
@@ -149,12 +158,12 @@ export default function AddPlant(props) {
             </>
           )}
         </select>
-        <label className="form-label gold mt-3" htmlFor="plantImage">
+        <label className="form-label gold mt-3" htmlFor="base64ImgString">
           Image
         </label>
         <input
           className="form-control"
-          name="plantImage"
+          name="base64ImgString"
           onChange={handleChange}
           type="file"
         ></input>

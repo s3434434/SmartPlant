@@ -22,11 +22,10 @@
 }
 .cg-container * {
   color: white;
-  text-shadow: 0.025em 0.025em 0.015em rgb(0, 53, 11);
+  text-shadow: 0.03em 0.03em 0.025em rgb(0, 53, 11);
   cursor: pointer;
   padding-left: 0.3em;
   padding-right: 0.3em;
-  /* text-shadow: 0.03em 0.03em black; */
   text-align: center;
   display: -webkit-box;
   -webkit-box-orient: vertical;

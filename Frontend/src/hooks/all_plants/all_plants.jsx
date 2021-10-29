@@ -62,8 +62,8 @@ export default function AllPlants(props) {
             {plants.map((plant) => {
               const { name, plantType, plantID } = plant;
               let plantImage = container_background;
-              if (plant.plantImage !== undefined) {
-                plantImage = plant.plantImage;
+              if (plant.imgurURL !== null) {
+                plantImage = plant.imgurURL;
               }
 
               return (
@@ -73,6 +73,7 @@ export default function AllPlants(props) {
                   className="cg-container"
                   style={{
                     backgroundImage: `url(${plantImage})`,
+                    backgroundSize: "cover",
                     backgroundBlendMode: "overlay",
                   }}
                   onMouseEnter={() => {
