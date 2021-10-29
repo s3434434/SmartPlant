@@ -155,141 +155,215 @@ export default function Plant(props) {
 
   return (
     <section>
-      <h1 className="text-center gold">{form.plantName}</h1>
-      <h4 className="text-center" style={{ color: "white" }}>
-        {form.plantType}
-      </h4>
       <form
-        className="w-25 m-auto mt-5 d-none d-lg-block"
+        className="w-25 m-auto d-none d-lg-block"
         onSubmit={(e) => {
-          handleSubmit(e, setImageStatus, setShowImageStatus);
+          handleSubmit(e, setDetailsStatus, setShowDetailsStatus);
         }}
       >
-        {imageModifiable ? (
+        {nameModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="base64ImgString">
-              Image
+            <label className="form-label gold" htmlFor="plantName">
+              Name
             </label>
             <input
-              className="form-control"
-              name="base64ImgString"
-              type="file"
-              required
+              className="form-control mb-3"
+              name="plantName"
+              type="text"
+              value={form.plantName}
               onChange={handleChange}
             />
           </>
         ) : (
           <>
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10"></div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setImageModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
+            <div className="text-end m-0 p-0">
+              <FontAwesomeIcon
+                className="gold light-gold-hover"
+                icon={faPen}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setNameModifiable(true);
+                  setDetailsModifiable(true);
+                }}
+              ></FontAwesomeIcon>
             </div>
-            <div
-              className="cg-container gold-border m-auto mt-1"
-              style={{
-                backgroundImage: `url(${plantImage})`,
-              }}
-            >
-              {plantImage === container_background ? (
-                <h2>No current image</h2>
-              ) : null}
-            </div>
+            <h1 className="text-center gold m-0 p-0">{form.plantName}</h1>
           </>
         )}
-        <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>
-          <span>{imageStatus}</span>
+        {typeModifiable ? (
+          <>
+            <label className="form-label gold mt-2" htmlFor="plantType">
+              Variety
+            </label>
+            <select
+              className="form-control"
+              name="plantType"
+              onChange={handleChange}
+            >
+              {plantTypes.length === 0 ? (
+                <option key="default" value="">
+                  Loading plant varieties...
+                </option>
+              ) : (
+                <>
+                  <option key="default" value="">
+                    Please select a plant
+                  </option>
+                  {plantTypes.sort().map((plantType) => {
+                    return (
+                      <option key={plantType} value={plantType}>
+                        {plantType}
+                      </option>
+                    );
+                  })}
+                </>
+              )}
+            </select>
+          </>
+        ) : (
+          <>
+            <div className="text-end m-0 p-0">
+              <FontAwesomeIcon
+                className="gold light-gold-hover"
+                icon={faPen}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setTypeModifiable(true);
+                  setDetailsModifiable(true);
+                }}
+              ></FontAwesomeIcon>
+            </div>
+            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+              {form.plantType}
+            </h4>
+          </>
+        )}
+        <div
+          className={showDetailsStatus ? "text-center mt-3" : "hidden-field"}
+        >
+          <span>{detailsStatus}</span>
         </div>
-        <div className={imageModifiable ? "text-center mt-3" : "hidden-field"}>
+        <div
+          className={detailsModifiable ? "text-center my-3" : "hidden-field"}
+        >
           <button className="btn btn-primary" type="submit">
-            Update image
+            Apply changes
           </button>
         </div>
       </form>
       <form
-        className="m-auto mt-5 px-2 d-lg-none"
+        className="m-auto px-2 d-lg-none"
         onSubmit={(e) => {
-          handleSubmit(e, setImageStatus, setShowImageStatus);
+          handleSubmit(e, setDetailsStatus, setShowDetailsStatus);
         }}
       >
-        {imageModifiable ? (
+        {nameModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="base64ImgString">
-              Image
+            <label className="form-label gold" htmlFor="plantName">
+              Name
             </label>
             <input
-              className="form-control"
-              name="base64ImgString"
-              type="file"
-              required
+              className="form-control mb-3"
+              name="plantName"
+              type="text"
+              value={form.plantName}
               onChange={handleChange}
             />
           </>
         ) : (
           <>
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10"></div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setImageModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
+            <div className="text-end m-0 p-0">
+              <FontAwesomeIcon
+                className="gold light-gold-hover"
+                icon={faPen}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setNameModifiable(true);
+                  setDetailsModifiable(true);
+                }}
+              ></FontAwesomeIcon>
             </div>
-            <div
-              className="cg-container gold-border m-auto mt-1"
-              style={{
-                backgroundImage: `url(${plantImage})`,
-              }}
-            >
-              {plantImage === container_background ? (
-                <h2>No current image</h2>
-              ) : null}
-            </div>
+            <h1 className="text-center gold m-0 p-0">{form.plantName}</h1>
           </>
         )}
-        <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>
-          <span>{imageStatus}</span>
+        {typeModifiable ? (
+          <>
+            <label className="form-label gold mt-2" htmlFor="plantType">
+              Variety
+            </label>
+            <select
+              className="form-control"
+              name="plantType"
+              onChange={handleChange}
+            >
+              {plantTypes.length === 0 ? (
+                <option key="default" value="">
+                  Loading plant varieties...
+                </option>
+              ) : (
+                <>
+                  <option key="default" value="">
+                    Please select a plant
+                  </option>
+                  {plantTypes.sort().map((plantType) => {
+                    return (
+                      <option key={plantType} value={plantType}>
+                        {plantType}
+                      </option>
+                    );
+                  })}
+                </>
+              )}
+            </select>
+          </>
+        ) : (
+          <>
+            <div className="text-end m-0 p-0">
+              <FontAwesomeIcon
+                className="gold light-gold-hover"
+                icon={faPen}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setTypeModifiable(true);
+                  setDetailsModifiable(true);
+                }}
+              ></FontAwesomeIcon>
+            </div>
+            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+              {form.plantType}
+            </h4>
+          </>
+        )}
+        <div
+          className={showDetailsStatus ? "text-center mt-3" : "hidden-field"}
+        >
+          <span>{detailsStatus}</span>
         </div>
-        <div className={imageModifiable ? "text-center mt-3" : "hidden-field"}>
+        <div
+          className={detailsModifiable ? "text-center my-3" : "hidden-field"}
+        >
           <button className="btn btn-primary" type="submit">
-            Update image
+            Apply changes
           </button>
         </div>
       </form>
 
       <form
-        className="w-25 m-auto mt-5 d-none d-lg-block"
+        className="w-25 m-auto d-none d-lg-block"
         onSubmit={(e) => {
-          handleSubmit(e, setDetailsStatus, setShowDetailsStatus);
+          handleSubmit(e, setImageStatus, setShowImageStatus);
         }}
       >
-        {nameModifiable ? (
+        {imageModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="plantName">
-              Name
+            <label className="form-label gold" htmlFor="base64ImgString">
+              Image
             </label>
             <input
               className="form-control"
-              name="plantName"
-              type="text"
-              value={form.plantName}
+              name="base64ImgString"
+              type="file"
+              required
               onChange={handleChange}
             />
           </>
@@ -297,111 +371,56 @@ export default function Plant(props) {
           <>
             <div className="container p-0">
               <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Name</span>
-                </div>
+                <div className="col-sm-10"></div>
                 <div className="col-sm-2 text-end">
                   <FontAwesomeIcon
                     className="gold light-gold-hover"
                     icon={faPen}
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setNameModifiable(true);
-                      setDetailsModifiable(true);
+                      setImageModifiable(true);
                     }}
                   ></FontAwesomeIcon>
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{form.plantName}</span>
-            </div>
-          </>
-        )}
-        {typeModifiable ? (
-          <>
-            <label className="form-label gold mt-2" htmlFor="plantType">
-              Variety
-            </label>
-            <select
-              className="form-control"
-              name="plantType"
-              onChange={handleChange}
+            <div
+              className="cg-container gold-border m-auto mt-1"
+              style={{
+                backgroundImage: `url(${plantImage})`,
+              }}
             >
-              {plantTypes.length === 0 ? (
-                <option key="default" value="">
-                  Loading plant varieties...
-                </option>
-              ) : (
-                <>
-                  <option key="default" value="">
-                    Please select a plant
-                  </option>
-                  {plantTypes.sort().map((plantType) => {
-                    return (
-                      <option key={plantType} value={plantType}>
-                        {plantType}
-                      </option>
-                    );
-                  })}
-                </>
-              )}
-            </select>
-          </>
-        ) : (
-          <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Variety</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setTypeModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
-            </div>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{form.plantType}</span>
+              {plantImage === container_background ? (
+                <h2>No current image</h2>
+              ) : null}
             </div>
           </>
         )}
-        <div
-          className={showDetailsStatus ? "text-center mt-3" : "hidden-field"}
-        >
-          <span>{detailsStatus}</span>
+        <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>
+          <span>{imageStatus}</span>
         </div>
-        <div
-          className={detailsModifiable ? "text-center mt-3" : "hidden-field"}
-        >
+        <div className={imageModifiable ? "text-center mt-3" : "hidden-field"}>
           <button className="btn btn-primary" type="submit">
-            Apply changes
+            Update image
           </button>
         </div>
       </form>
       <form
         className="m-auto mt-5 px-2 d-lg-none"
         onSubmit={(e) => {
-          handleSubmit(e, setDetailsStatus, setShowDetailsStatus);
+          handleSubmit(e, setImageStatus, setShowImageStatus);
         }}
       >
-        {nameModifiable ? (
+        {imageModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="plantName">
-              Name
+            <label className="form-label gold" htmlFor="base64ImgString">
+              Image
             </label>
             <input
               className="form-control"
-              name="plantName"
-              type="text"
-              value={form.plantName}
+              name="base64ImgString"
+              type="file"
+              required
               onChange={handleChange}
             />
           </>
@@ -409,92 +428,37 @@ export default function Plant(props) {
           <>
             <div className="container p-0">
               <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Name</span>
-                </div>
+                <div className="col-sm-10"></div>
                 <div className="col-sm-2 text-end">
                   <FontAwesomeIcon
                     className="gold light-gold-hover"
                     icon={faPen}
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setNameModifiable(true);
-                      setDetailsModifiable(true);
+                      setImageModifiable(true);
                     }}
                   ></FontAwesomeIcon>
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{form.plantName}</span>
-            </div>
-          </>
-        )}
-        {typeModifiable ? (
-          <>
-            <label className="form-label gold mt-2" htmlFor="plantType">
-              Variety
-            </label>
-            <select
-              className="form-control"
-              name="plantType"
-              onChange={handleChange}
+            <div
+              className="cg-container gold-border m-auto mt-1"
+              style={{
+                backgroundImage: `url(${plantImage})`,
+              }}
             >
-              {plantTypes.length === 0 ? (
-                <option key="default" value="">
-                  Loading plant varieties...
-                </option>
-              ) : (
-                <>
-                  <option key="default" value="">
-                    Please select a plant
-                  </option>
-                  {plantTypes.sort().map((plantType) => {
-                    return (
-                      <option key={plantType} value={plantType}>
-                        {plantType}
-                      </option>
-                    );
-                  })}
-                </>
-              )}
-            </select>
-          </>
-        ) : (
-          <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Variety</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setTypeModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
-            </div>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{form.plantType}</span>
+              {plantImage === container_background ? (
+                <h2>No current image</h2>
+              ) : null}
             </div>
           </>
         )}
-        <div
-          className={showDetailsStatus ? "text-center mt-3" : "hidden-field"}
-        >
-          <span>{detailsStatus}</span>
+        <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>
+          <span>{imageStatus}</span>
         </div>
-        <div
-          className={detailsModifiable ? "text-center mt-3" : "hidden-field"}
-        >
+        <div className={imageModifiable ? "text-center mt-3" : "hidden-field"}>
           <button className="btn btn-primary" type="submit">
-            Apply changes
+            Update image
           </button>
         </div>
       </form>
