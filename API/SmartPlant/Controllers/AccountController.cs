@@ -347,6 +347,18 @@ namespace SmartPlant.Controllers
         }
 
 
+        [HttpGet]
+        [Authorize]
+        [Route("/api/User/Role")]
+        public async Task<IActionResult> GetCurrentUserRole()
+        {
+            string userID = User.Identity?.Name;
+
+            var result = await _repo.GetCurrentUserRole(userID);
+
+            return Ok(result);
+        }
+
         /* 
          * ADMIN ROLE REQUIRED ENDPOINTS
          *           BELOW

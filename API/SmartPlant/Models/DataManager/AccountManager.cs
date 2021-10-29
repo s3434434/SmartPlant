@@ -290,6 +290,18 @@ namespace SmartPlant.Models.DataManager
             return result;
         }
 
+        public async Task<string> GetCurrentUserRole(string userID)
+        {
+            var user = await _userManager.FindByIdAsync(userID);
+            if (user != null)
+            {
+                var result = await _userManager.GetRolesAsync(user);
+
+                return result[0]; //in this program a user should only have one role.
+            }
+
+            return "";
+        }
 
         /* 
          * ADMIN ROLE REQUIRED ENDPOINTS
