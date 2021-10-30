@@ -7,21 +7,21 @@ import container_background from "../../assets/images/container_background.png";
 import "./plant.css";
 
 export default function Plant(props) {
+  const startIndex = window.location.pathname.lastIndexOf("/") + 1;
+
   const [form, setForm] = useState({
-      plantName: "",
-      plantType: "",
+      name: "",
       base64ImgString: "",
+      plantID: window.location.pathname.substr(startIndex),
     }),
-    [imageModifiable, setImageModifiable] = useState(false),
-    [detailsModifiable, setDetailsModifiable] = useState(false),
     [nameModifiable, setNameModifiable] = useState(false),
-    [typeModifiable, setTypeModifiable] = useState(false),
+    [imageModifiable, setImageModifiable] = useState(false),
+    [showNameStatus, setShowNameStatus] = useState(false),
+    [nameStatus, setNameStatus] = useState("none"),
     [showImageStatus, setShowImageStatus] = useState(false),
     [imageStatus, setImageStatus] = useState("none"),
-    [showDetailsStatus, setShowDetailsStatus] = useState(false),
-    [detailsStatus, setDetailsStatus] = useState("none"),
-    [plantImage, setPlantImage] = useState(container_background),
-    [plantTypes, setPlantTypes] = useState([]);
+    [plantType, setPlantType] = useState(""),
+    [plantImage, setPlantImage] = useState(container_background);
 
   useEffect(() => {
     document.title = "Demeter - The plant meter";
@@ -37,46 +37,20 @@ export default function Plant(props) {
           },
         })
         .then((res) => {
-          const startIndex = window.location.pathname.lastIndexOf("/") + 1;
-          const plantID = window.location.pathname.substr(startIndex);
-
           res.data.forEach((plant) => {
-            if (plant.plantID === plantID) {
+            if (plant.plantID === form.plantID) {
               document.title = `${plant.name} | Demeter - The plant meter`;
 
               let tempForm = _.cloneDeep(form);
-              tempForm.plantName = plant.name;
-              tempForm.plantType = plant.plantType;
-
+              tempForm.name = plant.name;
               setForm(tempForm);
 
               if (plant.imgurURL !== null) {
                 setPlantImage(plant.imgurURL);
               }
+              setPlantType(plant.plantType);
             }
           });
-        })
-        .catch((err) => {
-          props.logOut();
-          window.location.pathname = "/";
-        });
-
-      axios
-        .get("https://smart-plant.azurewebsites.net/api/Plants", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          axios
-            .get("https://smart-plant.azurewebsites.net/api/Plants/List", {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            })
-            .then((res) => {
-              setPlantTypes(res.data);
-            });
         })
         .catch((err) => {
           props.logOut();
@@ -137,8 +111,6 @@ export default function Plant(props) {
             errorMessage = errors.PlantName[0];
           } else if (errors["Name Taken"] !== undefined) {
             errorMessage = errors["Name Taken"][0];
-          } else if (errors["Plant Type"] !== undefined) {
-            errorMessage = errors["Plant Type"][0];
           } else if (errors.Limit !== undefined) {
             errorMessage = errors.Limit[0];
           }
@@ -158,21 +130,24 @@ export default function Plant(props) {
       <form
         className="w-25 m-auto d-none d-lg-block"
         onSubmit={(e) => {
-          handleSubmit(e, setDetailsStatus, setShowDetailsStatus);
+          handleSubmit(e, setNameStatus, setShowNameStatus);
         }}
       >
         {nameModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="plantName">
+            <label className="form-label gold" htmlFor="name">
               Name
             </label>
             <input
               className="form-control mb-3"
-              name="plantName"
+              name="name"
               type="text"
-              value={form.plantName}
+              value={form.name}
               onChange={handleChange}
             />
+            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+              {plantType}
+            </h4>
           </>
         ) : (
           <>
@@ -183,92 +158,45 @@ export default function Plant(props) {
                 style={{ cursor: "pointer" }}
                 onClick={() => {
                   setNameModifiable(true);
-                  setDetailsModifiable(true);
                 }}
               ></FontAwesomeIcon>
             </div>
-            <h1 className="text-center gold m-0 p-0">{form.plantName}</h1>
-          </>
-        )}
-        {typeModifiable ? (
-          <>
-            <label className="form-label gold mt-2" htmlFor="plantType">
-              Variety
-            </label>
-            <select
-              className="form-control"
-              name="plantType"
-              onChange={handleChange}
-            >
-              {plantTypes.length === 0 ? (
-                <option key="default" value="">
-                  Loading plant varieties...
-                </option>
-              ) : (
-                <>
-                  <option key="default" value="">
-                    Please select a plant
-                  </option>
-                  {plantTypes.sort().map((plantType) => {
-                    return (
-                      <option key={plantType} value={plantType}>
-                        {plantType}
-                      </option>
-                    );
-                  })}
-                </>
-              )}
-            </select>
-          </>
-        ) : (
-          <>
-            <div className="text-end m-0 p-0">
-              <FontAwesomeIcon
-                className="gold light-gold-hover"
-                icon={faPen}
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setTypeModifiable(true);
-                  setDetailsModifiable(true);
-                }}
-              ></FontAwesomeIcon>
-            </div>
+            <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {form.plantType}
+              {plantType}
             </h4>
           </>
         )}
-        <div
-          className={showDetailsStatus ? "text-center mt-3" : "hidden-field"}
-        >
-          <span>{detailsStatus}</span>
+        <div className={showNameStatus ? "text-center mt-3" : "hidden-field"}>
+          <span>{nameStatus}</span>
         </div>
-        <div
-          className={detailsModifiable ? "text-center my-3" : "hidden-field"}
-        >
+        <div className={nameModifiable ? "text-center my-3" : "hidden-field"}>
           <button className="btn btn-primary" type="submit">
-            Apply changes
+            Apply change
           </button>
         </div>
       </form>
       <form
         className="m-auto px-2 d-lg-none"
         onSubmit={(e) => {
-          handleSubmit(e, setDetailsStatus, setShowDetailsStatus);
+          handleSubmit(e, setNameStatus, setShowNameStatus);
         }}
       >
         {nameModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="plantName">
+            <label className="form-label gold" htmlFor="name">
               Name
             </label>
             <input
               className="form-control mb-3"
-              name="plantName"
+              name="name"
               type="text"
-              value={form.plantName}
+              value={form.name}
               onChange={handleChange}
             />
+            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+              {plantType}
+            </h4>
           </>
         ) : (
           <>
@@ -279,71 +207,21 @@ export default function Plant(props) {
                 style={{ cursor: "pointer" }}
                 onClick={() => {
                   setNameModifiable(true);
-                  setDetailsModifiable(true);
                 }}
               ></FontAwesomeIcon>
             </div>
-            <h1 className="text-center gold m-0 p-0">{form.plantName}</h1>
-          </>
-        )}
-        {typeModifiable ? (
-          <>
-            <label className="form-label gold mt-2" htmlFor="plantType">
-              Variety
-            </label>
-            <select
-              className="form-control"
-              name="plantType"
-              onChange={handleChange}
-            >
-              {plantTypes.length === 0 ? (
-                <option key="default" value="">
-                  Loading plant varieties...
-                </option>
-              ) : (
-                <>
-                  <option key="default" value="">
-                    Please select a plant
-                  </option>
-                  {plantTypes.sort().map((plantType) => {
-                    return (
-                      <option key={plantType} value={plantType}>
-                        {plantType}
-                      </option>
-                    );
-                  })}
-                </>
-              )}
-            </select>
-          </>
-        ) : (
-          <>
-            <div className="text-end m-0 p-0">
-              <FontAwesomeIcon
-                className="gold light-gold-hover"
-                icon={faPen}
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setTypeModifiable(true);
-                  setDetailsModifiable(true);
-                }}
-              ></FontAwesomeIcon>
-            </div>
+            <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {form.plantType}
+              {plantType}
             </h4>
           </>
         )}
-        <div
-          className={showDetailsStatus ? "text-center mt-3" : "hidden-field"}
-        >
-          <span>{detailsStatus}</span>
+        <div className={showNameStatus ? "text-center mt-3" : "hidden-field"}>
+          <span>{nameStatus}</span>
         </div>
-        <div
-          className={detailsModifiable ? "text-center my-3" : "hidden-field"}
-        >
+        <div className={nameModifiable ? "text-center my-3" : "hidden-field"}>
           <button className="btn btn-primary" type="submit">
-            Apply changes
+            Apply change
           </button>
         </div>
       </form>
