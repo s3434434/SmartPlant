@@ -16,7 +16,7 @@ export default function PlantAdded(props) {
       <h1 className="gold text-center">Plant added successfully</h1>
       <div className="text-center mt-3" style={{ color: "white" }}>
         Your plant has been added successfully. Your Arduino token is
-        <span className="gold"> {token}</span>.
+        <span className="gold"> {decodeURIComponent(token)}</span>.
       </div>
       <div className="text-center mt-3">
         <Link key="plants" to="/plants">

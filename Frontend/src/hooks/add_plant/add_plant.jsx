@@ -86,8 +86,9 @@ export default function AddPlant(props) {
           },
         })
         .then((res) => {
+          const tokenParameter = encodeURIComponent(res.data.messages.Token[0]);
           window.location.assign(
-            `https://www.demeter.onl/plant-added?token=${res.data.messages.Token[0]}`
+            `https://www.demeter.onl/plant-added?token=${tokenParameter}`
           );
         })
         .catch((err) => {

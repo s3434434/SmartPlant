@@ -65,7 +65,8 @@ p {
 form span {
   color: white;
 }
-form .hidden-field {
+
+.hidden-field {
   opacity: 0;
   pointer-events: none;
   user-select: none;

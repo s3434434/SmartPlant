@@ -20,7 +20,11 @@ export default function Plant(props) {
     [showImageStatus, setShowImageStatus] = useState(false),
     [imageStatus, setImageStatus] = useState("none"),
     [plantType, setPlantType] = useState(""),
-    [plantImage, setPlantImage] = useState(container_background);
+    [plantImage, setPlantImage] = useState(container_background),
+    [arduinoToken, setArduinoToken] = useState(""),
+    [showArduinoToken, setShowArduinoToken] = useState(false),
+    [showTokenStatus, setShowTokenStatus] = useState(false),
+    [tokenStatus, setTokenStatus] = useState("none");
 
   useEffect(() => {
     document.title = "Demeter - The plant meter";
@@ -116,6 +120,37 @@ export default function Plant(props) {
         });
     } else {
       setStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
+    }
+  };
+
+  const fetchArduinoToken = () => {
+    setTokenStatus("Please wait...");
+    setShowTokenStatus(true);
+
+    const login = localStorage.getItem("demeter-login");
+    if (login) {
+      const { token } = JSON.parse(login);
+      axios
+        .get(
+          `https://smart-plant.azurewebsites.net/api/Plants/Token/${form.plantID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          setArduinoToken(res.data);
+          setShowArduinoToken(true);
+        })
+        .catch((err) => {
+          setTokenStatus("Server error. Please try again later.");
+        });
+    } else {
+      setTokenStatus("You are not logged in.");
       setTimeout(() => {
         window.location.pathname = "/";
       }, 500);
@@ -337,6 +372,54 @@ export default function Plant(props) {
           </button>
         </div>
       </form>
+
+      {showArduinoToken ? (
+        <>
+          <div className="w-25 m-auto d-none d-lg-block">
+            <div className="gold">
+              <span>Arduino token</span>
+            </div>
+            <div className="mt-1 py-1 overflow-hidden gold-border">
+              <span className="ms-1">{arduinoToken}</span>
+            </div>
+          </div>
+          <div className="m-auto px-2 d-lg-none">
+            <div className="gold">
+              <span>Arduino token</span>
+            </div>
+            <div className="mt-1 py-1 overflow-hidden gold-border">
+              <span className="ms-1">{arduinoToken}</span>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="w-25 m-auto d-none d-lg-block">
+            <div
+              className={showTokenStatus ? "text-center mt-3" : "hidden-field"}
+            >
+              <span style={{ color: "white" }}>{tokenStatus}</span>
+            </div>
+            <div className="text-center mt-3">
+              <button className="btn btn-primary" onClick={fetchArduinoToken}>
+                Show Arduino token
+              </button>
+            </div>
+          </div>
+          <div className="m-auto px-2 d-lg-none">
+            <div
+              className={showTokenStatus ? "text-center mt-3" : "hidden-field"}
+            >
+              <span style={{ color: "white" }}>{tokenStatus}</span>
+            </div>
+            <div className="text-center mt-3">
+              <button className="btn btn-primary" onClick={fetchArduinoToken}>
+                Show Arduino token
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </section>
   );
 }
