@@ -8,7 +8,6 @@ import "./plant.css";
 
 export default function Plant(props) {
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
-
   const [form, setForm] = useState({
       name: "",
       base64ImgString: "",
@@ -111,8 +110,6 @@ export default function Plant(props) {
             errorMessage = errors.PlantName[0];
           } else if (errors["Name Taken"] !== undefined) {
             errorMessage = errors["Name Taken"][0];
-          } else if (errors.Limit !== undefined) {
-            errorMessage = errors.Limit[0];
           }
 
           setStatus(errorMessage);
@@ -279,7 +276,7 @@ export default function Plant(props) {
         </div>
         <div className={imageModifiable ? "text-center mt-3" : "hidden-field"}>
           <button className="btn btn-primary" type="submit">
-            Update image
+            Apply change
           </button>
         </div>
       </form>
@@ -336,7 +333,7 @@ export default function Plant(props) {
         </div>
         <div className={imageModifiable ? "text-center mt-3" : "hidden-field"}>
           <button className="btn btn-primary" type="submit">
-            Update image
+            Apply change
           </button>
         </div>
       </form>
