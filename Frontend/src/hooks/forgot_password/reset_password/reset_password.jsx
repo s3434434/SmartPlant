@@ -51,7 +51,7 @@ export default function ResetPassword(props) {
           window.location.pathname = "/password-reset-successful";
         })
         .catch((err) => {
-          const errors = err.response.data.errors;
+          const errors = err.response.data.messages;
           let errorMessage = "Server error. Please try again later.";
 
           if (errors.Passwords !== undefined) {

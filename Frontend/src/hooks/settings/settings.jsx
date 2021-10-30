@@ -100,7 +100,7 @@ export default function Settings(props) {
           window.location.reload();
         })
         .catch((err) => {
-          const errors = err.response.data.errors;
+          const errors = err.response.data.messages;
           let errorMessage = "Server error. Please try again later.";
 
           if (errors.Email !== undefined) {
@@ -146,7 +146,7 @@ export default function Settings(props) {
           window.location.reload();
         })
         .catch((err) => {
-          const errors = err.response.data.errors;
+          const errors = err.response.data.messages;
           let errorMessage = "Server error. Please try again later.";
 
           if (errors.Phone !== undefined) {
@@ -204,7 +204,7 @@ export default function Settings(props) {
           }, 1000);
         })
         .catch((err) => {
-          const errors = err.response.data.errors;
+          const errors = err.response.data.messages;
           let errorMessage = "Server error. Please try again later.";
 
           if (errors.PasswordMismatch !== undefined) {

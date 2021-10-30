@@ -5,7 +5,7 @@ import "./support.css";
 
 export default function Support(props) {
   const [form, setForm] = useState({
-    EmailSubject : "",
+    EmailSubject: "",
     EmailBody: "",
   });
   const [showStatus, setShowStatus] = useState(false);
@@ -34,13 +34,16 @@ export default function Support(props) {
     if (login) {
       const { token } = JSON.parse(login);
       axios
-        .post("https://smart-plant.azurewebsites.net/api/user/contactsupport", form, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        .post(
+          "https://smart-plant.azurewebsites.net/api/user/contactsupport",
+          form,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        })
+        )
         .then((res) => {
-
           window.location.pathname = "/support-successful";
         })
         .catch((err) => {
@@ -48,16 +51,15 @@ export default function Support(props) {
           console.log(JSON.stringify(err.response.data));
           setStatus(errorMessage);
         });
-
     } else {
-      console.log('Not logged in somehow?... ');
+      console.log("Not logged in somehow?... ");
       window.location.pathname = "/";
     }
   };
 
   return (
     <section>
-      <h1 className="gold text-center">Contact Support</h1>
+      <h1 className="gold text-center">Contact support</h1>
       <form
         className="w-25 m-auto mt-4 d-none d-lg-block"
         onSubmit={handleSubmit}
@@ -122,7 +124,7 @@ export default function Support(props) {
           onChange={handleChange}
           required
         ></textarea>
-        
+
         {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>

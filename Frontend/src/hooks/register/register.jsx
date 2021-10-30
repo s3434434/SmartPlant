@@ -49,7 +49,7 @@ export default function Register(props) {
           window.location.pathname = "/registration-successful";
         })
         .catch((err) => {
-          const errors = err.response.data.errors;
+          const errors = err.response.data.messages;
           let errorMessage = "Server error. Please try again later.";
 
           if (errors.Email !== undefined) {

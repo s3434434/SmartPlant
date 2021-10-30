@@ -43,7 +43,7 @@ export default function Login(props) {
       })
       .catch((err) => {
         let errorMessage = "Server error. Please try again later.";
-        const errors = err.response.data.errors;
+        const errors = err.response.data.messages;
 
         if (errors["Login Details"] !== undefined) {
           errorMessage = errors["Login Details"][0];

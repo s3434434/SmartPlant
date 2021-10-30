@@ -86,10 +86,12 @@ export default function AddPlant(props) {
           },
         })
         .then((res) => {
-          window.location.pathname = "/plants";
+          window.location.assign(
+            `https://www.demeter.onl/plant-added?token=${res.data.messages.Token[0]}`
+          );
         })
         .catch((err) => {
-          const errors = err.response.data.errors;
+          const errors = err.response.data.messages;
           let errorMessage = "Server error. Please try again later.";
 
           if (errors.PlantName !== undefined) {

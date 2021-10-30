@@ -103,7 +103,7 @@ export default function Plant(props) {
           window.location.reload();
         })
         .catch((err) => {
-          const errors = err.response.data.errors;
+          const errors = err.response.data.messages;
           let errorMessage = "Server error. Please try again later.";
 
           if (errors.PlantName !== undefined) {
