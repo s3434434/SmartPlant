@@ -190,7 +190,7 @@ namespace SmartPlant.Data
 
             var returnMessage = new GenericReturnMessageDto
             {
-                errors = new Dictionary<string, List<string>>
+                Messages = new Dictionary<string, List<string>>
                 {
                     {"Light", new List<string> {PlantCareLightCheck(baseLight, light)}},
                     {"Temperature", new List<string> {PlantCareTempCheck(baseTemp, temp)}},

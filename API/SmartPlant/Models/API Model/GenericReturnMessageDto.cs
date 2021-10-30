@@ -7,11 +7,11 @@ namespace SmartPlant.Models.API_Model
 {
     public class GenericReturnMessageDto
     {
-        public Dictionary<string, List<string>> errors { get; set; }
+        public Dictionary<string, List<string>> Messages { get; set; }
 
         public GenericReturnMessageDto()
         {
-            this.errors = new Dictionary<string, List<string>>();   
+            Messages = new Dictionary<string, List<string>>();   
         }
     }
 }

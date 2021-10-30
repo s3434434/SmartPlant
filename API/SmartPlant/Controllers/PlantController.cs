@@ -71,9 +71,9 @@ namespace SmartPlant.Controllers
 
             var data = JsonConvert.DeserializeObject<ImgurApiSuccessResponse>(response.Content);
 
-                Console.WriteLine(data.Data.link);
-                Console.WriteLine(data.Data.deletehash);
-            
+            Console.WriteLine(data.Data.link);
+            Console.WriteLine(data.Data.deletehash);
+
 
 
             Console.WriteLine(data);
@@ -158,12 +158,12 @@ namespace SmartPlant.Controllers
         {
             var userID = User.Identity.Name;
             var user = await _userManager.FindByIdAsync(userID);
-            
+            GenericReturnMessageDto msg;
             if (!PlantCareData.PlantCareDict.ContainsKey(dto.PlantType))
             {
-                var msg = new GenericReturnMessageDto
+                msg = new GenericReturnMessageDto
                 {
-                    errors = new Dictionary<string, List<string>>
+                    Messages = new Dictionary<string, List<string>>
                     {
                         {"Plant Type", new List<string> {"Invalid Plant Type"}}
                     }
@@ -190,13 +190,13 @@ namespace SmartPlant.Controllers
             }
             if (result == -1)
             {
-                var genericError = new GenericReturnMessageDto{ errors= new Dictionary<string, List<string>>{ {"Limit", new List<String>{"Max Plant Limit Hit"}}}};
+                var genericError = new GenericReturnMessageDto { Messages = new Dictionary<string, List<string>> { { "Limit", new List<String> { "Max Plant Limit Hit" } } } };
                 return Conflict(genericError);
             }
 
             if (result == -2)
             {
-                var genericError = new GenericReturnMessageDto { errors = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
+                var genericError = new GenericReturnMessageDto { Messages = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
                 return Conflict(genericError);
             }
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
@@ -209,7 +209,18 @@ namespace SmartPlant.Controllers
                 await _repo.UploadAndAddPlantImage(clientID, dto.Base64ImgString, plant.PlantID, userID);
             }
 
-            return Created("", $"Success\n{plant}\nToken: {plantToken.Token}");
+
+            msg = new GenericReturnMessageDto
+            {
+                Messages = new Dictionary<string, List<string>>
+            {
+                {
+                    "Token",
+                    new List<string>{plantToken.Token}
+                }
+            }};
+
+            return Created("", msg);
         }
 
 
@@ -242,7 +253,7 @@ namespace SmartPlant.Controllers
 
             if (result == -2)
             {
-                var genericError = new GenericReturnMessageDto { errors = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
+                var genericError = new GenericReturnMessageDto { Messages = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
                 return Conflict(genericError);
             }
             return NotFound();
@@ -435,7 +446,7 @@ namespace SmartPlant.Controllers
 
             if (user == null)
             {
-                genericError.errors.Add("User", new List<string>{"User does not exist"});
+                genericError.Messages.Add("User", new List<string> { "User does not exist" });
                 return NotFound(genericError);
             }
 
@@ -443,7 +454,7 @@ namespace SmartPlant.Controllers
             {
                 var msg = new GenericReturnMessageDto
                 {
-                    errors = new Dictionary<string, List<string>>
+                    Messages = new Dictionary<string, List<string>>
                     {
                         {"Plant Type", new List<string> {"Invalid Plant Type"}}
                     }
@@ -465,17 +476,17 @@ namespace SmartPlant.Controllers
 
             if (result == 0)
             {
-                genericError.errors.Add("Plant", new List<string> { "Plant ID already exists" });
+                genericError.Messages.Add("Plant", new List<string> { "Plant ID already exists" });
                 return Conflict(genericError); //409 , 400?
             }
             if (result == -1)
             {
-                genericError.errors.Add("Limit", new List<string> { "Max plant limit reached" });
+                genericError.Messages.Add("Limit", new List<string> { "Max plant limit reached" });
                 return Conflict(genericError);
             }
             if (result == -2)
             {
-                genericError = new GenericReturnMessageDto { errors = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
+                genericError = new GenericReturnMessageDto { Messages = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
                 return Conflict(genericError);
             }
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
@@ -508,7 +519,7 @@ namespace SmartPlant.Controllers
 
             if (result == -2)
             {
-                var genericError = new GenericReturnMessageDto { errors = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
+                var genericError = new GenericReturnMessageDto { Messages = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
                 return Conflict(genericError);
             }
             return NotFound();
@@ -536,7 +547,7 @@ namespace SmartPlant.Controllers
             else
             {
                 var genericError = new GenericReturnMessageDto();
-                genericError.errors.Add("Plant", new List<string>{"Plant does not exist"});
+                genericError.Messages.Add("Plant", new List<string> { "Plant does not exist" });
                 return NotFound(genericError);
             }
         }
@@ -562,7 +573,7 @@ namespace SmartPlant.Controllers
             if (!result)
             {
                 var genericError = new GenericReturnMessageDto();
-                genericError.errors.Add("Invalid", new List<string> { "Something went wrong, invalid inputs..." });
+                genericError.Messages.Add("Invalid", new List<string> { "Something went wrong, invalid inputs..." });
                 return BadRequest(genericError);
             }
             return Ok(plantToken.Token);

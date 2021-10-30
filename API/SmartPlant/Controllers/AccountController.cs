@@ -114,7 +114,7 @@ namespace SmartPlant.Controllers
 
             if (!result.IsAuthSuccessful)
             {
-                var genericError = new GenericReturnMessageDto {errors = result.errors};
+                var genericError = new GenericReturnMessageDto {Messages = result.errors};
                 return Unauthorized(genericError);
             }
 
@@ -140,7 +140,7 @@ namespace SmartPlant.Controllers
             {
                 return BadRequest(new GenericReturnMessageDto
                 {
-                    errors = new Dictionary<string, List<string>>
+                    Messages = new Dictionary<string, List<string>>
                 {
                     {"Email", new List<string>{"Email not found"}}
                 }
@@ -171,7 +171,7 @@ namespace SmartPlant.Controllers
             {
                 return BadRequest(new GenericReturnMessageDto
                 {
-                    errors = new Dictionary<string, List<string>>
+                    Messages = new Dictionary<string, List<string>>
                     {
                         {"Email", new List<string>{"Email not found"}}
                     }
@@ -185,7 +185,7 @@ namespace SmartPlant.Controllers
                 var genericErrors = new GenericReturnMessageDto();
                 foreach (string e in errors)
                 {
-                    genericErrors.errors.Add(Regex.Match(e, @"^([\w\-]+)").Value, new List<string> { e });
+                    genericErrors.Messages.Add(Regex.Match(e, @"^([\w\-]+)").Value, new List<string> { e });
                 }
 
                 return BadRequest(genericErrors);
@@ -255,7 +255,7 @@ namespace SmartPlant.Controllers
 
             foreach (var e in results.Errors)
             {
-                genericError.errors.Add(e.Code, new List<string>{e.Description});
+                genericError.Messages.Add(e.Code, new List<string>{e.Description});
             }
             return BadRequest(results.Errors);
         }
@@ -282,7 +282,7 @@ namespace SmartPlant.Controllers
                 var genericErrors = new GenericReturnMessageDto();
                 foreach (IdentityError e in result.Errors)
                 {
-                    genericErrors.errors.Add(Regex.Match(e.Code, @"^([\w\-]+)").Value, new List<string> { e.Description });
+                    genericErrors.Messages.Add(Regex.Match(e.Code, @"^([\w\-]+)").Value, new List<string> { e.Description });
                 }
                 return BadRequest(genericErrors);
             }
@@ -313,7 +313,7 @@ namespace SmartPlant.Controllers
                 var genericErrors = new GenericReturnMessageDto();
                 foreach (IdentityError e in result.Errors)
                 {
-                    genericErrors.errors.Add(Regex.Match(e.Code, @"^([\w\-]+)").Value, new List<string> { e.Description });
+                    genericErrors.Messages.Add(Regex.Match(e.Code, @"^([\w\-]+)").Value, new List<string> { e.Description });
                 }
                 return Unauthorized(genericErrors);
             }
@@ -440,7 +440,7 @@ namespace SmartPlant.Controllers
             if (result == null)
             {
                 var genericError = new GenericReturnMessageDto();
-                genericError.errors.Add("Email", new List<string> { "Email already exists or user does not exist" });
+                genericError.Messages.Add("Email", new List<string> { "Email already exists or user does not exist" });
 
                 return BadRequest(genericError);
             }
