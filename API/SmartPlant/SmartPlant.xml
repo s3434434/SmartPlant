@@ -119,6 +119,17 @@
             <response code="400">Something went wrong</response>
             <response code="401"></response>
         </member>
+        <member name="M:SmartPlant.Controllers.AccountController.GetCurrentUserRole">
+            <summary>
+            Gets the logged in user's Role - User or Admin
+            </summary>
+            <remarks>
+            This requires a logged in user to use.
+            </remarks>
+            <response code="200">Email Sent</response>
+            <response code="400">Something went wrong</response>
+            <response code="401"></response>
+        </member>
         <member name="M:SmartPlant.Controllers.AccountController.AdminGetAllUsers">
             <summary>
             Gets a list of all Users and their details (User Id, Email)

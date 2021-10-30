@@ -347,6 +347,15 @@ namespace SmartPlant.Controllers
         }
 
 
+        /// <summary>
+        /// Gets the logged in user's Role - User or Admin
+        /// </summary>
+        /// <remarks>
+        /// This requires a logged in user to use.
+        /// </remarks>
+        /// <response code="200">Email Sent</response>
+        /// <response code="400">Something went wrong</response>
+        /// <response code="401"></response>
         [HttpGet]
         [Authorize]
         [Route("/api/User/Role")]

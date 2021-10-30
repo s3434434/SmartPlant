@@ -222,7 +222,7 @@ namespace SmartPlant.Models.DataManager
         public async Task<bool> DeletePlantImage(string clientID, string plantID, string userID)
         {
             //check if plant + userid combo exists.
-            if (_context.Plants.FirstOrDefaultAsync(p => p.PlantID == plantID && p.UserID == userID) == null)
+            if (await _context.Plants.FirstOrDefaultAsync(p => p.PlantID == plantID && p.UserID == userID) == null)
             {
                 return false;
             }
