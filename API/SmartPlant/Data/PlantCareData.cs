@@ -42,7 +42,7 @@ namespace SmartPlant.Data
             new Dictionary<string, double[]>()
         {
             {
-                "Default", new double[]{0, 0, 0, 0}
+                "Other", new double[]{0, 0, 0, 0}
             },
             {
                 "Flowering Maple", new double[]{1, 1, 2, 4}
@@ -94,9 +94,6 @@ namespace SmartPlant.Data
             },
             {
                 "Jade Plant", new double[]{3,2,2,2}
-            },
-            {
-                "African Violet", new double[]{2,2,2,1}
             },
             {
                 "Rattlesnake Plant", new double[]{2,2,2,1}

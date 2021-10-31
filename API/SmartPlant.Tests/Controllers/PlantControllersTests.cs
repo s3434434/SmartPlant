@@ -47,6 +47,9 @@ namespace SmartPlant.Tests.Controllers
             // Which is used by the ClaimsPrincipal
             mock_Principal = new Mock<ClaimsPrincipal>();
             mock_Principal.Setup(x => x.Identity).Returns(identity.Object);
+
+            //setting up the config return value for the imgur api client id
+            mock_Configuration.Setup(c => c.GetSection("Imgur").GetSection("Client-ID").Value).Returns("ImgurClientId");
         }
 
         #region User
@@ -89,7 +92,7 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
 
-            var test_AddPlantDto = new AddPlantDto { PlantType = "Default", PlantName = "idc'" };
+            var test_AddPlantDto = new AddPlantDto { PlantType = "Other", PlantName = "idc'" };
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -116,7 +119,7 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
 
-            var test_AddPlantDto = new AddPlantDto { PlantType = "Default", PlantName = "idc'" };
+            var test_AddPlantDto = new AddPlantDto { PlantType = "Other", PlantName = "idc'" };
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -143,7 +146,7 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
 
-            var test_AddPlantDto = new AddPlantDto { PlantType = "Default", PlantName = "idc'" };
+            var test_AddPlantDto = new AddPlantDto { PlantType = "Other", PlantName = "idc'" };
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -404,7 +407,7 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
 
-            var test_AddPlantDto = new AdminAddPlantDto {PlantName = "idc", PlantType = "Default", UserID = "idc"};
+            var test_AddPlantDto = new AdminAddPlantDto {PlantName = "idc", PlantType = "Other", UserID = "idc"};
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -431,7 +434,7 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
 
-            var test_AddPlantDto = new AdminAddPlantDto { PlantName = "idc", PlantType = "Default", UserID = "idc" };
+            var test_AddPlantDto = new AdminAddPlantDto { PlantName = "idc", PlantType = "Other", UserID = "idc" };
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -458,7 +461,7 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
 
-            var test_AddPlantDto = new AdminAddPlantDto { PlantName = "idc", PlantType = "Default", UserID = "idc" };
+            var test_AddPlantDto = new AdminAddPlantDto { PlantName = "idc", PlantType = "Other", UserID = "idc" };
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
