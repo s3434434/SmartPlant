@@ -545,8 +545,8 @@ export default function Plant(props) {
                       <tr key={row.timeStampUTC}>
                         <td>{getDate(row.timeStampUTC)}</td>
                         <td>{row.temp.toFixed(1)} °C</td>
-                        <td>{row.lightIntensity.toFixed(1)} fc</td>
-                        <td>{row.moisture}</td>
+                        <td>{((row.lightIntensity / 50) * 100).toFixed(1)}%</td>
+                        <td>{((row.moisture / 50) * 100).toFixed(1)}%</td>
                         <td>{row.humidity.toFixed(1)}%</td>
                       </tr>
                     );
@@ -679,8 +679,10 @@ export default function Plant(props) {
                         <tr key={row.timeStampUTC}>
                           <td>{getDate(row.timeStampUTC)}</td>
                           <td>{row.temp.toFixed(1)} °C</td>
-                          <td>{row.lightIntensity.toFixed(1)} fc</td>
-                          <td>{row.moisture}</td>
+                          <td>
+                            {((row.lightIntensity / 50) * 100).toFixed(1)}%
+                          </td>
+                          <td>{((row.moisture / 50) * 100).toFixed(1)}%</td>
                           <td>{row.humidity.toFixed(1)}%</td>
                         </tr>
                       );
