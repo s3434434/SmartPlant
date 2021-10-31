@@ -527,58 +527,62 @@ export default function Plant(props) {
           <span style={{ color: "white" }}>{sensorData}</span>
         ) : (
           <>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Time</th>
-                  <th>Temperature</th>
-                  <th>Light intensity</th>
-                  <th>Moisture</th>
-                  <th>Humidity</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sensorData
-                  .slice(10 * currentPageNumber, currentPageNumber + 10)
-                  .map((row) => {
-                    return (
-                      <tr key={row.timeStampUTC}>
-                        <td>{getDate(row.timeStampUTC)}</td>
-                        <td>{row.temp.toFixed(1)} °C</td>
-                        <td>{((row.lightIntensity / 50) * 100).toFixed(1)}%</td>
-                        <td>{((row.moisture / 50) * 100).toFixed(1)}%</td>
-                        <td>{row.humidity.toFixed(1)}%</td>
-                      </tr>
-                    );
-                  })}
-                {10 -
-                  sensorData.slice(
-                    10 * currentPageNumber,
-                    currentPageNumber + 10
-                  ).length >
-                0
-                  ? [
-                      ...Array(
-                        10 -
-                          sensorData.slice(
-                            10 * currentPageNumber,
-                            currentPageNumber + 10
-                          ).length
-                      ).keys(),
-                    ].map((key) => {
+            <div className="overflow-scroll">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Temperature</th>
+                    <th>Light intensity</th>
+                    <th>Moisture</th>
+                    <th>Humidity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sensorData
+                    .slice(10 * currentPageNumber, currentPageNumber + 10)
+                    .map((row) => {
                       return (
-                        <tr key={key}>
-                          <td className="hidden-field">-</td>
-                          <td className="hidden-field">-</td>
-                          <td className="hidden-field">-</td>
-                          <td className="hidden-field">-</td>
-                          <td className="hidden-field">-</td>
+                        <tr key={row.timeStampUTC}>
+                          <td>{getDate(row.timeStampUTC)}</td>
+                          <td>{row.temp.toFixed(1)} °C</td>
+                          <td>
+                            {((row.lightIntensity / 50) * 100).toFixed(1)}%
+                          </td>
+                          <td>{((row.moisture / 50) * 100).toFixed(1)}%</td>
+                          <td>{row.humidity.toFixed(1)}%</td>
                         </tr>
                       );
-                    })
-                  : null}
-              </tbody>
-            </table>
+                    })}
+                  {10 -
+                    sensorData.slice(
+                      10 * currentPageNumber,
+                      currentPageNumber + 10
+                    ).length >
+                  0
+                    ? [
+                        ...Array(
+                          10 -
+                            sensorData.slice(
+                              10 * currentPageNumber,
+                              currentPageNumber + 10
+                            ).length
+                        ).keys(),
+                      ].map((key) => {
+                        return (
+                          <tr key={key}>
+                            <td className="hidden-field">-</td>
+                            <td className="hidden-field">-</td>
+                            <td className="hidden-field">-</td>
+                            <td className="hidden-field">-</td>
+                            <td className="hidden-field">-</td>
+                          </tr>
+                        );
+                      })
+                    : null}
+                </tbody>
+              </table>
+            </div>
             <nav style={{ backgroundColor: "transparent" }}>
               <ul className="pagination justify-content-center">
                 <li className="page-item">
