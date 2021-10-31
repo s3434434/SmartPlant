@@ -191,6 +191,7 @@ export default function Plant(props) {
             });
 
             setPaginationNumbers(numbers.slice(0, 19));
+            setCurrentPageNumber(1);
           } else {
             if (frequency === "15 min") {
               setCurrentPage(
@@ -201,12 +202,12 @@ export default function Plant(props) {
                 "No sensor data available. Your sensors may not have collected enough data for this timeframe. Otherwise, please make sure you have correctly input your token into the Arduino."
               );
             }
-
-            setPaginationNumbers([]);
           }
         })
         .catch((err) => {
-          setCurrentPage("Server error. Please try again later.");
+          setCurrentPage(
+            "There was an error retrieving your sensor data. Please try again later."
+          );
         });
     } else {
       setCurrentPage("You are not logged in.");
@@ -217,7 +218,18 @@ export default function Plant(props) {
   };
 
   const pageNavigate = (pageNumber) => {
-    setCurrentPageNumber(pageNumber);
+    if (pageNumber > 0 && pageNumber <= currentPage.length + 1) {
+      let numbers = [...currentPage.keys()];
+      numbers.forEach((number) => {
+        numbers[number]++;
+      });
+      numbers = numbers.slice(pageNumber - 1, pageNumber + 18);
+
+      if (numbers.length >= paginationNumbers.length) {
+        setPaginationNumbers(numbers);
+      }
+      setCurrentPageNumber(pageNumber);
+    }
   };
 
   return (
