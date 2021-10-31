@@ -67,8 +67,9 @@ namespace SmartPlant.Models.DataManager
                 { "email", user.Email }
             };
 
-            var content = QueryHelpers.AddQueryString(userRegDto.ClientURI, queryString);
-            var message = new Message(new string[] { user.Email }, "SmartPlant - Confirm Your Email", content);
+            var content = $"Thank you for registering for Demeter!\n\n\n" +
+                          $"Please click on the following link to confirm your email and activate your account.\n\n{QueryHelpers.AddQueryString(userRegDto.ClientURI, queryString)}";
+            var message = new Message(new string[] { user.Email }, "Demeter SmartPlant - Confirm Your Email", content);
             await _emailSender.SendEmailAsync(message);
 
             await _userManager.AddToRoleAsync(user, UserRoles.User);
@@ -140,8 +141,11 @@ namespace SmartPlant.Models.DataManager
                 { "email", user.Email }
             };
 
-            var content = QueryHelpers.AddQueryString(passwordDto.ClientURI, queryString);
-            var message = new Message(new string[] { user.Email }, "SmartPlant - Reset Your Password", content);
+            var content = $"Hello {user.Email}!\n\n" +
+                          $"Please click on the following link to reset your password\n\n" +
+                          $"{QueryHelpers.AddQueryString(passwordDto.ClientURI, queryString)}\n\n" +
+                          $"If you did not request to reset your password, your account may have been compromised. We suggest you change all your passwords immediately.";
+            var message = new Message(new string[] { user.Email }, "Demeter SmartPlant - Reset Your Password", content);
             await _emailSender.SendEmailAsync(message);
 
             //return true;
