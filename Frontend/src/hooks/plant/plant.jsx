@@ -537,7 +537,6 @@ export default function Plant(props) {
                   <th>Time</th>
                   <th>Temperature</th>
                   <th>Light intensity</th>
-
                   <th>Moisture</th>
                   <th>Humidity</th>
                 </tr>
@@ -549,10 +548,10 @@ export default function Plant(props) {
                     return (
                       <tr key={row.timeStampUTC}>
                         <td>{getDate(row.timeStampUTC)}</td>
-                        <td>{row.temp}</td>
-                        <td>{row.lightIntensity} fc</td>
+                        <td>{row.temp.toFixed(1)} °C</td>
+                        <td>{row.lightIntensity.toFixed(1)} fc</td>
                         <td>{row.moisture}</td>
-                        <td>{row.humidity}</td>
+                        <td>{row.humidity.toFixed(1)}%</td>
                       </tr>
                     );
                   })}
@@ -643,10 +642,10 @@ export default function Plant(props) {
               <thead>
                 <tr>
                   <th>Time</th>
-                  <th>Light intensity</th>
                   <th>Temperature</th>
-                  <th>Humidity</th>
+                  <th>Light intensity</th>
                   <th>Moisture</th>
+                  <th>Humidity</th>
                 </tr>
               </thead>
               <tbody>
@@ -656,10 +655,10 @@ export default function Plant(props) {
                     return (
                       <tr key={row.timeStampUTC}>
                         <td>{getDate(row.timeStampUTC)}</td>
-                        <td>{row.lightIntensity}</td>
-                        <td>{row.temp}</td>
-                        <td>{row.humidity}</td>
+                        <td>{row.temp.toFixed(1)} °C</td>
+                        <td>{row.lightIntensity.toFixed(1)} fc</td>
                         <td>{row.moisture}</td>
+                        <td>{row.humidity.toFixed(1)}%</td>
                       </tr>
                     );
                   })}
