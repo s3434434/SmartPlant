@@ -24,7 +24,10 @@ export default function Plant(props) {
     [arduinoToken, setArduinoToken] = useState(""),
     [showArduinoToken, setShowArduinoToken] = useState(false),
     [showTokenStatus, setShowTokenStatus] = useState(false),
-    [tokenStatus, setTokenStatus] = useState("none");
+    [tokenStatus, setTokenStatus] = useState("none"),
+    [currentPageNumber, setCurrentPageNumber] = useState(1),
+    [paginationNumbers, setPaginationNumbers] = useState([]),
+    [currentPage, setCurrentPage] = useState("Loading sensor data...");
 
   useEffect(() => {
     document.title = "Demeter - The plant meter";
@@ -155,6 +158,66 @@ export default function Plant(props) {
         window.location.pathname = "/";
       }, 500);
     }
+  };
+
+  const loadSensorData = (frequency) => {
+    const login = localStorage.getItem("demeter-login");
+    if (login) {
+      const { token } = JSON.parse(login);
+
+      let path = "";
+      if (frequency === "Daily" || frequency === "Monthly") {
+        path = frequency;
+        path += "/";
+      }
+      axios
+        .get(
+          `https://smart-plant.azurewebsites.net/api/SensorData/${path}${form.plantID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          const rows = res.data;
+
+          if (rows.length > 0) {
+            setCurrentPage(rows);
+
+            let numbers = [...rows.keys()];
+            numbers.forEach((number) => {
+              numbers[number]++;
+            });
+
+            setPaginationNumbers(numbers.slice(0, 19));
+          } else {
+            if (frequency === "15 min") {
+              setCurrentPage(
+                "No sensor data available. Please make sure you have correctly input your token into the Arduino."
+              );
+            } else {
+              setCurrentPage(
+                "No sensor data available. Your sensors may not have collected enough data for this timeframe. Otherwise, please make sure you have correctly input your token into the Arduino."
+              );
+            }
+
+            setPaginationNumbers([]);
+          }
+        })
+        .catch((err) => {
+          setCurrentPage("Server error. Please try again later.");
+        });
+    } else {
+      setCurrentPage("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
+    }
+  };
+
+  const pageNavigate = (pageNumber) => {
+    setCurrentPageNumber(pageNumber);
   };
 
   return (
@@ -420,6 +483,233 @@ export default function Plant(props) {
           </div>
         </>
       )}
+
+      <div className="w-25 m-auto d-none d-lg-block gold-border">
+        {currentPage instanceof String ? (
+          <span className="text-center" style={{ color: "white" }}>
+            {currentPage}
+          </span>
+        ) : (
+          <>
+            <table>
+              <th>
+                <td>Light intensity</td>
+                <td>Temperature</td>
+                <td>Humidity</td>
+                <td>Moisture</td>
+                <td>Time</td>
+              </th>
+              {currentPage
+                .slice(currentPageNumber - 1, currentPageNumber + 8)
+                .map((row) => {
+                  return (
+                    <tr>
+                      <td>{row.lightIntensity}</td>
+                      <td>{row.temp}</td>
+                      <td>{row.humidity}</td>
+                      <td>{row.moisture}</td>
+                      <td>{row.timeStampUTC}</td>
+                    </tr>
+                  );
+                })}
+            </table>
+            <nav>
+              <h5 className="text-center" style={{ color: "white" }}>
+                Sample frequency
+              </h5>
+              <ul className="pagination">
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="#"
+                    onClick={() => {
+                      loadSensorData("15 min");
+                    }}
+                  >
+                    15 minute
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="#"
+                    onClick={() => {
+                      loadSensorData("Daily");
+                    }}
+                  >
+                    Daily
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="#"
+                    onClick={() => {
+                      loadSensorData("Monthly");
+                    }}
+                  >
+                    Monthly
+                  </a>
+                </li>
+              </ul>
+            </nav>
+            <nav>
+              <ul className="pagination">
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="#"
+                    onClick={() => {
+                      pageNavigate(currentPageNumber - 1);
+                    }}
+                  >
+                    Previous
+                  </a>
+                </li>
+                {paginationNumbers.map((paginationNumber) => {
+                  return (
+                    <li class="page-item">
+                      <a
+                        class="page-link"
+                        href="#"
+                        onClick={() => {
+                          pageNavigate(paginationNumber);
+                        }}
+                      >
+                        {paginationNumber}
+                      </a>
+                    </li>
+                  );
+                })}
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="#"
+                    onClick={() => {
+                      pageNavigate(currentPageNumber + 1);
+                    }}
+                  >
+                    Next
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </>
+        )}
+      </div>
+      <div className="m-auto px-2 d-lg-none gold-border">
+        {currentPage instanceof String ? (
+          <span className="text-center" style={{ color: "white" }}>
+            {currentPage}
+          </span>
+        ) : (
+          <>
+            <table>
+              <th>
+                <td>Light intensity</td>
+                <td>Temperature</td>
+                <td>Humidity</td>
+                <td>Moisture</td>
+                <td>Time</td>
+              </th>
+              {currentPage
+                .slice(currentPageNumber - 1, currentPageNumber + 8)
+                .map((row) => {
+                  return (
+                    <tr>
+                      <td>{row.lightIntensity}</td>
+                      <td>{row.temp}</td>
+                      <td>{row.humidity}</td>
+                      <td>{row.moisture}</td>
+                      <td>{row.timeStampUTC}</td>
+                    </tr>
+                  );
+                })}
+            </table>
+            <nav>
+              <h5 className="text-center" style={{ color: "white" }}>
+                Sample frequency
+              </h5>
+              <ul className="pagination">
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="#"
+                    onClick={() => {
+                      loadSensorData("15 min");
+                    }}
+                  >
+                    15 minute
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="#"
+                    onClick={() => {
+                      loadSensorData("Daily");
+                    }}
+                  >
+                    Daily
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="#"
+                    onClick={() => {
+                      loadSensorData("Monthly");
+                    }}
+                  >
+                    Monthly
+                  </a>
+                </li>
+              </ul>
+            </nav>
+            <nav>
+              <ul className="pagination">
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="#"
+                    onClick={() => {
+                      pageNavigate(currentPageNumber - 1);
+                    }}
+                  >
+                    Previous
+                  </a>
+                </li>
+                {paginationNumbers.map((paginationNumber) => {
+                  return (
+                    <li class="page-item">
+                      <a
+                        class="page-link"
+                        href="#"
+                        onClick={() => {
+                          pageNavigate(paginationNumber);
+                        }}
+                      >
+                        {paginationNumber}
+                      </a>
+                    </li>
+                  );
+                })}
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="#"
+                    onClick={() => {
+                      pageNavigate(currentPageNumber + 1);
+                    }}
+                  >
+                    Next
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </>
+        )}
+      </div>
     </section>
   );
 }
