@@ -531,78 +531,72 @@ export default function Plant(props) {
               </h5>
               <ul className="pagination">
                 <li class="page-item">
-                  <a
+                  <span
                     class="page-link"
-                    href="#"
                     onClick={() => {
                       loadSensorData("15 min");
                     }}
                   >
                     15 minute
-                  </a>
+                  </span>
                 </li>
                 <li class="page-item">
-                  <a
+                  <span
                     class="page-link"
-                    href="#"
                     onClick={() => {
                       loadSensorData("Daily");
                     }}
                   >
                     Daily
-                  </a>
+                  </span>
                 </li>
                 <li class="page-item">
-                  <a
+                  <span
                     class="page-link"
-                    href="#"
                     onClick={() => {
                       loadSensorData("Monthly");
                     }}
                   >
                     Monthly
-                  </a>
+                  </span>
                 </li>
               </ul>
             </nav>
             <nav>
               <ul className="pagination">
                 <li class="page-item">
-                  <a
+                  <span
                     class="page-link"
-                    href="#"
                     onClick={() => {
                       pageNavigate(currentPageNumber - 1);
                     }}
                   >
                     Previous
-                  </a>
+                  </span>
                 </li>
                 {paginationNumbers.map((paginationNumber) => {
                   return (
                     <li class="page-item">
-                      <a
+                      <span
                         class="page-link"
-                        href="#"
                         onClick={() => {
                           pageNavigate(paginationNumber);
                         }}
                       >
                         {paginationNumber}
-                      </a>
+                      </span>
                     </li>
                   );
                 })}
                 <li class="page-item">
-                  <a
+                  <span
                     class="page-link"
-                    href="#"
                     onClick={() => {
                       pageNavigate(currentPageNumber + 1);
                     }}
                   >
                     Next
-                  </a>
+                  </span>
                 </li>
               </ul>
             </nav>
@@ -644,78 +638,72 @@ export default function Plant(props) {
               </h5>
               <ul className="pagination">
                 <li class="page-item">
-                  <a
+                  <span
                     class="page-link"
-                    href="#"
                     onClick={() => {
                       loadSensorData("15 min");
                     }}
                   >
                     15 minute
-                  </a>
+                  </span>
                 </li>
                 <li class="page-item">
-                  <a
+                  <span
                     class="page-link"
-                    href="#"
                     onClick={() => {
                       loadSensorData("Daily");
                     }}
                   >
                     Daily
-                  </a>
+                  </span>
                 </li>
                 <li class="page-item">
-                  <a
+                  <span
                     class="page-link"
-                    href="#"
                     onClick={() => {
                       loadSensorData("Monthly");
                     }}
                   >
                     Monthly
-                  </a>
+                  </span>
                 </li>
               </ul>
             </nav>
             <nav>
               <ul className="pagination">
                 <li class="page-item">
-                  <a
+                  <span
                     class="page-link"
-                    href="#"
                     onClick={() => {
                       pageNavigate(currentPageNumber - 1);
                     }}
                   >
                     Previous
-                  </a>
+                  </span>
                 </li>
                 {paginationNumbers.map((paginationNumber) => {
                   return (
                     <li class="page-item">
-                      <a
+                      <span
                         class="page-link"
-                        href="#"
                         onClick={() => {
                           pageNavigate(paginationNumber);
                         }}
                       >
                         {paginationNumber}
-                      </a>
+                      </span>
                     </li>
                   );
                 })}
                 <li class="page-item">
-                  <a
+                  <span
                     class="page-link"
-                    href="#"
                     onClick={() => {
                       pageNavigate(currentPageNumber + 1);
                     }}
                   >
                     Next
-                  </a>
+                  </span>
                 </li>
               </ul>
             </nav>
