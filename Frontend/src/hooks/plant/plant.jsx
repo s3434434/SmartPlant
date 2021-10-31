@@ -555,6 +555,32 @@ export default function Plant(props) {
                       </tr>
                     );
                   })}
+                {10 -
+                  sensorData.slice(
+                    10 * currentPageNumber,
+                    currentPageNumber + 10
+                  ).length >
+                0
+                  ? [
+                      ...Array(
+                        10 -
+                          sensorData.slice(
+                            10 * currentPageNumber,
+                            currentPageNumber + 10
+                          ).length
+                      ).keys(),
+                    ].map((key) => {
+                      return (
+                        <tr key={key}>
+                          <td className="hidden-field">-</td>
+                          <td className="hidden-field">-</td>
+                          <td className="hidden-field">-</td>
+                          <td className="hidden-field">-</td>
+                          <td className="hidden-field">-</td>
+                        </tr>
+                      );
+                    })
+                  : null}
               </tbody>
             </table>
             <nav style={{ backgroundColor: "transparent" }}>
@@ -633,7 +659,7 @@ export default function Plant(props) {
           </ul>
         </nav>
       </div>
-      <div className="m-auto px-2 d-xl-none gold-border">
+      <div className="m-auto px-2 d-xl-none gold-border overflow-scroll">
         {typeof sensorData === "string" ? (
           <span style={{ color: "white" }}>{sensorData}</span>
         ) : (
@@ -662,6 +688,32 @@ export default function Plant(props) {
                       </tr>
                     );
                   })}
+                {10 -
+                  sensorData.slice(
+                    10 * currentPageNumber,
+                    currentPageNumber + 10
+                  ).length >
+                0
+                  ? [
+                      ...Array(
+                        10 -
+                          sensorData.slice(
+                            10 * currentPageNumber,
+                            currentPageNumber + 10
+                          ).length
+                      ).keys(),
+                    ].map((key) => {
+                      return (
+                        <tr key={key}>
+                          <td className="hidden-field">-</td>
+                          <td className="hidden-field">-</td>
+                          <td className="hidden-field">-</td>
+                          <td className="hidden-field">-</td>
+                          <td className="hidden-field">-</td>
+                        </tr>
+                      );
+                    })
+                  : null}
               </tbody>
             </table>
             <nav style={{ backgroundColor: "transparent" }}>
