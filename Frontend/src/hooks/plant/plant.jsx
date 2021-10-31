@@ -480,17 +480,13 @@ export default function Plant(props) {
       {showArduinoToken ? (
         <>
           <div className="w-25 m-auto d-none d-lg-block">
-            <div className="gold">
-              <span>Arduino token</span>
-            </div>
+            <h4 className="gold text-center mt-1">Arduino token</h4>
             <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{arduinoToken}</span>
             </div>
           </div>
           <div className="m-auto px-2 d-lg-none">
-            <div className="gold">
-              <span>Arduino token</span>
-            </div>
+            <h4 className="gold text-center mt-1">Arduino token</h4>
             <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{arduinoToken}</span>
             </div>
@@ -500,11 +496,11 @@ export default function Plant(props) {
         <>
           <div className="w-25 m-auto d-none d-lg-block">
             <div
-              className={showTokenStatus ? "text-center mt-3" : "hidden-field"}
+              className={showTokenStatus ? "text-center mt-1" : "hidden-field"}
             >
               <span style={{ color: "white" }}>{tokenStatus}</span>
             </div>
-            <div className="text-center mt-3">
+            <div className="text-center mt-2">
               <button className="btn btn-primary" onClick={fetchArduinoToken}>
                 Show Arduino token
               </button>
@@ -512,11 +508,11 @@ export default function Plant(props) {
           </div>
           <div className="m-auto px-2 d-lg-none">
             <div
-              className={showTokenStatus ? "text-center mt-3" : "hidden-field"}
+              className={showTokenStatus ? "text-center mt-1" : "hidden-field"}
             >
               <span style={{ color: "white" }}>{tokenStatus}</span>
             </div>
-            <div className="text-center mt-3">
+            <div className="text-center mt-2">
               <button className="btn btn-primary" onClick={fetchArduinoToken}>
                 Show Arduino token
               </button>
