@@ -62,6 +62,8 @@ export default function Plant(props) {
           props.logOut();
           window.location.pathname = "/";
         });
+
+      loadSensorData("15 min");
     } else {
       window.location.pathname = "/";
     }
@@ -496,11 +498,10 @@ export default function Plant(props) {
         </>
       )}
 
-      <div className="w-25 m-auto d-none d-lg-block gold-border">
-        {currentPage instanceof String ? (
-          <span className="text-center" style={{ color: "white" }}>
-            {currentPage}
-          </span>
+      <h3 className="gold text-center mt-5">Sensor data</h3>
+      <div className="w-50 text-center m-auto d-none d-lg-block gold-border">
+        {typeof currentPage === "string" ? (
+          <span style={{ color: "white" }}>{currentPage}</span>
         ) : (
           <>
             <table>
@@ -604,7 +605,7 @@ export default function Plant(props) {
         )}
       </div>
       <div className="m-auto px-2 d-lg-none gold-border">
-        {currentPage instanceof String ? (
+        {typeof currentPage === "string" ? (
           <span className="text-center" style={{ color: "white" }}>
             {currentPage}
           </span>
