@@ -480,13 +480,13 @@ export default function Plant(props) {
       {showArduinoToken ? (
         <>
           <div className="w-25 m-auto d-none d-lg-block">
-            <h4 className="gold text-center mt-1">Arduino token</h4>
+            <h3 className="gold text-center mt-1">Arduino token</h3>
             <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{arduinoToken}</span>
             </div>
           </div>
           <div className="m-auto px-2 d-lg-none">
-            <h4 className="gold text-center mt-1">Arduino token</h4>
+            <h3 className="gold text-center mt-1">Arduino token</h3>
             <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{arduinoToken}</span>
             </div>
