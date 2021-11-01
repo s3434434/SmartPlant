@@ -29,6 +29,7 @@ export default function Plant(props) {
     [displayedReadings, setDisplayedReadings] = useState(
       "Loading sensor data..."
     ),
+    [averageReading, setAverageReading] = useState(null),
     [currentPageNumber, setCurrentPageNumber] = useState(0),
     [paginationNumbers, setPaginationNumbers] = useState([]);
 
@@ -278,6 +279,27 @@ export default function Plant(props) {
     }
 
     if (readings.length > 0) {
+      let averageTemp = null,
+        averageLightIntensity = null,
+        averageMoisture = null,
+        averageHumidity = null;
+      readings.forEach((reading) => {
+        averageTemp += reading.temp;
+        averageLightIntensity += reading.lightIntensity;
+        averageMoisture += reading.moisture;
+        averageHumidity += reading.humidity;
+      });
+      averageTemp /= readings.length;
+      averageLightIntensity /= readings.length;
+      averageMoisture /= readings.length;
+      averageHumidity /= readings.length;
+      setAverageReading({
+        temp: averageTemp,
+        lightIntensity: averageLightIntensity,
+        moisture: averageMoisture,
+        humidity: averageHumidity,
+      });
+
       setDisplayedReadings(readings);
 
       const numbers = getPaginationNumbers(readings.length);
@@ -583,7 +605,7 @@ export default function Plant(props) {
           <span style={{ color: "white" }}>{displayedReadings}</span>
         ) : (
           <>
-            <div>
+            <div className="overflow-auto">
               <table className="table">
                 <thead>
                   <tr>
@@ -595,8 +617,17 @@ export default function Plant(props) {
                   </tr>
                 </thead>
                 <tbody>
+                  {averageReading !== null ? (
+                    <tr key="average">
+                      <td>Average</td>
+                      <td>{averageReading.temp.toFixed(1)} °C</td>
+                      <td>{averageReading.lightIntensity.toFixed(1)}%</td>
+                      <td>{averageReading.moisture.toFixed(1)}%</td>
+                      <td>{averageReading.humidity.toFixed(1)}%</td>
+                    </tr>
+                  ) : null}
                   {displayedReadings
-                    .slice(10 * currentPageNumber, currentPageNumber + 10)
+                    .slice(9 * currentPageNumber, currentPageNumber + 9)
                     .map((row) => {
                       return (
                         <tr key={row.timeStampUTC}>
@@ -608,18 +639,18 @@ export default function Plant(props) {
                         </tr>
                       );
                     })}
-                  {10 -
+                  {9 -
                     displayedReadings.slice(
-                      10 * currentPageNumber,
-                      currentPageNumber + 10
+                      9 * currentPageNumber,
+                      currentPageNumber + 9
                     ).length >
                   0
                     ? [
                         ...Array(
-                          10 -
+                          9 -
                             displayedReadings.slice(
-                              10 * currentPageNumber,
-                              currentPageNumber + 10
+                              9 * currentPageNumber,
+                              currentPageNumber + 9
                             ).length
                         ).keys(),
                       ].map((key) => {
@@ -748,7 +779,7 @@ export default function Plant(props) {
           <span style={{ color: "white" }}>{displayedReadings}</span>
         ) : (
           <>
-            <div className="overflow-scroll">
+            <div className="overflow-auto">
               <table className="table">
                 <thead>
                   <tr>
@@ -760,8 +791,17 @@ export default function Plant(props) {
                   </tr>
                 </thead>
                 <tbody>
+                  {averageReading !== null ? (
+                    <tr key="average">
+                      <td>Average</td>
+                      <td>{averageReading.temp.toFixed(1)} °C</td>
+                      <td>{averageReading.lightIntensity.toFixed(1)}%</td>
+                      <td>{averageReading.moisture.toFixed(1)}%</td>
+                      <td>{averageReading.humidity.toFixed(1)}%</td>
+                    </tr>
+                  ) : null}
                   {displayedReadings
-                    .slice(10 * currentPageNumber, currentPageNumber + 10)
+                    .slice(9 * currentPageNumber, currentPageNumber + 9)
                     .map((row) => {
                       return (
                         <tr key={row.timeStampUTC}>
@@ -773,18 +813,18 @@ export default function Plant(props) {
                         </tr>
                       );
                     })}
-                  {10 -
+                  {9 -
                     displayedReadings.slice(
-                      10 * currentPageNumber,
-                      currentPageNumber + 10
+                      9 * currentPageNumber,
+                      currentPageNumber + 9
                     ).length >
                   0
                     ? [
                         ...Array(
-                          10 -
+                          9 -
                             displayedReadings.slice(
-                              10 * currentPageNumber,
-                              currentPageNumber + 10
+                              9 * currentPageNumber,
+                              currentPageNumber + 9
                             ).length
                         ).keys(),
                       ].map((key) => {
