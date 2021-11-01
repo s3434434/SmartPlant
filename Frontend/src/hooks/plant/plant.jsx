@@ -633,6 +633,7 @@ export default function Plant(props) {
           </div>
         </>
       )}
+
       <h3 className="gold text-center mt-5">Sensor data</h3>
       <div className="w-50 text-center m-auto d-none d-xl-block gold-border">
         {typeof displayedReadings === "string" ? (
@@ -702,7 +703,10 @@ export default function Plant(props) {
                 </tbody>
               </table>
             </div>
-            <nav style={{ backgroundColor: "transparent" }}>
+            <nav
+              className="overflow-auto"
+              style={{ backgroundColor: "transparent" }}
+            >
               <ul className="pagination justify-content-center">
                 <li className="page-item">
                   <span
@@ -742,7 +746,10 @@ export default function Plant(props) {
             </nav>
           </>
         )}
-        <nav className="mt-4" style={{ backgroundColor: "transparent" }}>
+        <nav
+          className="mt-4 overflow-auto"
+          style={{ backgroundColor: "transparent" }}
+        >
           <h4 className="text-center gold">Sample timeframe</h4>
           <ul className="pagination justify-content-center">
             <li className="page-item">
@@ -876,7 +883,10 @@ export default function Plant(props) {
                 </tbody>
               </table>
             </div>
-            <nav style={{ backgroundColor: "transparent" }}>
+            <nav
+              className="overflow-auto"
+              style={{ backgroundColor: "transparent" }}
+            >
               <ul className="pagination justify-content-center">
                 <li className="page-item">
                   <span
@@ -918,68 +928,70 @@ export default function Plant(props) {
         )}
         <nav className="mt-4" style={{ backgroundColor: "transparent" }}>
           <h4 className="text-center gold">Sample timeframe</h4>
-          <ul className="pagination justify-content-center">
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  updateDisplayedReadings("Hour");
-                }}
-              >
-                Hour
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  updateDisplayedReadings("Day");
-                }}
-              >
-                Day
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  updateDisplayedReadings("Week");
-                }}
-              >
-                Week
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  updateDisplayedReadings("Month");
-                }}
-              >
-                Month
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  updateDisplayedReadings("Year");
-                }}
-              >
-                Year
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  updateDisplayedReadings("All time");
-                }}
-              >
-                All time
-              </span>
-            </li>
-          </ul>
+          <div className="overflow-auto">
+            <ul className="pagination justify-content-center">
+              <li className="page-item">
+                <span
+                  className="page-link"
+                  onClick={() => {
+                    updateDisplayedReadings("Hour");
+                  }}
+                >
+                  Hour
+                </span>
+              </li>
+              <li className="page-item">
+                <span
+                  className="page-link"
+                  onClick={() => {
+                    updateDisplayedReadings("Day");
+                  }}
+                >
+                  Day
+                </span>
+              </li>
+              <li className="page-item">
+                <span
+                  className="page-link"
+                  onClick={() => {
+                    updateDisplayedReadings("Week");
+                  }}
+                >
+                  Week
+                </span>
+              </li>
+              <li className="page-item">
+                <span
+                  className="page-link"
+                  onClick={() => {
+                    updateDisplayedReadings("Month");
+                  }}
+                >
+                  Month
+                </span>
+              </li>
+              <li className="page-item">
+                <span
+                  className="page-link"
+                  onClick={() => {
+                    updateDisplayedReadings("Year");
+                  }}
+                >
+                  Year
+                </span>
+              </li>
+              <li className="page-item">
+                <span
+                  className="page-link"
+                  onClick={() => {
+                    updateDisplayedReadings("All time");
+                  }}
+                >
+                  All time
+                </span>
+              </li>
+            </ul>
+          </div>
         </nav>
       </div>
     </section>

@@ -10,13 +10,20 @@ td {
   cursor: pointer;
   color: white !important;
   border: 0em !important;
+  white-space: nowrap;
 }
 .page-link:hover {
-  color: rgb(206, 206, 206) !important;
+  opacity: 0.9;
   box-shadow: 0.0825em 0.0825em 0.1425em rgb(247, 215, 59),
     -0.0825em -0.0825em 0.1425em rgb(247, 215, 59),
     -0.0825em 0.0825em 0.1425em rgb(247, 215, 59),
     0.0825em -0.0825em 0.1425em rgb(247, 215, 59), 0.0624em 0.0624em black,
     -0.0624em -0.0624em black, -0.0624em 0.0624em black,
     0.0624em -0.0624em black !important;
+}
+.page-link:focus {
+  outline: none;
+}
+.page-link:active {
+  opacity: 0.8;
 }

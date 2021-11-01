@@ -43,6 +43,10 @@ p {
   border: none !important;
 }
 .btn-primary:hover,
+.btn-primary:active {
+  opacity: 0.9;
+}
+.btn-primary:hover,
 .btn-primary:active,
 .btn-primary:focus {
   box-shadow: 0.11em 0.11em 0.19em rgb(247, 215, 59),
