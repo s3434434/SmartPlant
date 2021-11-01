@@ -234,8 +234,8 @@ export default function Plant(props) {
       readings = sensorReadings;
     } else {
       const now = new Date().getTime();
-
       let endTime = null;
+
       switch (timeframe) {
         case "Hour":
           endTime = now - 3600000;
