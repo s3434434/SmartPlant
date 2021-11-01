@@ -25,7 +25,10 @@ export default function Plant(props) {
     [showArduinoToken, setShowArduinoToken] = useState(false),
     [showTokenStatus, setShowTokenStatus] = useState(false),
     [tokenStatus, setTokenStatus] = useState("none"),
-    [sensorData, setSensorData] = useState("Loading sensor data..."),
+    [sensorReadings, setSensorReadings] = useState(null),
+    [displayedReadings, setDisplayedReadings] = useState(
+      "Loading sensor data..."
+    ),
     [currentPageNumber, setCurrentPageNumber] = useState(0),
     [paginationNumbers, setPaginationNumbers] = useState([]);
 
@@ -63,13 +66,20 @@ export default function Plant(props) {
           window.location.pathname = "/";
         });
 
-      loadSensorData("15 sec");
+      loadSensorReadings();
     } else {
       window.location.pathname = "/";
     }
 
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (sensorReadings !== null) {
+      updateDisplayedReadings("All time");
+    }
+    // eslint-disable-next-line
+  }, [sensorReadings]);
 
   const handleChange = (e) => {
     const input = e.target;
@@ -182,21 +192,14 @@ export default function Plant(props) {
     return numbers;
   };
 
-  const loadSensorData = (frequency) => {
-    setSensorData("Loading sensor data...");
-
+  const loadSensorReadings = () => {
     const login = localStorage.getItem("demeter-login");
     if (login) {
       const { token } = JSON.parse(login);
 
-      let path = "";
-      if (frequency === "Daily" || frequency === "Monthly") {
-        path = frequency;
-        path += "/";
-      }
       axios
         .get(
-          `https://smart-plant.azurewebsites.net/api/SensorData/${path}${form.plantID}`,
+          `https://smart-plant.azurewebsites.net/api/SensorData/${form.plantID}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -204,43 +207,90 @@ export default function Plant(props) {
           }
         )
         .then((res) => {
-          const readings = res.data;
-
-          if (readings.length > 0) {
-            const sortedReadings = readings.sort((a, b) => {
-              const timeA = new Date(a.timeStampUTC).getTime(),
-                timeB = new Date(b.timeStampUTC).getTime();
-              return timeA > timeB ? -1 : timeA < timeB ? 1 : 0;
-            });
-            setSensorData(sortedReadings);
-
-            const numbers = getPaginationNumbers(readings.length);
-            setPaginationNumbers(numbers.slice(0, 19));
-
-            setCurrentPageNumber(0);
-          } else {
-            if (frequency === "15 sec") {
-              setSensorData(
-                "No sensor data available. Please make sure you have correctly input your token into the Arduino."
-              );
-            } else {
-              setSensorData(
-                "No sensor data available. Your sensors may not have collected enough data for this timeframe. Otherwise, please make sure you have correctly input your token into the Arduino."
-              );
-            }
-          }
+          const sortedReadings = res.data.sort((a, b) => {
+            const timeA = new Date(a.timeStampUTC).getTime(),
+              timeB = new Date(b.timeStampUTC).getTime();
+            return timeA > timeB ? -1 : timeA < timeB ? 1 : 0;
+          });
+          setSensorReadings(sortedReadings);
         })
         .catch((err) => {
-          console.log(err);
-          setSensorData(
+          setDisplayedReadings(
             "There was an error retrieving your sensor data. Please try again later."
           );
         });
     } else {
-      setSensorData("You are not logged in.");
+      setDisplayedReadings("You are not logged in.");
       setTimeout(() => {
         window.location.pathname = "/";
       }, 500);
+    }
+  };
+
+  const updateDisplayedReadings = (timeframe) => {
+    let readings = [];
+    if (timeframe === "All time") {
+      readings = sensorReadings;
+    } else {
+      const now = new Date().getTime();
+
+      let endTime = null;
+      switch (timeframe) {
+        case "Day":
+          endTime = now - 86400000;
+          break;
+        case "Week":
+          endTime = now - 604800000;
+          break;
+        case "Month":
+          endTime = new Date();
+          const currentMonth = endTime.getMonth();
+          endTime.setMonth(endTime.getMonth() - 1);
+          if (endTime.getMonth() === currentMonth) {
+            endTime.setDate(0);
+          }
+          endTime = endTime.getTime();
+
+          break;
+        case "Year":
+          endTime = new Date();
+          const current_month = endTime.getMonth();
+          endTime.setMonth(endTime.getMonth() - 12);
+          if (endTime.getMonth() === current_month) {
+            endTime.setDate(0);
+          }
+          endTime = endTime.getTime();
+
+          break;
+        default:
+          break;
+      }
+
+      sensorReadings.forEach((sensorReading) => {
+        const readingTime = new Date(sensorReading.timeStampUTC).getTime();
+        if (readingTime <= now && readingTime >= endTime) {
+          readings.push(sensorReading);
+        }
+      });
+    }
+
+    if (readings.length > 0) {
+      setDisplayedReadings(readings);
+
+      const numbers = getPaginationNumbers(readings.length);
+      setPaginationNumbers(numbers.slice(0, 19));
+
+      setCurrentPageNumber(0);
+    } else {
+      if (timeframe === "All time") {
+        setDisplayedReadings(
+          "No sensor data available. Please make sure you have correctly input your token into the Arduino."
+        );
+      } else {
+        setDisplayedReadings(
+          "No sensor data available. Your sensors may not have collected enough data for this timeframe. Otherwise, please make sure you have correctly input your token into the Arduino."
+        );
+      }
     }
   };
 
@@ -250,8 +300,11 @@ export default function Plant(props) {
   };
 
   const pageNavigate = (pageNumber) => {
-    if (pageNumber >= 0 && pageNumber <= getNumPages(sensorData.length) - 1) {
-      let numbers = getPaginationNumbers(sensorData.length);
+    if (
+      pageNumber >= 0 &&
+      pageNumber <= getNumPages(displayedReadings.length) - 1
+    ) {
+      let numbers = getPaginationNumbers(displayedReadings.length);
       numbers = numbers.slice(pageNumber, pageNumber + 19);
 
       if (numbers.length >= paginationNumbers.length) {
@@ -523,11 +576,11 @@ export default function Plant(props) {
 
       <h3 className="gold text-center mt-5">Sensor data</h3>
       <div className="w-50 text-center m-auto d-none d-xl-block gold-border">
-        {typeof sensorData === "string" ? (
-          <span style={{ color: "white" }}>{sensorData}</span>
+        {typeof displayedReadings === "string" ? (
+          <span style={{ color: "white" }}>{displayedReadings}</span>
         ) : (
           <>
-            <div className="overflow-scroll">
+            <div>
               <table className="table">
                 <thead>
                   <tr>
@@ -539,23 +592,21 @@ export default function Plant(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {sensorData
+                  {displayedReadings
                     .slice(10 * currentPageNumber, currentPageNumber + 10)
                     .map((row) => {
                       return (
                         <tr key={row.timeStampUTC}>
                           <td>{getDate(row.timeStampUTC)}</td>
                           <td>{row.temp.toFixed(1)} °C</td>
-                          <td>
-                            {((row.lightIntensity / 50) * 100).toFixed(1)}%
-                          </td>
-                          <td>{((row.moisture / 50) * 100).toFixed(1)}%</td>
+                          <td>{row.lightIntensity.toFixed(1)}%</td>
+                          <td>{row.moisture.toFixed(1)}%</td>
                           <td>{row.humidity.toFixed(1)}%</td>
                         </tr>
                       );
                     })}
                   {10 -
-                    sensorData.slice(
+                    displayedReadings.slice(
                       10 * currentPageNumber,
                       currentPageNumber + 10
                     ).length >
@@ -563,7 +614,7 @@ export default function Plant(props) {
                     ? [
                         ...Array(
                           10 -
-                            sensorData.slice(
+                            displayedReadings.slice(
                               10 * currentPageNumber,
                               currentPageNumber + 10
                             ).length
@@ -624,44 +675,64 @@ export default function Plant(props) {
           </>
         )}
         <nav className="mt-4" style={{ backgroundColor: "transparent" }}>
-          <h4 className="text-center gold">Sample frequency</h4>
+          <h4 className="text-center gold">Sample timeframe</h4>
           <ul className="pagination justify-content-center">
             <li className="page-item">
               <span
                 className="page-link"
                 onClick={() => {
-                  loadSensorData("15 sec");
+                  updateDisplayedReadings("Day");
                 }}
               >
-                15 second
+                Day
               </span>
             </li>
             <li className="page-item">
               <span
                 className="page-link"
                 onClick={() => {
-                  loadSensorData("Daily");
+                  updateDisplayedReadings("Week");
                 }}
               >
-                Daily
+                Week
               </span>
             </li>
             <li className="page-item">
               <span
                 className="page-link"
                 onClick={() => {
-                  loadSensorData("Monthly");
+                  updateDisplayedReadings("Month");
                 }}
               >
-                Monthly
+                Month
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("Year");
+                }}
+              >
+                Year
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("All time");
+                }}
+              >
+                All time
               </span>
             </li>
           </ul>
         </nav>
       </div>
       <div className="m-auto px-2 d-xl-none gold-border">
-        {typeof sensorData === "string" ? (
-          <span style={{ color: "white" }}>{sensorData}</span>
+        {typeof displayedReadings === "string" ? (
+          <span style={{ color: "white" }}>{displayedReadings}</span>
         ) : (
           <>
             <div className="overflow-scroll">
@@ -676,23 +747,21 @@ export default function Plant(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {sensorData
+                  {displayedReadings
                     .slice(10 * currentPageNumber, currentPageNumber + 10)
                     .map((row) => {
                       return (
                         <tr key={row.timeStampUTC}>
                           <td>{getDate(row.timeStampUTC)}</td>
                           <td>{row.temp.toFixed(1)} °C</td>
-                          <td>
-                            {((row.lightIntensity / 50) * 100).toFixed(1)}%
-                          </td>
-                          <td>{((row.moisture / 50) * 100).toFixed(1)}%</td>
+                          <td>{row.lightIntensity.toFixed(1)}%</td>
+                          <td>{row.moisture.toFixed(1)}%</td>
                           <td>{row.humidity.toFixed(1)}%</td>
                         </tr>
                       );
                     })}
                   {10 -
-                    sensorData.slice(
+                    displayedReadings.slice(
                       10 * currentPageNumber,
                       currentPageNumber + 10
                     ).length >
@@ -700,7 +769,7 @@ export default function Plant(props) {
                     ? [
                         ...Array(
                           10 -
-                            sensorData.slice(
+                            displayedReadings.slice(
                               10 * currentPageNumber,
                               currentPageNumber + 10
                             ).length
@@ -761,36 +830,56 @@ export default function Plant(props) {
           </>
         )}
         <nav className="mt-4" style={{ backgroundColor: "transparent" }}>
-          <h4 className="text-center gold">Sample frequency</h4>
+          <h4 className="text-center gold">Sample timeframe</h4>
           <ul className="pagination justify-content-center">
             <li className="page-item">
               <span
                 className="page-link"
                 onClick={() => {
-                  loadSensorData("15 sec");
+                  updateDisplayedReadings("Day");
                 }}
               >
-                15 second
+                Day
               </span>
             </li>
             <li className="page-item">
               <span
                 className="page-link"
                 onClick={() => {
-                  loadSensorData("Daily");
+                  updateDisplayedReadings("Week");
                 }}
               >
-                Daily
+                Week
               </span>
             </li>
             <li className="page-item">
               <span
                 className="page-link"
                 onClick={() => {
-                  loadSensorData("Monthly");
+                  updateDisplayedReadings("Month");
                 }}
               >
-                Monthly
+                Month
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("Year");
+                }}
+              >
+                Year
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("All time");
+                }}
+              >
+                All time
               </span>
             </li>
           </ul>
