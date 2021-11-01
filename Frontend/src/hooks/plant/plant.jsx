@@ -746,73 +746,72 @@ export default function Plant(props) {
             </nav>
           </>
         )}
-        <nav
-          className="mt-4 overflow-auto"
-          style={{ backgroundColor: "transparent" }}
-        >
+        <nav className="mt-4" style={{ backgroundColor: "transparent" }}>
           <h4 className="text-center gold">Sample timeframe</h4>
-          <ul className="pagination justify-content-center">
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  updateDisplayedReadings("Hour");
-                }}
-              >
-                Hour
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  updateDisplayedReadings("Day");
-                }}
-              >
-                Day
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  updateDisplayedReadings("Week");
-                }}
-              >
-                Week
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  updateDisplayedReadings("Month");
-                }}
-              >
-                Month
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  updateDisplayedReadings("Year");
-                }}
-              >
-                Year
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  updateDisplayedReadings("All time");
-                }}
-              >
-                All time
-              </span>
-            </li>
-          </ul>
+          <div className="overflow-auto">
+            <ul className="pagination justify-content-center">
+              <li className="page-item">
+                <span
+                  className="page-link"
+                  onClick={() => {
+                    updateDisplayedReadings("Hour");
+                  }}
+                >
+                  Hour
+                </span>
+              </li>
+              <li className="page-item">
+                <span
+                  className="page-link"
+                  onClick={() => {
+                    updateDisplayedReadings("Day");
+                  }}
+                >
+                  Day
+                </span>
+              </li>
+              <li className="page-item">
+                <span
+                  className="page-link"
+                  onClick={() => {
+                    updateDisplayedReadings("Week");
+                  }}
+                >
+                  Week
+                </span>
+              </li>
+              <li className="page-item">
+                <span
+                  className="page-link"
+                  onClick={() => {
+                    updateDisplayedReadings("Month");
+                  }}
+                >
+                  Month
+                </span>
+              </li>
+              <li className="page-item">
+                <span
+                  className="page-link"
+                  onClick={() => {
+                    updateDisplayedReadings("Year");
+                  }}
+                >
+                  Year
+                </span>
+              </li>
+              <li className="page-item">
+                <span
+                  className="page-link"
+                  onClick={() => {
+                    updateDisplayedReadings("All time");
+                  }}
+                >
+                  All time
+                </span>
+              </li>
+            </ul>
+          </div>
         </nav>
       </div>
       <div className="m-auto px-2 d-xl-none gold-border">
