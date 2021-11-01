@@ -41,14 +41,21 @@ export default function AllPlants(props) {
   return (
     <section>
       <h1 className="text-center gold">Plants</h1>
-      <div className="ps-4 text-left d-none d-lg-block">
-        <Link key="add-plant" to="/add-plant">
-          <button className="btn btn-primary">Add plant</button>
-        </Link>
+      <div className="d-none d-lg-block">
+        <div className="container m-0 p-0">
+          <div className="row">
+            <div className="col-lg-2 text-center">
+              <Link key="add-plant" to="/add-plant">
+                <button className="btn btn-primary">Add plant</button>
+              </Link>
+            </div>
+            <div className="col-lg-10"></div>
+          </div>
+        </div>
       </div>
-      <div className="mt-3 text-center d-lg-none">
+      <div className="text-center d-lg-none">
         <Link key="add-plant" to="/add-plant">
-          <button className="btn btn-primary">Add plant</button>
+          <button className="btn btn-primary mt-2">Add plant</button>
         </Link>
       </div>
       {plants ? (

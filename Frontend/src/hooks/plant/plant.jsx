@@ -33,7 +33,9 @@ export default function Plant(props) {
     ),
     [averageReading, setAverageReading] = useState(null),
     [currentPageNumber, setCurrentPageNumber] = useState(0),
-    [paginationNumbers, setPaginationNumbers] = useState([]);
+    [paginationNumbers, setPaginationNumbers] = useState([]),
+    [showDeleteStatus, setShowDeleteStatus] = useState(false),
+    [deleteStatus, setDeleteStatus] = useState("none");
 
   useEffect(() => {
     document.title = "Demeter - The plant meter";
@@ -322,8 +324,60 @@ export default function Plant(props) {
     }
   };
 
+  const deletePlant = () => {
+    setDeleteStatus("Please wait...");
+    setShowDeleteStatus(true);
+
+    const token = getLoginToken();
+    if (token !== null) {
+      axios
+        .delete(
+          `https://smart-plant.azurewebsites.net/api/Plants?plantID=${form.plantID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          window.location.pathname = "/";
+        })
+        .catch((err) => {
+          setDeleteStatus("Server error. Please try again later.");
+        });
+    } else {
+      setDeleteStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
+    }
+  };
+
   return (
     <section>
+      <div className="d-none d-lg-block">
+        <div className="container m-0 p-0">
+          <div className="row">
+            <div className="col-lg-2 text-center">
+              <div className={showDeleteStatus ? "" : "hidden-field"}>
+                <span style={{ color: "white" }}>{deleteStatus}</span>
+              </div>
+              <button className="btn btn-primary mt-2" onClick={deletePlant}>
+                Delete plant
+              </button>
+            </div>
+            <div className="col-lg-10"></div>
+          </div>
+        </div>
+      </div>
+      <div className="text-center d-lg-none">
+        <div className={showDeleteStatus ? "text-center" : "hidden-field"}>
+          <span style={{ color: "white" }}>{deleteStatus}</span>
+        </div>
+        <button className="btn btn-primary mt-2" onClick={deletePlant}>
+          Delete plant
+        </button>
+      </div>
       <form
         className="w-25 m-auto d-none d-lg-block"
         onSubmit={(e) => {
@@ -422,7 +476,6 @@ export default function Plant(props) {
           </button>
         </div>
       </form>
-
       <form
         className="w-25 m-auto d-none d-lg-block"
         onSubmit={(e) => {
@@ -537,7 +590,6 @@ export default function Plant(props) {
           </button>
         </div>
       </form>
-
       {showArduinoToken ? (
         <>
           <div className="w-25 m-auto d-none d-lg-block">
@@ -581,7 +633,6 @@ export default function Plant(props) {
           </div>
         </>
       )}
-
       <h3 className="gold text-center mt-5">Sensor data</h3>
       <div className="w-50 text-center m-auto d-none d-xl-block gold-border">
         {typeof displayedReadings === "string" ? (
