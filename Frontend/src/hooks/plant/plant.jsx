@@ -236,6 +236,9 @@ export default function Plant(props) {
 
       let endTime = null;
       switch (timeframe) {
+        case "Hour":
+          endTime = now - 3600000;
+          break;
         case "Day":
           endTime = now - 86400000;
           break;
@@ -681,6 +684,16 @@ export default function Plant(props) {
               <span
                 className="page-link"
                 onClick={() => {
+                  updateDisplayedReadings("Hour");
+                }}
+              >
+                Hour
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
                   updateDisplayedReadings("Day");
                 }}
               >
@@ -832,6 +845,16 @@ export default function Plant(props) {
         <nav className="mt-4" style={{ backgroundColor: "transparent" }}>
           <h4 className="text-center gold">Sample timeframe</h4>
           <ul className="pagination justify-content-center">
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("Hour");
+                }}
+              >
+                Hour
+              </span>
+            </li>
             <li className="page-item">
               <span
                 className="page-link"
