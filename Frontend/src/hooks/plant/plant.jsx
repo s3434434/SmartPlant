@@ -67,7 +67,28 @@ export default function Plant(props) {
           window.location.pathname = "/";
         });
 
-      loadSensorReadings();
+      axios
+        .get(
+          `https://smart-plant.azurewebsites.net/api/SensorData/${form.plantID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          const sortedReadings = res.data.sort((a, b) => {
+            const timeA = new Date(a.timeStampUTC).getTime(),
+              timeB = new Date(b.timeStampUTC).getTime();
+            return timeA > timeB ? -1 : timeA < timeB ? 1 : 0;
+          });
+          setSensorReadings(sortedReadings);
+        })
+        .catch((err) => {
+          setDisplayedReadings(
+            "There was an error retrieving your sensor data. Please try again later."
+          );
+        });
     } else {
       window.location.pathname = "/";
     }
@@ -191,41 +212,6 @@ export default function Plant(props) {
     });
 
     return numbers;
-  };
-
-  const loadSensorReadings = () => {
-    const login = localStorage.getItem("demeter-login");
-    if (login) {
-      const { token } = JSON.parse(login);
-
-      axios
-        .get(
-          `https://smart-plant.azurewebsites.net/api/SensorData/${form.plantID}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          const sortedReadings = res.data.sort((a, b) => {
-            const timeA = new Date(a.timeStampUTC).getTime(),
-              timeB = new Date(b.timeStampUTC).getTime();
-            return timeA > timeB ? -1 : timeA < timeB ? 1 : 0;
-          });
-          setSensorReadings(sortedReadings);
-        })
-        .catch((err) => {
-          setDisplayedReadings(
-            "There was an error retrieving your sensor data. Please try again later."
-          );
-        });
-    } else {
-      setDisplayedReadings("You are not logged in.");
-      setTimeout(() => {
-        window.location.pathname = "/";
-      }, 500);
-    }
   };
 
   const updateDisplayedReadings = (timeframe) => {
