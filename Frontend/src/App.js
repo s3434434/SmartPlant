@@ -186,38 +186,16 @@ function App() {
       <main>
         <BrowserRouter>
           <Switch>
-            <Route
-              exact
-              path="/landing"
-              render={(props) => (
-                <LandingPage
-                  {...props}
-                  getLoginToken={getLoginToken}
-                  logOut={logOut}
-                />
-              )}
-            />
+            <Route exact path="/landing" component={LandingPage} />
             <Route
               exact
               path="/login"
-              render={(props) => (
-                <Login
-                  {...props}
-                  getLoginToken={getLoginToken}
-                  logOut={logOut}
-                />
-              )}
+              render={(props) => <Login {...props} logOut={logOut} />}
             />
             <Route
               exact
               path="/register"
-              render={(props) => (
-                <Register
-                  {...props}
-                  getLoginToken={getLoginToken}
-                  logOut={logOut}
-                />
-              )}
+              render={(props) => <Register {...props} logOut={logOut} />}
             />
             <Route
               exact
@@ -227,13 +205,7 @@ function App() {
             <Route
               exact
               path="/confirm-email"
-              render={(props) => (
-                <ConfirmEmail
-                  {...props}
-                  getLoginToken={getLoginToken}
-                  logOut={logOut}
-                />
-              )}
+              render={(props) => <ConfirmEmail {...props} logOut={logOut} />}
             />
             <Route exact path="/forgot-password" component={ForgotPassword} />
             <Route
@@ -244,13 +216,7 @@ function App() {
             <Route
               exact
               path="/reset-password"
-              render={(props) => (
-                <ResetPassword
-                  {...props}
-                  getLoginToken={getLoginToken}
-                  logOut={logOut}
-                />
-              )}
+              render={(props) => <ResetPassword {...props} logOut={logOut} />}
             />
             <Route
               exact
@@ -260,13 +226,7 @@ function App() {
             <Route
               exact
               path="/logout"
-              render={(props) => (
-                <Logout
-                  {...props}
-                  getLoginToken={getLoginToken}
-                  logOut={logOut}
-                />
-              )}
+              render={(props) => <Logout {...props} logOut={logOut} />}
             />
             <Route
               exact
@@ -294,7 +254,13 @@ function App() {
             <Route
               exact
               path="/plant/:plant_name"
-              render={(props) => <Plant {...props} />}
+              render={(props) => (
+                <Plant
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
             />
             <Route
               exact
@@ -326,24 +292,12 @@ function App() {
             <Route
               exact
               path="/privacy-policy"
-              render={(props) => (
-                <PrivacyPolicy
-                  {...props}
-                  getLoginToken={getLoginToken}
-                  logOut={logOut}
-                />
-              )}
+              render={(props) => <PrivacyPolicy {...props} logOut={logOut} />}
             />
             <Route
               exact
               path="/terms-of-use"
-              render={(props) => (
-                <TermsOfUse
-                  {...props}
-                  getLoginToken={getLoginToken}
-                  logOut={logOut}
-                />
-              )}
+              render={(props) => <TermsOfUse {...props} logOut={logOut} />}
             />
             <Route
               exact
