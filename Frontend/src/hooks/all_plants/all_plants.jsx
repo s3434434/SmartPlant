@@ -10,9 +10,8 @@ export default function AllPlants(props) {
   useEffect(() => {
     document.title = "Plants | Demeter - The plant meter";
 
-    const login = localStorage.getItem("demeter-login");
-    if (login) {
-      const { token } = JSON.parse(login);
+    const token = props.getLoginToken();
+    if (token !== null) {
       axios
         .get("https://smart-plant.azurewebsites.net/api/Plants", {
           headers: {

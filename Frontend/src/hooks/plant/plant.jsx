@@ -7,7 +7,9 @@ import container_background from "../../assets/images/container_background.png";
 import "./plant.css";
 
 export default function Plant(props) {
+  const { getLoginToken, logOut } = props;
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
+
   const [form, setForm] = useState({
       name: "",
       base64ImgString: "",
@@ -36,10 +38,8 @@ export default function Plant(props) {
   useEffect(() => {
     document.title = "Demeter - The plant meter";
 
-    const login = localStorage.getItem("demeter-login");
-    if (login) {
-      const { token } = JSON.parse(login);
-
+    const token = getLoginToken();
+    if (token !== null) {
       axios
         .get("https://smart-plant.azurewebsites.net/api/Plants", {
           headers: {
@@ -63,7 +63,7 @@ export default function Plant(props) {
           });
         })
         .catch((err) => {
-          props.logOut();
+          logOut();
           window.location.pathname = "/";
         });
 
@@ -130,10 +130,8 @@ export default function Plant(props) {
     setStatus("Please wait...");
     setShowStatus(true);
 
-    const login = localStorage.getItem("demeter-login");
-    if (login) {
-      const { token } = JSON.parse(login);
-
+    const token = getLoginToken();
+    if (token !== null) {
       axios
         .put("https://smart-plant.azurewebsites.net/api/Plants", form, {
           headers: {
@@ -167,9 +165,8 @@ export default function Plant(props) {
     setTokenStatus("Please wait...");
     setShowTokenStatus(true);
 
-    const login = localStorage.getItem("demeter-login");
-    if (login) {
-      const { token } = JSON.parse(login);
+    const token = getLoginToken();
+    if (token !== null) {
       axios
         .get(
           `https://smart-plant.azurewebsites.net/api/Plants/Token/${form.plantID}`,

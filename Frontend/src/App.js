@@ -27,30 +27,34 @@ import SupportSuccessful from "./hooks/support/support_successful/support_succes
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
-  const checkLoggedIn = () => {
+  const getLoginToken = () => {
     const login = localStorage.getItem("demeter-login");
-    let loginStatus = false;
+    let loginToken = null;
 
     if (login) {
-      const { expiry } = JSON.parse(login);
+      const { token, expiry } = JSON.parse(login);
 
       if (expiry >= Date.now()) {
-        loginStatus = true;
+        loginToken = token;
       } else {
         localStorage.removeItem("demeter-login");
       }
     }
 
-    return loginStatus;
+    return loginToken;
   };
 
   useEffect(() => {
-    setLoggedIn(checkLoggedIn());
+    let logged_in = false;
+    if (getLoginToken() !== null) {
+      logged_in = true;
+    }
+    setLoggedIn(logged_in);
     // eslint-disable-next-line
   }, []);
 
   const logOut = () => {
-    if (checkLoggedIn()) {
+    if (getLoginToken() !== null) {
       localStorage.removeItem("demeter-login");
       setLoggedIn(false);
     }
@@ -185,17 +189,35 @@ function App() {
             <Route
               exact
               path="/landing"
-              render={(props) => <LandingPage {...props} logOut={logOut} />}
+              render={(props) => (
+                <LandingPage
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
             />
             <Route
               exact
               path="/login"
-              render={(props) => <Login {...props} logOut={logOut} />}
+              render={(props) => (
+                <Login
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
             />
             <Route
               exact
               path="/register"
-              render={(props) => <Register {...props} logOut={logOut} />}
+              render={(props) => (
+                <Register
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
             />
             <Route
               exact
@@ -205,7 +227,13 @@ function App() {
             <Route
               exact
               path="/confirm-email"
-              render={(props) => <ConfirmEmail {...props} logOut={logOut} />}
+              render={(props) => (
+                <ConfirmEmail
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
             />
             <Route exact path="/forgot-password" component={ForgotPassword} />
             <Route
@@ -216,7 +244,13 @@ function App() {
             <Route
               exact
               path="/reset-password"
-              render={(props) => <ResetPassword {...props} logOut={logOut} />}
+              render={(props) => (
+                <ResetPassword
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
             />
             <Route
               exact
@@ -226,17 +260,35 @@ function App() {
             <Route
               exact
               path="/logout"
-              render={(props) => <Logout {...props} logOut={logOut} />}
+              render={(props) => (
+                <Logout
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
             />
             <Route
               exact
               path="/plants"
-              render={(props) => <AllPlants {...props} logOut={logOut} />}
+              render={(props) => (
+                <AllPlants
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
             />
             <Route
               exact
               path="/add-plant"
-              render={(props) => <AddPlant {...props} logOut={logOut} />}
+              render={(props) => (
+                <AddPlant
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
             />
             <Route exact path="/plant-added" component={PlantAdded} />
             <Route
@@ -247,12 +299,24 @@ function App() {
             <Route
               exact
               path="/settings"
-              render={(props) => <Settings {...props} logOut={logOut} />}
+              render={(props) => (
+                <Settings
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
             />
             <Route
               exact
               path="/support"
-              render={(props) => <Support {...props} logOut={logOut} />}
+              render={(props) => (
+                <Support
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
             />
             <Route
               exact
@@ -262,18 +326,30 @@ function App() {
             <Route
               exact
               path="/privacy-policy"
-              render={(props) => <PrivacyPolicy {...props} logOut={logOut} />}
+              render={(props) => (
+                <PrivacyPolicy
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
             />
             <Route
               exact
               path="/terms-of-use"
-              render={(props) => <TermsOfUse {...props} logOut={logOut} />}
+              render={(props) => (
+                <TermsOfUse
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
             />
             <Route
               exact
               path="/"
               render={() => {
-                return checkLoggedIn() ? (
+                return getLoginToken() !== null ? (
                   <Redirect to="/plants" />
                 ) : (
                   <Redirect to="/landing" />

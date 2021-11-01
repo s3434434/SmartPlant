@@ -4,6 +4,7 @@ import _ from "lodash";
 import axios from "axios";
 
 export default function AddPlant(props) {
+  const { getLoginToken, logOut } = props;
   const [plantTypes, setPlantTypes] = useState([]);
   const [form, setForm] = useState({
     plantName: "",
@@ -16,10 +17,8 @@ export default function AddPlant(props) {
   useEffect(() => {
     document.title = "Add plant | Demeter - The plant meter";
 
-    const login = localStorage.getItem("demeter-login");
-    if (login) {
-      const { token } = JSON.parse(login);
-
+    const token = getLoginToken();
+    if (token !== null) {
       axios
         .get("https://smart-plant.azurewebsites.net/api/Plants", {
           headers: {
@@ -38,7 +37,7 @@ export default function AddPlant(props) {
             });
         })
         .catch((err) => {
-          props.logOut();
+          logOut();
           window.location.pathname = "/";
         });
     } else {
@@ -75,10 +74,8 @@ export default function AddPlant(props) {
     setStatus("Please wait...");
     setShowStatus(true);
 
-    const login = localStorage.getItem("demeter-login");
-    if (login) {
-      const { token } = JSON.parse(login);
-
+    const token = getLoginToken();
+    if (token !== null) {
       axios
         .post("https://smart-plant.azurewebsites.net/api/Plants", form, {
           headers: {

@@ -30,9 +30,8 @@ export default function Support(props) {
     setStatus("Please wait...");
     setShowStatus(true);
 
-    const login = localStorage.getItem("demeter-login");
-    if (login) {
-      const { token } = JSON.parse(login);
+    const token = props.getLoginToken();
+    if (token !== null) {
       axios
         .post(
           "https://smart-plant.azurewebsites.net/api/user/contactsupport",

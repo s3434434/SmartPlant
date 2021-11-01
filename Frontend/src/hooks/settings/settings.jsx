@@ -6,6 +6,8 @@ import axios from "axios";
 import "./settings.css";
 
 export default function Settings(props) {
+  const { getLoginToken, logOut } = props;
+
   const [emailForm, setEmailForm] = useState({
       email: "",
       confirmEmail: "",
@@ -36,9 +38,8 @@ export default function Settings(props) {
   useEffect(() => {
     document.title = "Settings | Demeter - The plant meter";
 
-    const login = localStorage.getItem("demeter-login");
-    if (login) {
-      const { token } = JSON.parse(login);
+    const token = getLoginToken();
+    if (token !== null) {
       axios
         .get("https://smart-plant.azurewebsites.net/api/User", {
           headers: {
@@ -56,7 +57,7 @@ export default function Settings(props) {
           });
         })
         .catch((err) => {
-          props.logOut();
+          logOut();
           window.location.pathname = "/";
         });
     } else {
@@ -80,12 +81,10 @@ export default function Settings(props) {
     setEmailStatus("Please wait...");
     setShowEmailStatus(true);
 
-    const login = localStorage.getItem("demeter-login");
+    const token = getLoginToken();
     if (emailForm.email !== emailForm.confirmEmail) {
       setEmailStatus("Emails do not match.");
-    } else if (login) {
-      const { token } = JSON.parse(login);
-
+    } else if (token !== null) {
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/User/Email",
@@ -133,9 +132,8 @@ export default function Settings(props) {
     setDetailsStatus("Please wait...");
     setShowDetailsStatus(true);
 
-    const login = localStorage.getItem("demeter-login");
-    if (login) {
-      const { token } = JSON.parse(login);
+    const token = getLoginToken();
+    if (token !== null) {
       axios
         .put("https://smart-plant.azurewebsites.net/api/User", detailsForm, {
           headers: {
@@ -181,12 +179,10 @@ export default function Settings(props) {
     setPasswordStatus("Please wait...");
     setShowPasswordStatus(true);
 
-    const login = localStorage.getItem("demeter-login");
+    const token = getLoginToken();
     if (passwordForm.newPassword !== passwordForm.confirmNewPassword) {
       setPasswordStatus("New passwords do not match.");
-    } else if (login) {
-      const { token } = JSON.parse(login);
-
+    } else if (token !== null) {
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/User/Password",
