@@ -56,46 +56,6 @@ namespace SmartPlant.Tests.Controllers
 
         #region Register
         [Test]
-        public async Task Register_WhenUserRegistrationDtoIsNull_ReturnsBadRequest()
-        {
-            // Arrange
-            var accountController = new AccountController(
-                mock_AccountManager.Object,
-                mock_Mapper.Object,
-                mock_UserManager.Object
-
-
-                );
-
-            // Act
-            var result = await accountController.Register(null);
-
-            // Assert
-            Assert.That(result, Is.TypeOf<BadRequestResult>());
-        }
-
-        [Test]
-        public async Task Register_WhenModelStateIsInvalid_ReturnsBadRequest()
-        {
-            // Arrange
-            var accountController = new AccountController(
-                mock_AccountManager.Object,
-                mock_Mapper.Object,
-                mock_UserManager.Object
-
-
-                );
-
-            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
-
-            // Act
-            var result = await accountController.Register(Mock.Of<UserRegistrationDto>());
-
-            // Assert
-            Assert.That(result, Is.TypeOf<BadRequestResult>());
-        }
-
-        [Test]
         public async Task Register_WhenRepoRegistrationFails_ReturnsBadRequest()
         {
             // Arrange
@@ -277,27 +237,7 @@ namespace SmartPlant.Tests.Controllers
         #endregion
 
         #region ForgotPassword
-        [Test]
-        public async Task ForgotPassword_WhenModelStateIsInvalid_ReturnsBadRequest()
-        {
-            // Arrange
-            var accountController = new AccountController(
-                mock_AccountManager.Object,
-                mock_Mapper.Object,
-                mock_UserManager.Object
-
-
-                );
-
-            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
-
-            // Act
-            var result = await accountController.ForgotPassword(It.IsAny<ForgotPasswordDto>());
-
-            // Assert
-            Assert.That(result, Is.TypeOf<BadRequestResult>());
-        }
-
+        
         [Test]
         public async Task ForgotPassword_WhenEmailNotFound_ReturnsBadRequest()
         {
@@ -347,28 +287,7 @@ namespace SmartPlant.Tests.Controllers
         #endregion
 
         #region ResetPassword
-        [Test]
-        public async Task ResetPassword_WhenModelStateIsInvalid_ReturnsBadRequest()
-        {
-            // Arrange
-            var accountController = new AccountController(
-                mock_AccountManager.Object,
-                mock_Mapper.Object,
-                mock_UserManager.Object
-
-
-                );
-
-            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
-
-            // Act
-            var result = await accountController.ForgotPassword(It.IsAny<ForgotPasswordDto>());
-
-            // Assert
-            Assert.That(result, Is.TypeOf<BadRequestResult>());
-        }
-
-        [Test]
+       [Test]
         public async Task ResetPassword_WhenEmailNotFound_ReturnsBadRequest()
         {
             // Arrange
@@ -483,35 +402,6 @@ namespace SmartPlant.Tests.Controllers
 
         #region UpdateDetails
         [Test]
-        public async Task UpdateDetails_WhenModelStateInvalid_ReturnsBadRequest()
-        {
-            // Arrange
-            var mock_Result = IdentityResult.Success;
-
-            mock_AccountManager.Setup(_repo => _repo.UpdateDetails(It.IsAny<string>(), It.IsAny<UpdateUserDetailsDto>()))
-                .ReturnsAsync(mock_Result);
-
-            var accountController = new AccountController(
-                mock_AccountManager.Object,
-                mock_Mapper.Object,
-                mock_UserManager.Object
-                );
-
-            accountController.ControllerContext.HttpContext = new DefaultHttpContext()
-            {
-                User = mock_Principal.Object
-            };
-
-            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
-
-            // Act
-            var result = await accountController.UpdateDetails(It.IsAny<UpdateUserDetailsDto>());
-
-            // Assert
-            Assert.That(result, Is.TypeOf<BadRequestResult>());
-        }
-
-        [Test]
         public async Task UpdateDetails_WhenDetailUpdateSuccessful_ReturnsOkRequest()
         {
             // Arrange
@@ -540,27 +430,6 @@ namespace SmartPlant.Tests.Controllers
         #endregion
 
         #region UpdateEmail
-        [Test]
-        public async Task UpdateEmail_WhenModelStateInvalid_ReturnsBadRequest()
-        {
-            // Arrange
-            var accountController = new AccountController(
-                mock_AccountManager.Object,
-                mock_Mapper.Object,
-                mock_UserManager.Object
-
-
-                );
-
-            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
-
-            // Act
-            var result = await accountController.UpdateEmail(It.IsAny<UpdateEmailDto>());
-
-            // Assert
-            Assert.That(result, Is.TypeOf<BadRequestResult>());
-        }
-
         [Test]
         public async Task UpdateEmail_WhenUserDoesNotExist_ReturnsBadRequest()
         {
@@ -677,27 +546,6 @@ namespace SmartPlant.Tests.Controllers
         #endregion
 
         #region UpdatePassword
-        [Test]
-        public async Task UpdatePassword_WhenModelStateInvalid_ReturnsBadRequest()
-        {
-            // Arrange
-            var accountController = new AccountController(
-                mock_AccountManager.Object,
-                mock_Mapper.Object,
-                mock_UserManager.Object
-
-
-                );
-
-            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
-
-            // Act
-            var result = await accountController.UpdatePassword(It.IsAny<UpdatePasswordDto>());
-
-            // Assert
-            Assert.That(result, Is.TypeOf<BadRequestResult>());
-        }
-
         [Test]
         public async Task UpdatePassword_WhenOldPasswordIncorrect_ReturnsUnauthorizedRequest()
         {
@@ -855,27 +703,7 @@ namespace SmartPlant.Tests.Controllers
         #endregion
 
         #region AdminUpdateDetails
-        [Test]
-        public async Task AdminUpdateDetails_WhenModelStateInvalid_ReturnsBadRequest()
-        {
-            // Arrange
-            var accountController = new AccountController(
-                mock_AccountManager.Object,
-                mock_Mapper.Object,
-                mock_UserManager.Object
-
-
-                );
-
-            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
-
-            // Act
-            var result = await accountController.AdminUpdateDetails(It.IsAny<AdminUpdateUserDetailsDto>());
-
-            // Assert
-            Assert.That(result, Is.TypeOf<BadRequestResult>());
-        }
-
+        
         [Test]
         public async Task AdminUpdateDetails_WhenUserDoesNotExistInRepo_ReturnsNotFoundRequest()
         {
@@ -950,27 +778,7 @@ namespace SmartPlant.Tests.Controllers
         #endregion
 
         #region AdminUpdateRole
-        [Test]
-        public async Task AdminUpdateRole_WhenModelStateIsInvalid_ReturnsBadRequest()
-        {
-            // Arrange
-            var accountController = new AccountController(
-                mock_AccountManager.Object,
-                mock_Mapper.Object,
-                mock_UserManager.Object
-
-
-                );
-
-            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
-
-            // Act
-            var result = await accountController.AdminUpdateRole(It.IsAny<AdminUpdateUserRoleDto>());
-
-            // Assert
-            Assert.That(result, Is.TypeOf<BadRequestResult>());
-        }
-
+       
         [Test]
         public async Task AdminUpdateRole_WhenRoleUpdatedSucessefully_ReturnsOkRequest()
         {
@@ -995,27 +803,7 @@ namespace SmartPlant.Tests.Controllers
         #endregion
 
         #region AdminUpdatePassword
-        [Test]
-        public async Task AdminUpdatePassword_WhenModelStateIsInvalid_ReturnsBadRequest()
-        {
-            // Arrange
-            var accountController = new AccountController(
-                mock_AccountManager.Object,
-                mock_Mapper.Object,
-                mock_UserManager.Object
-
-
-                );
-
-            accountController.ModelState.AddModelError("Adding error", "Model state now invalid");
-
-            // Act
-            var result = await accountController.AdminUpdateRole(It.IsAny<AdminUpdateUserRoleDto>());
-
-            // Assert
-            Assert.That(result, Is.TypeOf<BadRequestResult>());
-        }
-
+        
         [Test]
         public async Task AdminUpdatePassword_WhenUserNotInRepo_ReturnsNotFoundRequest()
         {

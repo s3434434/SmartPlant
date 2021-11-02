@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartPlant.Models.API_Model.Account
 {
@@ -13,7 +14,7 @@ namespace SmartPlant.Models.API_Model.Account
     public class AuthResponseDto
     {
         public bool IsAuthSuccessful { get; set; }
-        public string ErrorMessage { get; set; }
+        public Dictionary<string, List<string> > errors { get; set; }
         public string Token { get; set; }
     }
 }

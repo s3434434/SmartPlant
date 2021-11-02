@@ -345,19 +345,7 @@ namespace SmartPlant.Tests.Controllers
         #endregion
 
         #region Post
-        [Test]
-        public async Task Post_WhenModelStateInvalid_ReturnsBadRequest()
-        {
-            // Arrange
-            var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
-            sensorDataController.ModelState.AddModelError("Adding error", "Model state now invalid");
-            // Act
-            var result = await sensorDataController.Post(It.IsAny<SensorDataModel>());
-
-            // Assert
-            Assert.That(result, Is.TypeOf<BadRequestResult>());
-        }
-
+       
         [Test]
         public async Task Post_WhenUserDoesNotExist_ReturnsBadRequest()
         {
@@ -630,20 +618,7 @@ namespace SmartPlant.Tests.Controllers
         #endregion
 
         #region AdminPost
-        [Test]
-        public async Task AdminPost_WhenModelStateInvalid_ReturnsBadRequest()
-        {
-            // Arrange
-            var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
-            sensorDataController.ModelState.AddModelError("Adding error", "Model state now invalid");
-            // Act
-            ObjectResult result = (ObjectResult) await sensorDataController.AdminPost(It.IsAny<SensorDataModel>());
-
-            // Assert
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
-            Assert.AreEqual(400, result.StatusCode);
-        }
-
+        
         [Test]
         public async Task AdminPost_WhenUserDoesNotExist_ReturnsBadRequest()
         {

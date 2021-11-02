@@ -13,7 +13,11 @@
             gets sent as the confirmation link in the email and should be routed to the frontend confirmation webpage. &#xA;
             The only required inputs are the Email, Password, Confirmation Password. &#xA;
             &#xA;
-            First name, last name, address, and phone number are optional and can be left blank.
+            First name, last name, and phone number are optional and can be left blank.&#xA;
+            &#xA;
+            If included, &#xA;
+            First Name and Last Name can only contain letters, no special characters or numbers, max length of 50. &#xA;
+            Phone Numbers must begin with [02, 03, 04, 07, 08] followed by 8 digits. Length must equal 10.
             </remarks>
             <param name="userRegDto"></param>
             <response code="200">Successfully Registers User</response>
@@ -59,8 +63,7 @@
             <remarks>
             This takes in a password and confirmed password, and the token + email from the 'forgot password' email.&#xA;
             The token is probably html encoded e.g. '/' becomes %2F in the URL  &#xA;
-            so you need to decode it before using it, since this takes the token in the request body not as a query parameter.&#xA; 
-            I think you can use decodeURIComponent() in javascript?
+            needs to be decoded before using
             </remarks>
             <response code="200">Password Reset</response>
             <response code="400">Something went wrong, incorrect info</response>
@@ -79,6 +82,9 @@
             Updates non-important details (First name, last name, address, phone number)
             </summary>
             <remarks>This is used for updating non-important user details. Since the email address is used to login, it has its own method
+            &#xA;
+            First Name and Last Name can only contain letters, no special characters or numbers, max length of 50. &#xA;
+            Phone Numbers must begin with [02, 03, 04, 07, 08] followed by 8 digits. Length must equal 10.
             </remarks>
             <response code="200">Success</response>
             <response code="400">Something went wrong, user not found</response>
@@ -113,6 +119,17 @@
             <response code="400">Something went wrong</response>
             <response code="401"></response>
         </member>
+        <member name="M:SmartPlant.Controllers.AccountController.GetCurrentUserRole">
+            <summary>
+            Gets the logged in user's Role - User or Admin
+            </summary>
+            <remarks>
+            This requires a logged in user to use.
+            </remarks>
+            <response code="200">Email Sent</response>
+            <response code="400">Something went wrong</response>
+            <response code="401"></response>
+        </member>
         <member name="M:SmartPlant.Controllers.AccountController.AdminGetAllUsers">
             <summary>
             Gets a list of all Users and their details (User Id, Email)
@@ -136,6 +153,10 @@
             Used to update a user's details (First name, last name, address, phone number, email)
             </summary>
             <remarks>Since this is an admin action, no verification needed for changing emails
+            &#xA;
+            If included, &#xA;
+            First Name and Last Name can only contain letters, no special characters or numbers, max length of 50. &#xA;
+            Phone Numbers must begin with [02, 03, 04, 07, 08] followed by 8 digits. Length must equal 10.
             </remarks>
             <response code="200">Details successfully updated</response>
             <response code="400">User Not Found or email already in use</response>
@@ -177,11 +198,29 @@
             <response code="400">Bad Data</response>
             <response code="404">UserID Not Found</response>
         </member>
-        <member name="M:SmartPlant.Controllers.PlantController.Get">
+        <member name="M:SmartPlant.Controllers.PlantController.UploadImage(SmartPlant.Models.API_Model.Plant.PlantImageDto)">
             <summary>
-            Gets all plants belonging to the current user
+            Used for testing
             </summary>
             <remarks>
+            </remarks>
+            <response code="200">Success</response>
+        </member>
+        <member name="M:SmartPlant.Controllers.PlantController.DeleteImage(SmartPlant.Models.API_Model.Plant.PlantImageDto)">
+            <summary>
+            Used for testing
+            </summary>
+            <remarks>
+            </remarks>
+            <response code="200">Success</response>
+        </member>
+        <member name="M:SmartPlant.Controllers.PlantController.Get">
+            <summary>
+            Gets all plants belonging to the current user, Returns plant Name and ID
+            </summary>
+            <remarks>
+            The plant ID shouldn't be shown to the user, since it's not easy to read and they don't need to know about it&#xA;
+            the plant ID is used with the other api endpoints.
             </remarks>
             <response code="200">Success</response>
             <response code="404">No Plants Found</response>
@@ -191,9 +230,9 @@
             Adds a plant
             </summary>
             <remarks>
-            Takes in a plant name (maxlength 250 - nullable) - this can be excluded but is intended help user readabillity  e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily" &#xA;
-            This should be used when the user chooses to add a plant. Autogenerates the plant ID. &#xA;
-            The user should then copy and paste the new plant ID into an arduino setup file?
+            Takes in a plant name (maxlength 250, any special char and numbers allowed) -  e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily" &#xA;
+            This should be used when the user chooses to add a plant. Autogenerates the plant ID and Plant Token. &#xA;
+            The Plant Token is what should be put into the Arduino setup file so that it can known which plant to update data for.
             </remarks>
             <response code="201">Plant Created</response>
             <response code="400">Bad Data</response>
@@ -204,7 +243,7 @@
             Updates a plants name
             </summary>
             <remarks>
-            This takes in a plant ID and a string name --this can be excluded, making the name param null (no name)
+            This takes in a plant ID and a string name.
             </remarks>
             <response code="200">Name changed</response>        
             <response code="404">Plant Not Found</response>
@@ -242,6 +281,22 @@
             <response code="200">New token generated, returns new token</response>
             <response code="404">Something went wrong, probably invalid plantid</response>
         </member>
+        <member name="M:SmartPlant.Controllers.PlantController.GetPresetPlantList">
+            <summary>
+            Gets the preset list of plant types
+            </summary>
+            <remarks>
+            </remarks>
+            <response code="200">Success</response>
+        </member>
+        <member name="M:SmartPlant.Controllers.PlantController.DeletePlantImage(System.String)">
+            <summary>
+            Used to delete a plant image
+            </summary>
+            <remarks>
+            </remarks>
+            <response code="200">Success</response>
+        </member>
         <member name="M:SmartPlant.Controllers.PlantController.AdminGetAll">
             <summary>
             Gets a list of all plants (plantID, userID)
@@ -265,7 +320,7 @@
             Adds a plant for a specific user
             </summary>
             <remarks>
-            Takes in a plant name (maxlength 250 - nullable) - this can be excluded but is intended help user readabillity  e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily"
+            Takes in a plant name (maxlength 250) e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily"
             and user ID
             </remarks>
             <response code="201">Plant Created</response>
@@ -277,7 +332,7 @@
             Updates a plants name
             </summary>
             <remarks>
-            This takes in a plant ID and a string name --this can be excluded, making the name param null (no name)
+            This takes in a plant ID and a string name
             </remarks>
             <response code="200">Name changed</response>        
             <response code="404">Plant Not Found</response>
@@ -302,6 +357,14 @@
              </remarks>
              <response code="200">New token generated, returns new token</response>
              <response code="404">Something went wrong, probably invalid plantID or userID</response>
+        </member>
+        <member name="M:SmartPlant.Controllers.PlantController.AdminDeletePlantImage(System.String,System.String)">
+            <summary>
+            Used to delete a plant image\
+            </summary>
+            <remarks>
+            </remarks>
+            <response code="200">Success</response>
         </member>
         <member name="M:SmartPlant.Controllers.SensorDataController.GetAll">
             <summary>
@@ -348,7 +411,7 @@
             Adds sensor data for a plant belonging to the user
             </summary>
             <remarks>
-            For testing, use  &#xA;
+            DEPRECATED, ONLY USE FOR TESTING, use /api/SensorData/Token for production&#xA;
             ----------------------&#xA;
             Sensor data is stored as decimals, with 2 decimal places. &#xA; 
             For example: 12.446 becomes 12.45. &#xA; 

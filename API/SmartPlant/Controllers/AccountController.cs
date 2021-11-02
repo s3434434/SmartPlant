@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using SmartPlant.Models.API_Model.Account;
 using SmartPlant.Models.API_Model.Admin;
 using SmartPlant.Models.Repository;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SmartPlant.Controllers
@@ -37,7 +39,11 @@ namespace SmartPlant.Controllers
         /// gets sent as the confirmation link in the email and should be routed to the frontend confirmation webpage. &#xA;
         /// The only required inputs are the Email, Password, Confirmation Password. &#xA;
         /// &#xA;
-        /// First name, last name, address, and phone number are optional and can be left blank.
+        /// First name, last name, and phone number are optional and can be left blank.&#xA;
+        /// &#xA;
+        /// If included, &#xA;
+        /// First Name and Last Name can only contain letters, no special characters or numbers, max length of 50. &#xA;
+        /// Phone Numbers must begin with [02, 03, 04, 07, 08] followed by 8 digits. Length must equal 10.
         /// </remarks>
         /// <param name="userRegDto"></param>
         /// <response code="200">Successfully Registers User</response>
@@ -46,11 +52,6 @@ namespace SmartPlant.Controllers
         // [Route("api/Register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto userRegDto)
         {
-            if (userRegDto == null || !ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var user = _mapper.Map<ApplicationUser>(userRegDto);
 
             var result = await _repo.Register(user, userRegDto);
@@ -113,7 +114,8 @@ namespace SmartPlant.Controllers
 
             if (!result.IsAuthSuccessful)
             {
-                return Unauthorized(result.ErrorMessage);
+                var genericError = new GenericReturnMessageDto {Messages = result.errors};
+                return Unauthorized(genericError);
             }
 
             return Ok(result.Token);
@@ -132,17 +134,19 @@ namespace SmartPlant.Controllers
         [Route("Password/Forgot")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto passwordDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var result = await _repo.ForgotPassword(passwordDto);
 
             if (result == null)
             {
-                return BadRequest("Email not found");
+                return BadRequest(new GenericReturnMessageDto
+                {
+                    Messages = new Dictionary<string, List<string>>
+                {
+                    {"Email", new List<string>{"Email not found"}}
+                }
+                });
             }
+
             return Ok(result);
         }
 
@@ -161,22 +165,30 @@ namespace SmartPlant.Controllers
         [Route("Password/Reset")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto passwordDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var result = await _repo.ResetPassword(passwordDto);
 
             if (result == null)
             {
-                return BadRequest("Email not found");
+                return BadRequest(new GenericReturnMessageDto
+                {
+                    Messages = new Dictionary<string, List<string>>
+                    {
+                        {"Email", new List<string>{"Email not found"}}
+                    }
+                });
             }
 
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);
-                return BadRequest(new { Error = errors });
+
+                var genericErrors = new GenericReturnMessageDto();
+                foreach (string e in errors)
+                {
+                    genericErrors.Messages.Add(Regex.Match(e, @"^([\w\-]+)").Value, new List<string> { e });
+                }
+
+                return BadRequest(genericErrors);
             }
             return Ok();
         }
@@ -218,6 +230,9 @@ namespace SmartPlant.Controllers
         /// Updates non-important details (First name, last name, address, phone number)
         /// </summary>
         /// <remarks>This is used for updating non-important user details. Since the email address is used to login, it has its own method
+        /// &#xA;
+        /// First Name and Last Name can only contain letters, no special characters or numbers, max length of 50. &#xA;
+        /// Phone Numbers must begin with [02, 03, 04, 07, 08] followed by 8 digits. Length must equal 10.
         /// </remarks>
         /// <response code="200">Success</response>
         /// <response code="400">Something went wrong, user not found</response>
@@ -226,16 +241,23 @@ namespace SmartPlant.Controllers
         [Route("/api/User")]
         public async Task<IActionResult> UpdateDetails([FromBody] UpdateUserDetailsDto userDetailsDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
 
             var userID = User.Identity.Name;
 
             var results = await _repo.UpdateDetails(userID, userDetailsDto);
 
-            return Ok(results);
+            if (results.Succeeded)
+            {
+                return Ok(results);
+            }
+
+            var genericError = new GenericReturnMessageDto();
+
+            foreach (var e in results.Errors)
+            {
+                genericError.Messages.Add(e.Code, new List<string>{e.Description});
+            }
+            return BadRequest(results.Errors);
         }
 
 
@@ -251,19 +273,18 @@ namespace SmartPlant.Controllers
         [Route("/api/User/Email")]
         public async Task<IActionResult> UpdateEmail([FromBody] UpdateEmailDto emailDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var userID = User.Identity.Name;
 
             IdentityResult result = await _repo.UpdateEmail(userID, emailDto);
 
             if (!result.Succeeded)
             {
-                foreach (IdentityError error in result.Errors)
-                    return BadRequest(error.Description);
+                var genericErrors = new GenericReturnMessageDto();
+                foreach (IdentityError e in result.Errors)
+                {
+                    genericErrors.Messages.Add(Regex.Match(e.Code, @"^([\w\-]+)").Value, new List<string> { e.Description });
+                }
+                return BadRequest(genericErrors);
             }
 
             return Ok("Success");
@@ -283,19 +304,18 @@ namespace SmartPlant.Controllers
         [Route("/api/User/Password")]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordDto passwordDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var userID = User.Identity.Name;
 
             var result = await _repo.UpdatePassword(userID, passwordDto);
 
             if (!result.Succeeded)
             {
-                foreach (IdentityError error in result.Errors)
-                    return Unauthorized(error.Description);
+                var genericErrors = new GenericReturnMessageDto();
+                foreach (IdentityError e in result.Errors)
+                {
+                    genericErrors.Messages.Add(Regex.Match(e.Code, @"^([\w\-]+)").Value, new List<string> { e.Description });
+                }
+                return Unauthorized(genericErrors);
             }
 
             return Ok("Password Changed");
@@ -317,7 +337,7 @@ namespace SmartPlant.Controllers
         {
             string userID = User.Identity.Name;
 
-            var result =  await _repo.ContactSupport(userID, dto);
+            var result = await _repo.ContactSupport(userID, dto);
 
             if (!result)
             {
@@ -326,6 +346,27 @@ namespace SmartPlant.Controllers
             return Ok("Email Sent");
         }
 
+
+        /// <summary>
+        /// Gets the logged in user's Role - User or Admin
+        /// </summary>
+        /// <remarks>
+        /// This requires a logged in user to use.
+        /// </remarks>
+        /// <response code="200">Email Sent</response>
+        /// <response code="400">Something went wrong</response>
+        /// <response code="401"></response>
+        [HttpGet]
+        [Authorize]
+        [Route("/api/User/Role")]
+        public async Task<IActionResult> GetCurrentUserRole()
+        {
+            string userID = User.Identity?.Name;
+
+            var result = await _repo.GetCurrentUserRole(userID);
+
+            return Ok(result);
+        }
 
         /* 
          * ADMIN ROLE REQUIRED ENDPOINTS
@@ -382,6 +423,10 @@ namespace SmartPlant.Controllers
         /// Used to update a user's details (First name, last name, address, phone number, email)
         /// </summary>
         /// <remarks>Since this is an admin action, no verification needed for changing emails
+        /// &#xA;
+        /// If included, &#xA;
+        /// First Name and Last Name can only contain letters, no special characters or numbers, max length of 50. &#xA;
+        /// Phone Numbers must begin with [02, 03, 04, 07, 08] followed by 8 digits. Length must equal 10.
         /// </remarks>
         /// <response code="200">Details successfully updated</response>
         /// <response code="400">User Not Found or email already in use</response>
@@ -390,16 +435,14 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/User")]
         public async Task<IActionResult> AdminUpdateDetails([FromBody] AdminUpdateUserDetailsDto DetailsDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var result = await _repo.AdminUpdateUserDetails(DetailsDto);
 
             if (result == null)
             {
-                return BadRequest("Email already exists or user does not exist");
+                var genericError = new GenericReturnMessageDto();
+                genericError.Messages.Add("Email", new List<string> { "Email already exists or user does not exist" });
+
+                return BadRequest(genericError);
             }
             return Ok(result);
         }
@@ -435,11 +478,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/User/Role")]
         public async Task<IActionResult> AdminUpdateRole([FromBody] AdminUpdateUserRoleDto updateRoleDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var result = await _repo.AdminUpdateRole(updateRoleDto);
 
             return Ok(result);
@@ -463,7 +501,6 @@ namespace SmartPlant.Controllers
             {
                 return BadRequest();
             }
-
             var result = await _repo.AdminUpdatePassword(passwordDto);
 
             if (!result.Succeeded)

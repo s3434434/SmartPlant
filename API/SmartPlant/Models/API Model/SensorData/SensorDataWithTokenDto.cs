@@ -17,7 +17,7 @@ namespace SmartPlant.Models.API_Model.SensorData
         [Range(0, 100.00), Required]
         public decimal LightIntensity { get; set; }
 
-        [Range(0, 100.00), Required]
+        [Range(0, 100.00), Required] 
         public decimal Moisture { get; set; }
 
     }
