@@ -32,7 +32,7 @@ export default function Plant(props) {
       "Loading sensor data..."
     ),
     [averageReading, setAverageReading] = useState(null),
-    [currentPageNumber, setCurrentPageNumber] = useState(0),
+    [currentPageNumber, setCurrentPageNumber] = useState(1),
     [paginationNumbers, setPaginationNumbers] = useState([]),
     [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]),
     [showDeleteStatus, setShowDeleteStatus] = useState(false),
@@ -257,7 +257,9 @@ export default function Plant(props) {
       }
 
       sensorReadings.forEach((sensorReading) => {
-        const readingTime = new Date(sensorReading.timeStampUTC).getTime();
+        const readingTime = new Date(
+          sensorReading.timeStampUTC + "Z"
+        ).getTime();
         if (readingTime <= now && readingTime >= endTime) {
           readings.push(sensorReading);
         }
@@ -289,10 +291,10 @@ export default function Plant(props) {
       setDisplayedReadings(readings);
 
       const numbers = createPaginationNumbers(readings.length);
-      setPaginationNumbers(numbers.slice(0, 19));
-      setMobilePaginationNumbers(numbers.slice(0, 4));
+      setPaginationNumbers(numbers.slice(0, 20));
+      setMobilePaginationNumbers(numbers.slice(0, 5));
 
-      setCurrentPageNumber(0);
+      setCurrentPageNumber(1);
     } else {
       if (timeframe === "All time") {
         setDisplayedReadings(
@@ -307,22 +309,29 @@ export default function Plant(props) {
   };
 
   const getDate = (isoDate) => {
-    const date = new Date(isoDate);
+    const date = new Date(isoDate + "Z");
     return date.toLocaleString("en-AU", { timeZone: "Australia/Melbourne" });
   };
 
   const pageNavigate = (pageNumber) => {
     if (
-      pageNumber >= 0 &&
-      pageNumber <= getNumPages(displayedReadings.length) - 1
+      pageNumber >= 1 &&
+      pageNumber <= getNumPages(displayedReadings.length)
     ) {
-      const numbers = createPaginationNumbers(displayedReadings.length);
-      const desktopNumbers = numbers.slice(pageNumber, pageNumber + 19),
-        mobileNumbers = numbers.slice(pageNumber, pageNumber + 4);
+      if (pageNumber < 20) {
+        const numbers = createPaginationNumbers(displayedReadings.length);
+        const desktopNumbers = numbers.slice(0, 21);
 
-      if (desktopNumbers.length >= paginationNumbers.length) {
-        setPaginationNumbers(desktopNumbers);
+        setPaginationNumbers(numbers.slice(0, 21));
+      } else {
+        const numbers = createPaginationNumbers(displayedReadings.length);
+        const desktopNumbers = numbers.slice(pageNumber, pageNumber + 20);
+
+        if (desktopNumbers.length >= paginationNumbers.length) {
+          setPaginationNumbers(desktopNumbers);
+        }
       }
+
       if (mobileNumbers.length >= mobilePaginationNumbers.length) {
         setMobilePaginationNumbers(mobileNumbers);
       }
@@ -669,7 +678,7 @@ export default function Plant(props) {
                     </tr>
                   ) : null}
                   {displayedReadings
-                    .slice(9 * currentPageNumber, 9 * (currentPageNumber + 1))
+                    .slice(9 * (currentPageNumber - 1), 9 * currentPageNumber)
                     .map((row) => {
                       return (
                         <tr key={row.timeStampUTC}>
@@ -683,16 +692,16 @@ export default function Plant(props) {
                     })}
                   {9 -
                     displayedReadings.slice(
-                      9 * currentPageNumber,
-                      9 * (currentPageNumber + 1)
+                      9 * (currentPageNumber - 1),
+                      9 * currentPageNumber
                     ).length >
                   0
                     ? [
                         ...Array(
                           9 -
                             displayedReadings.slice(
-                              9 * currentPageNumber,
-                              9 * (currentPageNumber + 1)
+                              9 * (currentPageNumber - 1),
+                              9 * currentPageNumber
                             ).length
                         ).keys(),
                       ].map((key) => {
@@ -731,7 +740,7 @@ export default function Plant(props) {
                       <span
                         className="page-link"
                         onClick={() => {
-                          pageNavigate(paginationNumber - 1);
+                          pageNavigate(paginationNumber);
                         }}
                       >
                         {paginationNumber}
@@ -849,7 +858,7 @@ export default function Plant(props) {
                     </tr>
                   ) : null}
                   {displayedReadings
-                    .slice(9 * currentPageNumber, 9 * (currentPageNumber + 1))
+                    .slice(9 * (currentPageNumber - 1), 9 * currentPageNumber)
                     .map((row) => {
                       return (
                         <tr key={row.timeStampUTC}>
@@ -863,16 +872,16 @@ export default function Plant(props) {
                     })}
                   {9 -
                     displayedReadings.slice(
-                      9 * currentPageNumber,
-                      9 * (currentPageNumber + 1)
+                      9 * (currentPageNumber - 1),
+                      9 * currentPageNumber
                     ).length >
                   0
                     ? [
                         ...Array(
                           9 -
                             displayedReadings.slice(
-                              9 * currentPageNumber,
-                              9 * (currentPageNumber + 1)
+                              9 * (currentPageNumber - 1),
+                              9 * currentPageNumber
                             ).length
                         ).keys(),
                       ].map((key) => {
@@ -911,7 +920,7 @@ export default function Plant(props) {
                       <span
                         className="page-link"
                         onClick={() => {
-                          pageNavigate(mobilePaginationNumber - 1);
+                          pageNavigate(mobilePaginationNumber);
                         }}
                       >
                         {mobilePaginationNumber}
