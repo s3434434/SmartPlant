@@ -33,7 +33,8 @@ export default function Plant(props) {
     ),
     [averageReading, setAverageReading] = useState(null),
     [currentPageNumber, setCurrentPageNumber] = useState(0),
-    [paginationNumbers, setPaginationNumbers] = useState([]),
+    [displayedPaginationNumbers, setDisplayedPaginationNumbers] = useState([]),      
+    [displayedMobilePaginationNumbers, setDisplayedMobilePaginationNumbers] = useState([]), 
     [showDeleteStatus, setShowDeleteStatus] = useState(false),
     [deleteStatus, setDeleteStatus] = useState("none");
 
@@ -288,7 +289,8 @@ export default function Plant(props) {
       setDisplayedReadings(readings);
 
       const numbers = getPaginationNumbers(readings.length);
-      setPaginationNumbers(numbers.slice(0, 19));
+      setDisplayedPaginationNumbers(numbers.slice(0, 19));      
+      setDisplayedMobilePaginationNumbers(numbers.slice(0, 4));
 
       setCurrentPageNumber(0);
     } else {
@@ -317,9 +319,14 @@ export default function Plant(props) {
       let numbers = getPaginationNumbers(displayedReadings.length);
       numbers = numbers.slice(pageNumber, pageNumber + 19);
 
-      if (numbers.length >= paginationNumbers.length) {
-        setPaginationNumbers(numbers);
+      if (numbers.length >= displayedPaginationNumbers.length) {
+        setDisplayedPaginationNumbers(numbers);
       }
+      const mobileNumbers = numbers.slice(pageNumber, pageNumber + 4);
+      if (mobileNumbers.length >= displayedMobilePaginationNumbers.length) {
+        setDisplayedMobilePaginationNumbers(mobileNumbers);
+      }
+
       setCurrentPageNumber(pageNumber);
     }
   };
@@ -662,7 +669,7 @@ export default function Plant(props) {
                     </tr>
                   ) : null}
                   {displayedReadings
-                    .slice(9 * currentPageNumber, currentPageNumber + 9)
+                    .slice(9 * currentPageNumber, 9 * (currentPageNumber+1))
                     .map((row) => {
                       return (
                         <tr key={row.timeStampUTC}>
@@ -676,16 +683,14 @@ export default function Plant(props) {
                     })}
                   {9 -
                     displayedReadings.slice(
-                      9 * currentPageNumber,
-                      currentPageNumber + 9
+                      9 * currentPageNumber, 9 * (currentPageNumber+1)
                     ).length >
                   0
                     ? [
                         ...Array(
                           9 -
                             displayedReadings.slice(
-                              9 * currentPageNumber,
-                              currentPageNumber + 9
+                              9 * currentPageNumber, 9 * (currentPageNumber+1)
                             ).length
                         ).keys(),
                       ].map((key) => {
@@ -718,7 +723,7 @@ export default function Plant(props) {
                     Previous
                   </span>
                 </li>
-                {paginationNumbers.map((paginationNumber) => {
+                {displayedPaginationNumbers.map((paginationNumber) => {
                   return (
                     <li className="page-item" key={paginationNumber}>
                       <span
@@ -746,9 +751,8 @@ export default function Plant(props) {
             </nav>
           </>
         )}
-        <nav className="mt-4" style={{ backgroundColor: "transparent" }}>
+        <nav className="mt-4 overflow-auto" style={{ backgroundColor: "transparent" }}>
           <h4 className="text-center gold">Sample timeframe</h4>
-          <div className="overflow-auto">
             <ul className="pagination justify-content-center">
               <li className="page-item">
                 <span
@@ -811,7 +815,6 @@ export default function Plant(props) {
                 </span>
               </li>
             </ul>
-          </div>
         </nav>
       </div>
       <div className="m-auto px-2 d-xl-none gold-border">
@@ -841,7 +844,7 @@ export default function Plant(props) {
                     </tr>
                   ) : null}
                   {displayedReadings
-                    .slice(9 * currentPageNumber, currentPageNumber + 9)
+                    .slice(9 * currentPageNumber, 9 * (currentPageNumber+1))
                     .map((row) => {
                       return (
                         <tr key={row.timeStampUTC}>
@@ -855,16 +858,14 @@ export default function Plant(props) {
                     })}
                   {9 -
                     displayedReadings.slice(
-                      9 * currentPageNumber,
-                      currentPageNumber + 9
+                      9 * currentPageNumber, 9 * (currentPageNumber+1)
                     ).length >
                   0
                     ? [
                         ...Array(
                           9 -
                             displayedReadings.slice(
-                              9 * currentPageNumber,
-                              currentPageNumber + 9
+                              9 * currentPageNumber, 9 * (currentPageNumber+1)
                             ).length
                         ).keys(),
                       ].map((key) => {
@@ -897,7 +898,7 @@ export default function Plant(props) {
                     Previous
                   </span>
                 </li>
-                {paginationNumbers.map((paginationNumber) => {
+                {displayedMobilePaginationNumbers.map((paginationNumber) => {
                   return (
                     <li className="page-item" key={paginationNumber}>
                       <span
@@ -925,9 +926,8 @@ export default function Plant(props) {
             </nav>
           </>
         )}
-        <nav className="mt-4" style={{ backgroundColor: "transparent" }}>
+        <nav className="mt-4 overflow-auto" style={{ backgroundColor: "transparent" }}>
           <h4 className="text-center gold">Sample timeframe</h4>
-          <div className="overflow-auto">
             <ul className="pagination justify-content-center">
               <li className="page-item">
                 <span
@@ -990,7 +990,6 @@ export default function Plant(props) {
                 </span>
               </li>
             </ul>
-          </div>
         </nav>
       </div>
     </section>
