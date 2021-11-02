@@ -1,5 +1,4 @@
-# SmartPlant
-API
+# SmartPlant API
 
 open in visual studio -> tools ->NuGet Package Manager -> Package Manager Console -> "update-database" -> F5
 
