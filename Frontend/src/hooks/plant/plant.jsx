@@ -33,8 +33,8 @@ export default function Plant(props) {
     ),
     [averageReading, setAverageReading] = useState(null),
     [currentPageNumber, setCurrentPageNumber] = useState(0),
-    [displayedPaginationNumbers, setDisplayedPaginationNumbers] = useState([]),      
-    [displayedMobilePaginationNumbers, setDisplayedMobilePaginationNumbers] = useState([]), 
+    [paginationNumbers, setPaginationNumbers] = useState([]),
+    [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]),
     [showDeleteStatus, setShowDeleteStatus] = useState(false),
     [deleteStatus, setDeleteStatus] = useState("none");
 
@@ -203,7 +203,7 @@ export default function Plant(props) {
     return numPages;
   };
 
-  const getPaginationNumbers = (numReadings) => {
+  const createPaginationNumbers = (numReadings) => {
     const numPages = getNumPages(numReadings);
 
     let numbers = [...Array(numPages).keys()];
@@ -288,9 +288,9 @@ export default function Plant(props) {
 
       setDisplayedReadings(readings);
 
-      const numbers = getPaginationNumbers(readings.length);
-      setDisplayedPaginationNumbers(numbers.slice(0, 19));      
-      setDisplayedMobilePaginationNumbers(numbers.slice(0, 4));
+      const numbers = createPaginationNumbers(readings.length);
+      setPaginationNumbers(numbers.slice(0, 19));
+      setMobilePaginationNumbers(numbers.slice(0, 4));
 
       setCurrentPageNumber(0);
     } else {
@@ -316,15 +316,15 @@ export default function Plant(props) {
       pageNumber >= 0 &&
       pageNumber <= getNumPages(displayedReadings.length) - 1
     ) {
-      let numbers = getPaginationNumbers(displayedReadings.length);
-      numbers = numbers.slice(pageNumber, pageNumber + 19);
+      const numbers = createPaginationNumbers(displayedReadings.length);
+      const desktopNumbers = numbers.slice(pageNumber, pageNumber + 19),
+        mobileNumbers = numbers.slice(pageNumber, pageNumber + 4);
 
-      if (numbers.length >= displayedPaginationNumbers.length) {
-        setDisplayedPaginationNumbers(numbers);
+      if (desktopNumbers.length >= paginationNumbers.length) {
+        setPaginationNumbers(desktopNumbers);
       }
-      const mobileNumbers = numbers.slice(pageNumber, pageNumber + 4);
-      if (mobileNumbers.length >= displayedMobilePaginationNumbers.length) {
-        setDisplayedMobilePaginationNumbers(mobileNumbers);
+      if (mobileNumbers.length >= mobilePaginationNumbers.length) {
+        setMobilePaginationNumbers(mobileNumbers);
       }
 
       setCurrentPageNumber(pageNumber);
@@ -669,7 +669,7 @@ export default function Plant(props) {
                     </tr>
                   ) : null}
                   {displayedReadings
-                    .slice(9 * currentPageNumber, 9 * (currentPageNumber+1))
+                    .slice(9 * currentPageNumber, 9 * (currentPageNumber + 1))
                     .map((row) => {
                       return (
                         <tr key={row.timeStampUTC}>
@@ -683,14 +683,16 @@ export default function Plant(props) {
                     })}
                   {9 -
                     displayedReadings.slice(
-                      9 * currentPageNumber, 9 * (currentPageNumber+1)
+                      9 * currentPageNumber,
+                      9 * (currentPageNumber + 1)
                     ).length >
                   0
                     ? [
                         ...Array(
                           9 -
                             displayedReadings.slice(
-                              9 * currentPageNumber, 9 * (currentPageNumber+1)
+                              9 * currentPageNumber,
+                              9 * (currentPageNumber + 1)
                             ).length
                         ).keys(),
                       ].map((key) => {
@@ -723,7 +725,7 @@ export default function Plant(props) {
                     Previous
                   </span>
                 </li>
-                {displayedPaginationNumbers.map((paginationNumber) => {
+                {paginationNumbers.map((paginationNumber) => {
                   return (
                     <li className="page-item" key={paginationNumber}>
                       <span
@@ -751,70 +753,73 @@ export default function Plant(props) {
             </nav>
           </>
         )}
-        <nav className="mt-4 overflow-auto" style={{ backgroundColor: "transparent" }}>
+        <nav
+          className="mt-4 overflow-auto"
+          style={{ backgroundColor: "transparent" }}
+        >
           <h4 className="text-center gold">Sample timeframe</h4>
-            <ul className="pagination justify-content-center">
-              <li className="page-item">
-                <span
-                  className="page-link"
-                  onClick={() => {
-                    updateDisplayedReadings("Hour");
-                  }}
-                >
-                  Hour
-                </span>
-              </li>
-              <li className="page-item">
-                <span
-                  className="page-link"
-                  onClick={() => {
-                    updateDisplayedReadings("Day");
-                  }}
-                >
-                  Day
-                </span>
-              </li>
-              <li className="page-item">
-                <span
-                  className="page-link"
-                  onClick={() => {
-                    updateDisplayedReadings("Week");
-                  }}
-                >
-                  Week
-                </span>
-              </li>
-              <li className="page-item">
-                <span
-                  className="page-link"
-                  onClick={() => {
-                    updateDisplayedReadings("Month");
-                  }}
-                >
-                  Month
-                </span>
-              </li>
-              <li className="page-item">
-                <span
-                  className="page-link"
-                  onClick={() => {
-                    updateDisplayedReadings("Year");
-                  }}
-                >
-                  Year
-                </span>
-              </li>
-              <li className="page-item">
-                <span
-                  className="page-link"
-                  onClick={() => {
-                    updateDisplayedReadings("All time");
-                  }}
-                >
-                  All time
-                </span>
-              </li>
-            </ul>
+          <ul className="pagination justify-content-center">
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("Hour");
+                }}
+              >
+                Hour
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("Day");
+                }}
+              >
+                Day
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("Week");
+                }}
+              >
+                Week
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("Month");
+                }}
+              >
+                Month
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("Year");
+                }}
+              >
+                Year
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("All time");
+                }}
+              >
+                All time
+              </span>
+            </li>
+          </ul>
         </nav>
       </div>
       <div className="m-auto px-2 d-xl-none gold-border">
@@ -844,7 +849,7 @@ export default function Plant(props) {
                     </tr>
                   ) : null}
                   {displayedReadings
-                    .slice(9 * currentPageNumber, 9 * (currentPageNumber+1))
+                    .slice(9 * currentPageNumber, 9 * (currentPageNumber + 1))
                     .map((row) => {
                       return (
                         <tr key={row.timeStampUTC}>
@@ -858,14 +863,16 @@ export default function Plant(props) {
                     })}
                   {9 -
                     displayedReadings.slice(
-                      9 * currentPageNumber, 9 * (currentPageNumber+1)
+                      9 * currentPageNumber,
+                      9 * (currentPageNumber + 1)
                     ).length >
                   0
                     ? [
                         ...Array(
                           9 -
                             displayedReadings.slice(
-                              9 * currentPageNumber, 9 * (currentPageNumber+1)
+                              9 * currentPageNumber,
+                              9 * (currentPageNumber + 1)
                             ).length
                         ).keys(),
                       ].map((key) => {
@@ -898,16 +905,16 @@ export default function Plant(props) {
                     Previous
                   </span>
                 </li>
-                {displayedMobilePaginationNumbers.map((paginationNumber) => {
+                {mobilePaginationNumbers.map((mobilePaginationNumber) => {
                   return (
-                    <li className="page-item" key={paginationNumber}>
+                    <li className="page-item" key={mobilePaginationNumber}>
                       <span
                         className="page-link"
                         onClick={() => {
-                          pageNavigate(paginationNumber - 1);
+                          pageNavigate(mobilePaginationNumber - 1);
                         }}
                       >
-                        {paginationNumber}
+                        {mobilePaginationNumber}
                       </span>
                     </li>
                   );
@@ -926,70 +933,73 @@ export default function Plant(props) {
             </nav>
           </>
         )}
-        <nav className="mt-4 overflow-auto" style={{ backgroundColor: "transparent" }}>
+        <nav
+          className="mt-4 overflow-auto"
+          style={{ backgroundColor: "transparent" }}
+        >
           <h4 className="text-center gold">Sample timeframe</h4>
-            <ul className="pagination justify-content-center">
-              <li className="page-item">
-                <span
-                  className="page-link"
-                  onClick={() => {
-                    updateDisplayedReadings("Hour");
-                  }}
-                >
-                  Hour
-                </span>
-              </li>
-              <li className="page-item">
-                <span
-                  className="page-link"
-                  onClick={() => {
-                    updateDisplayedReadings("Day");
-                  }}
-                >
-                  Day
-                </span>
-              </li>
-              <li className="page-item">
-                <span
-                  className="page-link"
-                  onClick={() => {
-                    updateDisplayedReadings("Week");
-                  }}
-                >
-                  Week
-                </span>
-              </li>
-              <li className="page-item">
-                <span
-                  className="page-link"
-                  onClick={() => {
-                    updateDisplayedReadings("Month");
-                  }}
-                >
-                  Month
-                </span>
-              </li>
-              <li className="page-item">
-                <span
-                  className="page-link"
-                  onClick={() => {
-                    updateDisplayedReadings("Year");
-                  }}
-                >
-                  Year
-                </span>
-              </li>
-              <li className="page-item">
-                <span
-                  className="page-link"
-                  onClick={() => {
-                    updateDisplayedReadings("All time");
-                  }}
-                >
-                  All time
-                </span>
-              </li>
-            </ul>
+          <ul className="pagination justify-content-center">
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("Hour");
+                }}
+              >
+                Hour
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("Day");
+                }}
+              >
+                Day
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("Week");
+                }}
+              >
+                Week
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("Month");
+                }}
+              >
+                Month
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("Year");
+                }}
+              >
+                Year
+              </span>
+            </li>
+            <li className="page-item">
+              <span
+                className="page-link"
+                onClick={() => {
+                  updateDisplayedReadings("All time");
+                }}
+              >
+                All time
+              </span>
+            </li>
+          </ul>
         </nav>
       </div>
     </section>
