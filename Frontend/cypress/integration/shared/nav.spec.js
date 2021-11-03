@@ -6,7 +6,7 @@ describe('Nav bar', () => {
 
         cy.visit(route)
         cy.get('#navbar')
-        cy.get('.img-fluid')
+        cy.get('#nav-image')
         cy.get('.navbar-title > h1.gold')
         cy.get('h4.gold')
     })
