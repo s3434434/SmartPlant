@@ -60,4 +60,9 @@ footer * {
     width: 4em;
     height: 4em;
   }
+  main > * {
+    margin-left: 4.5%;
+    margin-right: 4.5%;
+    max-width: 91%;
+  }
 }
