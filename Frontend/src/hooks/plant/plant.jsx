@@ -323,34 +323,33 @@ export default function Plant(props) {
     ) {
       const numbers = createPaginationNumbers(displayedReadings.length);
 
-      if (pageNumber <= 10) {
-        setPaginationNumbers(numbers.slice(0, 10));
-      } else {
-        const numberDifference = pageNumber - 10,
-          desktopNumbers = numbers.slice(
-            0 + numberDifference,
-            10 + numberDifference
-          );
+      if (pageNumber < paginationNumbers[0]) {
+        const desktopNumbers = numbers.slice(pageNumber - 1, pageNumber + 9);
+
+        if (desktopNumbers.length >= paginationNumbers.length) {
+          setPaginationNumbers(desktopNumbers);
+        }
+      } else if (pageNumber > paginationNumbers[9]) {
+        const desktopNumbers = numbers.slice(pageNumber - 10, pageNumber);
 
         if (desktopNumbers.length >= paginationNumbers.length) {
           setPaginationNumbers(desktopNumbers);
         }
       }
 
-      if (pageNumber <= 4) {
-        setMobilePaginationNumbers(numbers.slice(0, 4));
-      } else {
-        const numberDifference = pageNumber - 4,
-          mobileNumbers = numbers.slice(
-            0 + numberDifference,
-            4 + numberDifference
-          );
+      if (pageNumber < mobilePaginationNumbers[0]) {
+        const mobileNumbers = numbers.slice(pageNumber - 1, pageNumber + 3);
+
+        if (mobileNumbers.length >= mobilePaginationNumbers.length) {
+          setMobilePaginationNumbers(mobileNumbers);
+        }
+      } else if (pageNumber > mobilePaginationNumbers[3]) {
+        const mobileNumbers = numbers.slice(pageNumber - 4, pageNumber);
 
         if (mobileNumbers.length >= mobilePaginationNumbers.length) {
           setMobilePaginationNumbers(mobileNumbers);
         }
       }
-
       setCurrentPageNumber(pageNumber);
     }
   };
