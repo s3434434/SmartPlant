@@ -63,7 +63,7 @@ function App() {
   return (
     <div className="bg-image">
       <nav
-        className="navbar navbar-expand-md sticky-top navbar-dark px-4 py-0"
+        className="navbar navbar-expand-md sticky-top navbar-dark ps-2 pe-4 py-0"
         id="navbar"
       >
         <button
