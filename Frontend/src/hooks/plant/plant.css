@@ -11,6 +11,7 @@ td {
   color: white !important;
   border: 0em !important;
   white-space: nowrap;
+  user-select: none;
 }
 .page-link-selected,
 .page-link:hover {

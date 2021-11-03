@@ -14,9 +14,13 @@ footer {
 .navbar-title h4 {
   font-family: "Times New Roman", Times, serif;
   cursor: default;
+  user-select: none;
 }
 nav li {
   text-align: center;
+}
+nav li h5 {
+  user-select: none;
 }
 
 span.nav-link,
@@ -36,7 +40,10 @@ main > * {
 footer * {
   color: white;
 }
-footer span.footer-link:hover {
+.footer-link {
+  user-select: none;
+}
+.footer-link:hover {
   color: rgb(255, 255, 255, 0.7) !important;
 }
 

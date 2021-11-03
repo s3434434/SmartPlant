@@ -85,7 +85,11 @@ export default function Login(props) {
         <div className="form-text">
           <span
             className="gold light-gold-hover"
-            style={{ textDecoration: "none", cursor: "pointer" }}
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
             onClick={() => {
               window.location.pathname = "/forgot-password";
             }}
@@ -135,7 +139,11 @@ export default function Login(props) {
         <div className="form-text">
           <span
             className="gold light-gold-hover"
-            style={{ textDecoration: "none", cursor: "pointer" }}
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
             onClick={() => {
               window.location.pathname = "/forgot-password";
             }}
