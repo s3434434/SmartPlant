@@ -30,7 +30,7 @@ export default function Support(props) {
     setStatus("Please wait...");
     setShowStatus(true);
 
-    const token = props.getLoginToken();
+    const token = props.getLogin().token;
     if (token !== null) {
       axios
         .post(

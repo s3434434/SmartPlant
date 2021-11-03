@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import axios from "axios";
-import "./settings.css";
+import "./user.css";
 
-export default function Settings(props) {
+export default function User(props) {
   const { getLogin, logOut } = props;
 
   const [emailForm, setEmailForm] = useState({

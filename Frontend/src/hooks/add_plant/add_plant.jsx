@@ -4,7 +4,7 @@ import _ from "lodash";
 import axios from "axios";
 
 export default function AddPlant(props) {
-  const { getLoginToken, logOut } = props;
+  const { getLogin, logOut } = props;
   const [plantTypes, setPlantTypes] = useState([]);
   const [form, setForm] = useState({
     plantName: "",
@@ -17,7 +17,7 @@ export default function AddPlant(props) {
   useEffect(() => {
     document.title = "Add plant | Demeter - The plant meter";
 
-    const token = getLoginToken();
+    const token = getLogin().token;
     if (token !== null) {
       axios
         .get("https://smart-plant.azurewebsites.net/api/Plants", {
@@ -74,7 +74,7 @@ export default function AddPlant(props) {
     setStatus("Please wait...");
     setShowStatus(true);
 
-    const token = getLoginToken();
+    const token = getLogin().token;
     if (token !== null) {
       axios
         .post("https://smart-plant.azurewebsites.net/api/Plants", form, {

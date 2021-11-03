@@ -7,7 +7,7 @@ import container_background from "../../assets/images/container_background.png";
 import "./plant.css";
 
 export default function Plant(props) {
-  const { getLoginToken, logOut } = props;
+  const { getLogin, logOut } = props;
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
 
   const [form, setForm] = useState({
@@ -42,7 +42,7 @@ export default function Plant(props) {
   useEffect(() => {
     document.title = "Demeter - The plant meter";
 
-    const token = getLoginToken();
+    const token = getLogin().token;
     if (token !== null) {
       axios
         .get("https://smart-plant.azurewebsites.net/api/Plants", {
@@ -134,7 +134,7 @@ export default function Plant(props) {
     setStatus("Please wait...");
     setShowStatus(true);
 
-    const token = getLoginToken();
+    const token = getLogin().token;
     if (token !== null) {
       axios
         .put("https://smart-plant.azurewebsites.net/api/Plants", form, {
@@ -169,7 +169,7 @@ export default function Plant(props) {
     setTokenStatus("Please wait...");
     setShowTokenStatus(true);
 
-    const token = getLoginToken();
+    const token = getLogin().token;
     if (token !== null) {
       axios
         .get(
@@ -358,7 +358,7 @@ export default function Plant(props) {
     setDeleteStatus("Please wait...");
     setShowDeleteStatus(true);
 
-    const token = getLoginToken();
+    const token = getLogin().token;
     if (token !== null) {
       axios
         .delete(

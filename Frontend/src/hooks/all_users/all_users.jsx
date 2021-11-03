@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import container_background from "../../assets/images/container_background.png";
-import "./all_plants.css";
+import "./all_users.css";
 
-export default function AllPlants(props) {
+export default function AllUsers(props) {
   const [plants, setPlants] = useState(null);
 
   useEffect(() => {
-    document.title = "Plants | Demeter - The plant meter";
+    document.title = "Users | Demeter - The plant meter";
 
     const token = props.getLogin().token;
     if (token !== null) {
