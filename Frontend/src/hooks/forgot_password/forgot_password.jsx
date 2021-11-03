@@ -6,7 +6,7 @@ import "./forgot_password.css";
 export default function ForgotPassword(props) {
   const [form, setForm] = useState({
     email: "",
-    clientURI: "http://localhost:3000/reset-password",
+    clientURI: "https://www.demeter.onl/reset-password",
   });
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("none");
@@ -48,7 +48,7 @@ export default function ForgotPassword(props) {
     <section>
       <h1 className="gold text-center">Forgot password</h1>
       <form
-        className="w-25 m-auto mt-4 d-none d-lg-block"
+        className="w-25 m-auto mt-4 d-none d-xl-block"
         onSubmit={handleSubmit}
       >
         <label className="form-label gold" htmlFor="email">
@@ -67,11 +67,15 @@ export default function ForgotPassword(props) {
             Enter your email and we will send you a password reset link.
           </span>
         </div>
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Reset password
@@ -79,7 +83,7 @@ export default function ForgotPassword(props) {
         </div>
       </form>
 
-      <form className="m-auto mt-4 px-2 d-lg-none" onSubmit={handleSubmit}>
+      <form className="m-auto mt-4 px-2 d-xl-none" onSubmit={handleSubmit}>
         <label className="form-label gold" htmlFor="email">
           Email
         </label>
@@ -96,11 +100,15 @@ export default function ForgotPassword(props) {
             Enter your email and we will send you a password reset link.
           </span>
         </div>
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Reset password

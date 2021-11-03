@@ -42,8 +42,14 @@ export default function Login(props) {
         window.location.pathname = "/";
       })
       .catch((err) => {
-        setStatus(err.response.data);
-        setShowStatus(true);
+        let errorMessage = "Server error. Please try again later.";
+        const errors = err.response.data.messages;
+
+        if (errors["Login Details"] !== undefined) {
+          errorMessage = errors["Login Details"][0];
+        }
+
+        setStatus(errorMessage);
       });
   };
 
@@ -51,7 +57,7 @@ export default function Login(props) {
     <section>
       <h1 className="gold text-center">Login</h1>
       <form
-        className="w-25 m-auto mt-4 d-none d-lg-block"
+        className="w-25 m-auto mt-4 d-none d-xl-block"
         onSubmit={handleSubmit}
       >
         <label className="form-label gold" htmlFor="email">
@@ -79,7 +85,11 @@ export default function Login(props) {
         <div className="form-text">
           <span
             className="gold light-gold-hover"
-            style={{ textDecoration: "none", cursor: "pointer" }}
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
             onClick={() => {
               window.location.pathname = "/forgot-password";
             }}
@@ -87,11 +97,15 @@ export default function Login(props) {
             Forgot password?
           </span>
         </div>
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Login
@@ -99,7 +113,7 @@ export default function Login(props) {
         </div>
       </form>
 
-      <form className="m-auto mt-4 px-2 d-lg-none" onSubmit={handleSubmit}>
+      <form className="m-auto mt-4 px-2 d-xl-none" onSubmit={handleSubmit}>
         <label className="form-label gold" htmlFor="email">
           Email
         </label>
@@ -125,7 +139,11 @@ export default function Login(props) {
         <div className="form-text">
           <span
             className="gold light-gold-hover"
-            style={{ textDecoration: "none", cursor: "pointer" }}
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
             onClick={() => {
               window.location.pathname = "/forgot-password";
             }}
@@ -133,11 +151,15 @@ export default function Login(props) {
             Forgot password?
           </span>
         </div>
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Login

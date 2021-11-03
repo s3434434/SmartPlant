@@ -1,21 +1,24 @@
 body {
   scroll-behavior: smooth;
-  background-image: url("assets/images/background.jpeg");
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
 }
 h1,
 span,
 div {
   cursor: default;
 }
+
 .gold {
   color: rgb(243, 202, 0);
 }
 
 .light-gold-hover:hover {
   color: rgb(247, 215, 59);
+}
+
+.gold-border {
+  border: 0.15rem rgb(243, 202, 0) solid;
+  border-radius: 0.2rem;
+  color: white;
 }
 
 section {
@@ -28,18 +31,20 @@ section {
 
 p {
   text-align: justify;
-  margin-top: 0;
   hyphens: auto;
-  font-size: 1.5em;
 }
 
 .btn-primary {
-  background-color: rgba(0, 53, 11) !important;
+  background-color: rgb(0, 53, 11) !important;
   border-radius: 0.85em !important;
 
   color: white;
 
   border: none !important;
+}
+.btn-primary:hover,
+.btn-primary:active {
+  background-color: rgb(31, 85, 52) !important;
 }
 .btn-primary:hover,
 .btn-primary:active,
@@ -55,66 +60,49 @@ p {
   outline: none;
 }
 .btn-primary:active {
-  opacity: 0.8;
+  background-color: rgb(51, 105, 72) !important;
 }
 
-input,
-textarea,
-select {
-  color: rgba(0, 53, 11) !important;
-}
 :-moz-ui-invalid {
   box-shadow: none;
 }
 form span {
   color: white;
 }
-form .hidden-field {
+
+.hidden-field {
   opacity: 0;
   pointer-events: none;
   user-select: none;
 }
 
-i {
-  color: #818181;
-}
-i:hover {
-  color: #f1f1f1;
-}
 .content-gallery {
-  margin-top: 0.5em;
+  display: flex;
+  flex-wrap: wrap;
 }
 .content-gallery > * {
   margin: auto;
   margin-bottom: 1%;
 }
-.cg-flex {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.flex-padding {
-  background-color: black;
-}
 
 .cg-container {
   overflow: hidden;
   background-position: center;
-  background-size: contain;
-  width: 15em;
-  height: 15em;
+  background-size: cover;
+  background-blend-mode: overlay;
+  width: 14em;
+  height: 14em;
   display: grid;
   grid-template-columns: 100%;
   align-items: center;
   justify-content: center;
   transition: 0.05s;
-  cursor: pointer;
 }
-.cg-container h1,
-.cg-container h2 {
+.cg-container * {
+  color: white;
+  text-shadow: 0.03em 0.03em 0.025em rgb(0, 53, 11);
   padding-left: 0.3em;
   padding-right: 0.3em;
-  text-shadow: 0.03em 0.03em black;
   text-align: center;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -124,78 +112,22 @@ i:hover {
   -ms-hyphens: auto;
   -moz-hyphens: auto;
 }
-
-.overlay {
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.9);
-  overflow: hidden;
-  transition: 0.5s;
-  height: 75%;
-  width: 0;
-  border-radius: 0.75em;
-  z-index: 1;
-  top: 17.5%;
-  left: 9%;
+.cg-container h1 {
+  -webkit-line-clamp: 2;
 }
-.overlay i {
-  position: absolute;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 45px;
-  padding: 5px;
-}
-.overlay .closeBtn {
-  top: 20px;
-  right: 45px;
-}
-.overlay-content {
-  position: absolute;
-  top: 0%;
-  left: 10%;
-  width: 80%;
-  display: grid;
-  grid-template-columns: 100%;
-}
-.overlay-content form {
-  text-align: center;
-  font-size: 1.3em;
-  margin-top: 5em;
-}
-.overlay-content form > * {
-  margin-bottom: 1em;
+.cg-container h2 {
+  -webkit-line-clamp: 3;
 }
 
-@media (max-width: 881px) {
+@media (max-width: 768px) {
   .content-gallery > * {
     margin-bottom: 3%;
   }
-}
-
-@media (max-width: 743px) {
-  .overlay .closeBtn {
-    font-size: 48px;
-    top: 12.5px;
-    right: 14.5px;
-  }
-  .overlay-content {
-    left: 13.75%;
-    width: 72.5%;
-  }
-}
-
-@media (max-width: 526px) {
   section {
     padding: 0.5em;
   }
-
-  .overlay .closeBtn {
-    top: 15px;
-    right: 20px;
-  }
-}
-@media (max-width: 524px) {
   .cg-container {
-    width: 10em;
-    height: 10em;
+    width: 9.33em;
+    height: 9.33em;
   }
 }

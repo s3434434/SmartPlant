@@ -6,6 +6,8 @@ import axios from "axios";
 import "./settings.css";
 
 export default function Settings(props) {
+  const { getLoginToken, logOut } = props;
+
   const [emailForm, setEmailForm] = useState({
       email: "",
       confirmEmail: "",
@@ -36,28 +38,32 @@ export default function Settings(props) {
   useEffect(() => {
     document.title = "Settings | Demeter - The plant meter";
 
-    const login = localStorage.getItem("demeter-login");
-    const { token } = JSON.parse(login);
-    axios
-      .get("https://smart-plant.azurewebsites.net/api/User", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        const settings = res.data;
+    const token = getLoginToken();
+    if (token !== null) {
+      axios
+        .get("https://smart-plant.azurewebsites.net/api/User", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          const settings = res.data;
 
-        setEmailForm({ email: settings.email, confirmEmail: "" });
-        setDetailsForm({
-          phoneNumber: settings.phoneNumber,
-          firstName: settings.firstName,
-          lastName: settings.lastName,
+          setEmailForm({ email: settings.email, confirmEmail: "" });
+          setDetailsForm({
+            phoneNumber: settings.phoneNumber,
+            firstName: settings.firstName,
+            lastName: settings.lastName,
+          });
+        })
+        .catch((err) => {
+          logOut();
+          window.location.pathname = "/";
         });
-      })
-      .catch((err) => {
-        props.logOut();
-        window.location.pathname = "/";
-      });
+    } else {
+      window.location.pathname = "/";
+    }
+
     // eslint-disable-next-line
   }, []);
 
@@ -75,12 +81,10 @@ export default function Settings(props) {
     setEmailStatus("Please wait...");
     setShowEmailStatus(true);
 
+    const token = getLoginToken();
     if (emailForm.email !== emailForm.confirmEmail) {
-      setEmailStatus("Email do not match.");
-    } else {
-      const login = localStorage.getItem("demeter-login");
-      const { token } = JSON.parse(login);
-
+      setEmailStatus("Emails do not match.");
+    } else if (token !== null) {
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/User/Email",
@@ -95,8 +99,22 @@ export default function Settings(props) {
           window.location.reload();
         })
         .catch((err) => {
-          setEmailStatus(err.response.data.errors.ConfirmEmail[0]);
+          const errors = err.response.data.messages;
+          let errorMessage = "Server error. Please try again later.";
+
+          if (errors.Email !== undefined) {
+            errorMessage = errors.Email[0];
+          } else if (errors.ConfirmEmail !== undefined) {
+            errorMessage = errors.ConfirmEmail[0];
+          }
+
+          setEmailStatus(errorMessage);
         });
+    } else {
+      setEmailStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
     }
   };
 
@@ -114,35 +132,37 @@ export default function Settings(props) {
     setDetailsStatus("Please wait...");
     setShowDetailsStatus(true);
 
-    const login = localStorage.getItem("demeter-login");
-    const { token } = JSON.parse(login);
+    const token = getLoginToken();
+    if (token !== null) {
+      axios
+        .put("https://smart-plant.azurewebsites.net/api/User", detailsForm, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          window.location.reload();
+        })
+        .catch((err) => {
+          const errors = err.response.data.messages;
+          let errorMessage = "Server error. Please try again later.";
 
-    axios
-      .put("https://smart-plant.azurewebsites.net/api/User", detailsForm, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        window.location.reload();
-      })
-      .catch((err) => {
-        const data = err.response.data;
-        let errorMessage = "";
+          if (errors.Phone !== undefined) {
+            errorMessage = errors.Phone[0];
+          } else if (errors.FirstName !== undefined) {
+            errorMessage = errors.FirstName[0];
+          } else if (errors.LastName !== undefined) {
+            errorMessage = errors.LastName[0];
+          }
 
-        if (data.error !== undefined) {
-          errorMessage = data.error[0];
-        } else {
-          const errors = data.errors;
-          Object.keys(errors).forEach((error) => {
-            if (errors[error] !== undefined) {
-              errorMessage = errors[error];
-            }
-          });
-        }
-
-        setDetailsStatus(errorMessage);
-      });
+          setDetailsStatus(errorMessage);
+        });
+    } else {
+      setDetailsStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
+    }
   };
 
   const handlePasswordChange = (e) => {
@@ -159,12 +179,10 @@ export default function Settings(props) {
     setPasswordStatus("Please wait...");
     setShowPasswordStatus(true);
 
+    const token = getLoginToken();
     if (passwordForm.newPassword !== passwordForm.confirmNewPassword) {
-      setPasswordStatus("Passwords do not match.");
-    } else {
-      const login = localStorage.getItem("demeter-login");
-      const { token } = JSON.parse(login);
-
+      setPasswordStatus("New passwords do not match.");
+    } else if (token !== null) {
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/User/Password",
@@ -182,8 +200,25 @@ export default function Settings(props) {
           }, 1000);
         })
         .catch((err) => {
-          setPasswordStatus(err.response.data);
+          const errors = err.response.data.messages;
+          let errorMessage = "Server error. Please try again later.";
+
+          if (errors.PasswordMismatch !== undefined) {
+            errorMessage = errors.PasswordMismatch[0];
+          }
+          if (errors.PasswordTooShort !== undefined) {
+            errorMessage = errors.PasswordTooShort[0];
+          } else if (errors.ConfirmNewPassword !== undefined) {
+            errorMessage = errors.ConfirmNewPassword[0];
+          }
+
+          setPasswordStatus(errorMessage);
         });
+    } else {
+      setPasswordStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
     }
   };
 
@@ -192,7 +227,7 @@ export default function Settings(props) {
       <h1 className="text-center gold">Settings</h1>
 
       <form
-        className="w-25 m-auto mt-4 d-none d-lg-block"
+        className="w-25 m-auto mt-4 d-none d-xl-block"
         onSubmit={handleEmailSubmit}
       >
         {emailModifiable ? (
@@ -240,7 +275,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{emailForm.email}</span>
             </div>
           </>
@@ -254,7 +289,7 @@ export default function Settings(props) {
           </button>
         </div>
       </form>
-      <form className="m-auto mt-4 px-2 d-lg-none" onSubmit={handleEmailSubmit}>
+      <form className="m-auto mt-4 px-2 d-xl-none" onSubmit={handleEmailSubmit}>
         {emailModifiable ? (
           <>
             <label className="form-label gold" htmlFor="email">
@@ -300,7 +335,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{emailForm.email}</span>
             </div>
           </>
@@ -316,7 +351,7 @@ export default function Settings(props) {
       </form>
 
       <form
-        className="w-25 m-auto mt-5 d-none d-lg-block"
+        className="w-25 m-auto mt-5 d-none d-xl-block"
         onSubmit={handleDetailsSubmit}
       >
         {phoneNumberModifiable ? (
@@ -352,7 +387,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.phoneNumber}</span>
             </div>
           </>
@@ -390,7 +425,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.firstName}</span>
             </div>
           </>
@@ -428,7 +463,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.lastName}</span>
             </div>
           </>
@@ -447,7 +482,7 @@ export default function Settings(props) {
         </div>
       </form>
       <form
-        className="m-auto mt-5 px-2 d-lg-none"
+        className="m-auto mt-5 px-2 d-xl-none"
         onSubmit={handleDetailsSubmit}
       >
         {phoneNumberModifiable ? (
@@ -483,7 +518,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.phoneNumber}</span>
             </div>
           </>
@@ -521,7 +556,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.firstName}</span>
             </div>
           </>
@@ -559,7 +594,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.lastName}</span>
             </div>
           </>
@@ -579,7 +614,7 @@ export default function Settings(props) {
       </form>
 
       <form
-        className="w-25 m-auto mt-5 d-none d-lg-block"
+        className="w-25 m-auto mt-5 d-none d-xl-block"
         onSubmit={handlePasswordSubmit}
       >
         {passwordModifiable ? (
@@ -640,7 +675,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">••••••••</span>
             </div>
           </>
@@ -659,7 +694,7 @@ export default function Settings(props) {
         </div>
       </form>
       <form
-        className="m-auto mt-5 px-2 d-lg-none"
+        className="m-auto mt-5 px-2 d-xl-none"
         onSubmit={handlePasswordSubmit}
       >
         {passwordModifiable ? (
@@ -720,7 +755,7 @@ export default function Settings(props) {
                 </div>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">••••••••</span>
             </div>
           </>

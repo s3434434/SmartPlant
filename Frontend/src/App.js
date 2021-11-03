@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import Plant from "./hooks/plant/plant";
+
 import LandingPage from "./hooks/landing_page/landing_page";
 import Login from "./hooks/login/login";
 import Register from "./hooks/register/register";
@@ -15,90 +15,55 @@ import Logout from "./hooks/logout/logout";
 import Settings from "./hooks/settings/settings";
 import NotFound from "./hooks/not_found/not_found";
 import AllPlants from "./hooks/all_plants/all_plants";
+import AddPlant from "./hooks/add_plant/add_plant";
+import PlantAdded from "./hooks/add_plant/plant_added/plant_added";
+import Plant from "./hooks/plant/plant";
 import logo from "./assets/images/logo.png";
+import PrivacyPolicy from "./hooks/privacy_policy/privacy_policy";
+import TermsOfUse from "./hooks/terms_of_use/terms_of_use";
+import Support from "./hooks/support/support";
+import SupportSuccessful from "./hooks/support/support_successful/support_successful";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
-  const checkLoggedIn = () => {
+  const getLoginToken = () => {
     const login = localStorage.getItem("demeter-login");
-    let loginStatus = false;
+    let loginToken = null;
 
     if (login) {
-      const { expiry } = JSON.parse(login);
+      const { token, expiry } = JSON.parse(login);
 
       if (expiry >= Date.now()) {
-        loginStatus = true;
+        loginToken = token;
       } else {
         localStorage.removeItem("demeter-login");
       }
     }
 
-    return loginStatus;
+    return loginToken;
   };
 
   useEffect(() => {
-    setLoggedIn(checkLoggedIn());
+    let logged_in = false;
+    if (getLoginToken() !== null) {
+      logged_in = true;
+    }
+    setLoggedIn(logged_in);
     // eslint-disable-next-line
   }, []);
 
-  const getPlants = (callback) => {
-    // getCurrentUser()
-    //   .then((user) => {
-    //     user.getSession((err, session) => {
-    //       if (!err) {
-    //         user.getUserAttributes((err, attributes) => {
-    //           if (!err) {
-    //             let email = "";
-    //             attributes.forEach((attribute) => {
-    //               if (attribute.getName() === "email") {
-    //                 email = attribute.getValue();
-    //               }
-    //             });
-    //             const fetchPlants = async () => {
-    //               const response = await fetch(
-    //                 `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/plants?email=${email}`,
-    //                 {
-    //                   headers: {
-    //                     Authorization: session.getIdToken().getJwtToken(),
-    //                   },
-    //                 }
-    //               );
-    //               const json = await response.json();
-    //               callback(json);
-    //             };
-    //             fetchPlants();
-    //           }
-    //         });
-    //       }
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     window.location.pathname = "/login";
-    //   });
-    // eslint-disable-next-line
-  };
-
   const logOut = () => {
-    if (checkLoggedIn()) {
+    if (getLoginToken() !== null) {
       localStorage.removeItem("demeter-login");
       setLoggedIn(false);
     }
   };
 
-  const openOverlay = (id) => {
-    document.getElementById(id).style.width = "82%";
-  };
-
-  const closeOverlay = (id) => {
-    document.getElementById(id).style.width = "0%";
-  };
-
   return (
-    <>
+    <div className="bg-image">
       <nav
-        className="navbar navbar-expand-sm sticky-top navbar-dark px-2 py-0"
+        className="navbar navbar-expand-md sticky-top navbar-dark ps-2 pe-5 py-0"
         id="navbar"
       >
         <button
@@ -109,13 +74,12 @@ function App() {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-
         <div
           className="navbar-brand"
           style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
         >
-          <img className="img-fluid" src={logo} alt="Demeter logo"></img>
-          <div className="navbar-title m-auto ms-1">
+          <img id="nav-image" src={logo} alt="Demeter logo"></img>
+          <div className="navbar-title m-auto ms-0">
             <h1 className="gold">Demeter</h1>
             <h4 className="gold">The Plant Meter</h4>
           </div>
@@ -204,7 +168,10 @@ function App() {
                   <span
                     className="nav-link"
                     onClick={() => {
-                      window.location.pathname = "/support";
+                      // mailto link
+                      window.open(
+                        "mailto:email@example.com?subject=Help%With%Demeter"
+                      );
                     }}
                   >
                     <h5>Support</h5>
@@ -218,11 +185,7 @@ function App() {
       <main>
         <BrowserRouter>
           <Switch>
-            <Route
-              exact
-              path="/landing"
-              render={(props) => <LandingPage {...props} logOut={logOut} />}
-            />
+            <Route exact path="/landing" component={LandingPage} />
             <Route
               exact
               path="/login"
@@ -270,34 +233,76 @@ function App() {
               render={(props) => (
                 <AllPlants
                   {...props}
-                  getPlants={getPlants}
-                  openOverlay={openOverlay}
-                  closeOverlay={closeOverlay}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
                 />
               )}
             />
+            <Route
+              exact
+              path="/add-plant"
+              render={(props) => (
+                <AddPlant
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
+            />
+            <Route exact path="/plant-added" component={PlantAdded} />
             <Route
               exact
               path="/plant/:plant_name"
               render={(props) => (
                 <Plant
                   {...props}
-                  getPlants={getPlants}
-                  openOverlay={openOverlay}
-                  closeOverlay={closeOverlay}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
                 />
               )}
             />
             <Route
               exact
               path="/settings"
-              render={(props) => <Settings {...props} logOut={logOut} />}
+              render={(props) => (
+                <Settings
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/support"
+              render={(props) => (
+                <Support
+                  {...props}
+                  getLoginToken={getLoginToken}
+                  logOut={logOut}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/support-successful"
+              component={SupportSuccessful}
+            />
+            <Route
+              exact
+              path="/privacy-policy"
+              render={(props) => <PrivacyPolicy {...props} logOut={logOut} />}
+            />
+            <Route
+              exact
+              path="/terms-of-use"
+              render={(props) => <TermsOfUse {...props} logOut={logOut} />}
             />
             <Route
               exact
               path="/"
               render={() => {
-                return checkLoggedIn() ? (
+                return getLoginToken() !== null ? (
                   <Redirect to="/plants" />
                 ) : (
                   <Redirect to="/landing" />
@@ -335,7 +340,7 @@ function App() {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
 

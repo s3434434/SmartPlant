@@ -11,7 +11,7 @@ export default function Register(props) {
     lastName: "",
     password: "",
     confirmPassword: "",
-    clientURI: "http://localhost:3000/confirm-email",
+    clientURI: "https://www.demeter.onl/confirm-email",
   });
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("none");
@@ -49,22 +49,21 @@ export default function Register(props) {
           window.location.pathname = "/registration-successful";
         })
         .catch((err) => {
-          const data = err.response.data;
-          let errorMessage = "";
+          const errors = err.response.data.messages;
+          let errorMessage = "Server error. Please try again later.";
 
-          if (data.error !== undefined) {
-            errorMessage = data.error[0];
-          } else {
-            const errors = data.errors;
-            if (errors instanceof Array) {
-              errorMessage = errors[0];
-            } else {
-              Object.keys(errors).forEach((error) => {
-                if (errors[error] !== undefined) {
-                  errorMessage = errors[error];
-                }
-              });
-            }
+          if (errors.Email !== undefined) {
+            errorMessage = errors.Email[0];
+          } else if (errors.Phone !== undefined) {
+            errorMessage = errors.Phone[0];
+          } else if (errors.FirstName !== undefined) {
+            errorMessage = errors.FirstName[0];
+          } else if (errors.LastName !== undefined) {
+            errorMessage = errors.LastName[0];
+          } else if (errors.Passwords !== undefined) {
+            errorMessage = errors.Passwords[0];
+          } else if (errors.ConfirmPassword !== undefined) {
+            errorMessage = errors.ConfirmPassword[0];
           }
 
           setStatus(errorMessage);
@@ -76,7 +75,7 @@ export default function Register(props) {
     <section>
       <h1 className="gold text-center">Register</h1>
       <form
-        className="w-25 m-auto mt-4 d-none d-lg-block"
+        className="w-25 m-auto mt-4 d-none d-xl-block"
         onSubmit={handleSubmit}
       >
         <label className="form-label gold" htmlFor="email">
@@ -142,11 +141,15 @@ export default function Register(props) {
           value={form.confirmPassword}
           onChange={handleChange}
         />
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Register
@@ -154,7 +157,7 @@ export default function Register(props) {
         </div>
       </form>
 
-      <form className="m-auto mt-4 d-lg-none px-2" onSubmit={handleSubmit}>
+      <form className="m-auto mt-4 d-xl-none px-2" onSubmit={handleSubmit}>
         <label className="form-label gold" htmlFor="email">
           Email
         </label>
@@ -218,11 +221,15 @@ export default function Register(props) {
           value={form.confirmPassword}
           onChange={handleChange}
         />
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
+        ) : (
+          <div className="hidden-field mt-3">
+            <span>{status}</span>
+          </div>
+        )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
             Register

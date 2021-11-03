@@ -9,6 +9,10 @@
 
 #Frontend
 Frontend/node_modules
+Frontend/.elasticbeanstalk/*
+Frontend/!.elasticbeanstalk/*.cfg.yml
+Frontend/!.elasticbeanstalk/*.global.yml
+
 
 # User-specific files
 *.rsuser
@@ -375,3 +379,9 @@ FodyWeavers.xsd
 .vscode/launch.json
 .vscode/ipch
 Arduino/.vscode/
+
+Frontend/cypress/videos/
+Frontend/instrumented/
+Frontend/coverage/
+Frontend/cypress/screenshots/
+Frontend/.nyc_output

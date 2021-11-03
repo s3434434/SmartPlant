@@ -1,36 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import _ from "lodash";
 import axios from "axios";
-import "./reset_password.css";
+import "./support.css";
 
-export default function ResetPassword(props) {
-  const search = useLocation().search;
-  const token = new URLSearchParams(search).get("token"),
-    email = new URLSearchParams(search).get("email");
-
+export default function Support(props) {
   const [form, setForm] = useState({
-    email: email,
-    token: token,
-    newPassword: "",
-    confirmNewPassword: "",
+    EmailSubject: "",
+    EmailBody: "",
   });
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("none");
 
   useEffect(() => {
-    document.title = "Reset password | Demeter - The plant meter";
+    document.title = "Support | Demeter - The plant meter";
 
-    props.logOut();
+    //props.logOut();
     // eslint-disable-next-line
   }, []);
 
   const handleChange = (e) => {
     const input = e.target;
     const tempForm = _.cloneDeep(form);
-
     tempForm[input.name] = input.value;
-
     setForm(tempForm);
   };
 
@@ -39,60 +30,61 @@ export default function ResetPassword(props) {
     setStatus("Please wait...");
     setShowStatus(true);
 
-    if (form.newPassword !== form.confirmNewPassword) {
-      setStatus("Passwords do not match.");
-    } else {
+    const token = props.getLoginToken();
+    if (token !== null) {
       axios
         .post(
-          "https://smart-plant.azurewebsites.net/api/Account/Password/Reset",
-          form
+          "https://smart-plant.azurewebsites.net/api/user/contactsupport",
+          form,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         )
         .then((res) => {
-          window.location.pathname = "/password-reset-successful";
+          window.location.pathname = "/support-successful";
         })
         .catch((err) => {
-          const errors = err.response.data.messages;
           let errorMessage = "Server error. Please try again later.";
-
-          if (errors.Passwords !== undefined) {
-            errorMessage = errors.Passwords[0];
-          } else if (errors.ConfirmNewPassword !== undefined) {
-            errorMessage = errors.ConfirmNewPassword[0];
-          }
-
+          console.log(JSON.stringify(err.response.data));
           setStatus(errorMessage);
         });
+    } else {
+      console.log("Not logged in somehow?... ");
+      window.location.pathname = "/";
     }
   };
 
   return (
     <section>
-      <h1 className="gold text-center">Reset password</h1>
+      <h1 className="gold text-center">Contact support</h1>
       <form
         className="w-25 m-auto mt-4 d-none d-xl-block"
         onSubmit={handleSubmit}
       >
-        <label className="form-label gold" htmlFor="newPassword">
-          New password
+        <label className="form-label gold" htmlFor="EmailSubject">
+          Subject
         </label>
         <input
           className="form-control"
-          name="newPassword"
-          type="password"
+          name="EmailSubject"
+          type="text"
+          value={form.EmailSubject}
+          onChange={handleChange}
           required
-          value={form.newPassword}
-          onChange={handleChange}
         />
-        <label className="form-label gold mt-3" htmlFor="confirmNewPassword">
-          Confirm new password
+        <label className="form-label mt-3 gold" htmlFor="EmailBody">
+          Message
         </label>
-        <input
+        <textarea
           className="form-control"
-          name="confirmNewPassword"
-          type="password"
-          value={form.confirmNewPassword}
+          name="EmailBody"
+          value={form.EmailBody}
           onChange={handleChange}
-        />
+          required
+        ></textarea>
+
         {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
@@ -104,33 +96,34 @@ export default function ResetPassword(props) {
         )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
-            Reset password
+            Send
           </button>
         </div>
       </form>
 
       <form className="m-auto mt-4 px-2 d-xl-none" onSubmit={handleSubmit}>
-        <label className="form-label gold" htmlFor="newPassword">
-          New password
+        <label className="form-label gold" htmlFor="EmailSubject">
+          Subject
         </label>
         <input
           className="form-control"
-          name="newPassword"
-          type="password"
+          name="EmailSubject"
+          type="text"
+          value={form.EmailSubject}
+          onChange={handleChange}
           required
-          value={form.newPassword}
-          onChange={handleChange}
         />
-        <label className="form-label gold mt-3" htmlFor="confirmNewPassword">
-          Confirm new password
+        <label className="form-label mt-3 gold" htmlFor="EmailBody">
+          Message
         </label>
-        <input
+        <textarea
           className="form-control"
-          name="confirmNewPassword"
-          type="password"
-          value={form.confirmNewPassword}
+          name="EmailBody"
+          value={form.EmailBody}
           onChange={handleChange}
-        />
+          required
+        ></textarea>
+
         {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
@@ -142,7 +135,7 @@ export default function ResetPassword(props) {
         )}
         <div className="text-center mt-3">
           <button className="btn btn-primary" type="submit">
-            Reset password
+            Send
           </button>
         </div>
       </form>
