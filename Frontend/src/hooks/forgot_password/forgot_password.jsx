@@ -48,7 +48,7 @@ export default function ForgotPassword(props) {
     <section>
       <h1 className="gold text-center">Forgot password</h1>
       <form
-        className="w-25 m-auto mt-4 d-none d-lg-block"
+        className="w-25 m-auto mt-4 d-none d-xl-block"
         onSubmit={handleSubmit}
       >
         <label className="form-label gold" htmlFor="email">
@@ -83,7 +83,7 @@ export default function ForgotPassword(props) {
         </div>
       </form>
 
-      <form className="m-auto mt-4 px-2 d-lg-none" onSubmit={handleSubmit}>
+      <form className="m-auto mt-4 px-2 d-xl-none" onSubmit={handleSubmit}>
         <label className="form-label gold" htmlFor="email">
           Email
         </label>

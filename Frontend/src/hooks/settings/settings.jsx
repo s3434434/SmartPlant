@@ -227,7 +227,7 @@ export default function Settings(props) {
       <h1 className="text-center gold">Settings</h1>
 
       <form
-        className="w-25 m-auto mt-4 d-none d-lg-block"
+        className="w-25 m-auto mt-4 d-none d-xl-block"
         onSubmit={handleEmailSubmit}
       >
         {emailModifiable ? (
@@ -289,7 +289,7 @@ export default function Settings(props) {
           </button>
         </div>
       </form>
-      <form className="m-auto mt-4 px-2 d-lg-none" onSubmit={handleEmailSubmit}>
+      <form className="m-auto mt-4 px-2 d-xl-none" onSubmit={handleEmailSubmit}>
         {emailModifiable ? (
           <>
             <label className="form-label gold" htmlFor="email">
@@ -351,7 +351,7 @@ export default function Settings(props) {
       </form>
 
       <form
-        className="w-25 m-auto mt-5 d-none d-lg-block"
+        className="w-25 m-auto mt-5 d-none d-xl-block"
         onSubmit={handleDetailsSubmit}
       >
         {phoneNumberModifiable ? (
@@ -482,7 +482,7 @@ export default function Settings(props) {
         </div>
       </form>
       <form
-        className="m-auto mt-5 px-2 d-lg-none"
+        className="m-auto mt-5 px-2 d-xl-none"
         onSubmit={handleDetailsSubmit}
       >
         {phoneNumberModifiable ? (
@@ -614,7 +614,7 @@ export default function Settings(props) {
       </form>
 
       <form
-        className="w-25 m-auto mt-5 d-none d-lg-block"
+        className="w-25 m-auto mt-5 d-none d-xl-block"
         onSubmit={handlePasswordSubmit}
       >
         {passwordModifiable ? (
@@ -694,7 +694,7 @@ export default function Settings(props) {
         </div>
       </form>
       <form
-        className="m-auto mt-5 px-2 d-lg-none"
+        className="m-auto mt-5 px-2 d-xl-none"
         onSubmit={handlePasswordSubmit}
       >
         {passwordModifiable ? (

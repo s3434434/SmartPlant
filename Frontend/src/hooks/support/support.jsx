@@ -60,7 +60,7 @@ export default function Support(props) {
     <section>
       <h1 className="gold text-center">Contact support</h1>
       <form
-        className="w-25 m-auto mt-4 d-none d-lg-block"
+        className="w-25 m-auto mt-4 d-none d-xl-block"
         onSubmit={handleSubmit}
       >
         <label className="form-label gold" htmlFor="EmailSubject">
@@ -101,7 +101,7 @@ export default function Support(props) {
         </div>
       </form>
 
-      <form className="m-auto mt-4 px-2 d-lg-none" onSubmit={handleSubmit}>
+      <form className="m-auto mt-4 px-2 d-xl-none" onSubmit={handleSubmit}>
         <label className="form-label gold" htmlFor="EmailSubject">
           Subject
         </label>

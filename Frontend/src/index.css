@@ -44,7 +44,7 @@ p {
 }
 .btn-primary:hover,
 .btn-primary:active {
-  opacity: 0.9;
+  opacity: 0.8;
 }
 .btn-primary:hover,
 .btn-primary:active,
@@ -60,7 +60,7 @@ p {
   outline: none;
 }
 .btn-primary:active {
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 :-moz-ui-invalid {

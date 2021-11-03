@@ -28,6 +28,7 @@ export default function Plant(props) {
     [showTokenStatus, setShowTokenStatus] = useState(false),
     [tokenStatus, setTokenStatus] = useState("none"),
     [sensorReadings, setSensorReadings] = useState(null),
+    [currentTimeframe, setCurrentTimeframe] = useState("All time"),
     [displayedReadings, setDisplayedReadings] = useState(
       "Loading sensor data..."
     ),
@@ -306,6 +307,8 @@ export default function Plant(props) {
         );
       }
     }
+
+    setCurrentTimeframe(timeframe);
   };
 
   const getDate = (isoDate) => {
@@ -383,10 +386,10 @@ export default function Plant(props) {
 
   return (
     <section>
-      <div className="d-none d-lg-block">
+      <div className="d-none d-xl-block">
         <div className="container m-0 p-0">
           <div className="row">
-            <div className="col-lg-2 text-center">
+            <div className="col-xl-2 text-center">
               <div className={showDeleteStatus ? "" : "hidden-field"}>
                 <span style={{ color: "white" }}>{deleteStatus}</span>
               </div>
@@ -394,11 +397,11 @@ export default function Plant(props) {
                 Delete plant
               </button>
             </div>
-            <div className="col-lg-10"></div>
+            <div className="col-xl-10"></div>
           </div>
         </div>
       </div>
-      <div className="text-center d-lg-none">
+      <div className="text-center d-xl-none">
         <div className={showDeleteStatus ? "text-center" : "hidden-field"}>
           <span style={{ color: "white" }}>{deleteStatus}</span>
         </div>
@@ -407,7 +410,7 @@ export default function Plant(props) {
         </button>
       </div>
       <form
-        className="w-25 m-auto d-none d-lg-block"
+        className="w-25 m-auto d-none d-xl-block"
         onSubmit={(e) => {
           handleSubmit(e, setNameStatus, setShowNameStatus);
         }}
@@ -456,7 +459,7 @@ export default function Plant(props) {
         </div>
       </form>
       <form
-        className="m-auto px-2 d-lg-none"
+        className="m-auto px-2 d-xl-none"
         onSubmit={(e) => {
           handleSubmit(e, setNameStatus, setShowNameStatus);
         }}
@@ -505,7 +508,7 @@ export default function Plant(props) {
         </div>
       </form>
       <form
-        className="w-25 m-auto d-none d-lg-block"
+        className="w-25 m-auto d-none d-xl-block"
         onSubmit={(e) => {
           handleSubmit(e, setImageStatus, setShowImageStatus);
         }}
@@ -562,7 +565,7 @@ export default function Plant(props) {
         </div>
       </form>
       <form
-        className="m-auto mt-5 px-2 d-lg-none"
+        className="m-auto mt-5 px-2 d-xl-none"
         onSubmit={(e) => {
           handleSubmit(e, setImageStatus, setShowImageStatus);
         }}
@@ -620,13 +623,13 @@ export default function Plant(props) {
       </form>
       {showArduinoToken ? (
         <>
-          <div className="w-25 m-auto d-none d-lg-block">
+          <div className="w-25 m-auto d-none d-xl-block">
             <h3 className="gold text-center mt-1">Arduino token</h3>
             <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{arduinoToken}</span>
             </div>
           </div>
-          <div className="m-auto px-2 d-lg-none">
+          <div className="m-auto px-2 d-xl-none">
             <h3 className="gold text-center mt-1">Arduino token</h3>
             <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{arduinoToken}</span>
@@ -635,7 +638,7 @@ export default function Plant(props) {
         </>
       ) : (
         <>
-          <div className="w-25 m-auto d-none d-lg-block">
+          <div className="w-25 m-auto d-none d-xl-block">
             <div
               className={showTokenStatus ? "text-center mt-1" : "hidden-field"}
             >
@@ -647,7 +650,7 @@ export default function Plant(props) {
               </button>
             </div>
           </div>
-          <div className="m-auto px-2 d-lg-none">
+          <div className="m-auto px-2 d-xl-none">
             <div
               className={showTokenStatus ? "text-center mt-1" : "hidden-field"}
             >
@@ -750,7 +753,11 @@ export default function Plant(props) {
                   return (
                     <li className="page-item" key={paginationNumber}>
                       <span
-                        className="page-link"
+                        className={
+                          currentPageNumber === paginationNumber
+                            ? "page-link page-link-selected"
+                            : "page-link"
+                        }
                         onClick={() => {
                           pageNavigate(paginationNumber);
                         }}
@@ -782,7 +789,11 @@ export default function Plant(props) {
           <ul className="pagination justify-content-center">
             <li className="page-item">
               <span
-                className="page-link"
+                className={
+                  currentTimeframe === "Hour"
+                    ? "page-link page-link-selected"
+                    : "page-link"
+                }
                 onClick={() => {
                   updateDisplayedReadings("Hour");
                 }}
@@ -792,7 +803,11 @@ export default function Plant(props) {
             </li>
             <li className="page-item">
               <span
-                className="page-link"
+                className={
+                  currentTimeframe === "Day"
+                    ? "page-link page-link-selected"
+                    : "page-link"
+                }
                 onClick={() => {
                   updateDisplayedReadings("Day");
                 }}
@@ -802,7 +817,11 @@ export default function Plant(props) {
             </li>
             <li className="page-item">
               <span
-                className="page-link"
+                className={
+                  currentTimeframe === "Week"
+                    ? "page-link page-link-selected"
+                    : "page-link"
+                }
                 onClick={() => {
                   updateDisplayedReadings("Week");
                 }}
@@ -812,7 +831,11 @@ export default function Plant(props) {
             </li>
             <li className="page-item">
               <span
-                className="page-link"
+                className={
+                  currentTimeframe === "Month"
+                    ? "page-link page-link-selected"
+                    : "page-link"
+                }
                 onClick={() => {
                   updateDisplayedReadings("Month");
                 }}
@@ -822,7 +845,11 @@ export default function Plant(props) {
             </li>
             <li className="page-item">
               <span
-                className="page-link"
+                className={
+                  currentTimeframe === "Year"
+                    ? "page-link page-link-selected"
+                    : "page-link"
+                }
                 onClick={() => {
                   updateDisplayedReadings("Year");
                 }}
@@ -832,7 +859,11 @@ export default function Plant(props) {
             </li>
             <li className="page-item">
               <span
-                className="page-link"
+                className={
+                  currentTimeframe === "All time"
+                    ? "page-link page-link-selected"
+                    : "page-link"
+                }
                 onClick={() => {
                   updateDisplayedReadings("All time");
                 }}
@@ -930,7 +961,11 @@ export default function Plant(props) {
                   return (
                     <li className="page-item" key={mobilePaginationNumber}>
                       <span
-                        className="page-link"
+                        className={
+                          currentPageNumber === mobilePaginationNumber
+                            ? "page-link page-link-selected"
+                            : "page-link"
+                        }
                         onClick={() => {
                           pageNavigate(mobilePaginationNumber);
                         }}
@@ -962,7 +997,11 @@ export default function Plant(props) {
           <ul className="pagination justify-content-center">
             <li className="page-item">
               <span
-                className="page-link"
+                className={
+                  currentTimeframe === "Hour"
+                    ? "page-link page-link-selected"
+                    : "page-link"
+                }
                 onClick={() => {
                   updateDisplayedReadings("Hour");
                 }}
@@ -972,7 +1011,11 @@ export default function Plant(props) {
             </li>
             <li className="page-item">
               <span
-                className="page-link"
+                className={
+                  currentTimeframe === "Day"
+                    ? "page-link page-link-selected"
+                    : "page-link"
+                }
                 onClick={() => {
                   updateDisplayedReadings("Day");
                 }}
@@ -982,7 +1025,11 @@ export default function Plant(props) {
             </li>
             <li className="page-item">
               <span
-                className="page-link"
+                className={
+                  currentTimeframe === "Week"
+                    ? "page-link page-link-selected"
+                    : "page-link"
+                }
                 onClick={() => {
                   updateDisplayedReadings("Week");
                 }}
@@ -992,7 +1039,11 @@ export default function Plant(props) {
             </li>
             <li className="page-item">
               <span
-                className="page-link"
+                className={
+                  currentTimeframe === "Month"
+                    ? "page-link page-link-selected"
+                    : "page-link"
+                }
                 onClick={() => {
                   updateDisplayedReadings("Month");
                 }}
@@ -1002,7 +1053,11 @@ export default function Plant(props) {
             </li>
             <li className="page-item">
               <span
-                className="page-link"
+                className={
+                  currentTimeframe === "Year"
+                    ? "page-link page-link-selected"
+                    : "page-link"
+                }
                 onClick={() => {
                   updateDisplayedReadings("Year");
                 }}
@@ -1012,7 +1067,11 @@ export default function Plant(props) {
             </li>
             <li className="page-item">
               <span
-                className="page-link"
+                className={
+                  currentTimeframe === "All time"
+                    ? "page-link page-link-selected"
+                    : "page-link"
+                }
                 onClick={() => {
                   updateDisplayedReadings("All time");
                 }}

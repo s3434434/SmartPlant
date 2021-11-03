@@ -12,8 +12,11 @@ td {
   border: 0em !important;
   white-space: nowrap;
 }
+.page-link-selected,
 .page-link:hover {
-  opacity: 0.9;
+  opacity: 0.8;
+}
+.page-link:hover {
   box-shadow: 0.0825em 0.0825em 0.1425em rgb(247, 215, 59),
     -0.0825em -0.0825em 0.1425em rgb(247, 215, 59),
     -0.0825em 0.0825em 0.1425em rgb(247, 215, 59),
@@ -25,5 +28,5 @@ td {
   outline: none;
 }
 .page-link:active {
-  opacity: 0.8;
+  opacity: 0.7;
 }

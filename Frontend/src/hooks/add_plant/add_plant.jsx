@@ -116,7 +116,7 @@ export default function AddPlant(props) {
     <section>
       <h1 className="gold text-center">Add plant</h1>
       <form
-        className="w-25 m-auto mt-4 d-none d-lg-block"
+        className="w-25 m-auto mt-4 d-none d-xl-block"
         onSubmit={handleSubmit}
       >
         <label className="form-label gold" htmlFor="plantName">
@@ -183,7 +183,7 @@ export default function AddPlant(props) {
         </div>
       </form>
 
-      <form className="m-auto mt-4 d-lg-none px-2" onSubmit={handleSubmit}>
+      <form className="m-auto mt-4 d-xl-none px-2" onSubmit={handleSubmit}>
         <label className="form-label gold" htmlFor="plantName">
           Name
         </label>
