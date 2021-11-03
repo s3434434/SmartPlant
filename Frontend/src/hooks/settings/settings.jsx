@@ -38,8 +38,9 @@ export default function Settings(props) {
   useEffect(() => {
     document.title = "Settings | Demeter - The plant meter";
 
-    const token = getLogin().token;
-    if (token !== null) {
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
       axios
         .get("https://smart-plant.azurewebsites.net/api/User", {
           headers: {
@@ -81,10 +82,11 @@ export default function Settings(props) {
     setEmailStatus("Please wait...");
     setShowEmailStatus(true);
 
-    const token = getLogin().token;
+    const login = getLogin();
     if (emailForm.email !== emailForm.confirmEmail) {
       setEmailStatus("Emails do not match.");
-    } else if (token !== null) {
+    } else if (login !== null) {
+      const { token } = login;
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/User/Email",
@@ -132,8 +134,9 @@ export default function Settings(props) {
     setDetailsStatus("Please wait...");
     setShowDetailsStatus(true);
 
-    const token = getLogin().token;
-    if (token !== null) {
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
       axios
         .put("https://smart-plant.azurewebsites.net/api/User", detailsForm, {
           headers: {
@@ -179,10 +182,11 @@ export default function Settings(props) {
     setPasswordStatus("Please wait...");
     setShowPasswordStatus(true);
 
-    const token = getLogin().token;
+    const login = getLogin();
     if (passwordForm.newPassword !== passwordForm.confirmNewPassword) {
       setPasswordStatus("New passwords do not match.");
-    } else if (token !== null) {
+    } else if (login !== null) {
+      const { token } = login;
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/User/Password",

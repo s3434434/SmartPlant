@@ -42,8 +42,9 @@ export default function Plant(props) {
   useEffect(() => {
     document.title = "Demeter - The plant meter";
 
-    const token = getLogin().token;
-    if (token !== null) {
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
       axios
         .get("https://smart-plant.azurewebsites.net/api/Plants", {
           headers: {
@@ -134,8 +135,9 @@ export default function Plant(props) {
     setStatus("Please wait...");
     setShowStatus(true);
 
-    const token = getLogin().token;
-    if (token !== null) {
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
       axios
         .put("https://smart-plant.azurewebsites.net/api/Plants", form, {
           headers: {
@@ -169,8 +171,9 @@ export default function Plant(props) {
     setTokenStatus("Please wait...");
     setShowTokenStatus(true);
 
-    const token = getLogin().token;
-    if (token !== null) {
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
       axios
         .get(
           `https://smart-plant.azurewebsites.net/api/Plants/Token/${form.plantID}`,
@@ -358,8 +361,9 @@ export default function Plant(props) {
     setDeleteStatus("Please wait...");
     setShowDeleteStatus(true);
 
-    const token = getLogin().token;
-    if (token !== null) {
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
       axios
         .delete(
           `https://smart-plant.azurewebsites.net/api/Plants?plantID=${form.plantID}`,

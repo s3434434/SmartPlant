@@ -17,8 +17,9 @@ export default function AddPlant(props) {
   useEffect(() => {
     document.title = "Add plant | Demeter - The plant meter";
 
-    const token = getLogin().token;
-    if (token !== null) {
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
       axios
         .get("https://smart-plant.azurewebsites.net/api/Plants", {
           headers: {
@@ -74,8 +75,9 @@ export default function AddPlant(props) {
     setStatus("Please wait...");
     setShowStatus(true);
 
-    const token = getLogin().token;
-    if (token !== null) {
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
       axios
         .post("https://smart-plant.azurewebsites.net/api/Plants", form, {
           headers: {

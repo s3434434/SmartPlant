@@ -5,15 +5,16 @@ import container_background from "../../assets/images/container_background.png";
 import "./all_users.css";
 
 export default function AllUsers(props) {
-  const [plants, setPlants] = useState(null);
+  const [users, setUsers] = useState(null);
 
   useEffect(() => {
     document.title = "Users | Demeter - The plant meter";
 
-    const token = props.getLogin().token;
-    if (token !== null) {
+    const login = props.getLogin();
+    if (login !== null) {
+      const { token } = login;
       axios
-        .get("https://smart-plant.azurewebsites.net/api/Plants", {
+        .get("https://smart-plant.azurewebsites.net/api/Users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
