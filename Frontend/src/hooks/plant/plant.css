@@ -15,7 +15,7 @@ td {
 }
 .page-link-selected,
 .page-link:hover {
-  opacity: 0.8;
+  background-color: rgb(31, 85, 52) !important;
 }
 .page-link:hover {
   box-shadow: 0.0825em 0.0825em 0.1425em rgb(247, 215, 59),
@@ -29,5 +29,5 @@ td {
   outline: none;
 }
 .page-link:active {
-  opacity: 0.7;
+  background-color: rgb(51, 105, 72) !important;
 }

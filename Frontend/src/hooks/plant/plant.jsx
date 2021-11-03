@@ -293,7 +293,7 @@ export default function Plant(props) {
 
       const numbers = createPaginationNumbers(readings.length);
       setPaginationNumbers(numbers.slice(0, 10));
-      setMobilePaginationNumbers(numbers.slice(0, 4));
+      setMobilePaginationNumbers(numbers.slice(0, 5));
 
       setCurrentPageNumber(1);
     } else {
@@ -338,13 +338,13 @@ export default function Plant(props) {
       }
 
       if (pageNumber < mobilePaginationNumbers[0]) {
-        const mobileNumbers = numbers.slice(pageNumber - 1, pageNumber + 3);
+        const mobileNumbers = numbers.slice(pageNumber - 1, pageNumber + 4);
 
         if (mobileNumbers.length >= mobilePaginationNumbers.length) {
           setMobilePaginationNumbers(mobileNumbers);
         }
-      } else if (pageNumber > mobilePaginationNumbers[3]) {
-        const mobileNumbers = numbers.slice(pageNumber - 4, pageNumber);
+      } else if (pageNumber > mobilePaginationNumbers[4]) {
+        const mobileNumbers = numbers.slice(pageNumber - 5, pageNumber);
 
         if (mobileNumbers.length >= mobilePaginationNumbers.length) {
           setMobilePaginationNumbers(mobileNumbers);
@@ -945,7 +945,7 @@ export default function Plant(props) {
               className="overflow-auto"
               style={{ backgroundColor: "transparent" }}
             >
-              <ul className="pagination justify-content-center">
+              <ul className="pagination pagination-sm justify-content-center">
                 <li className="page-item">
                   <span
                     className="page-link"
@@ -993,7 +993,7 @@ export default function Plant(props) {
           style={{ backgroundColor: "transparent" }}
         >
           <h4 className="text-center gold">Sample timeframe</h4>
-          <ul className="pagination justify-content-center">
+          <ul className="pagination pagination-sm justify-content-center">
             <li className="page-item">
               <span
                 className={
