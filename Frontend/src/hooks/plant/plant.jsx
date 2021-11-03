@@ -291,8 +291,8 @@ export default function Plant(props) {
       setDisplayedReadings(readings);
 
       const numbers = createPaginationNumbers(readings.length);
-      setPaginationNumbers(numbers.slice(0, 20));
-      setMobilePaginationNumbers(numbers.slice(0, 5));
+      setPaginationNumbers(numbers.slice(0, 10));
+      setMobilePaginationNumbers(numbers.slice(0, 4));
 
       setCurrentPageNumber(1);
     } else {
@@ -318,22 +318,34 @@ export default function Plant(props) {
       pageNumber >= 1 &&
       pageNumber <= getNumPages(displayedReadings.length)
     ) {
-      if (pageNumber < 20) {
-        const numbers = createPaginationNumbers(displayedReadings.length);
-        const desktopNumbers = numbers.slice(0, 21);
+      const numbers = createPaginationNumbers(displayedReadings.length);
 
-        setPaginationNumbers(numbers.slice(0, 21));
+      if (pageNumber <= 10) {
+        setPaginationNumbers(numbers.slice(0, 10));
       } else {
-        const numbers = createPaginationNumbers(displayedReadings.length);
-        const desktopNumbers = numbers.slice(pageNumber, pageNumber + 20);
+        const numberDifference = pageNumber - 10,
+          desktopNumbers = numbers.slice(
+            0 + numberDifference,
+            10 + numberDifference
+          );
 
         if (desktopNumbers.length >= paginationNumbers.length) {
           setPaginationNumbers(desktopNumbers);
         }
       }
 
-      if (mobileNumbers.length >= mobilePaginationNumbers.length) {
-        setMobilePaginationNumbers(mobileNumbers);
+      if (pageNumber <= 4) {
+        setMobilePaginationNumbers(numbers.slice(0, 4));
+      } else {
+        const numberDifference = pageNumber - 4,
+          mobileNumbers = numbers.slice(
+            0 + numberDifference,
+            4 + numberDifference
+          );
+
+        if (mobileNumbers.length >= mobilePaginationNumbers.length) {
+          setMobilePaginationNumbers(mobileNumbers);
+        }
       }
 
       setCurrentPageNumber(pageNumber);
