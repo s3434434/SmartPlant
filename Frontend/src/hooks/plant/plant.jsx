@@ -196,8 +196,8 @@ export default function Plant(props) {
   };
 
   const getNumPages = (numReadings) => {
-    let numPages = Math.floor(numReadings / 10);
-    if (numReadings % 10 !== 0) {
+    let numPages = Math.floor(numReadings / 9);
+    if (numReadings % 9 !== 0) {
       numPages++;
     }
 
