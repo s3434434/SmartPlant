@@ -33,13 +33,26 @@ export default function Login(props) {
     axios
       .post("https://smart-plant.azurewebsites.net/api/Account/Login", form)
       .then((res) => {
-        const login = JSON.stringify({
-          token: res.data,
-          expiry: Date.now() + 3600000,
-        });
+        const token = res.data;
+        axios
+          .get("https://smart-plant.azurewebsites.net/api/User/Role", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((res) => {
+            const login = JSON.stringify({
+              token: token,
+              expiry: Date.now() + 3600000,
+              admin: res.data === "Admin",
+            });
 
-        localStorage.setItem("demeter-login", login);
-        window.location.pathname = "/";
+            localStorage.setItem("demeter-login", login);
+            window.location.pathname = "/";
+          })
+          .catch((err) => {
+            setStatus("Server error. Please try again later.");
+          });
       })
       .catch((err) => {
         let errorMessage = "Server error. Please try again later.";
