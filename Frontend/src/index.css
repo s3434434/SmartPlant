@@ -119,17 +119,13 @@ form span {
   -webkit-line-clamp: 3;
 }
 
-@media (max-width: 881px) {
+@media (max-width: 768px) {
   .content-gallery > * {
     margin-bottom: 3%;
   }
-}
-@media (max-width: 526px) {
   section {
     padding: 0.5em;
   }
-}
-@media (max-width: 524px) {
   .cg-container {
     width: 9.33em;
     height: 9.33em;

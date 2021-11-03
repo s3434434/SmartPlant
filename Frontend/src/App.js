@@ -63,7 +63,7 @@ function App() {
   return (
     <div className="bg-image">
       <nav
-        className="navbar navbar-expand-sm sticky-top navbar-dark px-2 py-0"
+        className="navbar navbar-expand-md sticky-top navbar-dark px-4 py-0"
         id="navbar"
       >
         <button
@@ -74,12 +74,11 @@ function App() {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-
         <div
           className="navbar-brand"
           style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
         >
-          <img className="img-fluid" src={logo} alt="Demeter logo"></img>
+          <img id="nav-image" src={logo} alt="Demeter logo"></img>
           <div className="navbar-title m-auto ms-1">
             <h1 className="gold">Demeter</h1>
             <h4 className="gold">The Plant Meter</h4>
