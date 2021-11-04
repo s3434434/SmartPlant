@@ -324,12 +324,10 @@ export default function PlantAdmin(props) {
       setCurrentPageNumber(1);
     } else {
       if (timeframe === "All time") {
-        setDisplayedReadings(
-          "No sensor data available. Please make sure you have correctly input your token into the Arduino."
-        );
+        setDisplayedReadings("No sensor data available.");
       } else {
         setDisplayedReadings(
-          "No sensor data available. Your sensors may not have collected enough data for this timeframe. Otherwise, please make sure you have correctly input your token into the Arduino."
+          "No sensor data available. The sensors may not have collected enough data for this timeframe."
         );
       }
     }
