@@ -6,7 +6,7 @@ import axios from "axios";
 import "./user.css";
 
 export default function User(props) {
-  const { getLogin, logOut } = props;
+  const { getLogin } = props;
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
 
   const [role, setRole] = useState(""),
@@ -449,7 +449,9 @@ export default function User(props) {
 
       <form
         className="w-25 m-auto mt-5 d-none d-xl-block"
-        onSubmit={handleDetailsSubmit}
+        onSubmit={(e) => {
+          handleDetailsSubmit(e, setDetailsStatus, setShowDetailsStatus);
+        }}
       >
         {phoneNumberModifiable ? (
           <>
@@ -580,7 +582,9 @@ export default function User(props) {
       </form>
       <form
         className="m-auto mt-5 px-2 d-xl-none"
-        onSubmit={handleDetailsSubmit}
+        onSubmit={(e) => {
+          handleDetailsSubmit(e, setDetailsStatus, setShowDetailsStatus);
+        }}
       >
         {phoneNumberModifiable ? (
           <>

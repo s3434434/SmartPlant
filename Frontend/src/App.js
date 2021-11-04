@@ -341,9 +341,7 @@ function App() {
             <Route
               exact
               path="/user/:user_ID"
-              render={(props) => (
-                <User {...props} getLogin={getLogin} logOut={logOut} />
-              )}
+              render={(props) => <User {...props} getLogin={getLogin} />}
             />
             <Route path="/*" component={NotFound}></Route>
           </Switch>
