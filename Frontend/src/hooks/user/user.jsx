@@ -11,14 +11,14 @@ export default function User(props) {
 
   const [role, setRole] = useState("Loading..."),
     [detailsForm, setDetailsForm] = useState({
-      id: window.location.pathname.substr(startIndex),
+      userID: window.location.pathname.substr(startIndex),
       email: "",
       phoneNumber: "",
       firstName: "",
       lastName: "",
     }),
     [passwordForm, setPasswordForm] = useState({
-      id: window.location.pathname.substr(startIndex),
+      userID: window.location.pathname.substr(startIndex),
       newPassword: "",
       confirmNewPassword: "",
     }),
@@ -36,7 +36,9 @@ export default function User(props) {
     [showDetailsStatus, setShowDetailsStatus] = useState(false),
     [detailsStatus, setDetailsStatus] = useState("none"),
     [showPasswordStatus, setShowPasswordStatus] = useState(false),
-    [passwordStatus, setPasswordStatus] = useState("none");
+    [passwordStatus, setPasswordStatus] = useState("none"),
+    [showDeleteStatus, setShowDeleteStatus] = useState(false),
+    [deleteStatus, setDeleteStatus] = useState("none");
 
   useEffect(() => {
     document.title = "Demeter - The plant meter";
@@ -48,7 +50,7 @@ export default function User(props) {
       if (admin) {
         axios
           .get(
-            `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.id}`,
+            `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.userID}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -78,7 +80,7 @@ export default function User(props) {
               .then((res) => {
                 let userRole = "";
                 res.data.forEach((foundUser) => {
-                  if (foundUser.id === detailsForm.id) {
+                  if (foundUser.id === detailsForm.userID) {
                     userRole = foundUser.role;
                   }
                 });
@@ -123,7 +125,7 @@ export default function User(props) {
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/Admin/User/Role",
-          { id: detailsForm.id, role: role },
+          { id: detailsForm.userID, role: role },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -246,8 +248,61 @@ export default function User(props) {
     }
   };
 
+  const deleteUser = () => {
+    setDeleteStatus("Please wait...");
+    setShowDeleteStatus(true);
+
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
+      axios
+        .delete(
+          `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.userID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          window.location.pathname = "/users";
+        })
+        .catch((err) => {
+          setDeleteStatus("Server error. Please try again later.");
+        });
+    } else {
+      setDeleteStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
+    }
+  };
+
   return (
     <section>
+      <div className="d-none d-xl-block">
+        <div className="container m-0 p-0">
+          <div className="row">
+            <div className="col-xl-2 text-center">
+              <div className={showDeleteStatus ? "" : "hidden-field"}>
+                <span style={{ color: "white" }}>{deleteStatus}</span>
+              </div>
+              <button className="btn btn-primary mt-2" onClick={deleteUser}>
+                Delete user
+              </button>
+            </div>
+            <div className="col-xl-10"></div>
+          </div>
+        </div>
+      </div>
+      <div className="text-center d-xl-none">
+        <div className={showDeleteStatus ? "text-center" : "hidden-field"}>
+          <span style={{ color: "white" }}>{deleteStatus}</span>
+        </div>
+        <button className="btn btn-primary mt-2" onClick={deleteUser}>
+          Delete user
+        </button>
+      </div>
       <form
         className="w-25 m-auto d-none d-xl-block"
         onSubmit={(e) => {

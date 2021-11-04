@@ -47,6 +47,27 @@ function App() {
     return login;
   };
 
+  const getAdminStatus = () => {
+    const loginString = localStorage.getItem("demeter-login");
+    let adminStatus = null;
+
+    if (loginString !== null) {
+      const { expiry, admin } = JSON.parse(loginString);
+
+      if (expiry >= Date.now()) {
+        if (admin) {
+          adminStatus = true;
+        } else {
+          adminStatus = false;
+        }
+      } else {
+        localStorage.removeItem("demeter-login");
+      }
+    }
+
+    return adminStatus;
+  };
+
   useEffect(() => {
     const login = getLogin();
     if (login !== null) {
@@ -325,8 +346,13 @@ function App() {
               exact
               path="/"
               render={() => {
-                return getLogin() !== null ? (
-                  <Redirect to="/plants" />
+                const adminStatus = getAdminStatus();
+                return adminStatus !== null ? (
+                  adminStatus ? (
+                    <Redirect to="/users" />
+                  ) : (
+                    <Redirect to="/plants" />
+                  )
                 ) : (
                   <Redirect to="/landing" />
                 );
