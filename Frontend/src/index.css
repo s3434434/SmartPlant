@@ -115,6 +115,7 @@ form span {
 .cg-container h1,
 .cg-container h2 {
   -webkit-line-clamp: 2;
+  user-select: none;
 }
 
 @media (max-width: 768px) {
