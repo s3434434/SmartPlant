@@ -4,7 +4,7 @@ import container_background from "../../assets/images/container_background.png";
 import "./all_users.css";
 
 export default function AllUsers(props) {
-  const [users, setUsers] = useState(null);
+  const [users, setUsers] = useState("Loading users...");
 
   useEffect(() => {
     document.title = "Users | Demeter - The plant meter";
@@ -21,17 +21,23 @@ export default function AllUsers(props) {
             },
           })
           .then((res) => {
-            const sortedUsers = res.data.sort((a, b) => {
-              const emailA = a.email,
-                emailB = b.email;
-              return emailA < emailB ? -1 : emailA > emailB ? 1 : 0;
-            });
+            const foundUsers = res.data;
+            if (foundUsers.length > 0) {
+              const sortedUsers = res.data.sort((a, b) => {
+                const emailA = a.email,
+                  emailB = b.email;
+                return emailA < emailB ? -1 : emailA > emailB ? 1 : 0;
+              });
 
-            setUsers(sortedUsers);
+              setUsers(sortedUsers);
+            } else {
+              setUsers("No current users.");
+            }
           })
           .catch((err) => {
-            props.logOut();
-            window.location.pathname = "/";
+            setUsers(
+              "There was an error retrieving the user data. Please try again later."
+            );
           });
       } else {
         window.location.pathname = "/";
@@ -46,50 +52,44 @@ export default function AllUsers(props) {
   return (
     <section>
       <h1 className="text-center gold">Users</h1>
-      {users ? (
-        users.length > 0 ? (
-          <div className="content-gallery mt-4">
-            {users.map((user) => {
-              const { email, role, id } = user;
-              const userImage = container_background;
-
-              return (
-                <div
-                  id={id}
-                  key={id}
-                  className="cg-container"
-                  style={{
-                    backgroundImage: `url(${userImage})`,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={() => {
-                    document.getElementById(
-                      id
-                    ).style.backgroundImage = `url(${userImage}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
-                  }}
-                  onMouseLeave={() => {
-                    document.getElementById(
-                      id
-                    ).style.backgroundImage = `url(${userImage})`;
-                  }}
-                  onClick={(e) => {
-                    window.location.pathname = `/user/${id}`;
-                  }}
-                >
-                  <h1 style={{ cursor: "pointer" }}>{email}</h1>
-                  <h2 style={{ cursor: "pointer" }}>{role}</h2>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="text-center mt-3" style={{ color: "white" }}>
-            No current users.
-          </div>
-        )
-      ) : (
+      {typeof users === "string" ? (
         <div className="text-center mt-3" style={{ color: "white" }}>
-          Loading users...
+          {users}
+        </div>
+      ) : (
+        <div className="content-gallery mt-4">
+          {users.map((user) => {
+            const { email, role, id } = user;
+            const userImage = container_background;
+
+            return (
+              <div
+                id={id}
+                key={id}
+                className="cg-container"
+                style={{
+                  backgroundImage: `url(${userImage})`,
+                  cursor: "pointer",
+                }}
+                onMouseEnter={() => {
+                  document.getElementById(
+                    id
+                  ).style.backgroundImage = `url(${userImage}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
+                }}
+                onMouseLeave={() => {
+                  document.getElementById(
+                    id
+                  ).style.backgroundImage = `url(${userImage})`;
+                }}
+                onClick={(e) => {
+                  window.location.pathname = `/user/${id}`;
+                }}
+              >
+                <h2 style={{ cursor: "pointer" }}>{email}</h2>
+                <h2 style={{ cursor: "pointer" }}>{role}</h2>
+              </div>
+            );
+          })}
         </div>
       )}
     </section>

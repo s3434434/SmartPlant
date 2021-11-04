@@ -7,6 +7,8 @@ import "./user.css";
 
 export default function User(props) {
   const { getLogin, logOut } = props;
+  const startIndex = window.location.pathname.lastIndexOf("/") + 1;
+  const id = window.location.pathname.substr(startIndex);
 
   const [emailForm, setEmailForm] = useState({
       email: "",
@@ -36,31 +38,36 @@ export default function User(props) {
     [passwordStatus, setPasswordStatus] = useState("none");
 
   useEffect(() => {
-    document.title = "Settings | Demeter - The plant meter";
+    document.title = "Demeter - The plant meter";
 
-    const login = getLogin();
+    const login = props.getLogin();
     if (login !== null) {
-      const { token } = login;
-      axios
-        .get("https://smart-plant.azurewebsites.net/api/User", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          const settings = res.data;
+      const { token, admin } = login;
 
-          setEmailForm({ email: settings.email, confirmEmail: "" });
-          setDetailsForm({
-            phoneNumber: settings.phoneNumber,
-            firstName: settings.firstName,
-            lastName: settings.lastName,
+      if (admin) {
+        axios
+          .get(`https://smart-plant.azurewebsites.net/api/Admin/User?userID=${}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((res) => {
+            const settings = res.data;
+
+            setEmailForm({ email: settings.email, confirmEmail: "" });
+            setDetailsForm({
+              phoneNumber: settings.phoneNumber,
+              firstName: settings.firstName,
+              lastName: settings.lastName,
+            });
+          })
+          .catch((err) => {
+            logOut();
+            window.location.pathname = "/";
           });
-        })
-        .catch((err) => {
-          logOut();
-          window.location.pathname = "/";
-        });
+      } else {
+        window.location.pathname = "/";
+      }
     } else {
       window.location.pathname = "/";
     }

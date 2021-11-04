@@ -5,7 +5,7 @@ import container_background from "../../assets/images/container_background.png";
 import "./all_plants.css";
 
 export default function AllPlants(props) {
-  const [plants, setPlants] = useState(null);
+  const [plants, setPlants] = useState("Loading plants...");
 
   useEffect(() => {
     document.title = "Plants | Demeter - The plant meter";
@@ -20,17 +20,23 @@ export default function AllPlants(props) {
           },
         })
         .then((res) => {
-          const sortedPlants = res.data.sort((a, b) => {
-            const nameA = a.name,
-              nameB = b.name;
-            return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
-          });
+          const plantsFound = res.data;
 
-          setPlants(sortedPlants);
+          if (plantsFound.length > 0) {
+            const sortedPlants = res.data.sort((a, b) => {
+              const nameA = a.name,
+                nameB = b.name;
+              return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+            });
+            setPlants(sortedPlants);
+          } else {
+            setPlants("No current plants.");
+          }
         })
         .catch((err) => {
-          props.logOut();
-          window.location.pathname = "/";
+          setPlants(
+            "There was an error retrieving your plant data. Please try again later."
+          );
         });
     } else {
       window.location.pathname = "/";
@@ -59,53 +65,47 @@ export default function AllPlants(props) {
           <button className="btn btn-primary mt-2">Add plant</button>
         </Link>
       </div>
-      {plants ? (
-        plants.length > 0 ? (
-          <div className="content-gallery mt-4">
-            {plants.map((plant) => {
-              const { name, plantType, plantID } = plant;
-              let plantImage = container_background;
-              if (plant.imgurURL !== null) {
-                plantImage = plant.imgurURL;
-              }
-
-              return (
-                <div
-                  id={plantID}
-                  key={plantID}
-                  className="cg-container"
-                  style={{
-                    backgroundImage: `url(${plantImage})`,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={() => {
-                    document.getElementById(
-                      plantID
-                    ).style.backgroundImage = `url(${plantImage}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
-                  }}
-                  onMouseLeave={() => {
-                    document.getElementById(
-                      plantID
-                    ).style.backgroundImage = `url(${plantImage})`;
-                  }}
-                  onClick={(e) => {
-                    window.location.pathname = `/plant/${plantID}`;
-                  }}
-                >
-                  <h1 style={{ cursor: "pointer" }}>{name}</h1>
-                  <h2 style={{ cursor: "pointer" }}>{plantType}</h2>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="text-center mt-3" style={{ color: "white" }}>
-            No current plants.
-          </div>
-        )
-      ) : (
+      {typeof plants === "string" ? (
         <div className="text-center mt-3" style={{ color: "white" }}>
-          Loading plants...
+          {plants}
+        </div>
+      ) : (
+        <div className="content-gallery mt-4">
+          {plants.map((plant) => {
+            const { name, plantType, plantID } = plant;
+            let plantImage = container_background;
+            if (plant.imgurURL !== null) {
+              plantImage = plant.imgurURL;
+            }
+
+            return (
+              <div
+                id={plantID}
+                key={plantID}
+                className="cg-container"
+                style={{
+                  backgroundImage: `url(${plantImage})`,
+                  cursor: "pointer",
+                }}
+                onMouseEnter={() => {
+                  document.getElementById(
+                    plantID
+                  ).style.backgroundImage = `url(${plantImage}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
+                }}
+                onMouseLeave={() => {
+                  document.getElementById(
+                    plantID
+                  ).style.backgroundImage = `url(${plantImage})`;
+                }}
+                onClick={(e) => {
+                  window.location.pathname = `/plant/${plantID}`;
+                }}
+              >
+                <h1 style={{ cursor: "pointer" }}>{name}</h1>
+                <h2 style={{ cursor: "pointer" }}>{plantType}</h2>
+              </div>
+            );
+          })}
         </div>
       )}
     </section>
