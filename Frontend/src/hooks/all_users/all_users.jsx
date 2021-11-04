@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import container_background from "../../assets/images/container_background.png";
 import "./all_users.css";
@@ -12,26 +11,31 @@ export default function AllUsers(props) {
 
     const login = props.getLogin();
     if (login !== null) {
-      const { token } = login;
-      axios
-        .get("https://smart-plant.azurewebsites.net/api/Users", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          const sortedPlants = res.data.sort((a, b) => {
-            const nameA = a.name,
-              nameB = b.name;
-            return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
-          });
+      const { token, admin } = login;
 
-          setPlants(sortedPlants);
-        })
-        .catch((err) => {
-          props.logOut();
-          window.location.pathname = "/";
-        });
+      if (admin) {
+        axios
+          .get("https://smart-plant.azurewebsites.net/api/Admin/User/Role", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((res) => {
+            const sortedUsers = res.data.sort((a, b) => {
+              const emailA = a.email,
+                emailB = b.email;
+              return emailA < emailB ? -1 : emailA > emailB ? 1 : 0;
+            });
+
+            setUsers(sortedUsers);
+          })
+          .catch((err) => {
+            props.logOut();
+            window.location.pathname = "/";
+          });
+      } else {
+        window.location.pathname = "/";
+      }
     } else {
       window.location.pathname = "/";
     }
@@ -41,71 +45,51 @@ export default function AllUsers(props) {
 
   return (
     <section>
-      <h1 className="text-center gold">Plants</h1>
-      <div className="d-none d-xl-block">
-        <div className="container m-0 p-0">
-          <div className="row">
-            <div className="col-xl-2 text-center">
-              <Link key="add-plant" to="/add-plant">
-                <button className="btn btn-primary">Add plant</button>
-              </Link>
-            </div>
-            <div className="col-xl-10"></div>
-          </div>
-        </div>
-      </div>
-      <div className="text-center d-xl-none">
-        <Link key="add-plant" to="/add-plant">
-          <button className="btn btn-primary mt-2">Add plant</button>
-        </Link>
-      </div>
-      {plants ? (
-        plants.length > 0 ? (
+      <h1 className="text-center gold">Users</h1>
+      {users ? (
+        users.length > 0 ? (
           <div className="content-gallery mt-4">
-            {plants.map((plant) => {
-              const { name, plantType, plantID } = plant;
-              let plantImage = container_background;
-              if (plant.imgurURL !== null) {
-                plantImage = plant.imgurURL;
-              }
+            {users.map((user) => {
+              const { email, role, id } = user;
+              const userImage = container_background;
 
               return (
                 <div
-                  id={plantID}
-                  key={plantID}
+                  id={id}
+                  key={id}
                   className="cg-container"
                   style={{
-                    backgroundImage: `url(${plantImage})`,
+                    backgroundImage: `url(${userImage})`,
                     cursor: "pointer",
                   }}
                   onMouseEnter={() => {
                     document.getElementById(
-                      plantID
-                    ).style.backgroundImage = `url(${plantImage}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
+                      id
+                    ).style.backgroundImage = `url(${userImage}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
                   }}
                   onMouseLeave={() => {
                     document.getElementById(
-                      plantID
-                    ).style.backgroundImage = `url(${plantImage})`;
+                      id
+                    ).style.backgroundImage = `url(${userImage})`;
                   }}
                   onClick={(e) => {
-                    window.location.pathname = `/plant/${plantID}`;
+                    window.location.pathname = `/user/${id}`;
                   }}
                 >
-                  <h1 style={{ cursor: "pointer" }}>{name}</h1>
-                  <h2 style={{ cursor: "pointer" }}>{plantType}</h2>
+                  <h1 style={{ cursor: "pointer" }}>{email}</h1>
+                  <h2 style={{ cursor: "pointer" }}>{role}</h2>
                 </div>
               );
             })}
           </div>
         ) : (
           <div className="text-center mt-3" style={{ color: "white" }}>
-            No current plants.
+            No current users.
           </div>
         )
       ) : (
         <div className="text-center mt-3" style={{ color: "white" }}>
-          Loading plants...
+          Loading users...
         </div>
       )}
     </section>
