@@ -12,7 +12,6 @@ export default function PlantAdmin(props) {
 
   const [form, setForm] = useState({
       name: "",
-      base64ImgString: "",
       plantID: window.location.pathname.substr(startIndex),
     }),
     [nameModifiable, setNameModifiable] = useState(false),
