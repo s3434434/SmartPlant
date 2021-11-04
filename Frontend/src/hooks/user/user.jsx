@@ -6,7 +6,7 @@ import axios from "axios";
 import "./user.css";
 
 export default function User(props) {
-  const { getLogin } = props;
+  const { getLogin, logOut } = props;
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
 
   const [role, setRole] = useState("Loading..."),
@@ -88,15 +88,15 @@ export default function User(props) {
                 if (userRole !== "") {
                   setRole(userRole);
                 } else {
-                  window.location.pathname = "/users";
+                  window.location.pathname = "/";
                 }
               })
               .catch((err) => {
-                window.location.pathname = "/users";
+                window.location.pathname = "/";
               });
           })
           .catch((err) => {
-            window.location.pathname = "/users";
+            window.location.pathname = "/";
           });
       } else {
         window.location.pathname = "/";
@@ -122,6 +122,7 @@ export default function User(props) {
       setRoleStatus("An appropriate role must be selected.");
     } else if (login !== null) {
       const { token } = login;
+
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/Admin/User/Role",
@@ -255,17 +256,36 @@ export default function User(props) {
     const login = getLogin();
     if (login !== null) {
       const { token } = login;
+
       axios
-        .delete(
-          `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.userID}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        .get("https://smart-plant.azurewebsites.net/api/User", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((res) => {
-          window.location.pathname = "/users";
+          const currentEmail = res.data.email;
+
+          axios
+            .delete(
+              `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.userID}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            )
+            .then((res) => {
+              if (currentEmail === detailsForm.email) {
+                logOut();
+                window.location.pathname = "/";
+              } else {
+                window.location.reload();
+              }
+            })
+            .catch((err) => {
+              setDeleteStatus("Server error. Please try again later.");
+            });
         })
         .catch((err) => {
           setDeleteStatus("Server error. Please try again later.");

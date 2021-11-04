@@ -316,9 +316,7 @@ function App() {
             <Route
               exact
               path="/settings"
-              render={(props) => (
-                <Settings {...props} getLogin={getLogin} logOut={logOut} />
-              )}
+              render={(props) => <Settings {...props} getLogin={getLogin} />}
             />
             <Route
               exact
@@ -366,7 +364,9 @@ function App() {
             <Route
               exact
               path="/user/:user_ID"
-              render={(props) => <User {...props} getLogin={getLogin} />}
+              render={(props) => (
+                <User {...props} getLogin={getLogin} logOut={logOut} />
+              )}
             />
             <Route path="/*" component={NotFound}></Route>
           </Switch>

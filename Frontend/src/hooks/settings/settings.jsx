@@ -6,7 +6,7 @@ import axios from "axios";
 import "./settings.css";
 
 export default function Settings(props) {
-  const { getLogin, logOut } = props;
+  const { getLogin } = props;
 
   const [emailForm, setEmailForm] = useState({
       email: "",
@@ -58,7 +58,6 @@ export default function Settings(props) {
           });
         })
         .catch((err) => {
-          logOut();
           window.location.pathname = "/";
         });
     } else {
