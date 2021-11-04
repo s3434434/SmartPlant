@@ -16,7 +16,6 @@ export default function PlantAdmin(props) {
       plantID: window.location.pathname.substr(startIndex),
     }),
     [nameModifiable, setNameModifiable] = useState(false),
-    [imageModifiable, setImageModifiable] = useState(false),
     [showNameStatus, setShowNameStatus] = useState(false),
     [nameStatus, setNameStatus] = useState("none"),
     [showImageStatus, setShowImageStatus] = useState(false),
@@ -24,8 +23,6 @@ export default function PlantAdmin(props) {
     [plantType, setPlantType] = useState(""),
     [userID, setUserID] = useState(""),
     [plantImage, setPlantImage] = useState(container_background),
-    [arduinoToken, setArduinoToken] = useState(""),
-    [showArduinoToken, setShowArduinoToken] = useState(false),
     [showTokenStatus, setShowTokenStatus] = useState(false),
     [tokenStatus, setTokenStatus] = useState("none"),
     [sensorReadings, setSensorReadings] = useState(null),
@@ -118,20 +115,7 @@ export default function PlantAdmin(props) {
     const input = e.target;
     const tempForm = _.cloneDeep(form);
 
-    if (input.name === "base64ImgString") {
-      const fileReader = new FileReader();
-      fileReader.onload = function (fileLoadedEvent) {
-        let base64 = fileLoadedEvent.target.result;
-        const startIndex = base64.indexOf(",") + 1;
-        base64 = base64.substr(startIndex);
-
-        tempForm[input.name] = base64;
-      };
-
-      fileReader.readAsDataURL(input.files[0]);
-    } else {
-      tempForm[input.name] = input.value;
-    }
+    tempForm[input.name] = input.value;
 
     setForm(tempForm);
   };
@@ -173,16 +157,16 @@ export default function PlantAdmin(props) {
     }
   };
 
-  const fetchArduinoToken = () => {
-    setTokenStatus("Please wait...");
-    setShowTokenStatus(true);
+  const deleteImage = () => {
+    setImageStatus("Please wait...");
+    setShowImageStatus(true);
 
     const login = getLogin();
     if (login !== null) {
       const { token } = login;
       axios
-        .get(
-          `https://smart-plant.azurewebsites.net/api/Plants/Token/${form.plantID}`,
+        .delete(
+          `https://smart-plant.azurewebsites.net/api/Admin/Plants/Image?userID=${userID}&plantID=${form.plantID}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -190,8 +174,42 @@ export default function PlantAdmin(props) {
           }
         )
         .then((res) => {
-          setArduinoToken(res.data);
-          setShowArduinoToken(true);
+          window.location.reload();
+        })
+        .catch((err) => {
+          setImageStatus("Server error. Please try again later.");
+        });
+    } else {
+      setImageStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
+    }
+  };
+
+  const regenerateArduinoToken = () => {
+    setTokenStatus("Please wait...");
+    setShowTokenStatus(true);
+
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login,
+        plantID = form.plantID;
+      axios
+        .post(
+          `https://smart-plant.azurewebsites.net/api/Admin/Plants/NewToken/${userID}/${plantID}`,
+          {
+            userID: userID,
+            plantID: plantID,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          setTokenStatus("Arduino token regenerated.");
         })
         .catch((err) => {
           setTokenStatus("Server error. Please try again later.");
@@ -380,7 +398,7 @@ export default function PlantAdmin(props) {
           }
         )
         .then((res) => {
-          window.location.pathname = "/";
+          window.location.assign(document.referrer);
         })
         .catch((err) => {
           setDeleteStatus("Server error. Please try again later.");
@@ -532,163 +550,53 @@ export default function PlantAdmin(props) {
           </button>
         </div>
       </form>
-      <form
-        className="w-25 m-auto d-none d-xl-block"
-        onSubmit={(e) => {
-          handleSubmit(e, setImageStatus, setShowImageStatus);
+
+      <div
+        className="cg-container gold-border m-auto mt-1"
+        style={{
+          backgroundImage: `url(${plantImage})`,
         }}
       >
-        {imageModifiable ? (
-          <>
-            <label className="form-label gold" htmlFor="base64ImgString">
-              Image
-            </label>
-            <input
-              className="form-control"
-              name="base64ImgString"
-              type="file"
-              required
-              onChange={handleChange}
-            />
-          </>
-        ) : (
-          <>
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10"></div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setImageModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
-            </div>
-            <div
-              className="cg-container gold-border m-auto mt-1"
-              style={{
-                backgroundImage: `url(${plantImage})`,
-              }}
-            >
-              {plantImage === container_background ? (
-                <h2>No current image</h2>
-              ) : null}
-            </div>
-          </>
-        )}
-        <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>
-          <span>{imageStatus}</span>
-        </div>
-        <div className={imageModifiable ? "text-center mt-3" : "hidden-field"}>
-          <button className="btn btn-primary" type="submit">
-            Apply change
-          </button>
-        </div>
-      </form>
-      <form
-        className="m-auto mt-5 px-2 d-xl-none"
-        onSubmit={(e) => {
-          handleSubmit(e, setImageStatus, setShowImageStatus);
-        }}
+        {plantImage === container_background ? <h2>No current image</h2> : null}
+      </div>
+      <div
+        className={showImageStatus ? "text-center mt-3" : "hidden-field"}
+        style={{ color: "white" }}
       >
-        {imageModifiable ? (
-          <>
-            <label className="form-label gold" htmlFor="base64ImgString">
-              Image
-            </label>
-            <input
-              className="form-control"
-              name="base64ImgString"
-              type="file"
-              required
-              onChange={handleChange}
-            />
-          </>
-        ) : (
-          <>
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10"></div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setImageModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
-            </div>
-            <div
-              className="cg-container gold-border m-auto mt-1"
-              style={{
-                backgroundImage: `url(${plantImage})`,
-              }}
-            >
-              {plantImage === container_background ? (
-                <h2>No current image</h2>
-              ) : null}
-            </div>
-          </>
-        )}
-        <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>
-          <span>{imageStatus}</span>
+        <span>{imageStatus}</span>
+      </div>
+      <div
+        className={
+          plantImage !== container_background
+            ? "text-center mt-3"
+            : "hidden-field"
+        }
+      >
+        <button className="btn btn-primary" onClick={deleteImage}>
+          Delete image
+        </button>
+      </div>
+
+      <div className="w-25 m-auto mt-4 d-none d-xl-block">
+        <div className={showTokenStatus ? "text-center mt-1" : "hidden-field"}>
+          <span style={{ color: "white" }}>{tokenStatus}</span>
         </div>
-        <div className={imageModifiable ? "text-center mt-3" : "hidden-field"}>
-          <button className="btn btn-primary" type="submit">
-            Apply change
+        <div className="text-center mt-2">
+          <button className="btn btn-primary" onClick={regenerateArduinoToken}>
+            Regenerate Arduino token
           </button>
         </div>
-      </form>
-      {showArduinoToken ? (
-        <>
-          <div className="w-25 m-auto d-none d-xl-block">
-            <h3 className="gold text-center mt-1">Arduino token</h3>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{arduinoToken}</span>
-            </div>
-          </div>
-          <div className="m-auto px-2 d-xl-none">
-            <h3 className="gold text-center mt-1">Arduino token</h3>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{arduinoToken}</span>
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="w-25 m-auto d-none d-xl-block">
-            <div
-              className={showTokenStatus ? "text-center mt-1" : "hidden-field"}
-            >
-              <span style={{ color: "white" }}>{tokenStatus}</span>
-            </div>
-            <div className="text-center mt-2">
-              <button className="btn btn-primary" onClick={fetchArduinoToken}>
-                Show Arduino token
-              </button>
-            </div>
-          </div>
-          <div className="m-auto px-2 d-xl-none">
-            <div
-              className={showTokenStatus ? "text-center mt-1" : "hidden-field"}
-            >
-              <span style={{ color: "white" }}>{tokenStatus}</span>
-            </div>
-            <div className="text-center mt-2">
-              <button className="btn btn-primary" onClick={fetchArduinoToken}>
-                Show Arduino token
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      </div>
+      <div className="m-auto mt-4 px-2 d-xl-none">
+        <div className={showTokenStatus ? "text-center mt-1" : "hidden-field"}>
+          <span style={{ color: "white" }}>{tokenStatus}</span>
+        </div>
+        <div className="text-center mt-2">
+          <button className="btn btn-primary" onClick={regenerateArduinoToken}>
+            Regenerate Arduino token
+          </button>
+        </div>
+      </div>
 
       <h3 className="gold text-center mt-5">Sensor data</h3>
       <div className="w-50 text-center m-auto d-none d-xl-block gold-border">
