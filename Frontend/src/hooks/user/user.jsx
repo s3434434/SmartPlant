@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import axios from "axios";
+import container_background from "../../assets/images/container_background.png";
 import "./user.css";
 
 export default function User(props) {
@@ -38,7 +39,8 @@ export default function User(props) {
     [showPasswordStatus, setShowPasswordStatus] = useState(false),
     [passwordStatus, setPasswordStatus] = useState("none"),
     [showDeleteStatus, setShowDeleteStatus] = useState(false),
-    [deleteStatus, setDeleteStatus] = useState("none");
+    [deleteStatus, setDeleteStatus] = useState("none"),
+    [plants, setPlants] = useState("Loading plants...");
 
   useEffect(() => {
     document.title = "Demeter - The plant meter";
@@ -94,6 +96,30 @@ export default function User(props) {
               .catch((err) => {
                 window.location.pathname = "/";
               });
+          })
+          .catch((err) => {
+            window.location.pathname = "/";
+          });
+
+        axios
+          .get("https://smart-plant.azurewebsites.net/api/Admin/Plants", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((res) => {
+            let foundPlants = [];
+            res.data.forEach((plant) => {
+              if (plant.userID === detailsForm.userID) {
+                foundPlants.push(plant);
+              }
+            });
+
+            if (foundPlants.length > 0) {
+              setPlants(foundPlants);
+            } else {
+              setPlants("No current plants.");
+            }
           })
           .catch((err) => {
             window.location.pathname = "/";
@@ -935,6 +961,51 @@ export default function User(props) {
           </button>
         </div>
       </form>
+
+      <h1 className="text-center gold mt-3">Plants</h1>
+      {typeof plants === "string" ? (
+        <div className="text-center mt-3" style={{ color: "white" }}>
+          {plants}
+        </div>
+      ) : (
+        <div className="content-gallery mt-4">
+          {plants.map((plant) => {
+            const { name, plantType, plantID } = plant;
+            let plantImage = container_background;
+            if (plant.imgurURL !== null) {
+              plantImage = plant.imgurURL;
+            }
+
+            return (
+              <div
+                id={plantID}
+                key={plantID}
+                className="cg-container"
+                style={{
+                  backgroundImage: `url(${plantImage})`,
+                  cursor: "pointer",
+                }}
+                onMouseEnter={() => {
+                  document.getElementById(
+                    plantID
+                  ).style.backgroundImage = `url(${plantImage}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
+                }}
+                onMouseLeave={() => {
+                  document.getElementById(
+                    plantID
+                  ).style.backgroundImage = `url(${plantImage})`;
+                }}
+                onClick={(e) => {
+                  window.location.pathname = `/plant-admin/${plantID}`;
+                }}
+              >
+                <h1 style={{ cursor: "pointer" }}>{name}</h1>
+                <h2 style={{ cursor: "pointer" }}>{plantType}</h2>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }

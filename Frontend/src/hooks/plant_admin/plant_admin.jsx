@@ -439,7 +439,7 @@ export default function PlantAdmin(props) {
             <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
               {plantType}
             </h4>
-            <h2 className="text-center m-0 p-0 gold">User ID:</h2>
+            <h1 className="text-center m-0 p-0 gold">User ID:</h1>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
               {userID}
             </h4>
@@ -460,7 +460,7 @@ export default function PlantAdmin(props) {
             <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
               {plantType}
             </h4>
-            <h2 className="text-center m-0 p-0 gold">User ID:</h2>
+            <h1 className="text-center m-0 p-0 gold">User ID:</h1>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
               {userID}
             </h4>
@@ -496,7 +496,7 @@ export default function PlantAdmin(props) {
             <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
               {plantType}
             </h4>
-            <h2 className="text-center m-0 p-0 gold">User ID:</h2>
+            <h1 className="text-center m-0 p-0 gold">User ID:</h1>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
               {userID}
             </h4>
@@ -517,7 +517,7 @@ export default function PlantAdmin(props) {
             <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
               {plantType}
             </h4>
-            <h2 className="text-center m-0 p-0 gold">User ID:</h2>
+            <h1 className="text-center m-0 p-0 gold">User ID:</h1>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
               {userID}
             </h4>

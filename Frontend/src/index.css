@@ -112,12 +112,9 @@ form span {
   -ms-hyphens: auto;
   -moz-hyphens: auto;
 }
-.cg-container h1 {
+.cg-container h1,
+.cg-container h2 {
   -webkit-line-clamp: 2;
-}
-.cg-container h2,
-.cg-container h3 {
-  -webkit-line-clamp: 3;
 }
 
 @media (max-width: 768px) {

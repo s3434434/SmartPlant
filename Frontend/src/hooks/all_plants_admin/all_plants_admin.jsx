@@ -89,9 +89,9 @@ export default function AllPlantsAdmin(props) {
                 }}
               >
                 <h1 style={{ cursor: "pointer" }}>{name}</h1>
-                <h3 className="user-id" style={{ cursor: "pointer" }}>
+                <h2 className="user-id" style={{ cursor: "pointer" }}>
                   {userID}
-                </h3>
+                </h2>
               </div>
             );
           })}
