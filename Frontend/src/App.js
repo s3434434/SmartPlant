@@ -250,7 +250,11 @@ function App() {
               path="/confirm-email"
               render={(props) => <ConfirmEmail {...props} logOut={logOut} />}
             />
-            <Route exact path="/forgot-password" component={ForgotPassword} />
+            <Route
+              exact
+              path="/forgot-password"
+              render={(props) => <ForgotPassword {...props} logOut={logOut} />}
+            />
             <Route
               exact
               path="/request-processed"
@@ -274,9 +278,7 @@ function App() {
             <Route
               exact
               path="/plants"
-              render={(props) => (
-                <AllPlants {...props} getLogin={getLogin} logOut={logOut} />
-              )}
+              render={(props) => <AllPlants {...props} getLogin={getLogin} />}
             />
             <Route
               exact
@@ -289,9 +291,7 @@ function App() {
             <Route
               exact
               path="/plant/:plant_name"
-              render={(props) => (
-                <Plant {...props} getLogin={getLogin} logOut={logOut} />
-              )}
+              render={(props) => <Plant {...props} getLogin={getLogin} />}
             />
             <Route
               exact
@@ -336,9 +336,7 @@ function App() {
             <Route
               exact
               path="/users"
-              render={(props) => (
-                <AllUsers {...props} getLogin={getLogin} logOut={logOut} />
-              )}
+              render={(props) => <AllUsers {...props} getLogin={getLogin} />}
             />
             <Route
               exact

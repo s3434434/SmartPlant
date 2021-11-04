@@ -8,23 +8,22 @@ import "./user.css";
 export default function User(props) {
   const { getLogin, logOut } = props;
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
-  const id = window.location.pathname.substr(startIndex);
 
-  const [emailForm, setEmailForm] = useState({
-      email: "",
-      confirmEmail: "",
-    }),
+  const [role, setRole] = useState(""),
     [detailsForm, setDetailsForm] = useState({
+      id: window.location.pathname.substr(startIndex),
+      email: "",
       phoneNumber: "",
       firstName: "",
       lastName: "",
     }),
     [passwordForm, setPasswordForm] = useState({
-      oldPassword: "",
+      id: window.location.pathname.substr(startIndex),
       newPassword: "",
       confirmNewPassword: "",
     }),
     [emailModifiable, setEmailModifiable] = useState(false),
+    [roleModifiable, setRoleModifiable] = useState(false),
     [detailsModifiable, setDetailsModifiable] = useState(false),
     [phoneNumberModifiable, setPhoneNumberModifiable] = useState(false),
     [firstNameModifiable, setFirstNameModifiable] = useState(false),
@@ -32,6 +31,8 @@ export default function User(props) {
     [passwordModifiable, setPasswordModifiable] = useState(false),
     [showEmailStatus, setShowEmailStatus] = useState(false),
     [emailStatus, setEmailStatus] = useState("none"),
+    [showRoleStatus, setShowRoleStatus] = useState(false),
+    [roleStatus, setRoleStatus] = useState("none"),
     [showDetailsStatus, setShowDetailsStatus] = useState(false),
     [detailsStatus, setDetailsStatus] = useState("none"),
     [showPasswordStatus, setShowPasswordStatus] = useState(false),
@@ -40,30 +41,46 @@ export default function User(props) {
   useEffect(() => {
     document.title = "Demeter - The plant meter";
 
-    const login = props.getLogin();
+    const login = getLogin();
     if (login !== null) {
       const { token, admin } = login;
 
       if (admin) {
         axios
-          .get(`https://smart-plant.azurewebsites.net/api/Admin/User?userID=${}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
+          .get(
+            `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
           .then((res) => {
-            const settings = res.data;
+            const userData = res.data;
+            document.title = `${userData.email} | Demeter - The plant meter`;
 
-            setEmailForm({ email: settings.email, confirmEmail: "" });
-            setDetailsForm({
-              phoneNumber: settings.phoneNumber,
-              firstName: settings.firstName,
-              lastName: settings.lastName,
-            });
+            const tempDetailsForm = _.cloneDeep(detailsForm);
+            tempDetailsForm.email = userData.email;
+            tempDetailsForm.phoneNumber = userData.phoneNumber;
+            tempDetailsForm.firstName = userData.firstName;
+            tempDetailsForm.lastName = userData.lastName;
+            setDetailsForm(tempDetailsForm);
+
+            axios
+              .get("https://smart-plant.azurewebsites.net/api/User/Role", {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then((res) => {
+                setRole(res.data);
+              })
+              .catch((err) => {
+                window.location.pathname = "/users";
+              });
           })
           .catch((err) => {
-            logOut();
-            window.location.pathname = "/";
+            window.location.pathname = "/users";
           });
       } else {
         window.location.pathname = "/";
@@ -75,29 +92,65 @@ export default function User(props) {
     // eslint-disable-next-line
   }, []);
 
-  const handleEmailChange = (e) => {
-    const input = e.target;
-    const tempEmailForm = _.cloneDeep(emailForm);
-
-    tempEmailForm[input.name] = input.value;
-
-    setEmailForm(tempEmailForm);
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
   };
 
-  const handleEmailSubmit = (e) => {
+  const handleRoleSubmit = (e) => {
     e.preventDefault();
-    setEmailStatus("Please wait...");
-    setShowEmailStatus(true);
+    setRoleStatus("Please wait...");
+    setShowRoleStatus(true);
 
     const login = getLogin();
-    if (emailForm.email !== emailForm.confirmEmail) {
-      setEmailStatus("Emails do not match.");
+    if (role !== "User" && role !== "Admin") {
+      setRoleStatus("An appropriate role must be selected.");
     } else if (login !== null) {
       const { token } = login;
       axios
         .put(
-          "https://smart-plant.azurewebsites.net/api/User/Email",
-          emailForm,
+          "https://smart-plant.azurewebsites.net/api/Admin/User/Role",
+          { id: detailsForm.id, role: role },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          window.location.reload();
+        })
+        .catch((err) => {
+          setRoleStatus("Server error. Please try again later.");
+        });
+    } else {
+      setRoleStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
+    }
+  };
+
+  const handleDetailsChange = (e) => {
+    const input = e.target;
+    const tempDetailsForm = _.cloneDeep(detailsForm);
+
+    tempDetailsForm[input.name] = input.value;
+
+    setDetailsForm(tempDetailsForm);
+  };
+
+  const handleDetailsSubmit = (e, setStatus, setShowStatus) => {
+    e.preventDefault();
+    setStatus("Please wait...");
+    setShowStatus(true);
+
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
+      axios
+        .put(
+          "https://smart-plant.azurewebsites.net/api/Admin/User",
+          detailsForm,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -115,49 +168,7 @@ export default function User(props) {
             errorMessage = errors.Email[0];
           } else if (errors.ConfirmEmail !== undefined) {
             errorMessage = errors.ConfirmEmail[0];
-          }
-
-          setEmailStatus(errorMessage);
-        });
-    } else {
-      setEmailStatus("You are not logged in.");
-      setTimeout(() => {
-        window.location.pathname = "/";
-      }, 500);
-    }
-  };
-
-  const handleDetailsChange = (e) => {
-    const input = e.target;
-    const tempDetailsForm = _.cloneDeep(detailsForm);
-
-    tempDetailsForm[input.name] = input.value;
-
-    setDetailsForm(tempDetailsForm);
-  };
-
-  const handleDetailsSubmit = (e) => {
-    e.preventDefault();
-    setDetailsStatus("Please wait...");
-    setShowDetailsStatus(true);
-
-    const login = getLogin();
-    if (login !== null) {
-      const { token } = login;
-      axios
-        .put("https://smart-plant.azurewebsites.net/api/User", detailsForm, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          window.location.reload();
-        })
-        .catch((err) => {
-          const errors = err.response.data.messages;
-          let errorMessage = "Server error. Please try again later.";
-
-          if (errors.Phone !== undefined) {
+          } else if (errors.Phone !== undefined) {
             errorMessage = errors.Phone[0];
           } else if (errors.FirstName !== undefined) {
             errorMessage = errors.FirstName[0];
@@ -165,10 +176,10 @@ export default function User(props) {
             errorMessage = errors.LastName[0];
           }
 
-          setDetailsStatus(errorMessage);
+          setStatus(errorMessage);
         });
     } else {
-      setDetailsStatus("You are not logged in.");
+      setStatus("You are not logged in.");
       setTimeout(() => {
         window.location.pathname = "/";
       }, 500);
@@ -235,11 +246,11 @@ export default function User(props) {
 
   return (
     <section>
-      <h1 className="text-center gold">Settings</h1>
-
       <form
-        className="w-25 m-auto mt-4 d-none d-xl-block"
-        onSubmit={handleEmailSubmit}
+        className="w-25 m-auto d-none d-xl-block"
+        onSubmit={(e) => {
+          handleDetailsSubmit(e, setEmailStatus, setShowEmailStatus);
+        }}
       >
         {emailModifiable ? (
           <>
@@ -247,92 +258,114 @@ export default function User(props) {
               Email
             </label>
             <input
-              className="form-control"
+              className="form-control mb-3"
               name="email"
               type="text"
-              required
-              value={emailForm.email}
-              onChange={handleEmailChange}
-            />
-
-            <label className="form-label gold mt-2" htmlFor="confirmEmail">
-              Confirm email
-            </label>
-            <input
-              className="form-control"
-              name="confirmEmail"
-              type="text"
-              required
-              value={emailForm.confirmEmail}
-              onChange={handleEmailChange}
+              value={detailsForm.email}
+              onChange={handleDetailsChange}
             />
           </>
         ) : (
           <>
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Email</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setEmailModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
+            <div className="text-end m-0 p-0">
+              <FontAwesomeIcon
+                className="gold light-gold-hover"
+                icon={faPen}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setEmailModifiable(true);
+                }}
+              ></FontAwesomeIcon>
             </div>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{emailForm.email}</span>
-            </div>
+            <h1 className="text-center gold m-0 mb-2 p-0">
+              {detailsForm.email}
+            </h1>
           </>
         )}
         <div className={showEmailStatus ? "text-center mt-3" : "hidden-field"}>
           <span>{emailStatus}</span>
         </div>
-        <div className={emailModifiable ? "text-center mt-3" : "hidden-field"}>
+        <div className={emailModifiable ? "text-center my-3" : "hidden-field"}>
           <button className="btn btn-primary" type="submit">
             Apply change
           </button>
         </div>
       </form>
-      <form className="m-auto mt-4 px-2 d-xl-none" onSubmit={handleEmailSubmit}>
+      <form
+        className="m-auto px-2 d-xl-none"
+        onSubmit={(e) => {
+          handleDetailsSubmit(e, setEmailStatus, setShowEmailStatus);
+        }}
+      >
         {emailModifiable ? (
           <>
             <label className="form-label gold" htmlFor="email">
               Email
             </label>
             <input
-              className="form-control"
+              className="form-control mb-3"
               name="email"
               type="text"
-              required
-              value={emailForm.email}
-              onChange={handleEmailChange}
+              value={detailsForm.email}
+              onChange={handleDetailsChange}
             />
+          </>
+        ) : (
+          <>
+            <div className="text-end m-0 p-0">
+              <FontAwesomeIcon
+                className="gold light-gold-hover"
+                icon={faPen}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setEmailModifiable(true);
+                }}
+              ></FontAwesomeIcon>
+            </div>
+            <h1 className="text-center gold m-0 mb-2 p-0">
+              {detailsForm.email}
+            </h1>
+          </>
+        )}
+        <div className={showEmailStatus ? "text-center mt-3" : "hidden-field"}>
+          <span>{emailStatus}</span>
+        </div>
+        <div className={emailModifiable ? "text-center my-3" : "hidden-field"}>
+          <button className="btn btn-primary" type="submit">
+            Apply change
+          </button>
+        </div>
+      </form>
 
-            <label className="form-label gold mt-2" htmlFor="confirmEmail">
-              Confirm email
+      <form
+        className="w-25 m-auto mt-4 d-none d-xl-block"
+        onSubmit={handleRoleSubmit}
+      >
+        {roleModifiable ? (
+          <>
+            <label className="form-label gold" htmlFor="role">
+              Role
             </label>
-            <input
+            <select
               className="form-control"
-              name="confirmEmail"
-              type="text"
+              name="role"
+              onChange={handleRoleChange}
               required
-              value={emailForm.confirmEmail}
-              onChange={handleEmailChange}
-            />
+            >
+              <option key="User" value="User">
+                User
+              </option>
+              <option key="Admin" value="Admin">
+                Admin
+              </option>
+            </select>
           </>
         ) : (
           <>
             <div className="container p-0">
               <div className="row">
                 <div className="col-sm-10">
-                  <span className="gold">Email</span>
+                  <span className="gold">Role</span>
                 </div>
                 <div className="col-sm-2 text-end">
                   <FontAwesomeIcon
@@ -340,21 +373,74 @@ export default function User(props) {
                     icon={faPen}
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setEmailModifiable(true);
+                      setRoleModifiable(true);
                     }}
                   ></FontAwesomeIcon>
                 </div>
               </div>
             </div>
             <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{emailForm.email}</span>
+              <span className="ms-1">{role}</span>
             </div>
           </>
         )}
-        <div className={showEmailStatus ? "text-center mt-3" : "hidden-field"}>
-          <span>{emailStatus}</span>
+        <div className={showRoleStatus ? "text-center mt-3" : "hidden-field"}>
+          <span>{roleStatus}</span>
         </div>
-        <div className={emailModifiable ? "text-center mt-3" : "hidden-field"}>
+        <div className={roleModifiable ? "text-center mt-3" : "hidden-field"}>
+          <button className="btn btn-primary" type="submit">
+            Apply change
+          </button>
+        </div>
+      </form>
+      <form className="m-auto mt-4 px-2 d-xl-none" onSubmit={handleRoleSubmit}>
+        {roleModifiable ? (
+          <>
+            <label className="form-label gold" htmlFor="role">
+              Role
+            </label>
+            <select
+              className="form-control"
+              name="role"
+              onChange={handleRoleChange}
+              required
+            >
+              <option key="User" value="User">
+                User
+              </option>
+              <option key="Admin" value="Admin">
+                Admin
+              </option>
+            </select>
+          </>
+        ) : (
+          <>
+            <div className="container p-0">
+              <div className="row">
+                <div className="col-sm-10">
+                  <span className="gold">Role</span>
+                </div>
+                <div className="col-sm-2 text-end">
+                  <FontAwesomeIcon
+                    className="gold light-gold-hover"
+                    icon={faPen}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setRoleModifiable(true);
+                    }}
+                  ></FontAwesomeIcon>
+                </div>
+              </div>
+            </div>
+            <div className="mt-1 py-1 overflow-hidden gold-border">
+              <span className="ms-1">{role}</span>
+            </div>
+          </>
+        )}
+        <div className={showRoleStatus ? "text-center mt-3" : "hidden-field"}>
+          <span>{roleStatus}</span>
+        </div>
+        <div className={roleModifiable ? "text-center mt-3" : "hidden-field"}>
           <button className="btn btn-primary" type="submit">
             Apply change
           </button>
@@ -630,17 +716,6 @@ export default function User(props) {
       >
         {passwordModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="oldPassword">
-              Old password
-            </label>
-            <input
-              className="form-control"
-              name="oldPassword"
-              type="password"
-              required
-              value={passwordForm.oldPassword}
-              onChange={handlePasswordChange}
-            />
             <label className="form-label gold mt-2" htmlFor="newPassword">
               New password
             </label>
@@ -710,17 +785,6 @@ export default function User(props) {
       >
         {passwordModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="oldPassword">
-              Old password
-            </label>
-            <input
-              className="form-control"
-              name="oldPassword"
-              type="password"
-              required
-              value={passwordForm.oldPassword}
-              onChange={handlePasswordChange}
-            />
             <label className="form-label gold mt-2" htmlFor="newPassword">
               New password
             </label>

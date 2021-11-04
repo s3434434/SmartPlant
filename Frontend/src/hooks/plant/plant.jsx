@@ -7,7 +7,7 @@ import container_background from "../../assets/images/container_background.png";
 import "./plant.css";
 
 export default function Plant(props) {
-  const { getLogin, logOut } = props;
+  const { getLogin } = props;
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
 
   const [form, setForm] = useState({
@@ -68,7 +68,6 @@ export default function Plant(props) {
           });
         })
         .catch((err) => {
-          logOut();
           window.location.pathname = "/";
         });
 

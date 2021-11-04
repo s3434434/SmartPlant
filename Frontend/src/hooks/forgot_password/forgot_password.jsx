@@ -13,6 +13,7 @@ export default function ForgotPassword(props) {
 
   useEffect(() => {
     document.title = "Forgot password | Demeter - The plant meter";
+    props.logOut();
 
     // eslint-disable-next-line
   }, []);
