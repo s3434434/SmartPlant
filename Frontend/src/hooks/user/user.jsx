@@ -9,7 +9,7 @@ export default function User(props) {
   const { getLogin } = props;
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
 
-  const [role, setRole] = useState(""),
+  const [role, setRole] = useState("Loading..."),
     [detailsForm, setDetailsForm] = useState({
       id: window.location.pathname.substr(startIndex),
       email: "",
@@ -67,13 +67,27 @@ export default function User(props) {
             setDetailsForm(tempDetailsForm);
 
             axios
-              .get("https://smart-plant.azurewebsites.net/api/User/Role", {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              })
+              .get(
+                "https://smart-plant.azurewebsites.net/api/Admin/User/Role",
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              )
               .then((res) => {
-                setRole(res.data);
+                let userRole = "";
+                res.data.forEach((foundUser) => {
+                  if (foundUser.id === detailsForm.id) {
+                    userRole = foundUser.role;
+                  }
+                });
+
+                if (userRole !== "") {
+                  setRole(userRole);
+                } else {
+                  window.location.pathname = "/users";
+                }
               })
               .catch((err) => {
                 window.location.pathname = "/users";
@@ -161,7 +175,7 @@ export default function User(props) {
           window.location.reload();
         })
         .catch((err) => {
-          const errors = err.response.data.messages;
+          const errors = err.response.data.errors;
           let errorMessage = "Server error. Please try again later.";
 
           if (errors.Email !== undefined) {
@@ -207,7 +221,7 @@ export default function User(props) {
       const { token } = login;
       axios
         .put(
-          "https://smart-plant.azurewebsites.net/api/User/Password",
+          "https://smart-plant.azurewebsites.net/api/Admin/User/Password",
           passwordForm,
           {
             headers: {
@@ -222,19 +236,7 @@ export default function User(props) {
           }, 1000);
         })
         .catch((err) => {
-          const errors = err.response.data.messages;
-          let errorMessage = "Server error. Please try again later.";
-
-          if (errors.PasswordMismatch !== undefined) {
-            errorMessage = errors.PasswordMismatch[0];
-          }
-          if (errors.PasswordTooShort !== undefined) {
-            errorMessage = errors.PasswordTooShort[0];
-          } else if (errors.ConfirmNewPassword !== undefined) {
-            errorMessage = errors.ConfirmNewPassword[0];
-          }
-
-          setPasswordStatus(errorMessage);
+          setPasswordStatus(err.response.data[0].description);
         });
     } else {
       setPasswordStatus("You are not logged in.");
@@ -277,9 +279,9 @@ export default function User(props) {
                 }}
               ></FontAwesomeIcon>
             </div>
-            <h1 className="text-center gold m-0 mb-2 p-0">
+            <h2 className="text-center gold m-0 mb-2 p-0 overflow-auto">
               {detailsForm.email}
-            </h1>
+            </h2>
           </>
         )}
         <div className={showEmailStatus ? "text-center mt-3" : "hidden-field"}>
@@ -322,9 +324,9 @@ export default function User(props) {
                 }}
               ></FontAwesomeIcon>
             </div>
-            <h1 className="text-center gold m-0 mb-2 p-0">
+            <h2 className="text-center gold m-0 mb-2 p-0 overflow-hidden">
               {detailsForm.email}
-            </h1>
+            </h2>
           </>
         )}
         <div className={showEmailStatus ? "text-center mt-3" : "hidden-field"}>
@@ -352,6 +354,9 @@ export default function User(props) {
               onChange={handleRoleChange}
               required
             >
+              <option key="default" value="">
+                Please select a role
+              </option>
               <option key="User" value="User">
                 User
               </option>
@@ -405,6 +410,9 @@ export default function User(props) {
               onChange={handleRoleChange}
               required
             >
+              <option key="default" value="">
+                Please select a role
+              </option>
               <option key="User" value="User">
                 User
               </option>

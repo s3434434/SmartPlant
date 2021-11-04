@@ -97,7 +97,6 @@ function App() {
           <ul className="navbar-nav">
             {loggedIn ? (
               <>
-                (
                 {isAdmin ? (
                   <>
                     <li className="nav-item">

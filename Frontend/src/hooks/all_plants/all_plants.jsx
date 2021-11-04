@@ -23,7 +23,7 @@ export default function AllPlants(props) {
           const plantsFound = res.data;
 
           if (plantsFound.length > 0) {
-            const sortedPlants = res.data.sort((a, b) => {
+            const sortedPlants = plantsFound.sort((a, b) => {
               const nameA = a.name,
                 nameB = b.name;
               return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;

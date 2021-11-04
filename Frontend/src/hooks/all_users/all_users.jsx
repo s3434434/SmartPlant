@@ -23,7 +23,7 @@ export default function AllUsers(props) {
           .then((res) => {
             const foundUsers = res.data;
             if (foundUsers.length > 0) {
-              const sortedUsers = res.data.sort((a, b) => {
+              const sortedUsers = foundUsers.sort((a, b) => {
                 const emailA = a.email,
                   emailB = b.email;
                 return emailA < emailB ? -1 : emailA > emailB ? 1 : 0;
@@ -86,7 +86,9 @@ export default function AllUsers(props) {
                 }}
               >
                 <h2 style={{ cursor: "pointer" }}>{email}</h2>
-                <h2 style={{ cursor: "pointer" }}>{role}</h2>
+                <h2 className="role" style={{ cursor: "pointer" }}>
+                  {role}
+                </h2>
               </div>
             );
           })}
