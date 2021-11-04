@@ -115,7 +115,8 @@ form span {
 .cg-container h1 {
   -webkit-line-clamp: 2;
 }
-.cg-container h2 {
+.cg-container h2,
+.cg-container h3 {
   -webkit-line-clamp: 3;
 }
 

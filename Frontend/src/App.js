@@ -25,6 +25,8 @@ import Support from "./hooks/support/support";
 import SupportSuccessful from "./hooks/support/support_successful/support_successful";
 import AllUsers from "./hooks/all_users/all_users";
 import User from "./hooks/user/user";
+import AllPlantsAdmin from "./hooks/all_plants_admin/all_plants_admin";
+import PlantAdmin from "./hooks/plant_admin/plant_admin";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false),
@@ -124,7 +126,7 @@ function App() {
                       <span
                         className="nav-link"
                         onClick={() => {
-                          window.location.pathname = "/users";
+                          window.location.pathname = "/";
                         }}
                       >
                         <h5>Users</h5>
@@ -134,7 +136,7 @@ function App() {
                       <span
                         className="nav-link"
                         onClick={() => {
-                          window.location.pathname = "/";
+                          window.location.pathname = "/plants-admin";
                         }}
                       >
                         <h5>Plants</h5>
@@ -310,7 +312,7 @@ function App() {
             <Route exact path="/plant-added" component={PlantAdded} />
             <Route
               exact
-              path="/plant/:plant_name"
+              path="/plant/:plant_id"
               render={(props) => <Plant {...props} getLogin={getLogin} />}
             />
             <Route
@@ -367,6 +369,18 @@ function App() {
               render={(props) => (
                 <User {...props} getLogin={getLogin} logOut={logOut} />
               )}
+            />
+            <Route
+              exact
+              path="/plants-admin"
+              render={(props) => (
+                <AllPlantsAdmin {...props} getLogin={getLogin} />
+              )}
+            />
+            <Route
+              exact
+              path="/plant-admin/:plant_id"
+              render={(props) => <PlantAdmin {...props} getLogin={getLogin} />}
             />
             <Route path="/*" component={NotFound}></Route>
           </Switch>
