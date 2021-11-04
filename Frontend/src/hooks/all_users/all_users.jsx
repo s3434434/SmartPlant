@@ -1,0 +1,99 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import container_background from "../../assets/images/container_background.png";
+import "./all_users.css";
+
+export default function AllUsers(props) {
+  const [users, setUsers] = useState("Loading users...");
+
+  useEffect(() => {
+    document.title = "Users | Demeter - The plant meter";
+
+    const login = props.getLogin();
+    if (login !== null) {
+      const { token, admin } = login;
+
+      if (admin) {
+        axios
+          .get("https://smart-plant.azurewebsites.net/api/Admin/User/Role", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((res) => {
+            const foundUsers = res.data;
+            if (foundUsers.length > 0) {
+              const sortedUsers = foundUsers.sort((a, b) => {
+                const emailA = a.email,
+                  emailB = b.email;
+                return emailA < emailB ? -1 : emailA > emailB ? 1 : 0;
+              });
+
+              setUsers(sortedUsers);
+            } else {
+              setUsers("No current users.");
+            }
+          })
+          .catch((err) => {
+            setUsers(
+              "There was an error retrieving the user data. Please try again later."
+            );
+          });
+      } else {
+        window.location.pathname = "/";
+      }
+    } else {
+      window.location.pathname = "/";
+    }
+
+    // eslint-disable-next-line
+  }, []);
+
+  return (
+    <section>
+      <h1 className="text-center gold">Users</h1>
+      {typeof users === "string" ? (
+        <div className="text-center mt-3" style={{ color: "white" }}>
+          {users}
+        </div>
+      ) : (
+        <div className="content-gallery mt-4">
+          {users.map((user) => {
+            const { email, role, id } = user;
+            const userImage = container_background;
+
+            return (
+              <div
+                id={id}
+                key={id}
+                className="cg-container"
+                style={{
+                  backgroundImage: `url(${userImage})`,
+                  cursor: "pointer",
+                }}
+                onMouseEnter={() => {
+                  document.getElementById(
+                    id
+                  ).style.backgroundImage = `url(${userImage}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
+                }}
+                onMouseLeave={() => {
+                  document.getElementById(
+                    id
+                  ).style.backgroundImage = `url(${userImage})`;
+                }}
+                onClick={(e) => {
+                  window.location.pathname = `/user/${id}`;
+                }}
+              >
+                <h2 style={{ cursor: "pointer" }}>{email}</h2>
+                <h2 className="role" style={{ cursor: "pointer" }}>
+                  {role}
+                </h2>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  );
+}

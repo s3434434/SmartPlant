@@ -3,26 +3,28 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import axios from "axios";
-import "./settings.css";
+import container_background from "../../assets/images/container_background.png";
+import "./user.css";
 
-export default function Settings(props) {
-  const { getLogin } = props;
+export default function User(props) {
+  const { getLogin, logOut } = props;
+  const startIndex = window.location.pathname.lastIndexOf("/") + 1;
 
-  const [emailForm, setEmailForm] = useState({
-      email: "",
-      confirmEmail: "",
-    }),
+  const [role, setRole] = useState("Loading..."),
     [detailsForm, setDetailsForm] = useState({
+      userID: window.location.pathname.substr(startIndex),
+      email: "",
       phoneNumber: "",
       firstName: "",
       lastName: "",
     }),
     [passwordForm, setPasswordForm] = useState({
-      oldPassword: "",
+      userID: window.location.pathname.substr(startIndex),
       newPassword: "",
       confirmNewPassword: "",
     }),
     [emailModifiable, setEmailModifiable] = useState(false),
+    [roleModifiable, setRoleModifiable] = useState(false),
     [detailsModifiable, setDetailsModifiable] = useState(false),
     [phoneNumberModifiable, setPhoneNumberModifiable] = useState(false),
     [firstNameModifiable, setFirstNameModifiable] = useState(false),
@@ -30,36 +32,101 @@ export default function Settings(props) {
     [passwordModifiable, setPasswordModifiable] = useState(false),
     [showEmailStatus, setShowEmailStatus] = useState(false),
     [emailStatus, setEmailStatus] = useState("none"),
+    [showRoleStatus, setShowRoleStatus] = useState(false),
+    [roleStatus, setRoleStatus] = useState("none"),
     [showDetailsStatus, setShowDetailsStatus] = useState(false),
     [detailsStatus, setDetailsStatus] = useState("none"),
     [showPasswordStatus, setShowPasswordStatus] = useState(false),
-    [passwordStatus, setPasswordStatus] = useState("none");
+    [passwordStatus, setPasswordStatus] = useState("none"),
+    [showDeleteStatus, setShowDeleteStatus] = useState(false),
+    [deleteStatus, setDeleteStatus] = useState("none"),
+    [plants, setPlants] = useState("Loading plants...");
 
   useEffect(() => {
-    document.title = "Settings | Demeter - The plant meter";
+    document.title = "Demeter - The plant meter";
 
     const login = getLogin();
     if (login !== null) {
-      const { token } = login;
-      axios
-        .get("https://smart-plant.azurewebsites.net/api/User", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          const settings = res.data;
+      const { token, admin } = login;
 
-          setEmailForm({ email: settings.email, confirmEmail: "" });
-          setDetailsForm({
-            phoneNumber: settings.phoneNumber,
-            firstName: settings.firstName,
-            lastName: settings.lastName,
+      if (admin) {
+        axios
+          .get(
+            `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.userID}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((res) => {
+            const userData = res.data;
+            document.title = `${userData.email} | Demeter - The plant meter`;
+
+            const tempDetailsForm = _.cloneDeep(detailsForm);
+            tempDetailsForm.email = userData.email;
+            tempDetailsForm.phoneNumber = userData.phoneNumber;
+            tempDetailsForm.firstName = userData.firstName;
+            tempDetailsForm.lastName = userData.lastName;
+            setDetailsForm(tempDetailsForm);
+
+            axios
+              .get(
+                "https://smart-plant.azurewebsites.net/api/Admin/User/Role",
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              )
+              .then((res) => {
+                let userRole = "";
+                res.data.forEach((foundUser) => {
+                  if (foundUser.id === detailsForm.userID) {
+                    userRole = foundUser.role;
+                  }
+                });
+
+                if (userRole !== "") {
+                  setRole(userRole);
+                } else {
+                  window.location.pathname = "/";
+                }
+              })
+              .catch((err) => {
+                window.location.pathname = "/";
+              });
+          })
+          .catch((err) => {
+            window.location.pathname = "/";
           });
-        })
-        .catch((err) => {
-          window.location.pathname = "/";
-        });
+
+        axios
+          .get("https://smart-plant.azurewebsites.net/api/Admin/Plants", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((res) => {
+            let foundPlants = [];
+            res.data.forEach((plant) => {
+              if (plant.userID === detailsForm.userID) {
+                foundPlants.push(plant);
+              }
+            });
+
+            if (foundPlants.length > 0) {
+              setPlants(foundPlants);
+            } else {
+              setPlants("No current plants.");
+            }
+          })
+          .catch((err) => {
+            window.location.pathname = "/";
+          });
+      } else {
+        window.location.pathname = "/";
+      }
     } else {
       window.location.pathname = "/";
     }
@@ -67,29 +134,25 @@ export default function Settings(props) {
     // eslint-disable-next-line
   }, []);
 
-  const handleEmailChange = (e) => {
-    const input = e.target;
-    const tempEmailForm = _.cloneDeep(emailForm);
-
-    tempEmailForm[input.name] = input.value;
-
-    setEmailForm(tempEmailForm);
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
   };
 
-  const handleEmailSubmit = (e) => {
+  const handleRoleSubmit = (e) => {
     e.preventDefault();
-    setEmailStatus("Please wait...");
-    setShowEmailStatus(true);
+    setRoleStatus("Please wait...");
+    setShowRoleStatus(true);
 
     const login = getLogin();
-    if (emailForm.email !== emailForm.confirmEmail) {
-      setEmailStatus("Emails do not match.");
+    if (role !== "User" && role !== "Admin") {
+      setRoleStatus("An appropriate role must be selected.");
     } else if (login !== null) {
       const { token } = login;
+
       axios
         .put(
-          "https://smart-plant.azurewebsites.net/api/User/Email",
-          emailForm,
+          "https://smart-plant.azurewebsites.net/api/Admin/User/Role",
+          { id: detailsForm.userID, role: role },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -100,19 +163,10 @@ export default function Settings(props) {
           window.location.reload();
         })
         .catch((err) => {
-          const errors = err.response.data.messages;
-          let errorMessage = "Server error. Please try again later.";
-
-          if (errors.Email !== undefined) {
-            errorMessage = errors.Email[0];
-          } else if (errors.ConfirmEmail !== undefined) {
-            errorMessage = errors.ConfirmEmail[0];
-          }
-
-          setEmailStatus(errorMessage);
+          setRoleStatus("Server error. Please try again later.");
         });
     } else {
-      setEmailStatus("You are not logged in.");
+      setRoleStatus("You are not logged in.");
       setTimeout(() => {
         window.location.pathname = "/";
       }, 500);
@@ -128,28 +182,36 @@ export default function Settings(props) {
     setDetailsForm(tempDetailsForm);
   };
 
-  const handleDetailsSubmit = (e) => {
+  const handleDetailsSubmit = (e, setStatus, setShowStatus) => {
     e.preventDefault();
-    setDetailsStatus("Please wait...");
-    setShowDetailsStatus(true);
+    setStatus("Please wait...");
+    setShowStatus(true);
 
     const login = getLogin();
     if (login !== null) {
       const { token } = login;
       axios
-        .put("https://smart-plant.azurewebsites.net/api/User", detailsForm, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        .put(
+          "https://smart-plant.azurewebsites.net/api/Admin/User",
+          detailsForm,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .then((res) => {
           window.location.reload();
         })
         .catch((err) => {
-          const errors = err.response.data.messages;
+          const errors = err.response.data.errors;
           let errorMessage = "Server error. Please try again later.";
 
-          if (errors.Phone !== undefined) {
+          if (errors.Email !== undefined) {
+            errorMessage = errors.Email[0];
+          } else if (errors.ConfirmEmail !== undefined) {
+            errorMessage = errors.ConfirmEmail[0];
+          } else if (errors.Phone !== undefined) {
             errorMessage = errors.Phone[0];
           } else if (errors.FirstName !== undefined) {
             errorMessage = errors.FirstName[0];
@@ -157,10 +219,10 @@ export default function Settings(props) {
             errorMessage = errors.LastName[0];
           }
 
-          setDetailsStatus(errorMessage);
+          setStatus(errorMessage);
         });
     } else {
-      setDetailsStatus("You are not logged in.");
+      setStatus("You are not logged in.");
       setTimeout(() => {
         window.location.pathname = "/";
       }, 500);
@@ -188,7 +250,7 @@ export default function Settings(props) {
       const { token } = login;
       axios
         .put(
-          "https://smart-plant.azurewebsites.net/api/User/Password",
+          "https://smart-plant.azurewebsites.net/api/Admin/User/Password",
           passwordForm,
           {
             headers: {
@@ -203,19 +265,7 @@ export default function Settings(props) {
           }, 1000);
         })
         .catch((err) => {
-          const errors = err.response.data.messages;
-          let errorMessage = "Server error. Please try again later.";
-
-          if (errors.PasswordMismatch !== undefined) {
-            errorMessage = errors.PasswordMismatch[0];
-          }
-          if (errors.PasswordTooShort !== undefined) {
-            errorMessage = errors.PasswordTooShort[0];
-          } else if (errors.ConfirmNewPassword !== undefined) {
-            errorMessage = errors.ConfirmNewPassword[0];
-          }
-
-          setPasswordStatus(errorMessage);
+          setPasswordStatus(err.response.data[0].description);
         });
     } else {
       setPasswordStatus("You are not logged in.");
@@ -225,46 +275,203 @@ export default function Settings(props) {
     }
   };
 
+  const deleteUser = () => {
+    setDeleteStatus("Please wait...");
+    setShowDeleteStatus(true);
+
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
+
+      axios
+        .get("https://smart-plant.azurewebsites.net/api/User", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          const currentEmail = res.data.email;
+
+          axios
+            .delete(
+              `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.userID}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            )
+            .then((res) => {
+              if (currentEmail === detailsForm.email) {
+                logOut();
+                window.location.pathname = "/";
+              } else {
+                window.location.reload();
+              }
+            })
+            .catch((err) => {
+              setDeleteStatus("Server error. Please try again later.");
+            });
+        })
+        .catch((err) => {
+          setDeleteStatus("Server error. Please try again later.");
+        });
+    } else {
+      setDeleteStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
+    }
+  };
+
   return (
     <section>
-      <h1 className="text-center gold">Settings</h1>
+      <div className="d-none d-xl-block">
+        <div className="container m-0 p-0">
+          <div className="row">
+            <div className="col-xl-2 text-center">
+              <div className={showDeleteStatus ? "" : "hidden-field"}>
+                <span style={{ color: "white" }}>{deleteStatus}</span>
+              </div>
+              <button className="btn btn-primary mt-2" onClick={deleteUser}>
+                Delete user
+              </button>
+            </div>
+            <div className="col-xl-10"></div>
+          </div>
+        </div>
+      </div>
+      <div className="text-center d-xl-none">
+        <div className={showDeleteStatus ? "text-center" : "hidden-field"}>
+          <span style={{ color: "white" }}>{deleteStatus}</span>
+        </div>
+        <button className="btn btn-primary mt-2" onClick={deleteUser}>
+          Delete user
+        </button>
+      </div>
+      <form
+        className="w-25 m-auto d-none d-xl-block"
+        onSubmit={(e) => {
+          handleDetailsSubmit(e, setEmailStatus, setShowEmailStatus);
+        }}
+      >
+        {emailModifiable ? (
+          <>
+            <label className="form-label gold" htmlFor="email">
+              Email
+            </label>
+            <input
+              className="form-control mb-3"
+              name="email"
+              type="text"
+              value={detailsForm.email}
+              onChange={handleDetailsChange}
+            />
+          </>
+        ) : (
+          <>
+            <div className="text-end m-0 p-0">
+              <FontAwesomeIcon
+                className="gold light-gold-hover"
+                icon={faPen}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setEmailModifiable(true);
+                }}
+              ></FontAwesomeIcon>
+            </div>
+            <h2 className="text-center gold m-0 mb-2 p-0 overflow-auto">
+              {detailsForm.email}
+            </h2>
+          </>
+        )}
+        <div className={showEmailStatus ? "text-center mt-3" : "hidden-field"}>
+          <span>{emailStatus}</span>
+        </div>
+        <div className={emailModifiable ? "text-center my-3" : "hidden-field"}>
+          <button className="btn btn-primary" type="submit">
+            Apply change
+          </button>
+        </div>
+      </form>
+      <form
+        className="m-auto px-2 d-xl-none"
+        onSubmit={(e) => {
+          handleDetailsSubmit(e, setEmailStatus, setShowEmailStatus);
+        }}
+      >
+        {emailModifiable ? (
+          <>
+            <label className="form-label gold" htmlFor="email">
+              Email
+            </label>
+            <input
+              className="form-control mb-3"
+              name="email"
+              type="text"
+              value={detailsForm.email}
+              onChange={handleDetailsChange}
+            />
+          </>
+        ) : (
+          <>
+            <div className="text-end m-0 p-0">
+              <FontAwesomeIcon
+                className="gold light-gold-hover"
+                icon={faPen}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setEmailModifiable(true);
+                }}
+              ></FontAwesomeIcon>
+            </div>
+            <h2 className="text-center gold m-0 mb-2 p-0 overflow-hidden">
+              {detailsForm.email}
+            </h2>
+          </>
+        )}
+        <div className={showEmailStatus ? "text-center mt-3" : "hidden-field"}>
+          <span>{emailStatus}</span>
+        </div>
+        <div className={emailModifiable ? "text-center my-3" : "hidden-field"}>
+          <button className="btn btn-primary" type="submit">
+            Apply change
+          </button>
+        </div>
+      </form>
 
       <form
         className="w-25 m-auto mt-4 d-none d-xl-block"
-        onSubmit={handleEmailSubmit}
+        onSubmit={handleRoleSubmit}
       >
-        {emailModifiable ? (
+        {roleModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="email">
-              Email
+            <label className="form-label gold" htmlFor="role">
+              Role
             </label>
-            <input
+            <select
               className="form-control"
-              name="email"
-              type="text"
+              name="role"
+              onChange={handleRoleChange}
               required
-              value={emailForm.email}
-              onChange={handleEmailChange}
-            />
-
-            <label className="form-label gold mt-2" htmlFor="confirmEmail">
-              Confirm email
-            </label>
-            <input
-              className="form-control"
-              name="confirmEmail"
-              type="text"
-              required
-              value={emailForm.confirmEmail}
-              onChange={handleEmailChange}
-            />
+            >
+              <option key="default" value="">
+                Please select a role
+              </option>
+              <option key="User" value="User">
+                User
+              </option>
+              <option key="Admin" value="Admin">
+                Admin
+              </option>
+            </select>
           </>
         ) : (
           <>
             <div className="container p-0">
               <div className="row">
                 <div className="col-sm-10">
-                  <span className="gold">Email</span>
+                  <span className="gold">Role</span>
                 </div>
                 <div className="col-sm-2 text-end">
                   <FontAwesomeIcon
@@ -272,59 +479,55 @@ export default function Settings(props) {
                     icon={faPen}
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setEmailModifiable(true);
+                      setRoleModifiable(true);
                     }}
                   ></FontAwesomeIcon>
                 </div>
               </div>
             </div>
             <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{emailForm.email}</span>
+              <span className="ms-1">{role}</span>
             </div>
           </>
         )}
-        <div className={showEmailStatus ? "text-center mt-3" : "hidden-field"}>
-          <span>{emailStatus}</span>
+        <div className={showRoleStatus ? "text-center mt-3" : "hidden-field"}>
+          <span>{roleStatus}</span>
         </div>
-        <div className={emailModifiable ? "text-center mt-3" : "hidden-field"}>
+        <div className={roleModifiable ? "text-center mt-3" : "hidden-field"}>
           <button className="btn btn-primary" type="submit">
             Apply change
           </button>
         </div>
       </form>
-      <form className="m-auto mt-4 px-2 d-xl-none" onSubmit={handleEmailSubmit}>
-        {emailModifiable ? (
+      <form className="m-auto mt-4 px-2 d-xl-none" onSubmit={handleRoleSubmit}>
+        {roleModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="email">
-              Email
+            <label className="form-label gold" htmlFor="role">
+              Role
             </label>
-            <input
+            <select
               className="form-control"
-              name="email"
-              type="text"
+              name="role"
+              onChange={handleRoleChange}
               required
-              value={emailForm.email}
-              onChange={handleEmailChange}
-            />
-
-            <label className="form-label gold mt-2" htmlFor="confirmEmail">
-              Confirm email
-            </label>
-            <input
-              className="form-control"
-              name="confirmEmail"
-              type="text"
-              required
-              value={emailForm.confirmEmail}
-              onChange={handleEmailChange}
-            />
+            >
+              <option key="default" value="">
+                Please select a role
+              </option>
+              <option key="User" value="User">
+                User
+              </option>
+              <option key="Admin" value="Admin">
+                Admin
+              </option>
+            </select>
           </>
         ) : (
           <>
             <div className="container p-0">
               <div className="row">
                 <div className="col-sm-10">
-                  <span className="gold">Email</span>
+                  <span className="gold">Role</span>
                 </div>
                 <div className="col-sm-2 text-end">
                   <FontAwesomeIcon
@@ -332,21 +535,21 @@ export default function Settings(props) {
                     icon={faPen}
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setEmailModifiable(true);
+                      setRoleModifiable(true);
                     }}
                   ></FontAwesomeIcon>
                 </div>
               </div>
             </div>
             <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{emailForm.email}</span>
+              <span className="ms-1">{role}</span>
             </div>
           </>
         )}
-        <div className={showEmailStatus ? "text-center mt-3" : "hidden-field"}>
-          <span>{emailStatus}</span>
+        <div className={showRoleStatus ? "text-center mt-3" : "hidden-field"}>
+          <span>{roleStatus}</span>
         </div>
-        <div className={emailModifiable ? "text-center mt-3" : "hidden-field"}>
+        <div className={roleModifiable ? "text-center mt-3" : "hidden-field"}>
           <button className="btn btn-primary" type="submit">
             Apply change
           </button>
@@ -355,7 +558,9 @@ export default function Settings(props) {
 
       <form
         className="w-25 m-auto mt-5 d-none d-xl-block"
-        onSubmit={handleDetailsSubmit}
+        onSubmit={(e) => {
+          handleDetailsSubmit(e, setDetailsStatus, setShowDetailsStatus);
+        }}
       >
         {phoneNumberModifiable ? (
           <>
@@ -486,7 +691,9 @@ export default function Settings(props) {
       </form>
       <form
         className="m-auto mt-5 px-2 d-xl-none"
-        onSubmit={handleDetailsSubmit}
+        onSubmit={(e) => {
+          handleDetailsSubmit(e, setDetailsStatus, setShowDetailsStatus);
+        }}
       >
         {phoneNumberModifiable ? (
           <>
@@ -622,17 +829,6 @@ export default function Settings(props) {
       >
         {passwordModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="oldPassword">
-              Old password
-            </label>
-            <input
-              className="form-control"
-              name="oldPassword"
-              type="password"
-              required
-              value={passwordForm.oldPassword}
-              onChange={handlePasswordChange}
-            />
             <label className="form-label gold mt-2" htmlFor="newPassword">
               New password
             </label>
@@ -702,17 +898,6 @@ export default function Settings(props) {
       >
         {passwordModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="oldPassword">
-              Old password
-            </label>
-            <input
-              className="form-control"
-              name="oldPassword"
-              type="password"
-              required
-              value={passwordForm.oldPassword}
-              onChange={handlePasswordChange}
-            />
             <label className="form-label gold mt-2" htmlFor="newPassword">
               New password
             </label>
@@ -776,6 +961,51 @@ export default function Settings(props) {
           </button>
         </div>
       </form>
+
+      <h1 className="text-center gold mt-3">Plants</h1>
+      {typeof plants === "string" ? (
+        <div className="text-center mt-3" style={{ color: "white" }}>
+          {plants}
+        </div>
+      ) : (
+        <div className="content-gallery mt-4">
+          {plants.map((plant) => {
+            const { name, plantType, plantID } = plant;
+            let plantImage = container_background;
+            if (plant.imgurURL !== null) {
+              plantImage = plant.imgurURL;
+            }
+
+            return (
+              <div
+                id={plantID}
+                key={plantID}
+                className="cg-container"
+                style={{
+                  backgroundImage: `url(${plantImage})`,
+                  cursor: "pointer",
+                }}
+                onMouseEnter={() => {
+                  document.getElementById(
+                    plantID
+                  ).style.backgroundImage = `url(${plantImage}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
+                }}
+                onMouseLeave={() => {
+                  document.getElementById(
+                    plantID
+                  ).style.backgroundImage = `url(${plantImage})`;
+                }}
+                onClick={(e) => {
+                  window.location.pathname = `/plant-admin/${plantID}`;
+                }}
+              >
+                <h1 style={{ cursor: "pointer" }}>{name}</h1>
+                <h2 style={{ cursor: "pointer" }}>{plantType}</h2>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }

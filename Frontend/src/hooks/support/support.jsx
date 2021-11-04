@@ -30,8 +30,9 @@ export default function Support(props) {
     setStatus("Please wait...");
     setShowStatus(true);
 
-    const token = props.getLoginToken();
-    if (token !== null) {
+    const login = props.getLogin();
+    if (login !== null) {
+      const { token } = login;
       axios
         .post(
           "https://smart-plant.azurewebsites.net/api/user/contactsupport",

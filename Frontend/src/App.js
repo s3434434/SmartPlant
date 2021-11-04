@@ -23,38 +23,67 @@ import PrivacyPolicy from "./hooks/privacy_policy/privacy_policy";
 import TermsOfUse from "./hooks/terms_of_use/terms_of_use";
 import Support from "./hooks/support/support";
 import SupportSuccessful from "./hooks/support/support_successful/support_successful";
+import AllUsers from "./hooks/all_users/all_users";
+import User from "./hooks/user/user";
+import AllPlantsAdmin from "./hooks/all_plants_admin/all_plants_admin";
+import PlantAdmin from "./hooks/plant_admin/plant_admin";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false),
+    [isAdmin, setIsAdmin] = useState(false);
 
-  const getLoginToken = () => {
-    const login = localStorage.getItem("demeter-login");
-    let loginToken = null;
+  const getLogin = () => {
+    const loginString = localStorage.getItem("demeter-login");
+    let login = null;
 
-    if (login) {
-      const { token, expiry } = JSON.parse(login);
+    if (loginString !== null) {
+      const parsedLogin = JSON.parse(loginString);
 
-      if (expiry >= Date.now()) {
-        loginToken = token;
+      if (parsedLogin.expiry >= Date.now()) {
+        login = parsedLogin;
       } else {
         localStorage.removeItem("demeter-login");
       }
     }
 
-    return loginToken;
+    return login;
+  };
+
+  const getAdminStatus = () => {
+    const loginString = localStorage.getItem("demeter-login");
+    let adminStatus = null;
+
+    if (loginString !== null) {
+      const { expiry, admin } = JSON.parse(loginString);
+
+      if (expiry >= Date.now()) {
+        if (admin) {
+          adminStatus = true;
+        } else {
+          adminStatus = false;
+        }
+      } else {
+        localStorage.removeItem("demeter-login");
+      }
+    }
+
+    return adminStatus;
   };
 
   useEffect(() => {
-    let logged_in = false;
-    if (getLoginToken() !== null) {
-      logged_in = true;
+    const login = getLogin();
+    if (login !== null) {
+      setLoggedIn(true);
+      setIsAdmin(login.admin);
+    } else {
+      setLoggedIn(false);
     }
-    setLoggedIn(logged_in);
+
     // eslint-disable-next-line
   }, []);
 
   const logOut = () => {
-    if (getLoginToken() !== null) {
+    if (getLogin() !== null) {
       localStorage.removeItem("demeter-login");
       setLoggedIn(false);
     }
@@ -91,46 +120,83 @@ function App() {
           <ul className="navbar-nav">
             {loggedIn ? (
               <>
-                <li className="nav-item">
-                  <span
-                    className="nav-link"
-                    onClick={() => {
-                      window.location.pathname = "/";
-                    }}
-                  >
-                    <h5>Plants</h5>
-                  </span>
-                </li>
-                <li className="nav-item">
-                  <span
-                    className="nav-link"
-                    onClick={() => {
-                      window.location.pathname = "/settings";
-                    }}
-                  >
-                    <h5>Settings</h5>
-                  </span>
-                </li>
-                <li className="nav-item">
-                  <span
-                    className="nav-link"
-                    onClick={() => {
-                      window.location.pathname = "/support";
-                    }}
-                  >
-                    <h5>Support</h5>
-                  </span>
-                </li>
-                <li className="nav-item">
-                  <span
-                    className="nav-link"
-                    onClick={() => {
-                      window.location.pathname = "/logout";
-                    }}
-                  >
-                    <h5>Logout</h5>
-                  </span>
-                </li>
+                {isAdmin ? (
+                  <>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        onClick={() => {
+                          window.location.pathname = "/";
+                        }}
+                      >
+                        <h5>Users</h5>
+                      </span>
+                    </li>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        onClick={() => {
+                          window.location.pathname = "/plants-admin";
+                        }}
+                      >
+                        <h5>Plants</h5>
+                      </span>
+                    </li>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        onClick={() => {
+                          window.location.pathname = "/logout";
+                        }}
+                      >
+                        <h5>Logout</h5>
+                      </span>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        onClick={() => {
+                          window.location.pathname = "/";
+                        }}
+                      >
+                        <h5>Plants</h5>
+                      </span>
+                    </li>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        onClick={() => {
+                          window.location.pathname = "/settings";
+                        }}
+                      >
+                        <h5>Settings</h5>
+                      </span>
+                    </li>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        onClick={() => {
+                          window.location.pathname = "/support";
+                        }}
+                      >
+                        <h5>Support</h5>
+                      </span>
+                    </li>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        onClick={() => {
+                          window.location.pathname = "/logout";
+                        }}
+                      >
+                        <h5>Logout</h5>
+                      </span>
+                    </li>
+                  </>
+                )}
               </>
             ) : (
               <>
@@ -206,7 +272,11 @@ function App() {
               path="/confirm-email"
               render={(props) => <ConfirmEmail {...props} logOut={logOut} />}
             />
-            <Route exact path="/forgot-password" component={ForgotPassword} />
+            <Route
+              exact
+              path="/forgot-password"
+              render={(props) => <ForgotPassword {...props} logOut={logOut} />}
+            />
             <Route
               exact
               path="/request-processed"
@@ -230,57 +300,31 @@ function App() {
             <Route
               exact
               path="/plants"
-              render={(props) => (
-                <AllPlants
-                  {...props}
-                  getLoginToken={getLoginToken}
-                  logOut={logOut}
-                />
-              )}
+              render={(props) => <AllPlants {...props} getLogin={getLogin} />}
             />
             <Route
               exact
               path="/add-plant"
               render={(props) => (
-                <AddPlant
-                  {...props}
-                  getLoginToken={getLoginToken}
-                  logOut={logOut}
-                />
+                <AddPlant {...props} getLogin={getLogin} logOut={logOut} />
               )}
             />
             <Route exact path="/plant-added" component={PlantAdded} />
             <Route
               exact
-              path="/plant/:plant_name"
-              render={(props) => (
-                <Plant
-                  {...props}
-                  getLoginToken={getLoginToken}
-                  logOut={logOut}
-                />
-              )}
+              path="/plant/:plant_id"
+              render={(props) => <Plant {...props} getLogin={getLogin} />}
             />
             <Route
               exact
               path="/settings"
-              render={(props) => (
-                <Settings
-                  {...props}
-                  getLoginToken={getLoginToken}
-                  logOut={logOut}
-                />
-              )}
+              render={(props) => <Settings {...props} getLogin={getLogin} />}
             />
             <Route
               exact
               path="/support"
               render={(props) => (
-                <Support
-                  {...props}
-                  getLoginToken={getLoginToken}
-                  logOut={logOut}
-                />
+                <Support {...props} getLogin={getLogin} logOut={logOut} />
               )}
             />
             <Route
@@ -302,12 +346,41 @@ function App() {
               exact
               path="/"
               render={() => {
-                return getLoginToken() !== null ? (
-                  <Redirect to="/plants" />
+                const adminStatus = getAdminStatus();
+                return adminStatus !== null ? (
+                  adminStatus ? (
+                    <Redirect to="/users" />
+                  ) : (
+                    <Redirect to="/plants" />
+                  )
                 ) : (
                   <Redirect to="/landing" />
                 );
               }}
+            />
+            <Route
+              exact
+              path="/users"
+              render={(props) => <AllUsers {...props} getLogin={getLogin} />}
+            />
+            <Route
+              exact
+              path="/user/:user_ID"
+              render={(props) => (
+                <User {...props} getLogin={getLogin} logOut={logOut} />
+              )}
+            />
+            <Route
+              exact
+              path="/plants-admin"
+              render={(props) => (
+                <AllPlantsAdmin {...props} getLogin={getLogin} />
+              )}
+            />
+            <Route
+              exact
+              path="/plant-admin/:plant_id"
+              render={(props) => <PlantAdmin {...props} getLogin={getLogin} />}
             />
             <Route path="/*" component={NotFound}></Route>
           </Switch>
