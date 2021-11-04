@@ -22,6 +22,7 @@ export default function PlantAdmin(props) {
     [showImageStatus, setShowImageStatus] = useState(false),
     [imageStatus, setImageStatus] = useState("none"),
     [plantType, setPlantType] = useState(""),
+    [userID, setUserID] = useState(""),
     [plantImage, setPlantImage] = useState(container_background),
     [arduinoToken, setArduinoToken] = useState(""),
     [showArduinoToken, setShowArduinoToken] = useState(false),
@@ -44,55 +45,61 @@ export default function PlantAdmin(props) {
 
     const login = getLogin();
     if (login !== null) {
-      const { token } = login;
-      axios
-        .get("https://smart-plant.azurewebsites.net/api/Plants", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          res.data.forEach((plant) => {
-            if (plant.plantID === form.plantID) {
-              document.title = `${plant.name} | Demeter - The plant meter`;
+      const { token, admin } = login;
 
-              let tempForm = _.cloneDeep(form);
-              tempForm.name = plant.name;
-              setForm(tempForm);
-
-              if (plant.imgurURL !== null) {
-                setPlantImage(plant.imgurURL);
-              }
-              setPlantType(plant.plantType);
-            }
-          });
-        })
-        .catch((err) => {
-          window.location.pathname = "/";
-        });
-
-      axios
-        .get(
-          `https://smart-plant.azurewebsites.net/api/SensorData/${form.plantID}`,
-          {
+      if (admin) {
+        axios
+          .get("https://smart-plant.azurewebsites.net/api/Admin/Plants", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
-        )
-        .then((res) => {
-          const sortedReadings = res.data.sort((a, b) => {
-            const timeA = new Date(a.timeStampUTC).getTime(),
-              timeB = new Date(b.timeStampUTC).getTime();
-            return timeA > timeB ? -1 : timeA < timeB ? 1 : 0;
+          })
+          .then((res) => {
+            res.data.forEach((plant) => {
+              if (plant.plantID === form.plantID) {
+                document.title = `${plant.name} | Demeter - The plant meter`;
+
+                let tempForm = _.cloneDeep(form);
+                tempForm.name = plant.name;
+                setForm(tempForm);
+
+                if (plant.imgurURL !== null) {
+                  setPlantImage(plant.imgurURL);
+                }
+                setPlantType(plant.plantType);
+                setUserID(plant.userID);
+              }
+            });
+          })
+          .catch((err) => {
+            window.location.pathname = "/";
           });
-          setSensorReadings(sortedReadings);
-        })
-        .catch((err) => {
-          setDisplayedReadings(
-            "There was an error retrieving your sensor data. Please try again later."
-          );
-        });
+
+        axios
+          .get(
+            `https://smart-plant.azurewebsites.net/api/Admin/SensorData/${form.plantID}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((res) => {
+            const sortedReadings = res.data.sort((a, b) => {
+              const timeA = new Date(a.timeStampUTC).getTime(),
+                timeB = new Date(b.timeStampUTC).getTime();
+              return timeA > timeB ? -1 : timeA < timeB ? 1 : 0;
+            });
+            setSensorReadings(sortedReadings);
+          })
+          .catch((err) => {
+            setDisplayedReadings(
+              "There was an error retrieving your sensor data. Please try again later."
+            );
+          });
+      } else {
+        window.location.pathname = "/";
+      }
     } else {
       window.location.pathname = "/";
     }
@@ -138,7 +145,7 @@ export default function PlantAdmin(props) {
     if (login !== null) {
       const { token } = login;
       axios
-        .put("https://smart-plant.azurewebsites.net/api/Plants", form, {
+        .put("https://smart-plant.azurewebsites.net/api/Admin/Plants", form, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -365,7 +372,7 @@ export default function PlantAdmin(props) {
       const { token } = login;
       axios
         .delete(
-          `https://smart-plant.azurewebsites.net/api/Plants?plantID=${form.plantID}`,
+          `https://smart-plant.azurewebsites.net/api/Admin/Plants?plantID=${form.plantID}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -429,8 +436,12 @@ export default function PlantAdmin(props) {
               value={form.name}
               onChange={handleChange}
             />
-            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+            <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
               {plantType}
+            </h4>
+            <h2 className="text-center m-0 p-0 gold">User ID:</h2>
+            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+              {userID}
             </h4>
           </>
         ) : (
@@ -446,8 +457,12 @@ export default function PlantAdmin(props) {
               ></FontAwesomeIcon>
             </div>
             <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
-            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+            <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
               {plantType}
+            </h4>
+            <h2 className="text-center m-0 p-0 gold">User ID:</h2>
+            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+              {userID}
             </h4>
           </>
         )}
@@ -478,8 +493,12 @@ export default function PlantAdmin(props) {
               value={form.name}
               onChange={handleChange}
             />
-            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+            <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
               {plantType}
+            </h4>
+            <h2 className="text-center m-0 p-0 gold">User ID:</h2>
+            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+              {userID}
             </h4>
           </>
         ) : (
@@ -495,8 +514,12 @@ export default function PlantAdmin(props) {
               ></FontAwesomeIcon>
             </div>
             <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
-            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+            <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
               {plantType}
+            </h4>
+            <h2 className="text-center m-0 p-0 gold">User ID:</h2>
+            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+              {userID}
             </h4>
           </>
         )}

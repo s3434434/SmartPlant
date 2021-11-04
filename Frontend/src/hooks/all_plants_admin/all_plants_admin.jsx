@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import container_background from "../../assets/images/container_background.png";
 import "./all_plants_admin.css";
@@ -90,7 +89,9 @@ export default function AllPlantsAdmin(props) {
                 }}
               >
                 <h1 style={{ cursor: "pointer" }}>{name}</h1>
-                <h3 style={{ cursor: "pointer" }}>{userID}</h3>
+                <h3 className="user-id" style={{ cursor: "pointer" }}>
+                  {userID}
+                </h3>
               </div>
             );
           })}
