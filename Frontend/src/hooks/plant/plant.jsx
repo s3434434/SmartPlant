@@ -411,39 +411,44 @@ export default function Plant(props) {
           Delete plant
         </button>
       </div>
+
       <form
-        className="w-25 m-auto d-none d-xl-block"
+        className="m-auto d-none d-xl-block"
         onSubmit={(e) => {
           handleSubmit(e, setNameStatus, setShowNameStatus);
         }}
       >
         {nameModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="name">
-              Name
-            </label>
-            <input
-              className="form-control mb-3"
-              name="name"
-              type="text"
-              value={form.name}
-              onChange={handleChange}
-            />
+            <div className="w-25 m-auto">
+              <label className="form-label gold" htmlFor="name">
+                Name
+              </label>
+              <input
+                className="form-control mb-3"
+                name="name"
+                type="text"
+                value={form.name}
+                onChange={handleChange}
+              />
+            </div>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
               {plantType}
             </h4>
           </>
         ) : (
           <>
-            <div className="text-end m-0 p-0">
-              <FontAwesomeIcon
-                className="gold light-gold-hover"
-                icon={faPen}
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setNameModifiable(true);
-                }}
-              ></FontAwesomeIcon>
+            <div className="w-25 m-auto">
+              <div className="text-end m-0 p-0">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setNameModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
+              </div>
             </div>
             <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
@@ -451,10 +456,14 @@ export default function Plant(props) {
             </h4>
           </>
         )}
-        <div className={showNameStatus ? "text-center mt-3" : "hidden-field"}>
+        <div
+          className={showNameStatus ? "text-center mt-3" : "hidden-field m-0"}
+        >
           <span>{nameStatus}</span>
         </div>
-        <div className={nameModifiable ? "text-center my-3" : "hidden-field"}>
+        <div
+          className={nameModifiable ? "text-center my-3" : "hidden-field m-0"}
+        >
           <button className="btn btn-primary" type="submit">
             Apply change
           </button>
@@ -509,6 +518,7 @@ export default function Plant(props) {
           </button>
         </div>
       </form>
+
       <form
         className="w-25 m-auto d-none d-xl-block"
         onSubmit={(e) => {

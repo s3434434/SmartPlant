@@ -454,58 +454,59 @@ export default function PlantAdmin(props) {
           Delete plant
         </button>
       </div>
+
       <form
-        className="w-25 m-auto d-none d-xl-block"
+        className="m-auto d-none d-xl-block"
         onSubmit={(e) => {
           handleSubmit(e, setNameStatus, setShowNameStatus);
         }}
       >
         {nameModifiable ? (
           <>
-            <label className="form-label gold" htmlFor="name">
-              Name
-            </label>
-            <input
-              className="form-control mb-3"
-              name="name"
-              type="text"
-              value={form.name}
-              onChange={handleChange}
-            />
-            <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
-              {plantType}
-            </h4>
-            <h1 className="text-center m-0 p-0 gold">Email</h1>
+            <div className="w-25 m-auto">
+              <label className="form-label gold" htmlFor="name">
+                Name
+              </label>
+              <input
+                className="form-control mb-3"
+                name="name"
+                type="text"
+                value={form.name}
+                onChange={handleChange}
+              />
+            </div>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {email}
+              {plantType}
             </h4>
           </>
         ) : (
           <>
-            <div className="text-end m-0 p-0">
-              <FontAwesomeIcon
-                className="gold light-gold-hover"
-                icon={faPen}
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setNameModifiable(true);
-                }}
-              ></FontAwesomeIcon>
+            <div className="w-25 m-auto">
+              <div className="text-end m-0 p-0">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setNameModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
+              </div>
             </div>
-            <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
-            <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
-              {plantType}
-            </h4>
-            <h1 className="text-center m-0 p-0 gold">Email</h1>
+            <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>{" "}
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {email}
+              {plantType}
             </h4>
           </>
         )}
-        <div className={showNameStatus ? "text-center mt-3" : "hidden-field"}>
+        <div
+          className={showNameStatus ? "text-center mt-3" : "hidden-field m-0"}
+        >
           <span>{nameStatus}</span>
         </div>
-        <div className={nameModifiable ? "text-center my-3" : "hidden-field"}>
+        <div
+          className={nameModifiable ? "text-center my-3" : "hidden-field m-0"}
+        >
           <button className="btn btn-primary" type="submit">
             Apply change
           </button>
@@ -529,12 +530,8 @@ export default function PlantAdmin(props) {
               value={form.name}
               onChange={handleChange}
             />
-            <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
-              {plantType}
-            </h4>
-            <h1 className="text-center m-0 p-0 gold">Email</h1>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {email}
+              {plantType}
             </h4>
           </>
         ) : (
@@ -549,13 +546,9 @@ export default function PlantAdmin(props) {
                 }}
               ></FontAwesomeIcon>
             </div>
-            <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
-            <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
-              {plantType}
-            </h4>
-            <h1 className="text-center m-0 p-0 gold">Email</h1>
+            <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>{" "}
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {email}
+              {plantType}
             </h4>
           </>
         )}
@@ -568,7 +561,9 @@ export default function PlantAdmin(props) {
           </button>
         </div>
       </form>
-      <div className="m-auto mt-1 text-center">
+      <h1 className="text-center mb-2 p-0 gold">{email}</h1>
+
+      <div className="m-auto mt-5 text-center">
         <img
           className="plant-image gold-border"
           src={plantImage}
