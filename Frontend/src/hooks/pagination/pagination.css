@@ -1,9 +1,7 @@
 .pagination-tr:hover {
   background-color: rgba(0, 41, 8, 0.4);
 }
-.pagination-tr th {
-  text-align: center;
-}
+
 td h3,
 td h4,
 td h5 {
@@ -13,13 +11,13 @@ td h5 {
   -ms-hyphens: auto;
   -moz-hyphens: auto;
 }
-td img {
+tr img {
   height: 10em;
   width: 10em;
 }
 
 @media (max-width: 768px) {
-  td img {
+  tr img {
     height: 6em;
     width: 6em;
   }

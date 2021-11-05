@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import container_no_image from "../../assets/images/container_no_image.png";
 import "./pagination.css";
 
 export default function Pagination(props) {
@@ -89,15 +90,17 @@ export default function Pagination(props) {
               <tr>
                 {defaultImage !== null ? (
                   <th>
-                    <h3 style={{ visibility: "hidden" }}>
-                      --------------------------------
-                    </h3>
+                    <img
+                      src={container_no_image}
+                      alt="Header spacer"
+                      style={{ opacity: 0 }}
+                    ></img>
                   </th>
                 ) : null}
-                <th>
+                <th className={defaultImage !== null ? "text-center" : ""}>
                   <h3>{heading1}</h3>
                 </th>
-                <th>
+                <th className={defaultImage !== null ? "text-center" : ""}>
                   <h3>{heading2}</h3>
                 </th>
               </tr>
@@ -144,7 +147,7 @@ export default function Pagination(props) {
                             : "align-middle"
                         }
                       >
-                        <h3 style={{ cursor: "pointer" }}>{title1}</h3>
+                        <h4 style={{ cursor: "pointer" }}>{title1}</h4>
                       </td>
                       <td
                         className={
@@ -214,13 +217,17 @@ export default function Pagination(props) {
               <tr>
                 {defaultImage !== null ? (
                   <th>
-                    <h4 style={{ visibility: "hidden" }}>--------------</h4>
+                    <img
+                      src={container_no_image}
+                      alt="Header spacer"
+                      style={{ opacity: 0 }}
+                    ></img>
                   </th>
                 ) : null}
-                <th>
+                <th className={defaultImage !== null ? "text-center" : ""}>
                   <h4>{heading1}</h4>
                 </th>
-                <th>
+                <th className={defaultImage !== null ? "text-center" : ""}>
                   <h4>{heading2}</h4>
                 </th>
               </tr>
@@ -267,7 +274,7 @@ export default function Pagination(props) {
                             : "align-middle"
                         }
                       >
-                        <h4 style={{ cursor: "pointer" }}>{title1}</h4>
+                        <h5 style={{ cursor: "pointer" }}>{title1}</h5>
                       </td>
                       <td
                         className={
