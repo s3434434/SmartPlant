@@ -529,7 +529,7 @@ export default function Plant(props) {
             />
           </>
         ) : (
-          <>
+          <div className="text-center">
             <div className="container p-0">
               <div className="row">
                 <div className="col-sm-10"></div>
@@ -546,16 +546,18 @@ export default function Plant(props) {
               </div>
             </div>
             <img
-              className="gold-border m-auto mt-1"
+              className="plant-image gold-border m-auto mt-1"
               src={plantImage}
               alt="Plant"
             ></img>
-          </>
+          </div>
         )}
         <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>
           <span>{imageStatus}</span>
         </div>
-        <div className={imageModifiable ? "text-center mt-3" : "hidden-field"}>
+        <div
+          className={imageModifiable ? "text-center mt-3 mb-1" : "hidden-field"}
+        >
           <button className="btn btn-primary" type="submit">
             Apply change
           </button>
@@ -581,7 +583,7 @@ export default function Plant(props) {
             />
           </>
         ) : (
-          <>
+          <div className="text-center">
             <div className="container p-0">
               <div className="row">
                 <div className="col-sm-10"></div>
@@ -599,16 +601,18 @@ export default function Plant(props) {
             </div>
 
             <img
-              className="gold-border m-auto mt-1"
+              className="plant-image gold-border m-auto mt-1"
               src={plantImage}
               alt="Plant"
             ></img>
-          </>
+          </div>
         )}
         <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>
           <span>{imageStatus}</span>
         </div>
-        <div className={imageModifiable ? "text-center mt-3" : "hidden-field"}>
+        <div
+          className={imageModifiable ? "text-center mt-3 mb-1" : "hidden-field"}
+        >
           <button className="btn btn-primary" type="submit">
             Apply change
           </button>

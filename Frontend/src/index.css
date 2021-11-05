@@ -20,6 +20,10 @@ div {
   border-radius: 0.2rem;
   color: white;
 }
+.plant-image {
+  width: 14em;
+  height: 14em;
+}
 
 section {
   background-color: rgba(37, 78, 47, 0.5);
@@ -79,5 +83,9 @@ form span {
 @media (max-width: 768px) {
   section {
     padding: 0.5em;
+  }
+  .plant-image {
+    width: 10em;
+    height: 10em;
   }
 }

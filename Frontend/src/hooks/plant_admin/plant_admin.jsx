@@ -547,28 +547,29 @@ export default function PlantAdmin(props) {
           </button>
         </div>
       </form>
-
-      <img
-        className="gold-border m-auto mt-1"
-        src={plantImage}
-        alt="Plant"
-      ></img>
-      <div
-        className={showImageStatus ? "text-center mt-3" : "hidden-field"}
-        style={{ color: "white" }}
-      >
-        <span>{imageStatus}</span>
-      </div>
-      <div
-        className={
-          plantImage !== container_no_image
-            ? "text-center mt-3"
-            : "hidden-field"
-        }
-      >
-        <button className="btn btn-primary" onClick={deleteImage}>
-          Delete image
-        </button>
+      <div className="m-auto mt-1 text-center">
+        <img
+          className="plant-image gold-border"
+          src={plantImage}
+          alt="Plant"
+        ></img>
+        <div
+          className={showImageStatus ? "text-center mt-3" : "hidden-field"}
+          style={{ color: "white" }}
+        >
+          <span>{imageStatus}</span>
+        </div>
+        <div
+          className={
+            plantImage !== container_no_image
+              ? "text-center mt-3"
+              : "hidden-field"
+          }
+        >
+          <button className="btn btn-primary" onClick={deleteImage}>
+            Delete image
+          </button>
+        </div>
       </div>
 
       <div className="w-25 m-auto mt-4 d-none d-xl-block">
