@@ -61,6 +61,8 @@ export default function AllPlantsAdmin(props) {
         <Pagination
           items={plants}
           itemID="plantID"
+          heading1="Name"
+          heading2="User ID"
           defaultImage={container_no_image}
           itemTitle1="name"
           itemTitle2="userID"

@@ -1,22 +1,23 @@
-.tr-hover:hover {
+.pagination-tr:hover {
   background-color: rgba(0, 41, 8, 0.4);
 }
 
-td h1,
-td h2 {
+td h3,
+td h4,
+td h5 {
   overflow: hidden;
   word-wrap: break-word;
   hyphens: auto;
   -ms-hyphens: auto;
   -moz-hyphens: auto;
 }
-td img {
+tr img {
   height: 10em;
   width: 10em;
 }
 
 @media (max-width: 768px) {
-  td img {
+  tr img {
     height: 6em;
     width: 6em;
   }
