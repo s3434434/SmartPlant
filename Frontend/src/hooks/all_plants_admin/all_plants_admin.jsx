@@ -30,7 +30,29 @@ export default function AllPlantsAdmin(props) {
                   nameB = b.name;
                 return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
               });
-              setPlants(sortedPlants);
+
+              axios
+                .get("https://smart-plant.azurewebsites.net/api/Admin/Users", {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                })
+                .then((res) => {
+                  res.data.forEach((user) => {
+                    sortedPlants.forEach((sortedPlant) => {
+                      if (user.id === sortedPlant.userID) {
+                        sortedPlant.email = user.email;
+                      }
+                    });
+                  });
+
+                  setPlants(sortedPlants);
+                })
+                .catch((err) => {
+                  setPlants(
+                    "There was an error retrieving your plant data. Please try again later."
+                  );
+                });
             } else {
               setPlants("No current plants.");
             }
@@ -62,10 +84,10 @@ export default function AllPlantsAdmin(props) {
           items={plants}
           itemID="plantID"
           heading1="Name"
-          heading2="User ID"
+          heading2="Email"
           defaultImage={container_no_image}
           itemTitle1="name"
-          itemTitle2="userID"
+          itemTitle2="email"
           path="plant-admin"
         ></Pagination>
       )}

@@ -21,6 +21,7 @@ export default function PlantAdmin(props) {
     [imageStatus, setImageStatus] = useState("none"),
     [plantType, setPlantType] = useState(""),
     [userID, setUserID] = useState(""),
+    [email, setEmail] = useState(""),
     [plantImage, setPlantImage] = useState(container_no_image),
     [showTokenStatus, setShowTokenStatus] = useState(false),
     [tokenStatus, setTokenStatus] = useState("none"),
@@ -53,17 +54,37 @@ export default function PlantAdmin(props) {
           .then((res) => {
             res.data.forEach((plant) => {
               if (plant.plantID === form.plantID) {
-                document.title = `${plant.name} | Demeter - The plant meter`;
+                axios
+                  .get(
+                    "https://smart-plant.azurewebsites.net/api/Admin/Users",
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
+                  )
+                  .then((res) => {
+                    res.data.forEach((user) => {
+                      if (user.id === plant.userID) {
+                        setEmail(user.email);
+                      }
+                    });
 
-                let tempForm = _.cloneDeep(form);
-                tempForm.name = plant.name;
-                setForm(tempForm);
+                    document.title = `${plant.name} | Demeter - The plant meter`;
 
-                if (plant.imgurURL !== null) {
-                  setPlantImage(plant.imgurURL);
-                }
-                setPlantType(plant.plantType);
-                setUserID(plant.userID);
+                    let tempForm = _.cloneDeep(form);
+                    tempForm.name = plant.name;
+                    setForm(tempForm);
+
+                    if (plant.imgurURL !== null) {
+                      setPlantImage(plant.imgurURL);
+                    }
+                    setPlantType(plant.plantType);
+                    setUserID(plant.userID);
+                  })
+                  .catch((err) => {
+                    window.location.pathname = "/";
+                  });
               }
             });
           })
@@ -454,9 +475,9 @@ export default function PlantAdmin(props) {
             <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
               {plantType}
             </h4>
-            <h1 className="text-center m-0 p-0 gold">User ID:</h1>
+            <h1 className="text-center m-0 p-0 gold">Email</h1>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {userID}
+              {email}
             </h4>
           </>
         ) : (
@@ -475,9 +496,9 @@ export default function PlantAdmin(props) {
             <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
               {plantType}
             </h4>
-            <h1 className="text-center m-0 p-0 gold">User ID:</h1>
+            <h1 className="text-center m-0 p-0 gold">Email</h1>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {userID}
+              {email}
             </h4>
           </>
         )}
@@ -511,9 +532,9 @@ export default function PlantAdmin(props) {
             <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
               {plantType}
             </h4>
-            <h1 className="text-center m-0 p-0 gold">User ID:</h1>
+            <h1 className="text-center m-0 p-0 gold">Email</h1>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {userID}
+              {email}
             </h4>
           </>
         ) : (
@@ -532,9 +553,9 @@ export default function PlantAdmin(props) {
             <h4 className="text-center m-0 mb-4 p-0" style={{ color: "white" }}>
               {plantType}
             </h4>
-            <h1 className="text-center m-0 p-0 gold">User ID:</h1>
+            <h1 className="text-center m-0 p-0 gold">Email</h1>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {userID}
+              {email}
             </h4>
           </>
         )}
