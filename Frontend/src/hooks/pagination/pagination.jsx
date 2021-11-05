@@ -93,16 +93,7 @@ export default function Pagination(props) {
                   return (
                     <tr
                       key={id}
-                      onMouseEnter={() => {
-                        document.getElementById(
-                          `${id}-image`
-                        ).style.backgroundImage = `url(${image}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
-                      }}
-                      onMouseLeave={() => {
-                        document.getElementById(
-                          `${id}-image`
-                        ).style.backgroundImage = `url(${image})`;
-                      }}
+                      className="tr-hover"
                       onClick={(e) => {
                         window.location.pathname = `/${path}/${id}`;
                       }}
@@ -187,22 +178,16 @@ export default function Pagination(props) {
                     title1 = item[itemTitle1],
                     title2 = item[itemTitle2];
                   let image = defaultImage;
-                  if (item.imgurURL !== null) {
-                    image = item.imgurURL;
+                  if (item.imgurURL !== undefined) {
+                    if (item.imgurURL !== null) {
+                      image = item.imgurURL;
+                    }
                   }
+
                   return (
                     <tr
                       key={id}
-                      onMouseEnter={() => {
-                        document.getElementById(
-                          `${id}-image`
-                        ).style.backgroundImage = `url(${image}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
-                      }}
-                      onMouseLeave={() => {
-                        document.getElementById(
-                          `${id}-image`
-                        ).style.backgroundImage = `url(${image})`;
-                      }}
+                      className="tr-hover"
                       onClick={(e) => {
                         window.location.pathname = `/${path}/${id}`;
                       }}
@@ -219,10 +204,10 @@ export default function Pagination(props) {
                         ></img>
                       </td>
                       <td className="text-center align-middle gold">
-                        <h3 style={{ cursor: "pointer" }}>{title1}</h3>
+                        <h4 style={{ cursor: "pointer" }}>{title1}</h4>
                       </td>
                       <td className="text-center align-middle">
-                        <h4 style={{ cursor: "pointer" }}>{title2}</h4>
+                        <h5 style={{ cursor: "pointer" }}>{title2}</h5>
                       </td>
                     </tr>
                   );

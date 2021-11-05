@@ -1,3 +1,7 @@
+.tr-hover:hover {
+  background-color: rgba(0, 41, 8, 0.4);
+}
+
 td h1,
 td h2 {
   overflow: hidden;
