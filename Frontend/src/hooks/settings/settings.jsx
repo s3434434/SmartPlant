@@ -261,21 +261,22 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Email</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setEmailModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">Emaile</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setEmailModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
             <div className="mt-1 py-1 overflow-hidden gold-border">
@@ -321,21 +322,22 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Email</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setEmailModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">Emaile</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setEmailModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
             <div className="mt-1 py-1 overflow-hidden gold-border">
@@ -372,22 +374,23 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Phone</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setPhoneNumberModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">Phone</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setDetailsModifiable(true);
+                    setPhoneNumberModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
             <div className="mt-1 py-1 overflow-hidden gold-border">
@@ -410,22 +413,23 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">First name</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setFirstNameModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="mt-2 p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">First name</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setDetailsModifiable(true);
+                    setFirstNameModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
             <div className="mt-1 py-1 overflow-hidden gold-border">
@@ -448,22 +452,23 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Last name</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setLastNameModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="mt-2 p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">Last name</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setDetailsModifiable(true);
+                    setLastNameModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
             <div className="mt-1 py-1 overflow-hidden gold-border">
@@ -503,22 +508,23 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Phone</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setPhoneNumberModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">Phone</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setDetailsModifiable(true);
+                    setPhoneNumberModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
             <div className="mt-1 py-1 overflow-hidden gold-border">
@@ -541,22 +547,23 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">First name</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setFirstNameModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="mt-2 p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">First name</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setDetailsModifiable(true);
+                    setFirstNameModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
             <div className="mt-1 py-1 overflow-hidden gold-border">
@@ -579,22 +586,23 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Last name</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setLastNameModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="mt-2 p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">Last name</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setDetailsModifiable(true);
+                    setLastNameModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
             <div className="mt-1 py-1 overflow-hidden gold-border">
@@ -661,21 +669,22 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Password</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setPasswordModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="mt-2 p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">Password</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setPasswordModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
             <div className="mt-1 py-1 overflow-hidden gold-border">
@@ -741,21 +750,22 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Password</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setPasswordModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="mt-2 p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">Password</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setPasswordModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
             <div className="mt-1 py-1 overflow-hidden gold-border">
