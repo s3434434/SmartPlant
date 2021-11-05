@@ -46,8 +46,7 @@ p {
 
   border: none !important;
 }
-.btn-primary:hover,
-.btn-primary:active {
+.btn-primary:hover {
   background-color: rgb(31, 85, 52) !important;
 }
 .btn-primary:hover,

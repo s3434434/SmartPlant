@@ -1,6 +1,9 @@
 .pagination-tr:hover {
   background-color: rgba(0, 41, 8, 0.4);
 }
+.pagination-tr:active {
+  background-color: rgba(0, 41, 8, 0.5);
+}
 
 td h3,
 td h4,
