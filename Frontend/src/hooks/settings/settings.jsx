@@ -266,7 +266,7 @@ export default function Settings(props) {
               style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
             >
               <div className="text-left">
-                <span className="gold">Emaile</span>
+                <span className="gold">Email</span>
               </div>
               <div className="text-end">
                 <FontAwesomeIcon
@@ -327,7 +327,7 @@ export default function Settings(props) {
               style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
             >
               <div className="text-left">
-                <span className="gold">Emaile</span>
+                <span className="gold">Email</span>
               </div>
               <div className="text-end">
                 <FontAwesomeIcon
