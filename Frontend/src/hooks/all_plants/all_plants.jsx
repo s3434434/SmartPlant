@@ -74,6 +74,8 @@ export default function AllPlants(props) {
         <Pagination
           items={plants}
           itemID="plantID"
+          heading1="Name"
+          heading2="Variety"
           defaultImage={container_no_image}
           itemTitle1="name"
           itemTitle2="plantType"

@@ -1,9 +1,12 @@
-.tr-hover:hover {
+.pagination-tr:hover {
   background-color: rgba(0, 41, 8, 0.4);
 }
-
-td h1,
-td h2 {
+.pagination-tr th {
+  text-align: center;
+}
+td h3,
+td h4,
+td h5 {
   overflow: hidden;
   word-wrap: break-word;
   hyphens: auto;

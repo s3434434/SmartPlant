@@ -60,6 +60,8 @@ export default function AllUsers(props) {
         <Pagination
           items={users}
           itemID="id"
+          heading1="Email"
+          heading2="Role"
           defaultImage={null}
           itemTitle1="email"
           itemTitle2="role"

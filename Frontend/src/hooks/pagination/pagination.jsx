@@ -2,7 +2,16 @@ import React, { useEffect, useState } from "react";
 import "./pagination.css";
 
 export default function Pagination(props) {
-  const { items, itemID, defaultImage, itemTitle1, itemTitle2, path } = props;
+  const {
+    items,
+    itemID,
+    heading1,
+    heading2,
+    defaultImage,
+    itemTitle1,
+    itemTitle2,
+    path,
+  } = props;
   const [currentPageNumber, setCurrentPageNumber] = useState(1),
     [paginationNumbers, setPaginationNumbers] = useState([]),
     [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]);
@@ -76,6 +85,23 @@ export default function Pagination(props) {
       <div className="w-50 m-auto d-none d-xl-block overflow-auto">
         <div className="overflow-auto">
           <table className="table">
+            <thead>
+              <tr>
+                {defaultImage !== null ? (
+                  <th>
+                    <h3 style={{ visibility: "hidden" }}>
+                      --------------------------------
+                    </h3>
+                  </th>
+                ) : null}
+                <th>
+                  <h3>{heading1}</h3>
+                </th>
+                <th>
+                  <h3>{heading2}</h3>
+                </th>
+              </tr>
+            </thead>
             <tbody>
               {items
                 .slice(10 * (currentPageNumber - 1), 10 * currentPageNumber)
@@ -93,13 +119,13 @@ export default function Pagination(props) {
                   return (
                     <tr
                       key={id}
-                      className="tr-hover"
+                      className="pagination-tr"
                       onClick={(e) => {
                         window.location.pathname = `/${path}/${id}`;
                       }}
                       style={{ cursor: "pointer" }}
                     >
-                      {image !== null ? (
+                      {defaultImage !== null ? (
                         <td className="align-middle">
                           <img
                             id={`${id}-image`}
@@ -113,16 +139,16 @@ export default function Pagination(props) {
                       ) : null}
                       <td
                         className={
-                          image !== null
-                            ? "align-middle gold text-center"
-                            : "align-middle gold"
+                          defaultImage !== null
+                            ? "align-middle text-center"
+                            : "align-middle"
                         }
                       >
                         <h3 style={{ cursor: "pointer" }}>{title1}</h3>
                       </td>
                       <td
                         className={
-                          image !== null
+                          defaultImage !== null
                             ? "align-middle text-center"
                             : "align-middle"
                         }
@@ -184,6 +210,21 @@ export default function Pagination(props) {
       <div className="m-auto d-xl-none">
         <div className="overflow-auto">
           <table className="table">
+            <thead>
+              <tr>
+                {defaultImage !== null ? (
+                  <th>
+                    <h4 style={{ visibility: "hidden" }}>--------------</h4>
+                  </th>
+                ) : null}
+                <th>
+                  <h4>{heading1}</h4>
+                </th>
+                <th>
+                  <h4>{heading2}</h4>
+                </th>
+              </tr>
+            </thead>
             <tbody>
               {items
                 .slice(10 * (currentPageNumber - 1), 10 * currentPageNumber)
@@ -201,13 +242,13 @@ export default function Pagination(props) {
                   return (
                     <tr
                       key={id}
-                      className="tr-hover"
+                      className="pagination-tr"
                       onClick={(e) => {
                         window.location.pathname = `/${path}/${id}`;
                       }}
                       style={{ cursor: "pointer" }}
                     >
-                      {image !== null ? (
+                      {defaultImage !== null ? (
                         <td className="align-middle">
                           <img
                             id={`${id}-image`}
@@ -221,16 +262,16 @@ export default function Pagination(props) {
                       ) : null}
                       <td
                         className={
-                          image !== null
-                            ? "align-middle gold text-center"
-                            : "align-middle gold"
+                          defaultImage !== null
+                            ? "align-middle text-center"
+                            : "align-middle"
                         }
                       >
                         <h4 style={{ cursor: "pointer" }}>{title1}</h4>
                       </td>
                       <td
                         className={
-                          image !== null
+                          defaultImage !== null
                             ? "align-middle text-center"
                             : "align-middle"
                         }
