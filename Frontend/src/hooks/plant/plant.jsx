@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import axios from "axios";
-import container_background from "../../assets/images/container_background.png";
+import container_no_image from "../../assets/images/container_no_image.png";
 import "./plant.css";
 
 export default function Plant(props) {
@@ -22,7 +22,7 @@ export default function Plant(props) {
     [showImageStatus, setShowImageStatus] = useState(false),
     [imageStatus, setImageStatus] = useState("none"),
     [plantType, setPlantType] = useState(""),
-    [plantImage, setPlantImage] = useState(container_background),
+    [plantImage, setPlantImage] = useState(container_no_image),
     [arduinoToken, setArduinoToken] = useState(""),
     [showArduinoToken, setShowArduinoToken] = useState(false),
     [showTokenStatus, setShowTokenStatus] = useState(false),
@@ -545,16 +545,11 @@ export default function Plant(props) {
                 </div>
               </div>
             </div>
-            <div
-              className="cg-container gold-border m-auto mt-1"
-              style={{
-                backgroundImage: `url(${plantImage})`,
-              }}
-            >
-              {plantImage === container_background ? (
-                <h2>No current image</h2>
-              ) : null}
-            </div>
+            <img
+              className="gold-border m-auto mt-1"
+              src={plantImage}
+              alt="Plant"
+            ></img>
           </>
         )}
         <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>
@@ -602,16 +597,12 @@ export default function Plant(props) {
                 </div>
               </div>
             </div>
-            <div
-              className="cg-container gold-border m-auto mt-1"
-              style={{
-                backgroundImage: `url(${plantImage})`,
-              }}
-            >
-              {plantImage === container_background ? (
-                <h2>No current image</h2>
-              ) : null}
-            </div>
+
+            <img
+              className="gold-border m-auto mt-1"
+              src={plantImage}
+              alt="Plant"
+            ></img>
           </>
         )}
         <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import container_background from "../../assets/images/container_background.png";
+import container_no_image from "../../assets/images/container_no_image.png";
+import Pagination from "../pagination/pagination";
 import "./all_plants_admin.css";
 
 export default function AllPlantsAdmin(props) {
@@ -57,45 +58,14 @@ export default function AllPlantsAdmin(props) {
           {plants}
         </div>
       ) : (
-        <div className="content-gallery mt-4">
-          {plants.map((plant) => {
-            const { name, plantID, userID } = plant;
-            let plantImage = container_background;
-            if (plant.imgurURL !== null) {
-              plantImage = plant.imgurURL;
-            }
-
-            return (
-              <div
-                id={plantID}
-                key={plantID}
-                className="cg-container"
-                style={{
-                  backgroundImage: `url(${plantImage})`,
-                  cursor: "pointer",
-                }}
-                onMouseEnter={() => {
-                  document.getElementById(
-                    plantID
-                  ).style.backgroundImage = `url(${plantImage}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
-                }}
-                onMouseLeave={() => {
-                  document.getElementById(
-                    plantID
-                  ).style.backgroundImage = `url(${plantImage})`;
-                }}
-                onClick={(e) => {
-                  window.location.pathname = `/plant-admin/${plantID}`;
-                }}
-              >
-                <h1 style={{ cursor: "pointer" }}>{name}</h1>
-                <h2 className="user-id" style={{ cursor: "pointer" }}>
-                  {userID}
-                </h2>
-              </div>
-            );
-          })}
-        </div>
+        <Pagination
+          items={plants}
+          itemID="plantID"
+          defaultImage={container_no_image}
+          itemTitle1="name"
+          itemTitle2="userID"
+          path="plant-admin"
+        ></Pagination>
       )}
     </section>
   );
