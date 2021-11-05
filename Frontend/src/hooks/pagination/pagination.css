@@ -1,0 +1,23 @@
+.tr-hover:hover {
+  background-color: rgba(0, 41, 8, 0.4);
+}
+
+td h1,
+td h2 {
+  overflow: hidden;
+  word-wrap: break-word;
+  hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+}
+td img {
+  height: 10em;
+  width: 10em;
+}
+
+@media (max-width: 768px) {
+  td img {
+    height: 6em;
+    width: 6em;
+  }
+}

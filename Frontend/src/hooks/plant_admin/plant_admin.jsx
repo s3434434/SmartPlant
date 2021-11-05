@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import axios from "axios";
-import container_background from "../../assets/images/container_background.png";
+import container_no_image from "../../assets/images/container_no_image.png";
 import "./plant_admin.css";
 
 export default function PlantAdmin(props) {
@@ -21,7 +21,7 @@ export default function PlantAdmin(props) {
     [imageStatus, setImageStatus] = useState("none"),
     [plantType, setPlantType] = useState(""),
     [userID, setUserID] = useState(""),
-    [plantImage, setPlantImage] = useState(container_background),
+    [plantImage, setPlantImage] = useState(container_no_image),
     [showTokenStatus, setShowTokenStatus] = useState(false),
     [tokenStatus, setTokenStatus] = useState("none"),
     [sensorReadings, setSensorReadings] = useState(null),
@@ -547,31 +547,29 @@ export default function PlantAdmin(props) {
           </button>
         </div>
       </form>
-
-      <div
-        className="cg-container gold-border m-auto mt-1"
-        style={{
-          backgroundImage: `url(${plantImage})`,
-        }}
-      >
-        {plantImage === container_background ? <h2>No current image</h2> : null}
-      </div>
-      <div
-        className={showImageStatus ? "text-center mt-3" : "hidden-field"}
-        style={{ color: "white" }}
-      >
-        <span>{imageStatus}</span>
-      </div>
-      <div
-        className={
-          plantImage !== container_background
-            ? "text-center mt-3"
-            : "hidden-field"
-        }
-      >
-        <button className="btn btn-primary" onClick={deleteImage}>
-          Delete image
-        </button>
+      <div className="m-auto mt-1 text-center">
+        <img
+          className="plant-image gold-border"
+          src={plantImage}
+          alt="Plant"
+        ></img>
+        <div
+          className={showImageStatus ? "text-center mt-3" : "hidden-field"}
+          style={{ color: "white" }}
+        >
+          <span>{imageStatus}</span>
+        </div>
+        <div
+          className={
+            plantImage !== container_no_image
+              ? "text-center mt-3"
+              : "hidden-field"
+          }
+        >
+          <button className="btn btn-primary" onClick={deleteImage}>
+            Delete image
+          </button>
+        </div>
       </div>
 
       <div className="w-25 m-auto mt-4 d-none d-xl-block">

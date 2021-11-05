@@ -3,7 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import axios from "axios";
-import container_background from "../../assets/images/container_background.png";
+import container_no_image from "../../assets/images/container_no_image.png";
+import Pagination from "../pagination/pagination";
 import "./user.css";
 
 export default function User(props) {
@@ -968,43 +969,14 @@ export default function User(props) {
           {plants}
         </div>
       ) : (
-        <div className="content-gallery mt-4">
-          {plants.map((plant) => {
-            const { name, plantType, plantID } = plant;
-            let plantImage = container_background;
-            if (plant.imgurURL !== null) {
-              plantImage = plant.imgurURL;
-            }
-
-            return (
-              <div
-                id={plantID}
-                key={plantID}
-                className="cg-container"
-                style={{
-                  backgroundImage: `url(${plantImage})`,
-                  cursor: "pointer",
-                }}
-                onMouseEnter={() => {
-                  document.getElementById(
-                    plantID
-                  ).style.backgroundImage = `url(${plantImage}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
-                }}
-                onMouseLeave={() => {
-                  document.getElementById(
-                    plantID
-                  ).style.backgroundImage = `url(${plantImage})`;
-                }}
-                onClick={(e) => {
-                  window.location.pathname = `/plant-admin/${plantID}`;
-                }}
-              >
-                <h1 style={{ cursor: "pointer" }}>{name}</h1>
-                <h2 style={{ cursor: "pointer" }}>{plantType}</h2>
-              </div>
-            );
-          })}
-        </div>
+        <Pagination
+          items={plants}
+          itemID="plantID"
+          defaultImage={container_no_image}
+          itemTitle1="name"
+          itemTitle2="plantType"
+          path="plant-admin"
+        ></Pagination>
       )}
     </section>
   );

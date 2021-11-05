@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import container_background from "../../assets/images/container_background.png";
+import Pagination from "../pagination/pagination";
 import "./all_users.css";
 
 export default function AllUsers(props) {
@@ -28,7 +29,7 @@ export default function AllUsers(props) {
                   emailB = b.email;
                 return emailA < emailB ? -1 : emailA > emailB ? 1 : 0;
               });
-
+              console.log(sortedUsers);
               setUsers(sortedUsers);
             } else {
               setUsers("No current users.");
@@ -57,42 +58,14 @@ export default function AllUsers(props) {
           {users}
         </div>
       ) : (
-        <div className="content-gallery mt-4">
-          {users.map((user) => {
-            const { email, role, id } = user;
-            const userImage = container_background;
-
-            return (
-              <div
-                id={id}
-                key={id}
-                className="cg-container"
-                style={{
-                  backgroundImage: `url(${userImage})`,
-                  cursor: "pointer",
-                }}
-                onMouseEnter={() => {
-                  document.getElementById(
-                    id
-                  ).style.backgroundImage = `url(${userImage}), linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3))`;
-                }}
-                onMouseLeave={() => {
-                  document.getElementById(
-                    id
-                  ).style.backgroundImage = `url(${userImage})`;
-                }}
-                onClick={(e) => {
-                  window.location.pathname = `/user/${id}`;
-                }}
-              >
-                <h2 style={{ cursor: "pointer" }}>{email}</h2>
-                <h2 className="role" style={{ cursor: "pointer" }}>
-                  {role}
-                </h2>
-              </div>
-            );
-          })}
-        </div>
+        <Pagination
+          items={users}
+          itemID="id"
+          defaultImage={container_background}
+          itemTitle1="email"
+          itemTitle2="role"
+          path="user"
+        ></Pagination>
       )}
     </section>
   );

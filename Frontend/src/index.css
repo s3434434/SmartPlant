@@ -20,6 +20,10 @@ div {
   border-radius: 0.2rem;
   color: white;
 }
+.plant-image {
+  width: 14em;
+  height: 14em;
+}
 
 section {
   background-color: rgba(37, 78, 47, 0.5);
@@ -76,57 +80,12 @@ form span {
   user-select: none;
 }
 
-.content-gallery {
-  display: flex;
-  flex-wrap: wrap;
-}
-.content-gallery > * {
-  margin: auto;
-  margin-bottom: 1%;
-}
-
-.cg-container {
-  overflow: hidden;
-  background-position: center;
-  background-size: cover;
-  background-blend-mode: overlay;
-  width: 14em;
-  height: 14em;
-  display: grid;
-  grid-template-columns: 100%;
-  align-items: center;
-  justify-content: center;
-  transition: 0.05s;
-}
-.cg-container * {
-  color: white;
-  text-shadow: 0.03em 0.03em 0.025em rgb(0, 53, 11);
-  padding-left: 0.3em;
-  padding-right: 0.3em;
-  text-align: center;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  word-wrap: break-word;
-  hyphens: auto;
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-}
-.cg-container h1,
-.cg-container h2 {
-  -webkit-line-clamp: 2;
-  user-select: none;
-}
-
 @media (max-width: 768px) {
-  .content-gallery > * {
-    margin-bottom: 3%;
-  }
   section {
     padding: 0.5em;
   }
-  .cg-container {
-    width: 9.33em;
-    height: 9.33em;
+  .plant-image {
+    width: 10em;
+    height: 10em;
   }
 }
