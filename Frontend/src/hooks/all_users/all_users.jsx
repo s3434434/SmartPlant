@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import container_background from "../../assets/images/container_background.png";
 import Pagination from "../pagination/pagination";
 import "./all_users.css";
 
@@ -61,7 +60,7 @@ export default function AllUsers(props) {
         <Pagination
           items={users}
           itemID="id"
-          defaultImage={container_background}
+          defaultImage={null}
           itemTitle1="email"
           itemTitle2="role"
           path="user"

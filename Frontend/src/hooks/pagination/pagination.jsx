@@ -99,20 +99,34 @@ export default function Pagination(props) {
                       }}
                       style={{ cursor: "pointer" }}
                     >
-                      <td className="align-middle">
-                        <img
-                          id={`${id}-image`}
-                          src={image}
-                          alt={id}
-                          style={{
-                            cursor: "pointer",
-                          }}
-                        ></img>
-                      </td>
-                      <td className="text-center align-middle gold">
+                      {image !== null ? (
+                        <td className="align-middle">
+                          <img
+                            id={`${id}-image`}
+                            src={image}
+                            alt={id}
+                            style={{
+                              cursor: "pointer",
+                            }}
+                          ></img>
+                        </td>
+                      ) : null}
+                      <td
+                        className={
+                          image !== null
+                            ? "align-middle gold text-center"
+                            : "align-middle gold"
+                        }
+                      >
                         <h3 style={{ cursor: "pointer" }}>{title1}</h3>
                       </td>
-                      <td className="text-center align-middle">
+                      <td
+                        className={
+                          image !== null
+                            ? "align-middle text-center"
+                            : "align-middle"
+                        }
+                      >
                         <h4 style={{ cursor: "pointer" }}>{title2}</h4>
                       </td>
                     </tr>
@@ -193,20 +207,34 @@ export default function Pagination(props) {
                       }}
                       style={{ cursor: "pointer" }}
                     >
-                      <td className="align-middle">
-                        <img
-                          id={`${id}-image`}
-                          src={image}
-                          alt={id}
-                          style={{
-                            cursor: "pointer",
-                          }}
-                        ></img>
-                      </td>
-                      <td className="text-center align-middle gold">
+                      {image !== null ? (
+                        <td className="align-middle">
+                          <img
+                            id={`${id}-image`}
+                            src={image}
+                            alt={id}
+                            style={{
+                              cursor: "pointer",
+                            }}
+                          ></img>
+                        </td>
+                      ) : null}
+                      <td
+                        className={
+                          image !== null
+                            ? "align-middle gold text-center"
+                            : "align-middle gold"
+                        }
+                      >
                         <h4 style={{ cursor: "pointer" }}>{title1}</h4>
                       </td>
-                      <td className="text-center align-middle">
+                      <td
+                        className={
+                          image !== null
+                            ? "align-middle text-center"
+                            : "align-middle"
+                        }
+                      >
                         <h5 style={{ cursor: "pointer" }}>{title2}</h5>
                       </td>
                     </tr>
