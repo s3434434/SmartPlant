@@ -13,14 +13,14 @@ export default function User(props) {
 
   const [role, setRole] = useState("Loading..."),
     [detailsForm, setDetailsForm] = useState({
-      userID: window.location.pathname.substr(startIndex),
+      id: window.location.pathname.substr(startIndex),
       email: "",
       phoneNumber: "",
       firstName: "",
       lastName: "",
     }),
     [passwordForm, setPasswordForm] = useState({
-      userID: window.location.pathname.substr(startIndex),
+      id: window.location.pathname.substr(startIndex),
       newPassword: "",
       confirmNewPassword: "",
     }),
@@ -53,7 +53,7 @@ export default function User(props) {
       if (admin) {
         axios
           .get(
-            `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.userID}`,
+            `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -83,7 +83,7 @@ export default function User(props) {
               .then((res) => {
                 let userRole = "";
                 res.data.forEach((foundUser) => {
-                  if (foundUser.id === detailsForm.userID) {
+                  if (foundUser.id === detailsForm.id) {
                     userRole = foundUser.role;
                   }
                 });
@@ -111,7 +111,7 @@ export default function User(props) {
           .then((res) => {
             let foundPlants = [];
             res.data.forEach((plant) => {
-              if (plant.userID === detailsForm.userID) {
+              if (plant.userID === detailsForm.id) {
                 foundPlants.push(plant);
               }
             });
@@ -153,7 +153,7 @@ export default function User(props) {
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/Admin/User/Role",
-          { id: detailsForm.userID, role: role },
+          { id: detailsForm.id, role: role },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -295,7 +295,7 @@ export default function User(props) {
 
           axios
             .delete(
-              `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.userID}`,
+              `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.id}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
