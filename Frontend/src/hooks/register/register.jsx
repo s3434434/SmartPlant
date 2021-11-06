@@ -49,13 +49,13 @@ export default function Register(props) {
           window.location.pathname = "/registration-successful";
         })
         .catch((err) => {
-          const errors = err.response.data.messages;
+          const errors = err.response.data.errors;
           let errorMessage = "Server error. Please try again later.";
 
           if (errors.Email !== undefined) {
             errorMessage = errors.Email[0];
-          } else if (errors.Phone !== undefined) {
-            errorMessage = errors.Phone[0];
+          } else if (errors.PhoneNumber !== undefined) {
+            errorMessage = errors.PhoneNumber[0];
           } else if (errors.FirstName !== undefined) {
             errorMessage = errors.FirstName[0];
           } else if (errors.LastName !== undefined) {
@@ -141,6 +141,37 @@ export default function Register(props) {
           value={form.confirmPassword}
           onChange={handleChange}
         />
+        <div className="form-text mt-2" style={{ color: "white" }}>
+          By clicking Register you agree to our&nbsp;
+          <span
+            className="gold light-gold-hover"
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
+            onClick={() => {
+              window.location.pathname = "/terms-of-use";
+            }}
+          >
+            terms of use.
+          </span>
+          &nbsp;For more information about our privacy practices, please see
+          our&nbsp;
+          <span
+            className="gold light-gold-hover"
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
+            onClick={() => {
+              window.location.pathname = "/privacy-policy";
+            }}
+          >
+            privacy policy.
+          </span>
+        </div>
         {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
@@ -221,6 +252,37 @@ export default function Register(props) {
           value={form.confirmPassword}
           onChange={handleChange}
         />
+        <div className="form-text mt-2" style={{ color: "white" }}>
+          By clicking Register you agree to our&nbsp;
+          <span
+            className="gold light-gold-hover"
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
+            onClick={() => {
+              window.location.pathname = "/terms-of-use";
+            }}
+          >
+            terms of use.
+          </span>
+          &nbsp;For more information about our privacy practices, please see
+          our&nbsp;
+          <span
+            className="gold light-gold-hover"
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
+            onClick={() => {
+              window.location.pathname = "/privacy-policy";
+            }}
+          >
+            privacy policy.
+          </span>
+        </div>
         {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
