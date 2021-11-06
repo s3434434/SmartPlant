@@ -430,6 +430,7 @@ export default function Plant(props) {
                 type="text"
                 value={form.name}
                 onChange={handleChange}
+                required
               />
             </div>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
@@ -486,6 +487,7 @@ export default function Plant(props) {
               type="text"
               value={form.name}
               onChange={handleChange}
+              required
             />
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
               {plantType}

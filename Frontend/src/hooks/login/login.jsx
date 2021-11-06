@@ -95,7 +95,7 @@ export default function Login(props) {
           onChange={handleChange}
           required
         ></input>
-        <div className="form-text">
+        <div className="form-text mt-1">
           <span
             className="gold light-gold-hover"
             style={{
@@ -149,7 +149,7 @@ export default function Login(props) {
           onChange={handleChange}
           required
         ></input>
-        <div className="form-text">
+        <div className="form-text mt-1">
           <span
             className="gold light-gold-hover"
             style={{

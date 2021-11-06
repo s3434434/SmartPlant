@@ -100,7 +100,7 @@ export default function Settings(props) {
           window.location.reload();
         })
         .catch((err) => {
-          const errors = err.response.data.messages;
+          const errors = err.response.data.errors;
           let errorMessage = "Server error. Please try again later.";
 
           if (errors.Email !== undefined) {

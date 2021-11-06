@@ -158,11 +158,13 @@ export default function PlantAdmin(props) {
           window.location.reload();
         })
         .catch((err) => {
-          const errors = err.response.data.messages;
+          const errors = err.response.data.errors;
           let errorMessage = "Server error. Please try again later.";
 
           if (errors.PlantName !== undefined) {
             errorMessage = errors.PlantName[0];
+          } else if (errors["Name"] !== undefined) {
+            errorMessage = errors["Name"][0];
           } else if (errors["Name Taken"] !== undefined) {
             errorMessage = errors["Name Taken"][0];
           }
@@ -473,6 +475,7 @@ export default function PlantAdmin(props) {
                 type="text"
                 value={form.name}
                 onChange={handleChange}
+                required
               />
             </div>
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
@@ -529,6 +532,7 @@ export default function PlantAdmin(props) {
               type="text"
               value={form.name}
               onChange={handleChange}
+              required
             />
             <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
               {plantType}

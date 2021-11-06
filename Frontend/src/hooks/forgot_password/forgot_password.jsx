@@ -64,7 +64,7 @@ export default function ForgotPassword(props) {
           required
         />
         <div className="form-text mt-1">
-          <span className="gold">
+          <span style={{ color: "white" }}>
             Enter your email and we will send you a password reset link.
           </span>
         </div>
@@ -97,7 +97,7 @@ export default function ForgotPassword(props) {
           required
         />
         <div className="form-text mt-1">
-          <span className="gold">
+          <span style={{ color: "white" }}>
             Enter your email and we will send you a password reset link.
           </span>
         </div>
