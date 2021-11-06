@@ -305,9 +305,7 @@ function App() {
             <Route
               exact
               path="/add-plant"
-              render={(props) => (
-                <AddPlant {...props} getLogin={getLogin} logOut={logOut} />
-              )}
+              render={(props) => <AddPlant {...props} getLogin={getLogin} />}
             />
             <Route exact path="/plant-added" component={PlantAdded} />
             <Route

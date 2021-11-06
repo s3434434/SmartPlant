@@ -4,7 +4,7 @@ import _ from "lodash";
 import axios from "axios";
 
 export default function AddPlant(props) {
-  const { getLogin, logOut } = props;
+  const { getLogin } = props;
   const [plantTypes, setPlantTypes] = useState([]);
   const [form, setForm] = useState({
     plantName: "",
@@ -38,7 +38,6 @@ export default function AddPlant(props) {
             });
         })
         .catch((err) => {
-          logOut();
           window.location.pathname = "/";
         });
     } else {
