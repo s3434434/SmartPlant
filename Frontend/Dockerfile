@@ -1,11 +1,11 @@
-FROM node:14
+FROM nginx:stable
 
-WORKDIR /usr/src/Demeter
+WORKDIR /usr/share/nginx/html
 
 COPY . ./
 
-RUN npm install
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-CMD ["npm", "start"]
+EXPOSE 80
 
-EXPOSE 3000
+CMD ["nginx", "-g", "daemon off;"]
