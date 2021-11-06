@@ -59,7 +59,7 @@ export default function Support(props) {
 
   return (
     <section>
-      <h1 className="gold text-center">Contact support</h1>
+      <h1 className="gold text-center">Support</h1>
       <form
         className="w-25 m-auto mt-4 d-none d-xl-block"
         onSubmit={handleSubmit}

@@ -36,6 +36,7 @@ section {
 p {
   text-align: justify;
   hyphens: auto;
+  color: white;
 }
 
 .btn-primary {

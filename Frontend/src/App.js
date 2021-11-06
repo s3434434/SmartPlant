@@ -332,16 +332,8 @@ function App() {
               path="/support-successful"
               component={SupportSuccessful}
             />
-            <Route
-              exact
-              path="/privacy-policy"
-              render={(props) => <PrivacyPolicy {...props} logOut={logOut} />}
-            />
-            <Route
-              exact
-              path="/terms-of-use"
-              render={(props) => <TermsOfUse {...props} logOut={logOut} />}
-            />
+            <Route exact path="/privacy-policy" component={PrivacyPolicy} />
+            <Route exact path="/terms-of-use" component={TermsOfUse} />
             <Route
               exact
               path="/"
