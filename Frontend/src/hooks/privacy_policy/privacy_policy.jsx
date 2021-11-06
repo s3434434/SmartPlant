@@ -9,8 +9,8 @@ export default function PrivacyPolicy(props) {
 
   return (
     <section>
-      <h1 className="gold text-center">Privacy Policy</h1>
-      <div className="text-center w-25 m-auto mt-3 d-none d-xl-block">
+      <h1 className="gold text-center">Privacy policy</h1>
+      <div className="text-center w-50 m-auto mt-3 d-none d-xl-block">
         <p>
           This following document sets forth the Privacy Policy for the Demeter
           application. ACME Smart Plants is committed to providing you with the
@@ -71,6 +71,14 @@ export default function PrivacyPolicy(props) {
           reasons. ACME Smart Plants reserves the right to charge a fee for
           searching for, and providing access to, your information on a per
           request basis.
+        </p>
+        <h3 className="gold text-center">Security</h3>
+        <p>
+          We value your trust in providing us your personal information, thus we
+          are striving to use the best acceptable means of protecting it. But
+          remember that no method of transmission over the internet, or method
+          of electronic storage is 100% secure and reliable, and we cannot
+          guarantee its absolute security.
         </p>
         <h3 className="gold text-center">Contacting us</h3>
         <p>
@@ -143,6 +151,14 @@ export default function PrivacyPolicy(props) {
           reasons. ACME Smart Plants reserves the right to charge a fee for
           searching for, and providing access to, your information on a per
           request basis.
+        </p>
+        <h3 className="gold text-center">Security</h3>
+        <p>
+          We value your trust in providing us your personal information, thus we
+          are striving to use the best acceptable means of protecting it. But
+          remember that no method of transmission over the internet, or method
+          of electronic storage is 100% secure and reliable, and we cannot
+          guarantee its absolute security.
         </p>
         <h3 className="gold text-center">Contacting us</h3>
         <p>

@@ -10,7 +10,7 @@ export default function TermsOfUse(props) {
   return (
     <section>
       <h1 className="gold text-center">Terms of use</h1>
-      <div className="text-center w-25 m-auto mt-3 d-none d-xl-block">
+      <div className="text-center w-50 m-auto mt-3 d-none d-xl-block">
         <p>
           Please read these terms of use ("terms of use", "agreement") carefully
           before using www.demeter.onl website (“website”, "service") operated
