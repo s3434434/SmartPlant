@@ -141,7 +141,10 @@ export default function Register(props) {
           value={form.confirmPassword}
           onChange={handleChange}
         />
-        <div className="form-text mt-2" style={{ color: "white" }}>
+        <div
+          className="form-text mt-2"
+          style={{ color: "white", textAlign: "justify" }}
+        >
           By clicking Register you agree to our&nbsp;
           <span
             className="gold light-gold-hover"
@@ -154,9 +157,9 @@ export default function Register(props) {
               window.location.pathname = "/terms-of-use";
             }}
           >
-            terms of use.
+            terms of use
           </span>
-          &nbsp;For more information about our privacy practices, please see
+          . For more information about our privacy practices, please see
           our&nbsp;
           <span
             className="gold light-gold-hover"
@@ -169,8 +172,9 @@ export default function Register(props) {
               window.location.pathname = "/privacy-policy";
             }}
           >
-            privacy policy.
+            privacy policy
           </span>
+          .
         </div>
         {showStatus ? (
           <div className="text-center mt-3">
@@ -252,7 +256,10 @@ export default function Register(props) {
           value={form.confirmPassword}
           onChange={handleChange}
         />
-        <div className="form-text mt-2" style={{ color: "white" }}>
+        <div
+          className="form-text mt-2"
+          style={{ color: "white", textAlign: "justify" }}
+        >
           By clicking Register you agree to our&nbsp;
           <span
             className="gold light-gold-hover"
@@ -265,9 +272,9 @@ export default function Register(props) {
               window.location.pathname = "/terms-of-use";
             }}
           >
-            terms of use.
+            terms of use
           </span>
-          &nbsp;For more information about our privacy practices, please see
+          . For more information about our privacy practices, please see
           our&nbsp;
           <span
             className="gold light-gold-hover"
@@ -280,8 +287,9 @@ export default function Register(props) {
               window.location.pathname = "/privacy-policy";
             }}
           >
-            privacy policy.
+            privacy policy
           </span>
+          .
         </div>
         {showStatus ? (
           <div className="text-center mt-3">
