@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import office_plants from "../../assets/images/office_plants.jpeg";
+import office_plants from "../../assets/images/office_plants.webp";
 import plants_page from "../../assets/images/plants_page.png";
 import sensor_data from "../../assets/images/sensor_data.png";
 import support_page from "../../assets/images/support_page.png";
