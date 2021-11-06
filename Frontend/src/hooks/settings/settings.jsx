@@ -779,7 +779,9 @@ export default function Settings(props) {
           <span>{passwordStatus}</span>
         </div>
         <div
-          className={passwordModifiable ? "text-center mt-3" : "hidden-field"}
+          className={
+            passwordModifiable ? "text-center mt-3 mb-2" : "hidden-field"
+          }
         >
           <button className="btn btn-primary" type="submit">
             Change password
