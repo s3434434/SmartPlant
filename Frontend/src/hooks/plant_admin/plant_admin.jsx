@@ -148,28 +148,58 @@ export default function PlantAdmin(props) {
     const login = getLogin();
     if (login !== null) {
       const { token } = login;
+
       axios
-        .put("https://smart-plant.azurewebsites.net/api/Admin/Plants", form, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        .get(
+          `https://smart-plant.azurewebsites.net/api/Admin/Plants/User/${userID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .then((res) => {
-          window.location.reload();
+          let nameExists = false;
+          res.data.forEach((plant) => {
+            if (plant.name === form.name) {
+              nameExists = true;
+            }
+          });
+
+          if (!nameExists) {
+            axios
+              .put(
+                "https://smart-plant.azurewebsites.net/api/Admin/Plants",
+                form,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              )
+              .then((res) => {
+                window.location.reload();
+              })
+              .catch((err) => {
+                const errors = err.response.data.errors;
+                let errorMessage = "Server error. Please try again later.";
+
+                if (errors.PlantName !== undefined) {
+                  errorMessage = errors.PlantName[0];
+                } else if (errors["Name"] !== undefined) {
+                  errorMessage = errors["Name"][0];
+                } else if (errors["Name Taken"] !== undefined) {
+                  errorMessage = errors["Name Taken"][0];
+                }
+
+                setStatus(errorMessage);
+              });
+          } else {
+            setStatus(`A plant with this name already exists for ${email}.`);
+          }
         })
         .catch((err) => {
-          const errors = err.response.data.errors;
-          let errorMessage = "Server error. Please try again later.";
-
-          if (errors.PlantName !== undefined) {
-            errorMessage = errors.PlantName[0];
-          } else if (errors["Name"] !== undefined) {
-            errorMessage = errors["Name"][0];
-          } else if (errors["Name Taken"] !== undefined) {
-            errorMessage = errors["Name Taken"][0];
-          }
-
-          setStatus(errorMessage);
+          setStatus("Server error. Please try again later.");
         });
     } else {
       setStatus("You are not logged in.");
