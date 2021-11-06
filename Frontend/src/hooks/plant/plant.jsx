@@ -22,7 +22,7 @@ export default function Plant(props) {
     [showImageStatus, setShowImageStatus] = useState(false),
     [imageStatus, setImageStatus] = useState("none"),
     [plantType, setPlantType] = useState(""),
-    [plantImage, setPlantImage] = useState(container_no_image),
+    [plantImage, setPlantImage] = useState(null),
     [arduinoToken, setArduinoToken] = useState(""),
     [showArduinoToken, setShowArduinoToken] = useState(false),
     [showTokenStatus, setShowTokenStatus] = useState(false),
@@ -60,9 +60,12 @@ export default function Plant(props) {
               tempForm.name = plant.name;
               setForm(tempForm);
 
+              let image = container_no_image;
               if (plant.imgurURL !== null) {
-                setPlantImage(plant.imgurURL);
+                image = plant.imgurURL;
               }
+              setPlantImage(image);
+
               setPlantType(plant.plantType);
             }
           });
@@ -388,709 +391,752 @@ export default function Plant(props) {
 
   return (
     <section>
-      <div className="d-none d-xl-block">
-        <div className="container m-0 p-0">
-          <div className="row">
-            <div className="col-xl-2 text-center">
-              <div className={showDeleteStatus ? "" : "hidden-field"}>
-                <span style={{ color: "white" }}>{deleteStatus}</span>
+      {plantImage !== null ? (
+        <>
+          <div className="d-none d-xl-block">
+            <div className="container m-0 p-0">
+              <div className="row">
+                <div className="col-xl-2 text-center">
+                  <div className={showDeleteStatus ? "" : "hidden-field"}>
+                    <span style={{ color: "white" }}>{deleteStatus}</span>
+                  </div>
+                  <button
+                    className="btn btn-primary mt-2"
+                    onClick={deletePlant}
+                  >
+                    Delete plant
+                  </button>
+                </div>
+                <div className="col-xl-10"></div>
               </div>
-              <button className="btn btn-primary mt-2" onClick={deletePlant}>
-                Delete plant
+            </div>
+          </div>
+          <div className="text-center d-xl-none">
+            <div className={showDeleteStatus ? "text-center" : "hidden-field"}>
+              <span style={{ color: "white" }}>{deleteStatus}</span>
+            </div>
+            <button className="btn btn-primary mt-2" onClick={deletePlant}>
+              Delete plant
+            </button>
+          </div>
+
+          <form
+            className="m-auto d-none d-xl-block"
+            onSubmit={(e) => {
+              handleSubmit(e, setNameStatus, setShowNameStatus);
+            }}
+          >
+            {nameModifiable ? (
+              <>
+                <div className="w-25 m-auto">
+                  <label className="form-label gold" htmlFor="name">
+                    Name
+                  </label>
+                  <input
+                    className="form-control mb-3"
+                    name="name"
+                    type="text"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+                  {plantType}
+                </h4>
+              </>
+            ) : (
+              <>
+                <div className="w-25 m-auto">
+                  <div className="text-end m-0 p-0">
+                    <FontAwesomeIcon
+                      className="gold light-gold-hover"
+                      icon={faPen}
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        setNameModifiable(true);
+                      }}
+                    ></FontAwesomeIcon>
+                  </div>
+                </div>
+                <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
+                <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+                  {plantType}
+                </h4>
+              </>
+            )}
+            <div
+              className={
+                showNameStatus ? "text-center mt-3" : "hidden-field m-0"
+              }
+            >
+              <span>{nameStatus}</span>
+            </div>
+            <div
+              className={
+                nameModifiable ? "text-center my-3" : "hidden-field m-0"
+              }
+            >
+              <button className="btn btn-primary" type="submit">
+                Apply change
               </button>
             </div>
-            <div className="col-xl-10"></div>
-          </div>
-        </div>
-      </div>
-      <div className="text-center d-xl-none">
-        <div className={showDeleteStatus ? "text-center" : "hidden-field"}>
-          <span style={{ color: "white" }}>{deleteStatus}</span>
-        </div>
-        <button className="btn btn-primary mt-2" onClick={deletePlant}>
-          Delete plant
-        </button>
-      </div>
-
-      <form
-        className="m-auto d-none d-xl-block"
-        onSubmit={(e) => {
-          handleSubmit(e, setNameStatus, setShowNameStatus);
-        }}
-      >
-        {nameModifiable ? (
-          <>
-            <div className="w-25 m-auto">
-              <label className="form-label gold" htmlFor="name">
-                Name
-              </label>
-              <input
-                className="form-control mb-3"
-                name="name"
-                type="text"
-                value={form.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {plantType}
-            </h4>
-          </>
-        ) : (
-          <>
-            <div className="w-25 m-auto">
-              <div className="text-end m-0 p-0">
-                <FontAwesomeIcon
-                  className="gold light-gold-hover"
-                  icon={faPen}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setNameModifiable(true);
-                  }}
-                ></FontAwesomeIcon>
-              </div>
-            </div>
-            <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
-            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {plantType}
-            </h4>
-          </>
-        )}
-        <div
-          className={showNameStatus ? "text-center mt-3" : "hidden-field m-0"}
-        >
-          <span>{nameStatus}</span>
-        </div>
-        <div
-          className={nameModifiable ? "text-center my-3" : "hidden-field m-0"}
-        >
-          <button className="btn btn-primary" type="submit">
-            Apply change
-          </button>
-        </div>
-      </form>
-      <form
-        className="m-auto px-2 d-xl-none"
-        onSubmit={(e) => {
-          handleSubmit(e, setNameStatus, setShowNameStatus);
-        }}
-      >
-        {nameModifiable ? (
-          <>
-            <label className="form-label gold" htmlFor="name">
-              Name
-            </label>
-            <input
-              className="form-control mb-3"
-              name="name"
-              type="text"
-              value={form.name}
-              onChange={handleChange}
-              required
-            />
-            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {plantType}
-            </h4>
-          </>
-        ) : (
-          <>
-            <div className="text-end m-0 p-0">
-              <FontAwesomeIcon
-                className="gold light-gold-hover"
-                icon={faPen}
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setNameModifiable(true);
-                }}
-              ></FontAwesomeIcon>
-            </div>
-            <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
-            <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-              {plantType}
-            </h4>
-          </>
-        )}
-        <div className={showNameStatus ? "text-center mt-3" : "hidden-field"}>
-          <span>{nameStatus}</span>
-        </div>
-        <div className={nameModifiable ? "text-center my-3" : "hidden-field"}>
-          <button className="btn btn-primary" type="submit">
-            Apply change
-          </button>
-        </div>
-      </form>
-
-      <form
-        className="w-25 m-auto d-none d-xl-block"
-        onSubmit={(e) => {
-          handleSubmit(e, setImageStatus, setShowImageStatus);
-        }}
-      >
-        {imageModifiable ? (
-          <>
-            <label className="form-label gold" htmlFor="base64ImgString">
-              Image
-            </label>
-            <input
-              className="form-control"
-              name="base64ImgString"
-              type="file"
-              required
-              onChange={handleChange}
-            />
-          </>
-        ) : (
-          <div className="text-center">
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10"></div>
-                <div className="col-sm-2 text-end">
+          </form>
+          <form
+            className="m-auto px-2 d-xl-none"
+            onSubmit={(e) => {
+              handleSubmit(e, setNameStatus, setShowNameStatus);
+            }}
+          >
+            {nameModifiable ? (
+              <>
+                <label className="form-label gold" htmlFor="name">
+                  Name
+                </label>
+                <input
+                  className="form-control mb-3"
+                  name="name"
+                  type="text"
+                  value={form.name}
+                  onChange={handleChange}
+                  required
+                />
+                <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+                  {plantType}
+                </h4>
+              </>
+            ) : (
+              <>
+                <div className="text-end m-0 p-0">
                   <FontAwesomeIcon
                     className="gold light-gold-hover"
                     icon={faPen}
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setImageModifiable(true);
+                      setNameModifiable(true);
                     }}
                   ></FontAwesomeIcon>
                 </div>
-              </div>
+                <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
+                <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+                  {plantType}
+                </h4>
+              </>
+            )}
+            <div
+              className={showNameStatus ? "text-center mt-3" : "hidden-field"}
+            >
+              <span>{nameStatus}</span>
             </div>
-            <img
-              className="plant-image gold-border m-auto mt-1"
-              src={plantImage}
-              alt="Plant"
-            ></img>
-          </div>
-        )}
-        <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>
-          <span>{imageStatus}</span>
-        </div>
-        <div
-          className={imageModifiable ? "text-center mt-3 mb-1" : "hidden-field"}
-        >
-          <button className="btn btn-primary" type="submit">
-            Apply change
-          </button>
-        </div>
-      </form>
-      <form
-        className="m-auto mt-5 px-2 d-xl-none"
-        onSubmit={(e) => {
-          handleSubmit(e, setImageStatus, setShowImageStatus);
-        }}
-      >
-        {imageModifiable ? (
-          <>
-            <label className="form-label gold" htmlFor="base64ImgString">
-              Image
-            </label>
-            <input
-              className="form-control"
-              name="base64ImgString"
-              type="file"
-              required
-              onChange={handleChange}
-            />
-          </>
-        ) : (
-          <div className="text-center">
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10"></div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setImageModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
+            <div
+              className={nameModifiable ? "text-center my-3" : "hidden-field"}
+            >
+              <button className="btn btn-primary" type="submit">
+                Apply change
+              </button>
+            </div>
+          </form>
+
+          <form
+            className="w-25 m-auto d-none d-xl-block"
+            onSubmit={(e) => {
+              handleSubmit(e, setImageStatus, setShowImageStatus);
+            }}
+          >
+            {imageModifiable ? (
+              <>
+                <label className="form-label gold" htmlFor="base64ImgString">
+                  Image
+                </label>
+                <input
+                  className="form-control"
+                  name="base64ImgString"
+                  type="file"
+                  required
+                  onChange={handleChange}
+                />
+              </>
+            ) : (
+              <div className="text-center">
+                <div className="container p-0">
+                  <div className="row">
+                    <div className="col-sm-10"></div>
+                    <div className="col-sm-2 text-end">
+                      <FontAwesomeIcon
+                        className="gold light-gold-hover"
+                        icon={faPen}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setImageModifiable(true);
+                        }}
+                      ></FontAwesomeIcon>
+                    </div>
+                  </div>
+                </div>
+                <img
+                  className="plant-image gold-border m-auto mt-1"
+                  src={plantImage}
+                  alt="Plant"
+                ></img>
+              </div>
+            )}
+            <div
+              className={showImageStatus ? "text-center mt-3" : "hidden-field"}
+            >
+              <span>{imageStatus}</span>
+            </div>
+            <div
+              className={
+                imageModifiable ? "text-center mt-3 mb-1" : "hidden-field"
+              }
+            >
+              <button className="btn btn-primary" type="submit">
+                Apply change
+              </button>
+            </div>
+          </form>
+          <form
+            className="m-auto mt-5 px-2 d-xl-none"
+            onSubmit={(e) => {
+              handleSubmit(e, setImageStatus, setShowImageStatus);
+            }}
+          >
+            {imageModifiable ? (
+              <>
+                <label className="form-label gold" htmlFor="base64ImgString">
+                  Image
+                </label>
+                <input
+                  className="form-control"
+                  name="base64ImgString"
+                  type="file"
+                  required
+                  onChange={handleChange}
+                />
+              </>
+            ) : (
+              <div className="text-center">
+                <div className="container p-0">
+                  <div className="row">
+                    <div className="col-sm-10"></div>
+                    <div className="col-sm-2 text-end">
+                      <FontAwesomeIcon
+                        className="gold light-gold-hover"
+                        icon={faPen}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setImageModifiable(true);
+                        }}
+                      ></FontAwesomeIcon>
+                    </div>
+                  </div>
+                </div>
+
+                <img
+                  className="plant-image gold-border m-auto mt-1"
+                  src={plantImage}
+                  alt="Plant"
+                ></img>
+              </div>
+            )}
+            <div
+              className={showImageStatus ? "text-center mt-3" : "hidden-field"}
+            >
+              <span>{imageStatus}</span>
+            </div>
+            <div
+              className={
+                imageModifiable ? "text-center mt-3 mb-1" : "hidden-field"
+              }
+            >
+              <button className="btn btn-primary" type="submit">
+                Apply change
+              </button>
+            </div>
+          </form>
+          {showArduinoToken ? (
+            <>
+              <div className="w-25 m-auto d-none d-xl-block">
+                <h3 className="gold text-center mt-1">Arduino token</h3>
+                <div className="mt-1 py-1 overflow-hidden gold-border">
+                  <span className="ms-1">{arduinoToken}</span>
                 </div>
               </div>
-            </div>
+              <div className="m-auto px-2 d-xl-none">
+                <h3 className="gold text-center mt-1">Arduino token</h3>
+                <div className="mt-1 py-1 overflow-hidden gold-border">
+                  <span className="ms-1">{arduinoToken}</span>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="w-25 m-auto d-none d-xl-block">
+                <div
+                  className={
+                    showTokenStatus ? "text-center mt-1" : "hidden-field"
+                  }
+                >
+                  <span style={{ color: "white" }}>{tokenStatus}</span>
+                </div>
+                <div className="text-center mt-2">
+                  <button
+                    className="btn btn-primary"
+                    onClick={fetchArduinoToken}
+                  >
+                    Show Arduino token
+                  </button>
+                </div>
+              </div>
+              <div className="m-auto px-2 d-xl-none">
+                <div
+                  className={
+                    showTokenStatus ? "text-center mt-1" : "hidden-field"
+                  }
+                >
+                  <span style={{ color: "white" }}>{tokenStatus}</span>
+                </div>
+                <div className="text-center mt-2">
+                  <button
+                    className="btn btn-primary"
+                    onClick={fetchArduinoToken}
+                  >
+                    Show Arduino token
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
 
-            <img
-              className="plant-image gold-border m-auto mt-1"
-              src={plantImage}
-              alt="Plant"
-            ></img>
-          </div>
-        )}
-        <div className={showImageStatus ? "text-center mt-3" : "hidden-field"}>
-          <span>{imageStatus}</span>
-        </div>
-        <div
-          className={imageModifiable ? "text-center mt-3 mb-1" : "hidden-field"}
-        >
-          <button className="btn btn-primary" type="submit">
-            Apply change
-          </button>
-        </div>
-      </form>
-      {showArduinoToken ? (
-        <>
-          <div className="w-25 m-auto d-none d-xl-block">
-            <h3 className="gold text-center mt-1">Arduino token</h3>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{arduinoToken}</span>
-            </div>
-          </div>
-          <div className="m-auto px-2 d-xl-none">
-            <h3 className="gold text-center mt-1">Arduino token</h3>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{arduinoToken}</span>
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="w-25 m-auto d-none d-xl-block">
-            <div
-              className={showTokenStatus ? "text-center mt-1" : "hidden-field"}
-            >
-              <span style={{ color: "white" }}>{tokenStatus}</span>
-            </div>
-            <div className="text-center mt-2">
-              <button className="btn btn-primary" onClick={fetchArduinoToken}>
-                Show Arduino token
-              </button>
-            </div>
-          </div>
-          <div className="m-auto px-2 d-xl-none">
-            <div
-              className={showTokenStatus ? "text-center mt-1" : "hidden-field"}
-            >
-              <span style={{ color: "white" }}>{tokenStatus}</span>
-            </div>
-            <div className="text-center mt-2">
-              <button className="btn btn-primary" onClick={fetchArduinoToken}>
-                Show Arduino token
-              </button>
-            </div>
-          </div>
-        </>
-      )}
-
-      <h3 className="gold text-center mt-5">Sensor data</h3>
-      <div className="w-50 text-center m-auto d-none d-xl-block gold-border">
-        {typeof displayedReadings === "string" ? (
-          <span style={{ color: "white" }}>{displayedReadings}</span>
-        ) : (
-          <>
-            <div className="overflow-auto">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Time</th>
-                    <th>Temperature</th>
-                    <th>Light intensity</th>
-                    <th>Moisture</th>
-                    <th>Humidity</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {averageReading !== null ? (
-                    <tr key="average">
-                      <td>Average</td>
-                      <td>{averageReading.temp.toFixed(1)} °C</td>
-                      <td>{averageReading.lightIntensity.toFixed(1)}%</td>
-                      <td>{averageReading.moisture.toFixed(1)}%</td>
-                      <td>{averageReading.humidity.toFixed(1)}%</td>
-                    </tr>
-                  ) : null}
-                  {displayedReadings
-                    .slice(9 * (currentPageNumber - 1), 9 * currentPageNumber)
-                    .map((row) => {
-                      return (
-                        <tr key={row.timeStampUTC}>
-                          <td>{getDate(row.timeStampUTC)}</td>
-                          <td>{row.temp.toFixed(1)} °C</td>
-                          <td>{row.lightIntensity.toFixed(1)}%</td>
-                          <td>{row.moisture.toFixed(1)}%</td>
-                          <td>{row.humidity.toFixed(1)}%</td>
+          <h3 className="gold text-center mt-5">Sensor data</h3>
+          <div className="w-50 text-center m-auto d-none d-xl-block gold-border">
+            {typeof displayedReadings === "string" ? (
+              <span style={{ color: "white" }}>{displayedReadings}</span>
+            ) : (
+              <>
+                <div className="overflow-auto">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Time</th>
+                        <th>Temperature</th>
+                        <th>Light intensity</th>
+                        <th>Moisture</th>
+                        <th>Humidity</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {averageReading !== null ? (
+                        <tr key="average">
+                          <td>Average</td>
+                          <td>{averageReading.temp.toFixed(1)} °C</td>
+                          <td>{averageReading.lightIntensity.toFixed(1)}%</td>
+                          <td>{averageReading.moisture.toFixed(1)}%</td>
+                          <td>{averageReading.humidity.toFixed(1)}%</td>
                         </tr>
+                      ) : null}
+                      {displayedReadings
+                        .slice(
+                          9 * (currentPageNumber - 1),
+                          9 * currentPageNumber
+                        )
+                        .map((row) => {
+                          return (
+                            <tr key={row.timeStampUTC}>
+                              <td>{getDate(row.timeStampUTC)}</td>
+                              <td>{row.temp.toFixed(1)} °C</td>
+                              <td>{row.lightIntensity.toFixed(1)}%</td>
+                              <td>{row.moisture.toFixed(1)}%</td>
+                              <td>{row.humidity.toFixed(1)}%</td>
+                            </tr>
+                          );
+                        })}
+                      {9 -
+                        displayedReadings.slice(
+                          9 * (currentPageNumber - 1),
+                          9 * currentPageNumber
+                        ).length >
+                      0
+                        ? [
+                            ...Array(
+                              9 -
+                                displayedReadings.slice(
+                                  9 * (currentPageNumber - 1),
+                                  9 * currentPageNumber
+                                ).length
+                            ).keys(),
+                          ].map((key) => {
+                            return (
+                              <tr key={key}>
+                                <td className="hidden-field">-</td>
+                                <td className="hidden-field">-</td>
+                                <td className="hidden-field">-</td>
+                                <td className="hidden-field">-</td>
+                                <td className="hidden-field">-</td>
+                              </tr>
+                            );
+                          })
+                        : null}
+                    </tbody>
+                  </table>
+                </div>
+                <nav
+                  className="overflow-auto"
+                  style={{ backgroundColor: "transparent" }}
+                >
+                  <ul className="pagination justify-content-center">
+                    <li className="page-item">
+                      <span
+                        className="page-link"
+                        onClick={() => {
+                          pageNavigate(currentPageNumber - 1);
+                        }}
+                      >
+                        Previous
+                      </span>
+                    </li>
+                    {paginationNumbers.map((paginationNumber) => {
+                      return (
+                        <li className="page-item" key={paginationNumber}>
+                          <span
+                            className={
+                              currentPageNumber === paginationNumber
+                                ? "page-link page-link-selected"
+                                : "page-link"
+                            }
+                            onClick={() => {
+                              pageNavigate(paginationNumber);
+                            }}
+                          >
+                            {paginationNumber}
+                          </span>
+                        </li>
                       );
                     })}
-                  {9 -
-                    displayedReadings.slice(
-                      9 * (currentPageNumber - 1),
-                      9 * currentPageNumber
-                    ).length >
-                  0
-                    ? [
-                        ...Array(
-                          9 -
-                            displayedReadings.slice(
-                              9 * (currentPageNumber - 1),
-                              9 * currentPageNumber
-                            ).length
-                        ).keys(),
-                      ].map((key) => {
-                        return (
-                          <tr key={key}>
-                            <td className="hidden-field">-</td>
-                            <td className="hidden-field">-</td>
-                            <td className="hidden-field">-</td>
-                            <td className="hidden-field">-</td>
-                            <td className="hidden-field">-</td>
-                          </tr>
-                        );
-                      })
-                    : null}
-                </tbody>
-              </table>
-            </div>
+                    <li className="page-item">
+                      <span
+                        className="page-link"
+                        onClick={() => {
+                          pageNavigate(currentPageNumber + 1);
+                        }}
+                      >
+                        Next
+                      </span>
+                    </li>
+                  </ul>
+                </nav>
+              </>
+            )}
             <nav
-              className="overflow-auto"
+              className="mt-4 overflow-auto"
               style={{ backgroundColor: "transparent" }}
             >
+              <h4 className="text-center gold">Sample timeframe</h4>
               <ul className="pagination justify-content-center">
                 <li className="page-item">
                   <span
-                    className="page-link"
+                    className={
+                      currentTimeframe === "Hour"
+                        ? "page-link page-link-selected"
+                        : "page-link"
+                    }
                     onClick={() => {
-                      pageNavigate(currentPageNumber - 1);
+                      updateDisplayedReadings("Hour");
                     }}
                   >
-                    Previous
+                    Hour
                   </span>
                 </li>
-                {paginationNumbers.map((paginationNumber) => {
-                  return (
-                    <li className="page-item" key={paginationNumber}>
-                      <span
-                        className={
-                          currentPageNumber === paginationNumber
-                            ? "page-link page-link-selected"
-                            : "page-link"
-                        }
-                        onClick={() => {
-                          pageNavigate(paginationNumber);
-                        }}
-                      >
-                        {paginationNumber}
-                      </span>
-                    </li>
-                  );
-                })}
                 <li className="page-item">
                   <span
-                    className="page-link"
+                    className={
+                      currentTimeframe === "Day"
+                        ? "page-link page-link-selected"
+                        : "page-link"
+                    }
                     onClick={() => {
-                      pageNavigate(currentPageNumber + 1);
+                      updateDisplayedReadings("Day");
                     }}
                   >
-                    Next
+                    Day
+                  </span>
+                </li>
+                <li className="page-item">
+                  <span
+                    className={
+                      currentTimeframe === "Week"
+                        ? "page-link page-link-selected"
+                        : "page-link"
+                    }
+                    onClick={() => {
+                      updateDisplayedReadings("Week");
+                    }}
+                  >
+                    Week
+                  </span>
+                </li>
+                <li className="page-item">
+                  <span
+                    className={
+                      currentTimeframe === "Month"
+                        ? "page-link page-link-selected"
+                        : "page-link"
+                    }
+                    onClick={() => {
+                      updateDisplayedReadings("Month");
+                    }}
+                  >
+                    Month
+                  </span>
+                </li>
+                <li className="page-item">
+                  <span
+                    className={
+                      currentTimeframe === "Year"
+                        ? "page-link page-link-selected"
+                        : "page-link"
+                    }
+                    onClick={() => {
+                      updateDisplayedReadings("Year");
+                    }}
+                  >
+                    Year
+                  </span>
+                </li>
+                <li className="page-item">
+                  <span
+                    className={
+                      currentTimeframe === "All time"
+                        ? "page-link page-link-selected"
+                        : "page-link"
+                    }
+                    onClick={() => {
+                      updateDisplayedReadings("All time");
+                    }}
+                  >
+                    All time
                   </span>
                 </li>
               </ul>
             </nav>
-          </>
-        )}
-        <nav
-          className="mt-4 overflow-auto"
-          style={{ backgroundColor: "transparent" }}
-        >
-          <h4 className="text-center gold">Sample timeframe</h4>
-          <ul className="pagination justify-content-center">
-            <li className="page-item">
-              <span
-                className={
-                  currentTimeframe === "Hour"
-                    ? "page-link page-link-selected"
-                    : "page-link"
-                }
-                onClick={() => {
-                  updateDisplayedReadings("Hour");
-                }}
-              >
-                Hour
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className={
-                  currentTimeframe === "Day"
-                    ? "page-link page-link-selected"
-                    : "page-link"
-                }
-                onClick={() => {
-                  updateDisplayedReadings("Day");
-                }}
-              >
-                Day
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className={
-                  currentTimeframe === "Week"
-                    ? "page-link page-link-selected"
-                    : "page-link"
-                }
-                onClick={() => {
-                  updateDisplayedReadings("Week");
-                }}
-              >
-                Week
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className={
-                  currentTimeframe === "Month"
-                    ? "page-link page-link-selected"
-                    : "page-link"
-                }
-                onClick={() => {
-                  updateDisplayedReadings("Month");
-                }}
-              >
-                Month
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className={
-                  currentTimeframe === "Year"
-                    ? "page-link page-link-selected"
-                    : "page-link"
-                }
-                onClick={() => {
-                  updateDisplayedReadings("Year");
-                }}
-              >
-                Year
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className={
-                  currentTimeframe === "All time"
-                    ? "page-link page-link-selected"
-                    : "page-link"
-                }
-                onClick={() => {
-                  updateDisplayedReadings("All time");
-                }}
-              >
-                All time
-              </span>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div className="m-auto px-2 d-xl-none gold-border">
-        {typeof displayedReadings === "string" ? (
-          <span style={{ color: "white" }}>{displayedReadings}</span>
-        ) : (
-          <>
-            <div className="overflow-auto">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Time</th>
-                    <th>Temperature</th>
-                    <th>Light intensity</th>
-                    <th>Moisture</th>
-                    <th>Humidity</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {averageReading !== null ? (
-                    <tr key="average">
-                      <td>Average</td>
-                      <td>{averageReading.temp.toFixed(1)} °C</td>
-                      <td>{averageReading.lightIntensity.toFixed(1)}%</td>
-                      <td>{averageReading.moisture.toFixed(1)}%</td>
-                      <td>{averageReading.humidity.toFixed(1)}%</td>
-                    </tr>
-                  ) : null}
-                  {displayedReadings
-                    .slice(9 * (currentPageNumber - 1), 9 * currentPageNumber)
-                    .map((row) => {
-                      return (
-                        <tr key={row.timeStampUTC}>
-                          <td>{getDate(row.timeStampUTC)}</td>
-                          <td>{row.temp.toFixed(1)} °C</td>
-                          <td>{row.lightIntensity.toFixed(1)}%</td>
-                          <td>{row.moisture.toFixed(1)}%</td>
-                          <td>{row.humidity.toFixed(1)}%</td>
+          </div>
+          <div className="m-auto px-2 d-xl-none gold-border">
+            {typeof displayedReadings === "string" ? (
+              <span style={{ color: "white" }}>{displayedReadings}</span>
+            ) : (
+              <>
+                <div className="overflow-auto">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Time</th>
+                        <th>Temperature</th>
+                        <th>Light intensity</th>
+                        <th>Moisture</th>
+                        <th>Humidity</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {averageReading !== null ? (
+                        <tr key="average">
+                          <td>Average</td>
+                          <td>{averageReading.temp.toFixed(1)} °C</td>
+                          <td>{averageReading.lightIntensity.toFixed(1)}%</td>
+                          <td>{averageReading.moisture.toFixed(1)}%</td>
+                          <td>{averageReading.humidity.toFixed(1)}%</td>
                         </tr>
+                      ) : null}
+                      {displayedReadings
+                        .slice(
+                          9 * (currentPageNumber - 1),
+                          9 * currentPageNumber
+                        )
+                        .map((row) => {
+                          return (
+                            <tr key={row.timeStampUTC}>
+                              <td>{getDate(row.timeStampUTC)}</td>
+                              <td>{row.temp.toFixed(1)} °C</td>
+                              <td>{row.lightIntensity.toFixed(1)}%</td>
+                              <td>{row.moisture.toFixed(1)}%</td>
+                              <td>{row.humidity.toFixed(1)}%</td>
+                            </tr>
+                          );
+                        })}
+                      {9 -
+                        displayedReadings.slice(
+                          9 * (currentPageNumber - 1),
+                          9 * currentPageNumber
+                        ).length >
+                      0
+                        ? [
+                            ...Array(
+                              9 -
+                                displayedReadings.slice(
+                                  9 * (currentPageNumber - 1),
+                                  9 * currentPageNumber
+                                ).length
+                            ).keys(),
+                          ].map((key) => {
+                            return (
+                              <tr key={key}>
+                                <td className="hidden-field">-</td>
+                                <td className="hidden-field">-</td>
+                                <td className="hidden-field">-</td>
+                                <td className="hidden-field">-</td>
+                                <td className="hidden-field">-</td>
+                              </tr>
+                            );
+                          })
+                        : null}
+                    </tbody>
+                  </table>
+                </div>
+                <nav
+                  className="overflow-auto"
+                  style={{ backgroundColor: "transparent" }}
+                >
+                  <ul className="pagination pagination-sm justify-content-center">
+                    <li className="page-item">
+                      <span
+                        className="page-link"
+                        onClick={() => {
+                          pageNavigate(currentPageNumber - 1);
+                        }}
+                      >
+                        Previous
+                      </span>
+                    </li>
+                    {mobilePaginationNumbers.map((mobilePaginationNumber) => {
+                      return (
+                        <li className="page-item" key={mobilePaginationNumber}>
+                          <span
+                            className={
+                              currentPageNumber === mobilePaginationNumber
+                                ? "page-link page-link-selected"
+                                : "page-link"
+                            }
+                            onClick={() => {
+                              pageNavigate(mobilePaginationNumber);
+                            }}
+                          >
+                            {mobilePaginationNumber}
+                          </span>
+                        </li>
                       );
                     })}
-                  {9 -
-                    displayedReadings.slice(
-                      9 * (currentPageNumber - 1),
-                      9 * currentPageNumber
-                    ).length >
-                  0
-                    ? [
-                        ...Array(
-                          9 -
-                            displayedReadings.slice(
-                              9 * (currentPageNumber - 1),
-                              9 * currentPageNumber
-                            ).length
-                        ).keys(),
-                      ].map((key) => {
-                        return (
-                          <tr key={key}>
-                            <td className="hidden-field">-</td>
-                            <td className="hidden-field">-</td>
-                            <td className="hidden-field">-</td>
-                            <td className="hidden-field">-</td>
-                            <td className="hidden-field">-</td>
-                          </tr>
-                        );
-                      })
-                    : null}
-                </tbody>
-              </table>
-            </div>
+                    <li className="page-item">
+                      <span
+                        className="page-link"
+                        onClick={() => {
+                          pageNavigate(currentPageNumber + 1);
+                        }}
+                      >
+                        Next
+                      </span>
+                    </li>
+                  </ul>
+                </nav>
+              </>
+            )}
             <nav
-              className="overflow-auto"
+              className="mt-4 overflow-auto"
               style={{ backgroundColor: "transparent" }}
             >
+              <h4 className="text-center gold">Sample timeframe</h4>
               <ul className="pagination pagination-sm justify-content-center">
                 <li className="page-item">
                   <span
-                    className="page-link"
+                    className={
+                      currentTimeframe === "Hour"
+                        ? "page-link page-link-selected"
+                        : "page-link"
+                    }
                     onClick={() => {
-                      pageNavigate(currentPageNumber - 1);
+                      updateDisplayedReadings("Hour");
                     }}
                   >
-                    Previous
+                    Hour
                   </span>
                 </li>
-                {mobilePaginationNumbers.map((mobilePaginationNumber) => {
-                  return (
-                    <li className="page-item" key={mobilePaginationNumber}>
-                      <span
-                        className={
-                          currentPageNumber === mobilePaginationNumber
-                            ? "page-link page-link-selected"
-                            : "page-link"
-                        }
-                        onClick={() => {
-                          pageNavigate(mobilePaginationNumber);
-                        }}
-                      >
-                        {mobilePaginationNumber}
-                      </span>
-                    </li>
-                  );
-                })}
                 <li className="page-item">
                   <span
-                    className="page-link"
+                    className={
+                      currentTimeframe === "Day"
+                        ? "page-link page-link-selected"
+                        : "page-link"
+                    }
                     onClick={() => {
-                      pageNavigate(currentPageNumber + 1);
+                      updateDisplayedReadings("Day");
                     }}
                   >
-                    Next
+                    Day
+                  </span>
+                </li>
+                <li className="page-item">
+                  <span
+                    className={
+                      currentTimeframe === "Week"
+                        ? "page-link page-link-selected"
+                        : "page-link"
+                    }
+                    onClick={() => {
+                      updateDisplayedReadings("Week");
+                    }}
+                  >
+                    Week
+                  </span>
+                </li>
+                <li className="page-item">
+                  <span
+                    className={
+                      currentTimeframe === "Month"
+                        ? "page-link page-link-selected"
+                        : "page-link"
+                    }
+                    onClick={() => {
+                      updateDisplayedReadings("Month");
+                    }}
+                  >
+                    Month
+                  </span>
+                </li>
+                <li className="page-item">
+                  <span
+                    className={
+                      currentTimeframe === "Year"
+                        ? "page-link page-link-selected"
+                        : "page-link"
+                    }
+                    onClick={() => {
+                      updateDisplayedReadings("Year");
+                    }}
+                  >
+                    Year
+                  </span>
+                </li>
+                <li className="page-item">
+                  <span
+                    className={
+                      currentTimeframe === "All time"
+                        ? "page-link page-link-selected"
+                        : "page-link"
+                    }
+                    onClick={() => {
+                      updateDisplayedReadings("All time");
+                    }}
+                  >
+                    All time
                   </span>
                 </li>
               </ul>
             </nav>
-          </>
-        )}
-        <nav
-          className="mt-4 overflow-auto"
-          style={{ backgroundColor: "transparent" }}
-        >
-          <h4 className="text-center gold">Sample timeframe</h4>
-          <ul className="pagination pagination-sm justify-content-center">
-            <li className="page-item">
-              <span
-                className={
-                  currentTimeframe === "Hour"
-                    ? "page-link page-link-selected"
-                    : "page-link"
-                }
-                onClick={() => {
-                  updateDisplayedReadings("Hour");
-                }}
-              >
-                Hour
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className={
-                  currentTimeframe === "Day"
-                    ? "page-link page-link-selected"
-                    : "page-link"
-                }
-                onClick={() => {
-                  updateDisplayedReadings("Day");
-                }}
-              >
-                Day
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className={
-                  currentTimeframe === "Week"
-                    ? "page-link page-link-selected"
-                    : "page-link"
-                }
-                onClick={() => {
-                  updateDisplayedReadings("Week");
-                }}
-              >
-                Week
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className={
-                  currentTimeframe === "Month"
-                    ? "page-link page-link-selected"
-                    : "page-link"
-                }
-                onClick={() => {
-                  updateDisplayedReadings("Month");
-                }}
-              >
-                Month
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className={
-                  currentTimeframe === "Year"
-                    ? "page-link page-link-selected"
-                    : "page-link"
-                }
-                onClick={() => {
-                  updateDisplayedReadings("Year");
-                }}
-              >
-                Year
-              </span>
-            </li>
-            <li className="page-item">
-              <span
-                className={
-                  currentTimeframe === "All time"
-                    ? "page-link page-link-selected"
-                    : "page-link"
-                }
-                onClick={() => {
-                  updateDisplayedReadings("All time");
-                }}
-              >
-                All time
-              </span>
-            </li>
-          </ul>
-        </nav>
-      </div>
+          </div>
+        </>
+      ) : (
+        <div className="text-center" style={{ color: "white" }}>
+          Loading plant...
+        </div>
+      )}
     </section>
   );
 }
