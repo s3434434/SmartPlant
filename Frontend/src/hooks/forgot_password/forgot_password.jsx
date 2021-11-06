@@ -110,7 +110,7 @@ export default function ForgotPassword(props) {
             <span>{status}</span>
           </div>
         )}
-        <div className="text-center mt-3">
+        <div className="text-center mt-3 mb-2">
           <button className="btn btn-primary" type="submit">
             Reset password
           </button>

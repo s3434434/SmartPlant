@@ -30,7 +30,12 @@ export default function ConfirmEmail(props) {
       <div className="text-center mt-3" style={{ color: "white" }}>
         Your email has been confirmed successfully.
       </div>
-      <div className="text-center mt-3">
+      <div className="text-center mt-3 d-none d-xl-block">
+        <Link key="login" to="/login">
+          <button className="btn btn-primary">Login</button>
+        </Link>
+      </div>
+      <div className="text-center mt-3 mb-2 d-xl-none">
         <Link key="login" to="/login">
           <button className="btn btn-primary">Login</button>
         </Link>
