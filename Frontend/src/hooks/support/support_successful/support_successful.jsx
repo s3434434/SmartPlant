@@ -4,7 +4,7 @@ import "./support_successful.css";
 
 export default function SupportSuccessful(props) {
   useEffect(() => {
-    document.title = "Support successful | Demeter - The plant meter";
+    document.title = "Support email sent | Demeter - The plant meter";
     // eslint-disable-next-line
   }, []);
 

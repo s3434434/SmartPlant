@@ -48,12 +48,21 @@ export default function Support(props) {
         })
         .catch((err) => {
           let errorMessage = "Server error. Please try again later.";
-          console.log(JSON.stringify(err.response.data));
+          const errors = err.response.data.errors;
+
+          if (errors.EmailSubject !== undefined) {
+            errorMessage = errors.EmailSubject[0];
+          } else if (errors.EmailBody !== undefined) {
+            errorMessage = errors.EmailBody[0];
+          }
+
           setStatus(errorMessage);
         });
     } else {
-      console.log("Not logged in somehow?... ");
-      window.location.pathname = "/";
+      setStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
     }
   };
 
