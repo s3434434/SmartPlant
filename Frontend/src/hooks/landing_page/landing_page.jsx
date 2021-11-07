@@ -31,7 +31,7 @@ export default function LandingPage(props) {
         <p>
           But taking care of a plant is not as easy as it sounds. Many plants
           grow poorly or die due to overwatering, underwatering, too much or too
-          little light, being exposed to extreme temperatures, and being in an
+          little light, being exposed to extreme temperatures, or being in an
           environment with inappropriate humidity. Demeter facilitates the
           proper care and nurturing of indoor plants by tracking these
           environmental factors and providing information on plant health.
@@ -42,10 +42,10 @@ export default function LandingPage(props) {
           alt="Plants page"
         />
         <p>
-          Demeter connects to an Arduino microprocessor connected to four
-          environment sensors (temperature, humidity, light, and moisture
-          content). These sensors' data is collected and presented to the user
-          in an easy to view manner via a mobile friendly web application.
+          Demeter connects to an Arduino microprocessor with four environmental
+          sensors (temperature, light, moisture content and humidity). These
+          sensors collect data and present it to you in an easy to view manner
+          via a mobile friendly web application.
         </p>
         <img
           className="landing-image m-auto mb-3"
@@ -53,9 +53,8 @@ export default function LandingPage(props) {
           alt="Sensor data"
         />
         <p>
-          Our administrative team are also available to help you gain an insight
-          to your plant’s physical environment, and will provide you with advice
-          and support whenever you need it.
+          Our administrative team are available to help you gain insights into
+          using Demeter, and will provide you with support whenever you need it.
         </p>
         <img
           className="landing-image m-auto mb-3"
@@ -83,7 +82,7 @@ export default function LandingPage(props) {
         <p>
           But taking care of a plant is not as easy as it sounds. Many plants
           grow poorly or die due to overwatering, underwatering, too much or too
-          little light, being exposed to extreme temperatures, and being in an
+          little light, being exposed to extreme temperatures, or being in an
           environment with inappropriate humidity. Demeter facilitates the
           proper care and nurturing of indoor plants by tracking these
           environmental factors and providing information on plant health.
@@ -94,10 +93,10 @@ export default function LandingPage(props) {
           alt="Plants page"
         />
         <p>
-          Demeter connects to an Arduino microprocessor connected to four
-          environment sensors (temperature, humidity, light, and moisture
-          content). These sensors' data is collected and presented to the user
-          in an easy to view manner via a mobile friendly web application.
+          Demeter connects to an Arduino microprocessor with four environmental
+          sensors (temperature, light, moisture content and humidity). These
+          sensors collect data and present it to you in an easy to view manner
+          via a mobile friendly web application.
         </p>
         <img
           className="landing-image m-auto mb-3"
@@ -105,9 +104,8 @@ export default function LandingPage(props) {
           alt="Sensor data"
         />
         <p>
-          Our administrative team are also available to help you gain an insight
-          to your plant’s physical environment, and will provide you with advice
-          and support whenever you need it.
+          Our administrative team are available to help you gain insights into
+          using Demeter, and will provide you with support whenever you need it.
         </p>
         <img
           className="landing-image m-auto mb-3"
