@@ -116,7 +116,7 @@ export default function LandingPage(props) {
           It's time to get your plants happier and healthier!
         </p>
       </div>
-      <div className="text-center mt-4 d-none d-xl-block">
+      <div className="text-center mt-5 d-none d-xl-block">
         <Link className="me-1" key="login" to="/login">
           <button className="btn btn-primary">Login</button>
         </Link>
@@ -124,7 +124,7 @@ export default function LandingPage(props) {
           <button className="btn btn-primary">Register</button>
         </Link>
       </div>
-      <div className="text-center mt-4 mb-2 d-xl-none">
+      <div className="text-center mt-5 mb-2 d-xl-none">
         <Link className="me-1" key="login" to="/login">
           <button className="btn btn-primary">Login</button>
         </Link>
