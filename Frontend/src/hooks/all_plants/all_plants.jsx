@@ -80,6 +80,7 @@ export default function AllPlants(props) {
           itemTitle1="name"
           itemTitle2="plantType"
           path="plant"
+          wideView={props.wideView}
         ></Pagination>
       )}
     </section>

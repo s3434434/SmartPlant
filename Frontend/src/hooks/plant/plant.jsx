@@ -7,7 +7,7 @@ import container_no_image from "../../assets/images/container_no_image.png";
 import "./plant.css";
 
 export default function Plant(props) {
-  const { getLogin } = props;
+  const { getLogin, wideView } = props;
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
 
   const [form, setForm] = useState({
@@ -421,7 +421,7 @@ export default function Plant(props) {
           </div>
 
           <form
-            className="m-auto d-none d-xl-block"
+            className={wideView ? "m-auto" : "m-auto px-2"}
             onSubmit={(e) => {
               handleSubmit(e, setNameStatus, setShowNameStatus);
             }}

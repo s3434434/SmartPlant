@@ -89,6 +89,7 @@ export default function AllPlantsAdmin(props) {
           itemTitle1="name"
           itemTitle2="email"
           path="plant-admin"
+          wideView={props.wideView}
         ></Pagination>
       )}
     </section>

@@ -12,6 +12,7 @@ export default function Pagination(props) {
     itemTitle1,
     itemTitle2,
     path,
+    wideView,
   } = props;
   const [currentPageNumber, setCurrentPageNumber] = useState(1),
     [paginationNumbers, setPaginationNumbers] = useState([]),
@@ -82,292 +83,167 @@ export default function Pagination(props) {
   };
 
   return (
-    <>
-      <div className="w-50 m-auto d-none d-xl-block overflow-auto">
-        <div className="overflow-auto">
-          <table className="table">
-            <thead>
-              <tr>
-                {defaultImage !== null ? (
-                  <th>
-                    <img
-                      src={container_no_image}
-                      alt="Header spacer"
-                      style={{ opacity: 0 }}
-                    ></img>
-                  </th>
-                ) : null}
-                <th className={defaultImage !== null ? "text-center" : ""}>
-                  <h3>{heading1}</h3>
+    <div className={wideView ? "w-50 m-auto overflow-auto" : "m-auto"}>
+      <div className="overflow-auto">
+        <table className="table">
+          <thead>
+            <tr>
+              {defaultImage !== null ? (
+                <th>
+                  <img
+                    src={container_no_image}
+                    alt="Header spacer"
+                    style={{ opacity: 0 }}
+                  ></img>
                 </th>
-                <th className={defaultImage !== null ? "text-center" : ""}>
-                  <h3>{heading2}</h3>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {items
-                .slice(10 * (currentPageNumber - 1), 10 * currentPageNumber)
-                .map((item) => {
-                  const id = item[itemID],
-                    title1 = item[itemTitle1],
-                    title2 = item[itemTitle2];
-                  let image = defaultImage;
-                  if (item.imgurURL !== undefined) {
-                    if (item.imgurURL !== null) {
-                      image = item.imgurURL;
-                    }
+              ) : null}
+              <th className={defaultImage !== null ? "text-center" : ""}>
+                {wideView ? <h3>{heading1}</h3> : <h4>{heading1}</h4>}
+              </th>
+              <th className={defaultImage !== null ? "text-center" : ""}>
+                {wideView ? <h3>{heading2}</h3> : <h4>{heading2}</h4>}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {items
+              .slice(10 * (currentPageNumber - 1), 10 * currentPageNumber)
+              .map((item) => {
+                const id = item[itemID],
+                  title1 = item[itemTitle1],
+                  title2 = item[itemTitle2];
+                let image = defaultImage;
+                if (item.imgurURL !== undefined) {
+                  if (item.imgurURL !== null) {
+                    image = item.imgurURL;
                   }
+                }
 
-                  return (
-                    <tr
-                      key={id}
-                      className="pagination-tr"
-                      onClick={(e) => {
-                        window.location.pathname = `/${path}/${id}`;
-                      }}
-                      style={{ cursor: "pointer" }}
+                return (
+                  <tr
+                    key={id}
+                    className="pagination-tr"
+                    onClick={(e) => {
+                      window.location.pathname = `/${path}/${id}`;
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {defaultImage !== null ? (
+                      <td className="align-middle">
+                        <img
+                          id={`${id}-image`}
+                          src={image}
+                          alt={id}
+                          style={{
+                            cursor: "pointer",
+                          }}
+                        ></img>
+                      </td>
+                    ) : null}
+                    <td
+                      className={
+                        defaultImage !== null
+                          ? "align-middle text-center"
+                          : "align-middle"
+                      }
                     >
-                      {defaultImage !== null ? (
-                        <td className="align-middle">
-                          <img
-                            id={`${id}-image`}
-                            src={image}
-                            alt={id}
-                            style={{
-                              cursor: "pointer",
-                            }}
-                          ></img>
-                        </td>
-                      ) : null}
-                      <td
-                        className={
-                          defaultImage !== null
-                            ? "align-middle text-center"
-                            : "align-middle"
-                        }
-                      >
+                      {wideView ? (
                         <h4 style={{ cursor: "pointer" }}>{title1}</h4>
-                      </td>
-                      <td
-                        className={
-                          defaultImage !== null
-                            ? "align-middle text-center"
-                            : "align-middle"
-                        }
-                      >
-                        <h4 style={{ cursor: "pointer" }}>{title2}</h4>
-                      </td>
-                    </tr>
-                  );
-                })}
-              {10 -
-                items.slice(
-                  10 * (currentPageNumber - 1),
-                  10 * currentPageNumber
-                ).length >
-              0
-                ? [
-                    ...Array(
-                      10 -
-                        items.slice(
-                          10 * (currentPageNumber - 1),
-                          10 * currentPageNumber
-                        ).length
-                    ).keys(),
-                  ].map((key) => {
-                    return (
-                      <tr key={key}>
-                        {defaultImage !== null ? (
-                          <td className="align-middle hidden-field">
-                            <img
-                              src={container_no_image}
-                              alt={`${key}-placeholder}`}
-                            ></img>
-                          </td>
-                        ) : null}
-                        <td className="hidden-field">-</td>
-                        <td className="hidden-field">-</td>
-                      </tr>
-                    );
-                  })
-                : null}
-            </tbody>
-          </table>
-        </div>
-        <nav
-          className="w-50 m-auto overflow-auto"
-          style={{ backgroundColor: "transparent" }}
-        >
-          <ul className="pagination justify-content-center">
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  pageNavigate(currentPageNumber - 1);
-                }}
-              >
-                Previous
-              </span>
-            </li>
-            {paginationNumbers.map((paginationNumber) => {
-              return (
-                <li className="page-item" key={paginationNumber}>
-                  <span
-                    className={
-                      currentPageNumber === paginationNumber
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      pageNavigate(paginationNumber);
-                    }}
-                  >
-                    {paginationNumber}
-                  </span>
-                </li>
-              );
-            })}
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  pageNavigate(currentPageNumber + 1);
-                }}
-              >
-                Next
-              </span>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div className="m-auto d-xl-none">
-        <div className="overflow-auto">
-          <table className="table">
-            <thead>
-              <tr>
-                {defaultImage !== null ? (
-                  <th>
-                    <img
-                      src={container_no_image}
-                      alt="Header spacer"
-                      style={{ opacity: 0 }}
-                    ></img>
-                  </th>
-                ) : null}
-                <th className={defaultImage !== null ? "text-center" : ""}>
-                  <h4>{heading1}</h4>
-                </th>
-                <th className={defaultImage !== null ? "text-center" : ""}>
-                  <h4>{heading2}</h4>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {items
-                .slice(10 * (currentPageNumber - 1), 10 * currentPageNumber)
-                .map((item) => {
-                  const id = item[itemID],
-                    title1 = item[itemTitle1],
-                    title2 = item[itemTitle2];
-                  let image = defaultImage;
-                  if (item.imgurURL !== undefined) {
-                    if (item.imgurURL !== null) {
-                      image = item.imgurURL;
-                    }
-                  }
-
-                  return (
-                    <tr
-                      key={id}
-                      className="pagination-tr"
-                      onClick={(e) => {
-                        window.location.pathname = `/${path}/${id}`;
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      {defaultImage !== null ? (
-                        <td className="align-middle">
-                          <img
-                            id={`${id}-image`}
-                            src={image}
-                            alt={id}
-                            style={{
-                              cursor: "pointer",
-                            }}
-                          ></img>
-                        </td>
-                      ) : null}
-                      <td
-                        className={
-                          defaultImage !== null
-                            ? "align-middle text-center"
-                            : "align-middle"
-                        }
-                      >
+                      ) : (
                         <h5 style={{ cursor: "pointer" }}>{title1}</h5>
-                      </td>
-                      <td
-                        className={
-                          defaultImage !== null
-                            ? "align-middle text-center"
-                            : "align-middle"
-                        }
-                      >
+                      )}
+                    </td>
+                    <td
+                      className={
+                        defaultImage !== null
+                          ? "align-middle text-center"
+                          : "align-middle"
+                      }
+                    >
+                      {wideView ? (
+                        <h4 style={{ cursor: "pointer" }}>{title2}</h4>
+                      ) : (
                         <h5 style={{ cursor: "pointer" }}>{title2}</h5>
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </div>
-        <nav
-          className="m-auto overflow-auto"
-          style={{ backgroundColor: "transparent" }}
-        >
-          <ul className="pagination justify-content-center">
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  pageNavigate(currentPageNumber - 1);
-                }}
-              >
-                Previous
-              </span>
-            </li>
-            {paginationNumbers.map((paginationNumber) => {
-              return (
-                <li className="page-item" key={paginationNumber}>
-                  <span
-                    className={
-                      currentPageNumber === paginationNumber
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      pageNavigate(paginationNumber);
-                    }}
-                  >
-                    {paginationNumber}
-                  </span>
-                </li>
-              );
-            })}
-            <li className="page-item">
-              <span
-                className="page-link"
-                onClick={() => {
-                  pageNavigate(currentPageNumber + 1);
-                }}
-              >
-                Next
-              </span>
-            </li>
-          </ul>
-        </nav>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
       </div>
-    </>
+      <nav
+        className={
+          wideView ? "w-50 m-auto overflow-auto" : "m-auto overflow-auto"
+        }
+        style={{ backgroundColor: "transparent" }}
+      >
+        <ul
+          className={
+            wideView
+              ? "pagination justify-content-center"
+              : "pagination pagination-sm justify-content-center"
+          }
+        >
+          <li className="page-item">
+            <span
+              className="page-link"
+              onClick={() => {
+                pageNavigate(currentPageNumber - 1);
+              }}
+            >
+              Previous
+            </span>
+          </li>
+          {wideView
+            ? paginationNumbers.map((paginationNumber) => {
+                return (
+                  <li className="page-item" key={paginationNumber}>
+                    <span
+                      className={
+                        currentPageNumber === paginationNumber
+                          ? "page-link page-link-selected"
+                          : "page-link"
+                      }
+                      onClick={() => {
+                        pageNavigate(paginationNumber);
+                      }}
+                    >
+                      {paginationNumber}
+                    </span>
+                  </li>
+                );
+              })
+            : mobilePaginationNumbers.map((mobilePaginationNumber) => {
+                return (
+                  <li className="page-item" key={mobilePaginationNumber}>
+                    <span
+                      className={
+                        currentPageNumber === mobilePaginationNumber
+                          ? "page-link page-link-selected"
+                          : "page-link"
+                      }
+                      onClick={() => {
+                        pageNavigate(mobilePaginationNumber);
+                      }}
+                    >
+                      {mobilePaginationNumber}
+                    </span>
+                  </li>
+                );
+              })}
+          <li className="page-item">
+            <span
+              className="page-link"
+              onClick={() => {
+                pageNavigate(currentPageNumber + 1);
+              }}
+            >
+              Next
+            </span>
+          </li>
+        </ul>
+      </nav>
+    </div>
   );
 }
