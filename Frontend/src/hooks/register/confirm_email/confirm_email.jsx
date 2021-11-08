@@ -21,8 +21,8 @@ export default function ConfirmEmail(props) {
         token: token,
       }
     ).catch((err) => {
-      let errorMessage = "Server error. Please try again later.";
-      const errors = err.response.data.errors;
+      //let errorMessage = "Server error. Please try again later.";
+      //const errors = err.response.data.errors;
       console.log(err.response.data.errors);
 
       //setStatus(errorMessage);
