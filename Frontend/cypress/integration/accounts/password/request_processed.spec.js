@@ -11,14 +11,14 @@ describe('Request processed page', () => {
     it('Displays required fields', () => {
 
         cy.visit(route)
-        cy.get('.gold.text-center').should('have.text', 'Request processed')
-        cy.get('.btn').should('have.text', 'Home')
+        cy.get('section > .gold').should('have.text', 'Request processed')
+        cy.get('.mb-2 > a > .btn').should('have.text', 'Home')
 
     })
 
     it('Redirects use to the landing page when home button clicked', () => {
 
-        cy.get('.btn').click()
+        cy.get('.mb-2 > a > .btn').click()
         cy.url().should('be.equal', Cypress.config("baseUrl") + '/landing')
     })
 })

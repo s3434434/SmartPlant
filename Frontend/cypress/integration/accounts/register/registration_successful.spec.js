@@ -18,7 +18,7 @@ describe('Registration successful page', () => {
     it('Redirects user to login page when login button is clicked', () => {
 
         cy.visit(route)
-        cy.get('.btn').click()
+        cy.get('.mb-2 > a > .btn').click()
         cy.url().should('be.equal', Cypress.config("baseUrl") + '/landing')
     })
 })
