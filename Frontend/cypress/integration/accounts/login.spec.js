@@ -24,4 +24,14 @@ describe('Login page', () => {
         cy.get('input:invalid').should('have.length', 4)
 
     })
+
+    it('Redirects user to the Plants page when correct credentials are entered', () => {
+
+        cy.visit(route)
+        cy.get('.px-2 > [name="email"]').type('user')
+        cy.get('.px-2 > [name="password"]').type('user')
+        cy.get('.px-2 > .text-center > .btn').click();
+
+        cy.url().should('be.equal', Cypress.config("baseUrl") + '/plants')
+    })
 })
