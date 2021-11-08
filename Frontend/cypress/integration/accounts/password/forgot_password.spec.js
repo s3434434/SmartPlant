@@ -29,8 +29,8 @@ describe('Forgot password page', () => {
     it('Redirects use to the request processed page when reset password button clicked', () => {
 
         cy.visit(route)
-        cy.get('input[name="email"]').first().type('test@email.com')
-        cy.get('.w-25 > .text-center > .btn').click()
+        cy.get('.px-2 > .form-control').type('test@email.com')
+        cy.get('.px-2 > .text-center > .btn').click()
         cy.url().should('be.equal', Cypress.config("baseUrl") + '/request-processed')
     })
 })

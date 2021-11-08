@@ -4,10 +4,9 @@ namespace SmartPlant.Models.API_Model.Account
 {
     public class UpdateEmailDto
     {
-        [DataType(DataType.EmailAddress)]
-        [Required(ErrorMessage = "Email required.")]
+        [MaxLength(256), EmailAddress, Required(ErrorMessage = "Email required.")]
         public string Email { get; set; }
-        [Compare("Email", ErrorMessage = "Emails do not match.")]
+        [EmailAddress, Compare("Email", ErrorMessage = "Emails do not match.")]
         public string ConfirmEmail { get; set; }
     }
 }

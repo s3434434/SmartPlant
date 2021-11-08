@@ -42,13 +42,15 @@ namespace SmartPlant.Models.DataManager
         }
         public async Task<RegistrationResponseDto> Register(ApplicationUser user, UserRegistrationDto userRegDto)
         {
+            user.PhoneNumber = user.PhoneNumber?.Length > 0 ? user.PhoneNumber : null;
+
             var result = await _userManager.CreateAsync(user, userRegDto.Password);
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);
-                var errorDictionary = new Dictionary<string, string>();
+                var errorDictionary = new Dictionary<string, List<String>>();
 
-                errors.ToList().ForEach(e => errorDictionary.Add(Regex.Match(e, @"^([\w\-]+)").Value, e));
+                errors.ToList().ForEach(e => errorDictionary.Add(Regex.Match(e, @"^([\w\-]+)").Value, new List<string> { e }));
 
                 return new RegistrationResponseDto
                 {
@@ -65,8 +67,9 @@ namespace SmartPlant.Models.DataManager
                 { "email", user.Email }
             };
 
-            var content = QueryHelpers.AddQueryString(userRegDto.ClientURI, queryString);
-            var message = new Message(new string[] { user.Email }, "SmartPlant - Confirm Your Email", content);
+            var content = $"Thank you for registering for Demeter!\n\n\n" +
+                          $"Please click on the following link to confirm your email and activate your account.\n\n{QueryHelpers.AddQueryString(userRegDto.ClientURI, queryString)}";
+            var message = new Message(new string[] { user.Email }, "Demeter SmartPlant - Confirm Your Email", content);
             await _emailSender.SendEmailAsync(message);
 
             await _userManager.AddToRoleAsync(user, UserRoles.User);
@@ -74,7 +77,7 @@ namespace SmartPlant.Models.DataManager
             return new RegistrationResponseDto
             {
                 isSuccessfulRegistration = true,
-                Errors = new Dictionary<string, string>() { { "The token is added here for easier testing", token } }
+                Errors = new Dictionary<string, List<string>>() { { "The token is added here for easier testing", new List<string> { token } } }
             };
 
         }
@@ -82,27 +85,34 @@ namespace SmartPlant.Models.DataManager
         public async Task<IdentityResult> ConfirmEmail(ApplicationUser user, string token)
         {
             return await _userManager.ConfirmEmailAsync(user, token);
-
-            /*if (!result.Succeeded)
-            {
-                return false;
-            }
-
-            return true;*/
         }
 
         public async Task<AuthResponseDto> Login(UserForAuthenticationDto loginUser)
         {
             var user = await _userManager.FindByEmailAsync(loginUser.Email);
 
-            //if user doens't exist or password is incorrect
+            //if user doesn't exist or password is incorrect
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginUser.Password))
             {
-                return (new AuthResponseDto { IsAuthSuccessful = false, ErrorMessage = "Incorrect Login Details" });
+                return (new AuthResponseDto
+                {
+                    IsAuthSuccessful = false,
+                    errors = new Dictionary<string, List<string>>
+                    {
+                        {"Login Details", new List<string>{"Incorrect Login Details"} }
+                    }
+                });
             }
             if (!await _userManager.IsEmailConfirmedAsync(user)) // if the user hasn't confirmed their email
             {
-                return (new AuthResponseDto { IsAuthSuccessful = false, ErrorMessage = "Email is not confirmed" });
+                return (new AuthResponseDto
+                {
+                    IsAuthSuccessful = false,
+                    errors = new Dictionary<string, List<string>>
+                    {
+                        {"Email", new List<string> {"Email is not confirmed"}}
+                    }
+                });
             }
 
             var signingCredentials = _jwtHandler.GetSigningCredentials();
@@ -131,8 +141,11 @@ namespace SmartPlant.Models.DataManager
                 { "email", user.Email }
             };
 
-            var content = QueryHelpers.AddQueryString(passwordDto.ClientURI, queryString);
-            var message = new Message(new string[] { user.Email }, "SmartPlant - Reset Your Password", content);
+            var content = $"Hello {user.Email}!\n\n" +
+                          $"Please click on the following link to reset your password\n\n" +
+                          $"{QueryHelpers.AddQueryString(passwordDto.ClientURI, queryString)}\n\n" +
+                          $"If you did not request to reset your password, your account may have been compromised. We suggest you change all your passwords immediately.";
+            var message = new Message(new string[] { user.Email }, "Demeter SmartPlant - Reset Your Password", content);
             await _emailSender.SendEmailAsync(message);
 
             //return true;
@@ -205,7 +218,6 @@ namespace SmartPlant.Models.DataManager
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Address = user.Address,
                 PhoneNumber = user.PhoneNumber
             };
             return details;
@@ -222,12 +234,9 @@ namespace SmartPlant.Models.DataManager
 
             user.FirstName = details.FirstName;
             user.LastName = details.LastName;
-            user.Address = details.Address;
-            user.PhoneNumber = details.PhoneNumber;
+            user.PhoneNumber = details.PhoneNumber?.Length > 0 ? details.PhoneNumber : null;
 
-            await _userManager.UpdateAsync(user);
-
-            return IdentityResult.Success;
+            return await _userManager.UpdateAsync(user);
         }
 
         public async Task<IdentityResult> UpdateEmail(string userID, UpdateEmailDto emailDto)
@@ -235,25 +244,23 @@ namespace SmartPlant.Models.DataManager
             var id_user = await _userManager.FindByIdAsync(userID);
 
             if (id_user == null)
-                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
+                return IdentityResult.Failed(new IdentityError() { Code = "NotFound", Description = "User not found." });
 
             var email_user = await _userManager.FindByEmailAsync(emailDto.Email);
 
             if (email_user != null)
             {
                 if (email_user.Id == id_user.Id)
-                    return IdentityResult.Failed(new IdentityError() { Code = "2", Description = "New email is the same as existing email." });
+                    return IdentityResult.Failed(new IdentityError() { Code = "Same", Description = "New email is the same as existing email." });
 
                 if (email_user.Id != id_user.Id)
-                    return IdentityResult.Failed(new IdentityError() { Code = "1", Description = "Email already in use." });
+                    return IdentityResult.Failed(new IdentityError() { Code = "Exists", Description = "Email already in use." });
             }
 
             id_user.Email = emailDto.Email;
             id_user.UserName = emailDto.Email;
 
-            await _userManager.UpdateAsync(id_user);
-
-            return IdentityResult.Success;
+            return await _userManager.UpdateAsync(id_user);
 
             /* _userManager.GenerateChangeEmailTokenAsync
              * 
@@ -280,13 +287,25 @@ namespace SmartPlant.Models.DataManager
 
             if (user == null)
             {
-                return IdentityResult.Failed(new IdentityError() { Code = "0", Description = "User not found." });
+                return IdentityResult.Failed(new IdentityError() { Code = "NotFound", Description = "User not found." });
             }
 
             var result = await _userManager.ChangePasswordAsync(user, passwordDto.OldPassword, passwordDto.NewPassword);
             return result;
         }
 
+        public async Task<string> GetCurrentUserRole(string userID)
+        {
+            var user = await _userManager.FindByIdAsync(userID);
+            if (user != null)
+            {
+                var result = await _userManager.GetRolesAsync(user);
+
+                return result[0]; //in this program a user should only have one role.
+            }
+
+            return "";
+        }
 
         /* 
          * ADMIN ROLE REQUIRED ENDPOINTS
@@ -337,8 +356,7 @@ namespace SmartPlant.Models.DataManager
             user.FirstName = detailsDto.FirstName;
             user.LastName = detailsDto.LastName;
             user.Email = detailsDto.Email;
-            user.Address = detailsDto.Address;
-            user.PhoneNumber = detailsDto.PhoneNumber;
+            user.PhoneNumber = detailsDto.PhoneNumber?.Length > 0 ? detailsDto.PhoneNumber : null;
 
             var result = await _userManager.UpdateAsync(user);
 

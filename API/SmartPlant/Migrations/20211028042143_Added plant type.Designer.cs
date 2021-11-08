@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartPlant.Data;
 
 namespace SmartPlant.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211028042143_Added plant type")]
+    partial class Addedplanttype
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,7 +243,6 @@ namespace SmartPlant.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("PlantType")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -269,24 +270,6 @@ namespace SmartPlant.Migrations
                     b.HasKey("PlantID");
 
                     b.ToTable("PlantTokens");
-                });
-
-            modelBuilder.Entity("SmartPlant.Models.Repository.PlantImage", b =>
-                {
-                    b.Property<string>("PlantID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("DeleteHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageURL")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PlantID");
-
-                    b.ToTable("PlantImages");
                 });
 
             modelBuilder.Entity("SmartPlant.Models.SensorData", b =>
@@ -409,17 +392,6 @@ namespace SmartPlant.Migrations
                     b.Navigation("Plant");
                 });
 
-            modelBuilder.Entity("SmartPlant.Models.Repository.PlantImage", b =>
-                {
-                    b.HasOne("SmartPlant.Models.Plant", "Plant")
-                        .WithOne("Image")
-                        .HasForeignKey("SmartPlant.Models.Repository.PlantImage", "PlantID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Plant");
-                });
-
             modelBuilder.Entity("SmartPlant.Models.SensorData", b =>
                 {
                     b.HasOne("SmartPlant.Models.Plant", "Plant")
@@ -438,8 +410,6 @@ namespace SmartPlant.Migrations
 
             modelBuilder.Entity("SmartPlant.Models.Plant", b =>
                 {
-                    b.Navigation("Image");
-
                     b.Navigation("Token");
                 });
 #pragma warning restore 612, 618

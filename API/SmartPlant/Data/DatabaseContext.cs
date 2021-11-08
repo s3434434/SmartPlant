@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SmartPlant.Models;
+using SmartPlant.Models.Repository;
 
 namespace SmartPlant.Data
 {
@@ -13,12 +14,19 @@ namespace SmartPlant.Data
         public DbSet<Plant> Plants { get; set; }
         public DbSet<SensorData> SensorData { get; set; }
         public DbSet<PlantToken> PlantTokens { get; set; }
+        public DbSet<PlantImage> PlantImages { get; set; }
 
 
         //fluent api
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            //
+            builder.Entity<ApplicationUser>()
+                .HasCheckConstraint("CH_User_PhoneNumber", "len(PhoneNumber) = 10")
+                .HasCheckConstraint("CH_User_FirstName", "len(FirstName) <= 50")
+                .HasCheckConstraint("CH_User_LastName", "len(LastName) <= 50");
 
             //set CHECK constraint -> humidity cannot be negative. Needed? light level, moisture %
             builder.Entity<SensorData>()

@@ -218,7 +218,7 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Assert
             Assert.IsFalse(result.IsAuthSuccessful);
-            Assert.AreEqual("Incorrect Login Details", result.ErrorMessage);
+            Assert.AreEqual("Incorrect Login Details", result.errors["Login Details"][0]);
         }
 
         [Test]
@@ -248,7 +248,8 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Assert
             Assert.IsFalse(result.IsAuthSuccessful);
-            Assert.AreEqual("Incorrect Login Details", result.ErrorMessage);
+            Assert.AreEqual("Incorrect Login Details", result.errors["Login Details"][0]);
+
         }
 
         [Test]
@@ -281,7 +282,7 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Assert
             Assert.IsFalse(result.IsAuthSuccessful);
-            Assert.AreEqual("Email is not confirmed", result.ErrorMessage);
+            Assert.AreEqual("Email is not confirmed", result.errors["Email"][0]);
         }
 
         [Test]
@@ -739,7 +740,7 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Assert
             Assert.IsFalse(result.Succeeded);
-            Assert.IsTrue(result.Errors.Any(e => e.Code == "0"));
+            Assert.IsTrue(result.Errors.Any(e => e.Code == "NotFound"));
         }
 
         [Test]
@@ -785,7 +786,7 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Assert
             Assert.IsFalse(result.Succeeded);
-            Assert.IsTrue(result.Errors.Any(e => e.Code == "1"));
+            Assert.IsTrue(result.Errors.Any(e => e.Code == "Exists"));
         }
 
         [Test]
@@ -823,14 +824,14 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Assert
             Assert.IsFalse(result.Succeeded);
-            Assert.IsTrue(result.Errors.Any(e => e.Code == "2"));
+            Assert.IsTrue(result.Errors.Any(e => e.Code == "Same"));
         }
 
         [Test]
         public async Task UpdateEmail_WhenEmailUpdatedSuccessful_ReturnsIdentityResultSuccess()
         {
             // Arrange
-            var test_UpdateEmailDto = new UpdateEmailDto();
+            var test_UpdateEmailDto = new UpdateEmailDto {Email = "new@email.com", ConfirmEmail = "new@email.com"};
 
             var test_User = new ApplicationUser()
             {
@@ -847,6 +848,9 @@ namespace SmartPlant.Tests.Models.DataManager
             mock_UserManager.Setup(_userManager => _userManager.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
 
+            mock_UserManager.Setup(_userManager => _userManager.UpdateAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(IdentityResult.Success);
+
             var accountManager = new AccountManager(
                 mock_UserManager.Object,
                 mock_Mapper.Object,
@@ -860,7 +864,7 @@ namespace SmartPlant.Tests.Models.DataManager
             var result = await accountManager.UpdateEmail(It.IsAny<string>(), test_UpdateEmailDto);
 
             // Assert
-            Assert.IsTrue(result.Succeeded);
+            Assert.IsTrue(result?.Succeeded);
         }
         #endregion
 
@@ -888,7 +892,7 @@ namespace SmartPlant.Tests.Models.DataManager
 
             // Assert
             Assert.IsFalse(result.Succeeded);
-            Assert.IsTrue(result.Errors.Any(e => e.Code == "0"));
+            Assert.IsTrue(result.Errors.Any(e => e.Code == "NotFound"));
         }
 
         [Test]

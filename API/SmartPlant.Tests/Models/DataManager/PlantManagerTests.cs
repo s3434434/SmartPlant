@@ -9,6 +9,7 @@ using SmartPlant.Models.DataManager;
 using SmartPlant.Data;
 using SmartPlant.Models;
 using System;
+using SmartPlant.Models.API_Model.Plant;
 
 namespace SmartPlant.Tests.Models.DataManager
 {
@@ -67,11 +68,11 @@ namespace SmartPlant.Tests.Models.DataManager
             var plantManager = new PlantManager(mock_DatabaseContext);
 
             // Act
-            IEnumerable<Plant> result = await plantManager.GetAllForUser(test_UserID);
+            IEnumerable<UserGetPlantDto> result = await plantManager.GetAllForUser(test_UserID);
 
             // Assert
             Assert.IsNotNull(result);
-            foreach (Plant plant in result)
+            foreach (UserGetPlantDto plant in result)
             {
                 Assert.AreEqual(plant.PlantID, "existing");
             }
@@ -116,21 +117,21 @@ namespace SmartPlant.Tests.Models.DataManager
 
             for (int i = 0; i < 5; i++)
             {
-                Plant plant = new() { PlantID = i.ToString(), UserID = existing_UserID };
+                Plant plant = new() { PlantID = i.ToString(), Name = i.ToString() ,UserID = existing_UserID};
                 existing_PlantTokens.Add(new() { PlantID = i.ToString(), Token = i.ToString(), Plant = plant });
             }
 
             Plant test_Plant = new ()
             {
                 PlantID = "tooManyPlants",
+                Name = "newname",
                 UserID = existing_UserID
             };
 
             PlantToken test_PlantToken = new ()
             {
-                PlantID = "existing",
-                Token = "token",
-                Plant = test_Plant
+                PlantID = "tooManyPlants",
+                Token = "token"
             };
 
             var plantManager = new PlantManager(mock_DatabaseContext);

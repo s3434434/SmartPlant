@@ -2,6 +2,7 @@
 using SmartPlant.Models;
 using SmartPlant.Models.API_Model;
 using SmartPlant.Models.API_Model.Account;
+using SmartPlant.Models.API_Model.Plant;
 
 namespace SmartPlant.MappingConfigurations
 {
@@ -12,6 +13,8 @@ namespace SmartPlant.MappingConfigurations
             //map from the dto/API Model to the domain object 
             //SensorDataModel to SensorData
             CreateMap<SensorDataModel, SensorData>();
+
+            CreateMap<Plant, UserGetPlantDto>();
 
             CreateMap<AdminAddPlantDto, Plant>();
 

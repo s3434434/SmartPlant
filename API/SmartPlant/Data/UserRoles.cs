@@ -1,6 +1,6 @@
 ﻿namespace SmartPlant.Data
 {
-    public static class UserRoles
+    public struct UserRoles
     {
         public const string Admin = "Admin";
         public const string User = "User";

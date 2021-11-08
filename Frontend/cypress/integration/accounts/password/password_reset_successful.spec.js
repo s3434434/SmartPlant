@@ -11,14 +11,14 @@ describe('Password reset successful page', () => {
     it('Displays required fields', () => {
 
         cy.visit(route)
-        cy.get('.gold.text-center').should('have.text', 'Password reset successfully')
-        cy.get('.btn').should('have.text', 'Login')
+        cy.get('section > .gold').should('have.text', 'Password reset successfully')
+        cy.get('.mb-2 > a > .btn').should('have.text', 'Login')
 
     })
 
     it('Redirects use to the login page when login button clicked', () => {
 
-        cy.get('.btn').click()
+        cy.get('.mb-2 > a > .btn').click()
         cy.url().should('be.equal', Cypress.config("baseUrl") + '/login')
     })
 })

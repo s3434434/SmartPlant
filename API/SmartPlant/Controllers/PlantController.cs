@@ -7,7 +7,18 @@ using SmartPlant.Models.API_Model;
 using SmartPlant.Models.API_Model.Plant;
 using SmartPlant.Models.Repository;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting.Internal;
+using Newtonsoft.Json;
+using RestSharp;
+using RestSharp.Serialization.Json;
 
 namespace SmartPlant.Controllers
 {
@@ -18,23 +29,91 @@ namespace SmartPlant.Controllers
     {
         private readonly IPlantManager _repo;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _configuration;
+        private readonly string clientID;
 
-        public PlantController(IPlantManager repo, UserManager<ApplicationUser> userManager)
+        public PlantController(IPlantManager repo, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _repo = repo;
             _userManager = userManager;
+            _configuration = configuration;
+            clientID = _configuration.GetSection("Imgur").GetSection("Client-ID").Value;
         }
 
-        /*            (user)
-         *   ANY ROLE REQUIRED ENDPOINTS
+        /*           
+         *   USER ROLE REQUIRED ENDPOINTS
          *             BELOW
          */
 
-
         /// <summary>
-        /// Gets all plants belonging to the current user
+        /// Used for testing
         /// </summary>
         /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/api/Plants/TEST/image")]
+        public IActionResult UploadImage([FromBody] PlantImageDto img)
+        {
+            Console.WriteLine($"ClientID : {clientID}");
+
+            var client = new RestClient("https://api.imgur.com/3/image");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Authorization", $"Client-ID {clientID}");
+            request.AlwaysMultipartFormData = true;
+            request.AddParameter("image", img.Base64ImgString);
+            IRestResponse response = client.Execute(request);
+            Console.WriteLine(response.Content);
+            Trace.WriteLine(response.Content);
+
+
+            var data = JsonConvert.DeserializeObject<ImgurApiSuccessResponse>(response.Content);
+
+            Console.WriteLine(data.Data.link);
+            Console.WriteLine(data.Data.deletehash);
+
+
+
+            Console.WriteLine(data);
+
+            return Ok(response.Content);
+
+        }
+
+        /// <summary>
+        /// Used for testing
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
+        [HttpDelete]
+        [AllowAnonymous]
+        [Route("/api/Plants/TEST/Image")]
+        public IActionResult DeleteImage([FromBody] PlantImageDto img)
+        {
+            Console.WriteLine(clientID);
+
+            var client = new RestClient($"https://api.imgur.com/3/image/{img.Base64ImgString}");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.DELETE);
+            request.AddHeader("Authorization", $"Client-ID {clientID}");
+            request.AlwaysMultipartFormData = true;
+            IRestResponse response = client.Execute(request);
+            Console.WriteLine(response.Content);
+            Trace.WriteLine(response.Content);
+            return Ok(response.Content);
+
+        }
+
+
+        /// <summary>
+        /// Gets all plants belonging to the current user, Returns plant Name and ID
+        /// </summary>
+        /// <remarks>
+        /// The plant ID shouldn't be shown to the user, since it's not easy to read and they don't need to know about it&#xA;
+        /// the plant ID is used with the other api endpoints.
         /// </remarks>
         /// <response code="200">Success</response>
         /// <response code="404">No Plants Found</response>
@@ -54,7 +133,8 @@ namespace SmartPlant.Controllers
 
             if (plants == null)
             {
-                return NotFound(); //404
+                //return NotFound(); //404
+                return Ok(new List<Plant>());
             }
 
             return Ok(plants); //200
@@ -65,9 +145,9 @@ namespace SmartPlant.Controllers
         /// Adds a plant
         /// </summary>
         /// <remarks>
-        /// Takes in a plant name (maxlength 250 - nullable) - this can be excluded but is intended help user readabillity  e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily" &#xA;
-        /// This should be used when the user chooses to add a plant. Autogenerates the plant ID. &#xA;
-        /// The user should then copy and paste the new plant ID into an arduino setup file?
+        /// Takes in a plant name (maxlength 250, any special char and numbers allowed) -  e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily" &#xA;
+        /// This should be used when the user chooses to add a plant. Autogenerates the plant ID and Plant Token. &#xA;
+        /// The Plant Token is what should be put into the Arduino setup file so that it can known which plant to update data for.
         /// </remarks>
         /// <response code="201">Plant Created</response>
         /// <response code="400">Bad Data</response>
@@ -78,23 +158,25 @@ namespace SmartPlant.Controllers
         {
             var userID = User.Identity.Name;
             var user = await _userManager.FindByIdAsync(userID);
-
-            if (!ModelState.IsValid)
+            GenericReturnMessageDto msg;
+            if (!PlantCareData.PlantCareDict.ContainsKey(dto.PlantType))
             {
-                return BadRequest();
-            }
-
-            //it really shouldn't be null
-            if (user == null)
-            {
-                return BadRequest("User does not exist, this really shouldn't happen");
+                msg = new GenericReturnMessageDto
+                {
+                    Messages = new Dictionary<string, List<string>>
+                    {
+                        {"Plant Type", new List<string> {"Invalid Plant Type"}}
+                    }
+                };
+                return BadRequest(msg);
             }
 
             var plant = new Plant
             {
                 PlantID = Guid.NewGuid().ToString(),
                 UserID = userID,
-                Name = dto.PlantName
+                Name = dto.PlantName,
+                PlantType = dto.PlantType
             };
 
             var plantToken = GeneratePlantToken(plant.PlantID);
@@ -108,12 +190,37 @@ namespace SmartPlant.Controllers
             }
             if (result == -1)
             {
-                return Conflict("Max Plant Limit Hit");
+                var genericError = new GenericReturnMessageDto { Messages = new Dictionary<string, List<string>> { { "Limit", new List<String> { "Max Plant Limit Hit" } } } };
+                return Conflict(genericError);
+            }
+
+            if (result == -2)
+            {
+                var genericError = new GenericReturnMessageDto { Messages = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
+                return Conflict(genericError);
             }
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
 
             //else result == 1
-            return Created("", $"Success\n{plant}\nToken: {plantToken.Token}");
+
+            Console.WriteLine(dto.Base64ImgString != null);
+            if (dto.Base64ImgString != null)
+            {
+                await _repo.UploadAndAddPlantImage(clientID, dto.Base64ImgString, plant.PlantID, userID);
+            }
+
+
+            msg = new GenericReturnMessageDto
+            {
+                Messages = new Dictionary<string, List<string>>
+            {
+                {
+                    "Token",
+                    new List<string>{plantToken.Token}
+                }
+            }};
+
+            return Created("", msg);
         }
 
 
@@ -121,7 +228,7 @@ namespace SmartPlant.Controllers
         /// Updates a plants name
         /// </summary>
         /// <remarks>
-        /// This takes in a plant ID and a string name --this can be excluded, making the name param null (no name)
+        /// This takes in a plant ID and a string name.
         /// </remarks>
         /// <response code="200">Name changed</response>        
         /// <response code="404">Plant Not Found</response>
@@ -135,7 +242,19 @@ namespace SmartPlant.Controllers
 
             if (result == 1)
             {
+                if (dto.Base64ImgString != null)
+                {
+                    var clientID = _configuration.GetSection("Imgur").GetSection("Client-ID").Value;
+                    await _repo.UploadAndAddPlantImage(clientID, dto.Base64ImgString, dto.PlantID, User.Identity.Name);
+                }
+
                 return Ok();
+            }
+
+            if (result == -2)
+            {
+                var genericError = new GenericReturnMessageDto { Messages = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
+                return Conflict(genericError);
             }
             return NotFound();
 
@@ -154,6 +273,7 @@ namespace SmartPlant.Controllers
         public async Task<IActionResult> Delete(string plantID)
         {
             var userID = User.Identity.Name;
+            await _repo.DeletePlantImage(clientID, plantID, userID);
             var result = await _repo.Delete(plantID, userID);
 
             if (result == 1)
@@ -221,6 +341,37 @@ namespace SmartPlant.Controllers
 
         }
 
+        /// <summary>
+        /// Gets the preset list of plant types
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
+        [HttpGet]
+        [Route("/api/Plants/List")]
+        public IActionResult GetPresetPlantList()
+        {
+            return Ok(PlantCareData.PlantCareDict.Keys);
+        }
+
+
+        /// <summary>
+        /// Used to delete a plant image
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
+        [HttpDelete]
+        [Route("/api/Plants/Image")]
+        public async Task<IActionResult> DeletePlantImage(string plantID)
+        {
+            var userID = User.Identity.Name;
+
+            var result = await _repo.DeletePlantImage(clientID, plantID, userID);
+            return Ok(result);
+        }
+
+
         /* 
          * ADMIN ROLE REQUIRED ENDPOINTS
          *           BELOW
@@ -278,7 +429,7 @@ namespace SmartPlant.Controllers
         /// Adds a plant for a specific user
         /// </summary>
         /// <remarks>
-        /// Takes in a plant name (maxlength 250 - nullable) - this can be excluded but is intended help user readabillity  e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily"
+        /// Takes in a plant name (maxlength 250) e.g. "office building 2 - floor 3 - Meeting room 2 - Peace Lily"
         /// and user ID
         /// </remarks>
         /// <response code="201">Plant Created</response>
@@ -291,29 +442,52 @@ namespace SmartPlant.Controllers
         {
             var user = await _userManager.FindByIdAsync(plantDto.UserID);
 
+            var genericError = new GenericReturnMessageDto();
+
             if (user == null)
             {
-                return NotFound("User does not exist");
+                genericError.Messages.Add("User", new List<string> { "User does not exist" });
+                return NotFound(genericError);
+            }
+
+            if (!PlantCareData.PlantCareDict.ContainsKey(plantDto.PlantType))
+            {
+                var msg = new GenericReturnMessageDto
+                {
+                    Messages = new Dictionary<string, List<string>>
+                    {
+                        {"Plant Type", new List<string> {"Invalid Plant Type"}}
+                    }
+                };
+                return BadRequest(msg);
             }
 
             var plant = new Plant
             {
                 PlantID = Guid.NewGuid().ToString(),
                 UserID = plantDto.UserID,
-                Name = plantDto.PlantName
+                Name = plantDto.PlantName,
+                PlantType = plantDto.PlantType
             };
 
             var plantToken = GeneratePlantToken(plant.PlantID);
 
-            var result = await _repo.Add(plant, null);
+            var result = await _repo.Add(plant, plantToken);
 
             if (result == 0)
             {
-                return Conflict("Plant id exists"); //409 , 400?
+                genericError.Messages.Add("Plant", new List<string> { "Plant ID already exists" });
+                return Conflict(genericError); //409 , 400?
             }
             if (result == -1)
             {
-                return Conflict("Max Plant Limit Hit");
+                genericError.Messages.Add("Limit", new List<string> { "Max plant limit reached" });
+                return Conflict(genericError);
+            }
+            if (result == -2)
+            {
+                genericError = new GenericReturnMessageDto { Messages = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
+                return Conflict(genericError);
             }
             //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
 
@@ -326,7 +500,7 @@ namespace SmartPlant.Controllers
         /// Updates a plants name
         /// </summary>
         /// <remarks>
-        /// This takes in a plant ID and a string name --this can be excluded, making the name param null (no name)
+        /// This takes in a plant ID and a string name
         /// </remarks>
         /// <response code="200">Name changed</response>        
         /// <response code="404">Plant Not Found</response>
@@ -341,6 +515,12 @@ namespace SmartPlant.Controllers
             if (result == 1)
             {
                 return Ok();
+            }
+
+            if (result == -2)
+            {
+                var genericError = new GenericReturnMessageDto { Messages = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
+                return Conflict(genericError);
             }
             return NotFound();
 
@@ -366,7 +546,9 @@ namespace SmartPlant.Controllers
             }
             else
             {
-                return NotFound("Plant does not exist");
+                var genericError = new GenericReturnMessageDto();
+                genericError.Messages.Add("Plant", new List<string> { "Plant does not exist" });
+                return NotFound(genericError);
             }
         }
 
@@ -390,10 +572,26 @@ namespace SmartPlant.Controllers
 
             if (!result)
             {
-                return BadRequest("Something went wrong, invalid inputs...");
+                var genericError = new GenericReturnMessageDto();
+                genericError.Messages.Add("Invalid", new List<string> { "Something went wrong, invalid inputs..." });
+                return BadRequest(genericError);
             }
             return Ok(plantToken.Token);
 
+        }
+
+        /// <summary>
+        /// Used to delete a plant image\
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="200">Success</response>
+        [HttpDelete]
+        [Route("/api/Admin/Plants/Image")]
+        public async Task<IActionResult> AdminDeletePlantImage(string userID, string plantID)
+        {
+            var result = await _repo.DeletePlantImage(clientID, plantID, userID);
+            return Ok(result);
         }
 
 
