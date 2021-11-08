@@ -161,6 +161,37 @@ export default function Pagination(props) {
                     </tr>
                   );
                 })}
+              {10 -
+                items.slice(
+                  10 * (currentPageNumber - 1),
+                  10 * currentPageNumber
+                ).length >
+              0
+                ? [
+                    ...Array(
+                      10 -
+                        items.slice(
+                          10 * (currentPageNumber - 1),
+                          10 * currentPageNumber
+                        ).length
+                    ).keys(),
+                  ].map((key) => {
+                    return (
+                      <tr key={key}>
+                        {defaultImage !== null ? (
+                          <td className="align-middle hidden-field">
+                            <img
+                              src={container_no_image}
+                              alt={`${key}-placeholder}`}
+                            ></img>
+                          </td>
+                        ) : null}
+                        <td className="hidden-field">-</td>
+                        <td className="hidden-field">-</td>
+                      </tr>
+                    );
+                  })
+                : null}
             </tbody>
           </table>
         </div>

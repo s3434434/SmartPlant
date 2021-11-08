@@ -14,7 +14,6 @@ export default function Support(props) {
   useEffect(() => {
     document.title = "Support | Demeter - The plant meter";
 
-    //props.logOut();
     // eslint-disable-next-line
   }, []);
 
