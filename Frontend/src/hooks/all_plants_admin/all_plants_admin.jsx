@@ -5,12 +5,13 @@ import Pagination from "../pagination/pagination";
 import "./all_plants_admin.css";
 
 export default function AllPlantsAdmin(props) {
+  const { getLogin, wideView } = props;
   const [plants, setPlants] = useState("Loading plants...");
 
   useEffect(() => {
     document.title = "Plants | Demeter - The plant meter";
 
-    const login = props.getLogin();
+    const login = getLogin();
     if (login !== null) {
       const { token, admin } = login;
 
@@ -89,7 +90,7 @@ export default function AllPlantsAdmin(props) {
           itemTitle1="name"
           itemTitle2="email"
           path="plant-admin"
-          wideView={props.wideView}
+          wideView={wideView}
         ></Pagination>
       )}
     </section>

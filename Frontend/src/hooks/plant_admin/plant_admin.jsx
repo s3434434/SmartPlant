@@ -468,7 +468,6 @@ export default function PlantAdmin(props) {
     <section>
       {plantImage !== null ? (
         <>
-          {" "}
           <div className="d-none d-xl-block">
             <div className="container m-0 p-0">
               <div className="row">
@@ -496,7 +495,7 @@ export default function PlantAdmin(props) {
             </button>
           </div>
           <form
-            className="m-auto d-none d-xl-block"
+            className={wideView ? "m-auto" : "m-auto px-2"}
             onSubmit={(e) => {
               handleSubmit(e, setNameStatus, setShowNameStatus);
             }}
@@ -534,7 +533,7 @@ export default function PlantAdmin(props) {
                     ></FontAwesomeIcon>
                   </div>
                 </div>
-                <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>{" "}
+                <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
                 <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
                   {plantType}
                 </h4>
@@ -592,7 +591,7 @@ export default function PlantAdmin(props) {
                     }}
                   ></FontAwesomeIcon>
                 </div>
-                <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>{" "}
+                <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
                 <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
                   {plantType}
                 </h4>
@@ -636,22 +635,7 @@ export default function PlantAdmin(props) {
               </button>
             </div>
           </div>
-          <div className="w-25 m-auto mt-4 d-none d-xl-block">
-            <div
-              className={showTokenStatus ? "text-center mt-1" : "hidden-field"}
-            >
-              <span style={{ color: "white" }}>{tokenStatus}</span>
-            </div>
-            <div className="text-center mt-2">
-              <button
-                className="btn btn-primary"
-                onClick={regenerateArduinoToken}
-              >
-                Regenerate Arduino token
-              </button>
-            </div>
-          </div>
-          <div className="m-auto mt-4 px-2 d-xl-none">
+          <div className={wideView ? "w-25 m-auto mt-4" : "m-auto mt-4 px-2"}>
             <div
               className={showTokenStatus ? "text-center mt-1" : "hidden-field"}
             >
