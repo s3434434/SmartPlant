@@ -502,7 +502,7 @@ export default function PlantAdmin(props) {
           >
             {nameModifiable ? (
               <>
-                <div className="w-25 m-auto">
+                <div className={wideView ? "w-25 m-auto" : ""}>
                   <label className="form-label gold" htmlFor="name">
                     Name
                   </label>
@@ -521,7 +521,7 @@ export default function PlantAdmin(props) {
               </>
             ) : (
               <>
-                <div className="w-25 m-auto">
+                <div className={wideView ? "w-25 m-auto" : ""}>
                   <div className="text-end m-0 p-0">
                     <FontAwesomeIcon
                       className="gold light-gold-hover"
@@ -541,69 +541,23 @@ export default function PlantAdmin(props) {
             )}
             <div
               className={
-                showNameStatus ? "text-center mt-3" : "hidden-field m-0"
+                showNameStatus
+                  ? "text-center mt-3"
+                  : wideView
+                  ? "hidden-field m-0"
+                  : "hidden-field"
               }
             >
               <span>{nameStatus}</span>
             </div>
             <div
               className={
-                nameModifiable ? "text-center my-3" : "hidden-field m-0"
+                nameModifiable
+                  ? "text-center my-3"
+                  : wideView
+                  ? "hidden-field m-0"
+                  : "hidden-field"
               }
-            >
-              <button className="btn btn-primary" type="submit">
-                Apply change
-              </button>
-            </div>
-          </form>
-          <form
-            className="m-auto px-2 d-xl-none"
-            onSubmit={(e) => {
-              handleSubmit(e, setNameStatus, setShowNameStatus);
-            }}
-          >
-            {nameModifiable ? (
-              <>
-                <label className="form-label gold" htmlFor="name">
-                  Name
-                </label>
-                <input
-                  className="form-control mb-3"
-                  name="name"
-                  type="text"
-                  value={form.name}
-                  onChange={handleChange}
-                  required
-                />
-                <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-                  {plantType}
-                </h4>
-              </>
-            ) : (
-              <>
-                <div className="text-end m-0 p-0">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setNameModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-                <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
-                <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-                  {plantType}
-                </h4>
-              </>
-            )}
-            <div
-              className={showNameStatus ? "text-center mt-3" : "hidden-field"}
-            >
-              <span>{nameStatus}</span>
-            </div>
-            <div
-              className={nameModifiable ? "text-center my-3" : "hidden-field"}
             >
               <button className="btn btn-primary" type="submit">
                 Apply change
