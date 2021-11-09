@@ -579,7 +579,7 @@ export default function Plant(props) {
             className={
               wideView
                 ? "w-50 text-center m-auto gold-border"
-                : "m-auto px-2 gold-border"
+                : "m-auto px-2 mb-2 gold-border"
             }
           >
             {typeof displayedReadings === "string" ? (

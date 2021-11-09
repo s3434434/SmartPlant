@@ -83,7 +83,19 @@ export default function Pagination(props) {
   };
 
   return (
-    <div className={wideView ? "w-50 m-auto overflow-auto" : "m-auto"}>
+    <div
+      className={wideView ? "w-50 mx-auto overflow-auto" : "mx-auto"}
+      style={{
+        marginTop:
+          defaultImage !== null
+            ? wideView
+              ? "-6em"
+              : "-3em"
+            : wideView
+            ? "2em"
+            : "1em",
+      }}
+    >
       <div className="overflow-auto">
         <table className="table">
           <thead>

@@ -4,7 +4,7 @@ import axios from "axios";
 import "./forgot_password.css";
 
 export default function ForgotPassword(props) {
-  const [logOut, wideView] = props;
+  const { logOut, wideView } = props;
   const [form, setForm] = useState({
     email: "",
     clientURI: "https://www.demeter.onl/reset-password",

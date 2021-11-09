@@ -489,7 +489,7 @@ export default function User(props) {
           </form>
 
           <form
-            className={wideView ? "w-25 m-auto mt-5" : "m-auto mt-5 px-2"}
+            className={wideView ? "w-25 m-auto mt-4" : "m-auto mt-4 px-2"}
             onSubmit={(e) => {
               handleDetailsSubmit(e, setDetailsStatus, setShowDetailsStatus);
             }}
@@ -630,7 +630,7 @@ export default function User(props) {
           </form>
 
           <form
-            className={wideView ? "w-25 m-auto mt-5" : "m-auto mt-5 px-2"}
+            className={wideView ? "w-25 m-auto mt-4" : "m-auto mt-4 px-2"}
             onSubmit={handlePasswordSubmit}
           >
             {passwordModifiable ? (
@@ -704,7 +704,7 @@ export default function User(props) {
             </div>
           </form>
 
-          <h1 className="text-center gold mt-3">Plants</h1>
+          <h1 className="text-center gold mt-4">Plants</h1>
           {typeof plants === "string" ? (
             <div className="text-center mt-3" style={{ color: "white" }}>
               {plants}

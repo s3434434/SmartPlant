@@ -5,7 +5,7 @@ import axios from "axios";
 import "./reset_password.css";
 
 export default function ResetPassword(props) {
-  const [logOut, wideView] = props;
+  const { logOut, wideView } = props;
   const search = useLocation().search;
   const token = new URLSearchParams(search).get("token"),
     email = new URLSearchParams(search).get("email");
