@@ -4,6 +4,7 @@ import axios from "axios";
 import "./forgot_password.css";
 
 export default function ForgotPassword(props) {
+  const { logOut, wideView } = props;
   const [form, setForm] = useState({
     email: "",
     clientURI: "https://www.demeter.onl/reset-password",
@@ -13,7 +14,7 @@ export default function ForgotPassword(props) {
 
   useEffect(() => {
     document.title = "Forgot password | Demeter - The plant meter";
-    props.logOut();
+    logOut();
 
     // eslint-disable-next-line
   }, []);
@@ -49,7 +50,7 @@ export default function ForgotPassword(props) {
     <section>
       <h1 className="gold text-center">Forgot password</h1>
       <form
-        className="w-25 m-auto mt-4 d-none d-xl-block"
+        className={wideView ? "w-25 m-auto mt-4" : "m-auto mt-4 px-2"}
         onSubmit={handleSubmit}
       >
         <label className="form-label gold" htmlFor="email">
@@ -77,40 +78,9 @@ export default function ForgotPassword(props) {
             <span>{status}</span>
           </div>
         )}
-        <div className="text-center mt-3">
-          <button className="btn btn-primary" type="submit">
-            Reset password
-          </button>
-        </div>
-      </form>
-
-      <form className="m-auto mt-4 px-2 d-xl-none" onSubmit={handleSubmit}>
-        <label className="form-label gold" htmlFor="email">
-          Email
-        </label>
-        <input
-          className="form-control"
-          name="email"
-          type="text"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
-        <div className="form-text mt-1">
-          <span style={{ color: "white" }}>
-            Enter your email and we will send you a password reset link.
-          </span>
-        </div>
-        {showStatus ? (
-          <div className="text-center mt-3">
-            <span>{status}</span>
-          </div>
-        ) : (
-          <div className="hidden-field mt-3">
-            <span>{status}</span>
-          </div>
-        )}
-        <div className="text-center mt-3 mb-2">
+        <div
+          className={wideView ? "text-center mt-3" : "text-center mt-3 mb-2"}
+        >
           <button className="btn btn-primary" type="submit">
             Reset password
           </button>

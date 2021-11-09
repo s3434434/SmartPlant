@@ -14,12 +14,11 @@ export default function PasswordResetSuccessful(props) {
       <div className="text-center mt-3" style={{ color: "white" }}>
         You can now login with you new password.
       </div>
-      <div className="text-center mt-3 d-none d-xl-block">
-        <Link key="login" to="/login">
-          <button className="btn btn-primary">Login</button>
-        </Link>
-      </div>
-      <div className="text-center mt-3 mb-2 d-xl-none">
+      <div
+        className={
+          props.wideView ? "text-center mt-3" : "text-center mt-3 mb-2"
+        }
+      >
         <Link key="login" to="/login">
           <button className="btn btn-primary">Login</button>
         </Link>

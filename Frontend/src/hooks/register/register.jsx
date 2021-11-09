@@ -4,6 +4,8 @@ import axios from "axios";
 import _ from "lodash";
 
 export default function Register(props) {
+  const { logOut, wideView } = props;
+
   const [form, setForm] = useState({
     email: "",
     phoneNumber: "",
@@ -19,7 +21,7 @@ export default function Register(props) {
   useEffect(() => {
     document.title = "Register | Demeter - The plant meter";
 
-    props.logOut();
+    logOut();
     // eslint-disable-next-line
   }, []);
 
@@ -75,7 +77,7 @@ export default function Register(props) {
     <section>
       <h1 className="gold text-center">Register</h1>
       <form
-        className="w-25 m-auto mt-4 d-none d-xl-block"
+        className={wideView ? "w-25 m-auto mt-4" : "m-auto mt-4 px-2"}
         onSubmit={handleSubmit}
       >
         <label className="form-label gold" htmlFor="email">
@@ -185,122 +187,9 @@ export default function Register(props) {
             <span>{status}</span>
           </div>
         )}
-        <div className="text-center mt-3">
-          <button className="btn btn-primary" type="submit">
-            Register
-          </button>
-        </div>
-      </form>
-
-      <form className="m-auto mt-4 d-xl-none px-2" onSubmit={handleSubmit}>
-        <label className="form-label gold" htmlFor="email">
-          Email
-        </label>
-        <input
-          className="form-control"
-          name="email"
-          type="text"
-          required
-          value={form.email}
-          onChange={handleChange}
-        />
-        <label className="form-label gold mt-3" htmlFor="phoneNumber">
-          Phone
-        </label>
-        <input
-          className="form-control"
-          name="phoneNumber"
-          type="text"
-          value={form.phoneNumber}
-          onChange={handleChange}
-        />
-        <label className="form-label gold mt-3" htmlFor="firstName">
-          First name
-        </label>
-        <input
-          className="form-control"
-          name="firstName"
-          type="text"
-          value={form.firstName}
-          onChange={handleChange}
-        />
-        <label className="form-label gold mt-3" htmlFor="lastName">
-          Last name
-        </label>
-        <input
-          className="form-control"
-          name="lastName"
-          type="text"
-          value={form.lastName}
-          onChange={handleChange}
-        />
-        <label className="form-label gold mt-3" htmlFor="password">
-          Password
-        </label>
-        <input
-          className="form-control"
-          name="password"
-          type="password"
-          required
-          value={form.password}
-          onChange={handleChange}
-        />
-        <label className="form-label gold mt-3" htmlFor="confirmPassword">
-          Confirm password
-        </label>
-        <input
-          className="form-control"
-          name="confirmPassword"
-          type="password"
-          required
-          value={form.confirmPassword}
-          onChange={handleChange}
-        />
         <div
-          className="form-text mt-2"
-          style={{ color: "white", textAlign: "justify" }}
+          className={wideView ? "text-center mt-3" : "text-center mt-3 mb-2"}
         >
-          By clicking Register you agree to our&nbsp;
-          <span
-            className="gold light-gold-hover"
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              userSelect: "none",
-            }}
-            onClick={() => {
-              window.location.pathname = "/terms-of-use";
-            }}
-          >
-            terms of use
-          </span>
-          . For more information about our privacy practices, please see
-          our&nbsp;
-          <span
-            className="gold light-gold-hover"
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              userSelect: "none",
-            }}
-            onClick={() => {
-              window.location.pathname = "/privacy-policy";
-            }}
-          >
-            privacy policy
-          </span>
-          .
-        </div>
-        {showStatus ? (
-          <div className="text-center mt-3">
-            <span>{status}</span>
-          </div>
-        ) : (
-          <div className="hidden-field mt-3">
-            <span>{status}</span>
-          </div>
-        )}
-        <div className="text-center mt-3 mb-2">
           <button className="btn btn-primary" type="submit">
             Register
           </button>

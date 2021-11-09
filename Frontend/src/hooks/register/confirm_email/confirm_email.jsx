@@ -4,6 +4,7 @@ import axios from "axios";
 import "./confirm_email.css";
 
 export default function ConfirmEmail(props) {
+  const { logOut, wideView } = props;
   const search = useLocation().search;
   const token = new URLSearchParams(search).get("token"),
     email = new URLSearchParams(search).get("email");
@@ -12,7 +13,7 @@ export default function ConfirmEmail(props) {
     document.title =
       "Email confirmation successful | Demeter - The plant meter";
 
-    props.logOut();
+    logOut();
 
     axios.put(
       "https://smart-plant.azurewebsites.net/api/Account/ConfirmEmail",
@@ -20,13 +21,7 @@ export default function ConfirmEmail(props) {
         email: email,
         token: token,
       }
-    ).catch((err) => {
-      //let errorMessage = "Server error. Please try again later.";
-      //const errors = err.response.data.errors;
-      console.log(err.response.data.errors);
-
-      //setStatus(errorMessage);
-    });
+    );
     // eslint-disable-next-line
   }, []);
 
@@ -36,12 +31,7 @@ export default function ConfirmEmail(props) {
       <div className="text-center mt-3" style={{ color: "white" }}>
         Your email has been confirmed successfully.
       </div>
-      <div className="text-center mt-3 d-none d-xl-block">
-        <Link key="login" to="/login">
-          <button className="btn btn-primary">Login</button>
-        </Link>
-      </div>
-      <div className="text-center mt-3 mb-2 d-xl-none">
+      <div className={wideView ? "text-center mt-3" : "text-center mt-3 mb-2"}>
         <Link key="login" to="/login">
           <button className="btn btn-primary">Login</button>
         </Link>

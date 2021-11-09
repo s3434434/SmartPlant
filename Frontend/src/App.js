@@ -30,7 +30,8 @@ import PlantAdmin from "./hooks/plant_admin/plant_admin";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false),
-    [isAdmin, setIsAdmin] = useState(false);
+    [isAdmin, setIsAdmin] = useState(false),
+    [wideView, setWideView] = useState(window.innerWidth > 1199);
 
   const getLogin = () => {
     const loginString = localStorage.getItem("demeter-login");
@@ -78,6 +79,14 @@ function App() {
     } else {
       setLoggedIn(false);
     }
+
+    window.addEventListener(
+      "resize",
+      function () {
+        setWideView(window.innerWidth > 1199);
+      },
+      true
+    );
 
     // eslint-disable-next-line
   }, []);
@@ -251,87 +260,142 @@ function App() {
       <main>
         <BrowserRouter>
           <Switch>
-            <Route exact path="/landing" component={LandingPage} />
+            <Route
+              exact
+              path="/landing"
+              render={(props) => <LandingPage {...props} wideView={wideView} />}
+            />
             <Route
               exact
               path="/login"
-              render={(props) => <Login {...props} logOut={logOut} />}
+              render={(props) => (
+                <Login {...props} wideView={wideView} logOut={logOut} />
+              )}
             />
             <Route
               exact
               path="/register"
-              render={(props) => <Register {...props} logOut={logOut} />}
+              render={(props) => (
+                <Register {...props} wideView={wideView} logOut={logOut} />
+              )}
             />
             <Route
               exact
               path="/registration-successful"
-              component={RegistrationSuccessful}
+              render={(props) => (
+                <RegistrationSuccessful {...props} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/confirm-email"
-              render={(props) => <ConfirmEmail {...props} logOut={logOut} />}
+              render={(props) => (
+                <ConfirmEmail {...props} logOut={logOut} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/forgot-password"
-              render={(props) => <ForgotPassword {...props} logOut={logOut} />}
+              render={(props) => (
+                <ForgotPassword
+                  {...props}
+                  logOut={logOut}
+                  wideView={wideView}
+                />
+              )}
             />
             <Route
               exact
               path="/request-processed"
-              component={RequestProcessed}
+              render={(props) => (
+                <RequestProcessed {...props} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/reset-password"
-              render={(props) => <ResetPassword {...props} logOut={logOut} />}
+              render={(props) => (
+                <ResetPassword {...props} logOut={logOut} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/password-reset-successful"
-              component={PasswordResetSuccessful}
+              render={(props) => (
+                <PasswordResetSuccessful {...props} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/logout"
-              render={(props) => <Logout {...props} logOut={logOut} />}
+              render={(props) => (
+                <Logout {...props} logOut={logOut} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/plants"
-              render={(props) => <AllPlants {...props} getLogin={getLogin} />}
+              render={(props) => (
+                <AllPlants {...props} getLogin={getLogin} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/add-plant"
-              render={(props) => <AddPlant {...props} getLogin={getLogin} />}
+              render={(props) => (
+                <AddPlant {...props} getLogin={getLogin} wideView={wideView} />
+              )}
             />
-            <Route exact path="/plant-added" component={PlantAdded} />
+            <Route
+              exact
+              path="/plant-added"
+              render={(props) => <PlantAdded {...props} wideView={wideView} />}
+            />
             <Route
               exact
               path="/plant/:plant_id"
-              render={(props) => <Plant {...props} getLogin={getLogin} />}
+              render={(props) => (
+                <Plant {...props} getLogin={getLogin} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/settings"
-              render={(props) => <Settings {...props} getLogin={getLogin} />}
+              render={(props) => (
+                <Settings {...props} getLogin={getLogin} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/support"
               render={(props) => (
-                <Support {...props} getLogin={getLogin} logOut={logOut} />
+                <Support
+                  {...props}
+                  getLogin={getLogin}
+                  logOut={logOut}
+                  wideView={wideView}
+                />
               )}
             />
             <Route
               exact
               path="/support-successful"
-              component={SupportSuccessful}
+              render={(props) => (
+                <SupportSuccessful {...props} wideView={wideView} />
+              )}
             />
-            <Route exact path="/privacy-policy" component={PrivacyPolicy} />
-            <Route exact path="/terms-of-use" component={TermsOfUse} />
+            <Route
+              exact
+              path="/privacy-policy"
+              render={(props) => (
+                <PrivacyPolicy {...props} wideView={wideView} />
+              )}
+            />
+            <Route
+              exact
+              path="/terms-of-use"
+              render={(props) => <TermsOfUse {...props} wideView={wideView} />}
+            />
             <Route
               exact
               path="/"
@@ -351,28 +415,48 @@ function App() {
             <Route
               exact
               path="/users"
-              render={(props) => <AllUsers {...props} getLogin={getLogin} />}
+              render={(props) => (
+                <AllUsers {...props} getLogin={getLogin} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/user/:user_ID"
               render={(props) => (
-                <User {...props} getLogin={getLogin} logOut={logOut} />
+                <User
+                  {...props}
+                  getLogin={getLogin}
+                  logOut={logOut}
+                  wideView={wideView}
+                />
               )}
             />
             <Route
               exact
               path="/plants-admin"
               render={(props) => (
-                <AllPlantsAdmin {...props} getLogin={getLogin} />
+                <AllPlantsAdmin
+                  {...props}
+                  getLogin={getLogin}
+                  wideView={wideView}
+                />
               )}
             />
             <Route
               exact
               path="/plant-admin/:plant_id"
-              render={(props) => <PlantAdmin {...props} getLogin={getLogin} />}
+              render={(props) => (
+                <PlantAdmin
+                  {...props}
+                  getLogin={getLogin}
+                  wideView={wideView}
+                />
+              )}
             />
-            <Route path="/*" component={NotFound}></Route>
+            <Route
+              path="/*"
+              render={(props) => <NotFound {...props} wideView={wideView} />}
+            ></Route>
           </Switch>
         </BrowserRouter>
       </main>

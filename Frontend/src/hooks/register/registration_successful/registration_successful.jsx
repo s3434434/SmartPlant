@@ -14,12 +14,11 @@ export default function RegistrationSuccessful(props) {
       <div className="text-center mt-3" style={{ color: "white" }}>
         Be sure to check your email and verify your account.
       </div>
-      <div className="text-center mt-3 d-none d-xl-block">
-        <Link key="home" to="/">
-          <button className="btn btn-primary">Home</button>
-        </Link>
-      </div>
-      <div className="text-center mt-3 mb-2 d-xl-none">
+      <div
+        className={
+          props.wideView ? "text-center mt-3" : "text-center mt-3 mb-2"
+        }
+      >
         <Link key="home" to="/">
           <button className="btn btn-primary">Home</button>
         </Link>
