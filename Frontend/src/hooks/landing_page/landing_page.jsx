@@ -71,11 +71,11 @@ export default function LandingPage(props) {
         </p>
       </div>
       <div className={wideView ? "text-center mt-5" : "text-center mt-5 mb-2"}>
-        <Link className="me-1" key="login" to="/login">
-          <button className="btn btn-primary">Login</button>
+        <Link key="login" className="btn btn-primary me-1" to="/login">
+          Login
         </Link>
-        <Link className="ms-1" key="register" to="/register">
-          <button className="btn btn-primary">Register</button>
+        <Link key="register" className="btn btn-primary ms-1" to="/register">
+          Register
         </Link>
       </div>
     </section>

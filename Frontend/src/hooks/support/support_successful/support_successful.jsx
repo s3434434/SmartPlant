@@ -15,14 +15,13 @@ export default function SupportSuccessful(props) {
         Your email to Demeter's support team has been sent. We'll get back to
         you as soon as we can.
       </div>
-      <div className="text-center mt-3 d-none d-xl-block">
-        <Link key="home" to="/">
-          <button className="btn btn-primary">Home</button>
-        </Link>
-      </div>
-      <div className="text-center mt-3 mb-2 d-xl-none">
-        <Link key="home" to="/">
-          <button className="btn btn-primary">Home</button>
+      <div
+        className={
+          props.wideView ? "text-center mt-3" : "text-center mt-3 mb-2"
+        }
+      >
+        <Link key="home" className="btn btn-primary" to="/">
+          Home
         </Link>
       </div>
     </section>

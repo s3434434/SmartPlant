@@ -15,8 +15,8 @@ export default function Logout(props) {
     <section>
       <h1 className="gold text-center">You have been logged out.</h1>
       <div className={wideView ? "text-center mt-5" : "text-center mt-5 mb-2"}>
-        <Link key="home" to="/">
-          <button className="btn btn-primary">Home</button>
+        <Link key="home" className="btn btn-primary" to="/">
+          Home
         </Link>
       </div>
     </section>

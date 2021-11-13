@@ -54,16 +54,16 @@ export default function AllPlants(props) {
         <div className="container m-0 p-0">
           <div className="row">
             <div className="col-xl-2 text-center">
-              <Link key="add-plant" to="/add-plant">
-                <button className="btn btn-primary">Add plant</button>
+              <Link key="add-plant" className="btn btn-primary" to="/add-plant">
+                Add plant
               </Link>
             </div>
             <div className="col-xl-10"></div>
           </div>
         </div>
       ) : (
-        <Link key="add-plant" to="/add-plant">
-          <button className="btn btn-primary mt-2">Add plant</button>
+        <Link key="add-plant" className="btn btn-primary mt-2" to="/add-plant">
+          Add plant
         </Link>
       )}
       {typeof plants === "string" ? (
