@@ -63,7 +63,7 @@ export default function AllUsers(props) {
           itemID="id"
           heading1="Email"
           heading2="Role"
-          defaultImage={null}
+          imageCol={false}
           itemTitle1="email"
           itemTitle2="role"
           path="user"

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import container_no_image from "../../assets/images/container_no_image.png";
 import Pagination from "../pagination/pagination";
 import "./all_plants.css";
 
@@ -76,7 +75,7 @@ export default function AllPlants(props) {
           itemID="plantID"
           heading1="Name"
           heading2="Variety"
-          defaultImage={container_no_image}
+          imageCol={true}
           itemTitle1="name"
           itemTitle2="plantType"
           path="plant"
