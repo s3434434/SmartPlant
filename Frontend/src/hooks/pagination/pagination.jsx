@@ -192,7 +192,6 @@ export default function Pagination(props) {
         className={
           wideView ? "w-50 m-auto overflow-auto" : "m-auto overflow-auto"
         }
-        role="div"
         style={{ backgroundColor: "transparent" }}
       >
         <ul

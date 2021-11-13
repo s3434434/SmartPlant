@@ -704,7 +704,6 @@ export default function PlantAdmin(props) {
                 </div>
                 <nav
                   className="overflow-auto"
-                  role="div"
                   style={{ backgroundColor: "transparent" }}
                 >
                   <ul
@@ -798,7 +797,6 @@ export default function PlantAdmin(props) {
             )}
             <nav
               className="mt-4 overflow-auto"
-              role="div"
               style={{ backgroundColor: "transparent" }}
             >
               <h4 className="text-center gold">Sample timeframe</h4>
