@@ -15,9 +15,7 @@ export default function LandingPage(props) {
 
   return (
     <section>
-      <h1 className="gold text-center">
-        Welcome to Demeter... The plant meter!
-      </h1>
+      <h1 className="gold text-center">Demeter - The plant meter</h1>
       <div
         className={
           wideView

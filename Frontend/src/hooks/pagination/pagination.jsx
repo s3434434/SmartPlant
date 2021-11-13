@@ -149,7 +149,7 @@ export default function Pagination(props) {
                         <img
                           id={`${id}-image`}
                           src={image}
-                          alt={id}
+                          alt={title1}
                           style={{
                             cursor: "pointer",
                           }}
