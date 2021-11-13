@@ -97,7 +97,7 @@ export default function Login(props) {
           onChange={handleChange}
           required
         ></input>
-        <div className="form-text mt-1">
+        <div className="form-text mt-2">
           <span
             className="gold light-gold-hover"
             tabIndex="0"

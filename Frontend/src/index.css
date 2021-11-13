@@ -73,6 +73,10 @@ p {
 form span {
   color: white;
 }
+input,
+textarea {
+  color: rgb(0, 53, 11) !important;
+}
 
 .hidden-field {
   opacity: 0;

@@ -393,7 +393,7 @@ export default function Plant(props) {
     <section>
       {plantImage !== null ? (
         <>
-          <div className="d-none d-xl-block">
+          {wideView ? (
             <div className="container m-0 p-0">
               <div className="row">
                 <div className="col-xl-2 text-center">
@@ -410,15 +410,18 @@ export default function Plant(props) {
                 <div className="col-xl-10"></div>
               </div>
             </div>
-          </div>
-          <div className="text-center d-xl-none">
-            <div className={showDeleteStatus ? "text-center" : "hidden-field"}>
-              <span style={{ color: "white" }}>{deleteStatus}</span>
-            </div>
-            <button className="btn btn-primary mt-2" onClick={deletePlant}>
-              Delete plant
-            </button>
-          </div>
+          ) : (
+            <>
+              <div
+                className={showDeleteStatus ? "text-center" : "hidden-field"}
+              >
+                <span style={{ color: "white" }}>{deleteStatus}</span>
+              </div>
+              <button className="btn btn-primary mt-2" onClick={deletePlant}>
+                Delete plant
+              </button>
+            </>
+          )}
 
           <form
             className={wideView ? "m-auto" : "m-auto px-2"}
@@ -451,9 +454,13 @@ export default function Plant(props) {
                   <div className="text-end m-0 p-0">
                     <FontAwesomeIcon
                       className="gold light-gold-hover"
+                      tabIndex="0"
                       icon={faPen}
                       style={{ cursor: "pointer" }}
                       onClick={() => {
+                        setNameModifiable(true);
+                      }}
+                      onKeyPress={() => {
                         setNameModifiable(true);
                       }}
                     ></FontAwesomeIcon>
@@ -485,7 +492,11 @@ export default function Plant(props) {
                   : "hidden-field"
               }
             >
-              <button className="btn btn-primary" type="submit">
+              <button
+                className="btn btn-primary"
+                tabIndex={nameModifiable ? "0" : "-1"}
+                type="submit"
+              >
                 Apply change
               </button>
             </div>
@@ -518,9 +529,13 @@ export default function Plant(props) {
                     <div className="col-sm-2 text-end">
                       <FontAwesomeIcon
                         className="gold light-gold-hover"
+                        tabIndex="0"
                         icon={faPen}
                         style={{ cursor: "pointer" }}
                         onClick={() => {
+                          setImageModifiable(true);
+                        }}
+                        onKeyPress={() => {
                           setImageModifiable(true);
                         }}
                       ></FontAwesomeIcon>
@@ -544,7 +559,11 @@ export default function Plant(props) {
                 imageModifiable ? "text-center mt-3 mb-1" : "hidden-field"
               }
             >
-              <button className="btn btn-primary" type="submit">
+              <button
+                className="btn btn-primary"
+                tabIndex={imageModifiable ? "0" : "-1"}
+                type="submit"
+              >
                 Apply change
               </button>
             </div>
@@ -666,7 +685,11 @@ export default function Plant(props) {
                     <li className="page-item">
                       <span
                         className="page-link"
+                        tabIndex="0"
                         onClick={() => {
+                          pageNavigate(currentPageNumber - 1);
+                        }}
+                        onKeyPress={() => {
                           pageNavigate(currentPageNumber - 1);
                         }}
                       >
@@ -683,7 +706,11 @@ export default function Plant(props) {
                                     ? "page-link page-link-selected"
                                     : "page-link"
                                 }
+                                tabIndex="0"
                                 onClick={() => {
+                                  pageNavigate(paginationNumber);
+                                }}
+                                onKeyPress={() => {
                                   pageNavigate(paginationNumber);
                                 }}
                               >
@@ -705,7 +732,11 @@ export default function Plant(props) {
                                       ? "page-link page-link-selected"
                                       : "page-link"
                                   }
+                                  tabIndex="0"
                                   onClick={() => {
+                                    pageNavigate(mobilePaginationNumber);
+                                  }}
+                                  onKeyPress={() => {
                                     pageNavigate(mobilePaginationNumber);
                                   }}
                                 >
@@ -718,7 +749,11 @@ export default function Plant(props) {
                     <li className="page-item">
                       <span
                         className="page-link"
+                        tabIndex="0"
                         onClick={() => {
+                          pageNavigate(currentPageNumber + 1);
+                        }}
+                        onKeyPress={() => {
                           pageNavigate(currentPageNumber + 1);
                         }}
                       >
@@ -748,7 +783,11 @@ export default function Plant(props) {
                         ? "page-link page-link-selected"
                         : "page-link"
                     }
+                    tabIndex="0"
                     onClick={() => {
+                      updateDisplayedReadings("Hour");
+                    }}
+                    onKeyPress={() => {
                       updateDisplayedReadings("Hour");
                     }}
                   >
@@ -762,7 +801,11 @@ export default function Plant(props) {
                         ? "page-link page-link-selected"
                         : "page-link"
                     }
+                    tabIndex="0"
                     onClick={() => {
+                      updateDisplayedReadings("Day");
+                    }}
+                    onKeyPress={() => {
                       updateDisplayedReadings("Day");
                     }}
                   >
@@ -776,7 +819,11 @@ export default function Plant(props) {
                         ? "page-link page-link-selected"
                         : "page-link"
                     }
+                    tabIndex="0"
                     onClick={() => {
+                      updateDisplayedReadings("Week");
+                    }}
+                    onKeyPress={() => {
                       updateDisplayedReadings("Week");
                     }}
                   >
@@ -790,7 +837,11 @@ export default function Plant(props) {
                         ? "page-link page-link-selected"
                         : "page-link"
                     }
+                    tabIndex="0"
                     onClick={() => {
+                      updateDisplayedReadings("Month");
+                    }}
+                    onKeyPress={() => {
                       updateDisplayedReadings("Month");
                     }}
                   >
@@ -804,7 +855,11 @@ export default function Plant(props) {
                         ? "page-link page-link-selected"
                         : "page-link"
                     }
+                    tabIndex="0"
                     onClick={() => {
+                      updateDisplayedReadings("Year");
+                    }}
+                    onKeyPress={() => {
                       updateDisplayedReadings("Year");
                     }}
                   >
@@ -818,7 +873,11 @@ export default function Plant(props) {
                         ? "page-link page-link-selected"
                         : "page-link"
                     }
+                    tabIndex="0"
                     onClick={() => {
+                      updateDisplayedReadings("All time");
+                    }}
+                    onKeyPress={() => {
                       updateDisplayedReadings("All time");
                     }}
                   >
