@@ -19,8 +19,8 @@ export default function PasswordResetSuccessful(props) {
           props.wideView ? "text-center mt-3" : "text-center mt-3 mb-2"
         }
       >
-        <Link key="login" to="/login">
-          <button className="btn btn-primary">Login</button>
+        <Link key="login" className="btn btn-primary" to="/login">
+          Login
         </Link>
       </div>
     </section>

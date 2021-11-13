@@ -29,11 +29,11 @@ export default function Settings(props) {
     [lastNameModifiable, setLastNameModifiable] = useState(false),
     [passwordModifiable, setPasswordModifiable] = useState(false),
     [showEmailStatus, setShowEmailStatus] = useState(false),
-    [emailStatus, setEmailStatus] = useState("none"),
+    [emailStatus, setEmailStatus] = useState("-"),
     [showDetailsStatus, setShowDetailsStatus] = useState(false),
-    [detailsStatus, setDetailsStatus] = useState("none"),
+    [detailsStatus, setDetailsStatus] = useState("-"),
     [showPasswordStatus, setShowPasswordStatus] = useState(false),
-    [passwordStatus, setPasswordStatus] = useState("none");
+    [passwordStatus, setPasswordStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Settings | Demeter - The plant meter";
@@ -271,9 +271,13 @@ export default function Settings(props) {
               <div className="text-end">
                 <FontAwesomeIcon
                   className="gold light-gold-hover"
+                  tabIndex="0"
                   icon={faPen}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
+                    setEmailModifiable(true);
+                  }}
+                  onKeyPress={() => {
                     setEmailModifiable(true);
                   }}
                 ></FontAwesomeIcon>
@@ -288,7 +292,11 @@ export default function Settings(props) {
           <span>{emailStatus}</span>
         </div>
         <div className={emailModifiable ? "text-center mt-3" : "hidden-field"}>
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            tabIndex={emailModifiable ? "0" : "-1"}
+            type="submit"
+          >
             Apply change
           </button>
         </div>
@@ -323,9 +331,14 @@ export default function Settings(props) {
               <div className="text-end">
                 <FontAwesomeIcon
                   className="gold light-gold-hover"
+                  tabIndex="0"
                   icon={faPen}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
+                    setDetailsModifiable(true);
+                    setPhoneNumberModifiable(true);
+                  }}
+                  onKeyPress={() => {
                     setDetailsModifiable(true);
                     setPhoneNumberModifiable(true);
                   }}
@@ -362,9 +375,14 @@ export default function Settings(props) {
               <div className="text-end">
                 <FontAwesomeIcon
                   className="gold light-gold-hover"
+                  tabIndex="0"
                   icon={faPen}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
+                    setDetailsModifiable(true);
+                    setFirstNameModifiable(true);
+                  }}
+                  onKeyPress={() => {
                     setDetailsModifiable(true);
                     setFirstNameModifiable(true);
                   }}
@@ -401,9 +419,14 @@ export default function Settings(props) {
               <div className="text-end">
                 <FontAwesomeIcon
                   className="gold light-gold-hover"
+                  tabIndex="0"
                   icon={faPen}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
+                    setDetailsModifiable(true);
+                    setLastNameModifiable(true);
+                  }}
+                  onKeyPress={() => {
                     setDetailsModifiable(true);
                     setLastNameModifiable(true);
                   }}
@@ -423,7 +446,11 @@ export default function Settings(props) {
         <div
           className={detailsModifiable ? "text-center mt-3" : "hidden-field"}
         >
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            tabIndex={detailsModifiable ? "0" : "-1"}
+            type="submit"
+          >
             Apply changes
           </button>
         </div>
@@ -484,9 +511,13 @@ export default function Settings(props) {
               <div className="text-end">
                 <FontAwesomeIcon
                   className="gold light-gold-hover"
+                  tabIndex="0"
                   icon={faPen}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
+                    setPasswordModifiable(true);
+                  }}
+                  onKeyPress={() => {
                     setPasswordModifiable(true);
                   }}
                 ></FontAwesomeIcon>
@@ -511,7 +542,11 @@ export default function Settings(props) {
               : "hidden-field"
           }
         >
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            tabIndex={passwordModifiable ? "0" : "-1"}
+            type="submit"
+          >
             Change password
           </button>
         </div>

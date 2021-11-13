@@ -135,7 +135,11 @@ export default function Pagination(props) {
                   <tr
                     key={id}
                     className="pagination-tr"
+                    tabIndex="0"
                     onClick={(e) => {
+                      window.location.pathname = `/${path}/${id}`;
+                    }}
+                    onKeyPress={(e) => {
                       window.location.pathname = `/${path}/${id}`;
                     }}
                     style={{ cursor: "pointer" }}
@@ -145,7 +149,7 @@ export default function Pagination(props) {
                         <img
                           id={`${id}-image`}
                           src={image}
-                          alt={id}
+                          alt={title1}
                           style={{
                             cursor: "pointer",
                           }}
@@ -200,7 +204,11 @@ export default function Pagination(props) {
           <li className="page-item">
             <span
               className="page-link"
+              tabIndex="0"
               onClick={() => {
+                pageNavigate(currentPageNumber - 1);
+              }}
+              onKeyPress={() => {
                 pageNavigate(currentPageNumber - 1);
               }}
             >
@@ -217,7 +225,11 @@ export default function Pagination(props) {
                           ? "page-link page-link-selected"
                           : "page-link"
                       }
+                      tabIndex="0"
                       onClick={() => {
+                        pageNavigate(paginationNumber);
+                      }}
+                      onKeyPress={() => {
                         pageNavigate(paginationNumber);
                       }}
                     >
@@ -235,7 +247,11 @@ export default function Pagination(props) {
                           ? "page-link page-link-selected"
                           : "page-link"
                       }
+                      tabIndex="0"
                       onClick={() => {
+                        pageNavigate(mobilePaginationNumber);
+                      }}
+                      onKeyPress={() => {
                         pageNavigate(mobilePaginationNumber);
                       }}
                     >
@@ -247,7 +263,11 @@ export default function Pagination(props) {
           <li className="page-item">
             <span
               className="page-link"
+              tabIndex="0"
               onClick={() => {
+                pageNavigate(currentPageNumber + 1);
+              }}
+              onKeyPress={() => {
                 pageNavigate(currentPageNumber + 1);
               }}
             >

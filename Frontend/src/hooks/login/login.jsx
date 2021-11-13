@@ -11,7 +11,7 @@ export default function Login(props) {
     password: "",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("none");
+  const [status, setStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Login | Demeter - The plant meter";
@@ -97,15 +97,19 @@ export default function Login(props) {
           onChange={handleChange}
           required
         ></input>
-        <div className="form-text mt-1">
+        <div className="form-text mt-2">
           <span
             className="gold light-gold-hover"
+            tabIndex="0"
             style={{
               textDecoration: "none",
               cursor: "pointer",
               userSelect: "none",
             }}
             onClick={() => {
+              window.location.pathname = "/forgot-password";
+            }}
+            onKeyPress={() => {
               window.location.pathname = "/forgot-password";
             }}
           >

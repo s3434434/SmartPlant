@@ -14,10 +14,12 @@ td {
   user-select: none;
 }
 .page-link-selected,
-.page-link:hover {
+.page-link:hover,
+.page-link:focus {
   background-color: rgb(31, 85, 52) !important;
 }
-.page-link:hover {
+.page-link:hover,
+.page-link:focus {
   box-shadow: 0.0825em 0.0825em 0.1425em rgb(247, 215, 59),
     -0.0825em -0.0825em 0.1425em rgb(247, 215, 59),
     -0.0825em 0.0825em 0.1425em rgb(247, 215, 59),

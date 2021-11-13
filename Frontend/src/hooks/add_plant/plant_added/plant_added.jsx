@@ -23,8 +23,8 @@ export default function PlantAdded(props) {
           props.wideView ? "text-center mt-3" : "text-center mt-3 mb-2"
         }
       >
-        <Link key="plants" to="/plants">
-          <button className="btn btn-primary">Plants</button>
+        <Link key="plants" className="btn btn-primary" to="/plants">
+          Plants
         </Link>
       </div>
     </section>

@@ -17,7 +17,7 @@ export default function ResetPassword(props) {
     confirmNewPassword: "",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("none");
+  const [status, setStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Reset password | Demeter - The plant meter";

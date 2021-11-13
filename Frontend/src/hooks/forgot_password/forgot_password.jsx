@@ -10,7 +10,7 @@ export default function ForgotPassword(props) {
     clientURI: "https://www.demeter.onl/reset-password",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("none");
+  const [status, setStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Forgot password | Demeter - The plant meter";
@@ -64,7 +64,7 @@ export default function ForgotPassword(props) {
           onChange={handleChange}
           required
         />
-        <div className="form-text mt-1">
+        <div className="form-text mt-2">
           <span style={{ color: "white" }}>
             Enter your email and we will send you a password reset link.
           </span>

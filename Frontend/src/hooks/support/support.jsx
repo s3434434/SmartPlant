@@ -10,7 +10,7 @@ export default function Support(props) {
     EmailBody: "",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("none");
+  const [status, setStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Support | Demeter - The plant meter";

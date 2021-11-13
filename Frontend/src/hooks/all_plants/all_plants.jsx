@@ -6,6 +6,7 @@ import Pagination from "../pagination/pagination";
 import "./all_plants.css";
 
 export default function AllPlants(props) {
+  const { wideView } = props;
   const [plants, setPlants] = useState("Loading plants...");
 
   useEffect(() => {
@@ -49,23 +50,22 @@ export default function AllPlants(props) {
   return (
     <section>
       <h1 className="text-center gold">Plants</h1>
-      <div className="d-none d-xl-block">
+      {wideView ? (
         <div className="container m-0 p-0">
           <div className="row">
             <div className="col-xl-2 text-center">
-              <Link key="add-plant" to="/add-plant">
-                <button className="btn btn-primary">Add plant</button>
+              <Link key="add-plant" className="btn btn-primary" to="/add-plant">
+                Add plant
               </Link>
             </div>
             <div className="col-xl-10"></div>
           </div>
         </div>
-      </div>
-      <div className="text-center d-xl-none">
-        <Link key="add-plant" to="/add-plant">
-          <button className="btn btn-primary mt-2">Add plant</button>
+      ) : (
+        <Link key="add-plant" className="btn btn-primary mt-2" to="/add-plant">
+          Add plant
         </Link>
-      </div>
+      )}
       {typeof plants === "string" ? (
         <div className="text-center mt-3" style={{ color: "white" }}>
           {plants}
@@ -80,7 +80,7 @@ export default function AllPlants(props) {
           itemTitle1="name"
           itemTitle2="plantType"
           path="plant"
-          wideView={props.wideView}
+          wideView={wideView}
         ></Pagination>
       )}
     </section>

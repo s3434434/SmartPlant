@@ -16,7 +16,7 @@ export default function Register(props) {
     clientURI: "https://www.demeter.onl/confirm-email",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("none");
+  const [status, setStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Register | Demeter - The plant meter";
@@ -150,12 +150,16 @@ export default function Register(props) {
           By clicking Register you agree to our&nbsp;
           <span
             className="gold light-gold-hover"
+            tabIndex="0"
             style={{
               textDecoration: "none",
               cursor: "pointer",
               userSelect: "none",
             }}
             onClick={() => {
+              window.location.pathname = "/terms-of-use";
+            }}
+            onKeyPress={() => {
               window.location.pathname = "/terms-of-use";
             }}
           >
@@ -165,12 +169,16 @@ export default function Register(props) {
           our&nbsp;
           <span
             className="gold light-gold-hover"
+            tabIndex="0"
             style={{
               textDecoration: "none",
               cursor: "pointer",
               userSelect: "none",
             }}
             onClick={() => {
+              window.location.pathname = "/privacy-policy";
+            }}
+            onKeyPress={() => {
               window.location.pathname = "/privacy-policy";
             }}
           >

@@ -134,7 +134,11 @@ function App() {
                     <li className="nav-item">
                       <span
                         className="nav-link"
+                        tabIndex="0"
                         onClick={() => {
+                          window.location.pathname = "/";
+                        }}
+                        onKeyPress={() => {
                           window.location.pathname = "/";
                         }}
                       >
@@ -144,7 +148,11 @@ function App() {
                     <li className="nav-item">
                       <span
                         className="nav-link"
+                        tabIndex="0"
                         onClick={() => {
+                          window.location.pathname = "/plants-admin";
+                        }}
+                        onKeyPress={() => {
                           window.location.pathname = "/plants-admin";
                         }}
                       >
@@ -154,7 +162,11 @@ function App() {
                     <li className="nav-item">
                       <span
                         className="nav-link"
+                        tabIndex="0"
                         onClick={() => {
+                          window.location.pathname = "/logout";
+                        }}
+                        onKeyPress={() => {
                           window.location.pathname = "/logout";
                         }}
                       >
@@ -167,7 +179,11 @@ function App() {
                     <li className="nav-item">
                       <span
                         className="nav-link"
+                        tabIndex="0"
                         onClick={() => {
+                          window.location.pathname = "/";
+                        }}
+                        onKeyPress={() => {
                           window.location.pathname = "/";
                         }}
                       >
@@ -177,7 +193,11 @@ function App() {
                     <li className="nav-item">
                       <span
                         className="nav-link"
+                        tabIndex="0"
                         onClick={() => {
+                          window.location.pathname = "/settings";
+                        }}
+                        onKeyPress={() => {
                           window.location.pathname = "/settings";
                         }}
                       >
@@ -187,7 +207,11 @@ function App() {
                     <li className="nav-item">
                       <span
                         className="nav-link"
+                        tabIndex="0"
                         onClick={() => {
+                          window.location.pathname = "/support";
+                        }}
+                        onKeyPress={() => {
                           window.location.pathname = "/support";
                         }}
                       >
@@ -197,7 +221,11 @@ function App() {
                     <li className="nav-item">
                       <span
                         className="nav-link"
+                        tabIndex="0"
                         onClick={() => {
+                          window.location.pathname = "/logout";
+                        }}
+                        onKeyPress={() => {
                           window.location.pathname = "/logout";
                         }}
                       >
@@ -212,7 +240,11 @@ function App() {
                 <li className="nav-item">
                   <span
                     className="nav-link"
+                    tabIndex="0"
                     onClick={() => {
+                      window.location.pathname = "/";
+                    }}
+                    onKeyPress={() => {
                       window.location.pathname = "/";
                     }}
                   >
@@ -222,7 +254,11 @@ function App() {
                 <li className="nav-item">
                   <span
                     className="nav-link"
+                    tabIndex="0"
                     onClick={() => {
+                      window.location.pathname = "/login";
+                    }}
+                    onKeyPress={() => {
                       window.location.pathname = "/login";
                     }}
                   >
@@ -232,7 +268,11 @@ function App() {
                 <li className="nav-item">
                   <span
                     className="nav-link"
+                    tabIndex="0"
                     onClick={() => {
+                      window.location.pathname = "/register";
+                    }}
+                    onKeyPress={() => {
                       window.location.pathname = "/register";
                     }}
                   >
@@ -242,8 +282,13 @@ function App() {
                 <li className="nav-item">
                   <span
                     className="nav-link"
+                    tabIndex="0"
                     onClick={() => {
-                      // mailto link
+                      window.open(
+                        "mailto:email@example.com?subject=Help%With%Demeter"
+                      );
+                    }}
+                    onKeyPress={() => {
                       window.open(
                         "mailto:email@example.com?subject=Help%With%Demeter"
                       );
@@ -468,7 +513,11 @@ function App() {
           <div className="col-sm-4 text-center">
             <span
               className="footer-link"
+              tabIndex="0"
               onClick={() => {
+                window.location.pathname = "/terms-of-use";
+              }}
+              onKeyPress={() => {
                 window.location.pathname = "/terms-of-use";
               }}
             >
@@ -478,7 +527,11 @@ function App() {
           <div className="col-sm-4 text-center">
             <span
               className="footer-link"
+              tabIndex="0"
               onClick={() => {
+                window.location.pathname = "/privacy-policy";
+              }}
+              onKeyPress={() => {
                 window.location.pathname = "/privacy-policy";
               }}
             >

@@ -16,15 +16,15 @@ export default function PlantAdmin(props) {
     }),
     [nameModifiable, setNameModifiable] = useState(false),
     [showNameStatus, setShowNameStatus] = useState(false),
-    [nameStatus, setNameStatus] = useState("none"),
+    [nameStatus, setNameStatus] = useState("-"),
     [showImageStatus, setShowImageStatus] = useState(false),
-    [imageStatus, setImageStatus] = useState("none"),
-    [plantType, setPlantType] = useState(""),
-    [userID, setUserID] = useState(""),
-    [email, setEmail] = useState(""),
+    [imageStatus, setImageStatus] = useState("-"),
+    [plantType, setPlantType] = useState("-"),
+    [userID, setUserID] = useState("-"),
+    [email, setEmail] = useState("-"),
     [plantImage, setPlantImage] = useState(null),
     [showTokenStatus, setShowTokenStatus] = useState(false),
-    [tokenStatus, setTokenStatus] = useState("none"),
+    [tokenStatus, setTokenStatus] = useState("-"),
     [sensorReadings, setSensorReadings] = useState(null),
     [currentTimeframe, setCurrentTimeframe] = useState("All time"),
     [displayedReadings, setDisplayedReadings] = useState(
@@ -35,7 +35,7 @@ export default function PlantAdmin(props) {
     [paginationNumbers, setPaginationNumbers] = useState([]),
     [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]),
     [showDeleteStatus, setShowDeleteStatus] = useState(false),
-    [deleteStatus, setDeleteStatus] = useState("none");
+    [deleteStatus, setDeleteStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Demeter - The plant meter";
@@ -468,7 +468,7 @@ export default function PlantAdmin(props) {
     <section>
       {plantImage !== null ? (
         <>
-          <div className="d-none d-xl-block">
+          {wideView ? (
             <div className="container m-0 p-0">
               <div className="row">
                 <div className="col-xl-2 text-center">
@@ -485,15 +485,19 @@ export default function PlantAdmin(props) {
                 <div className="col-xl-10"></div>
               </div>
             </div>
-          </div>
-          <div className="text-center d-xl-none">
-            <div className={showDeleteStatus ? "text-center" : "hidden-field"}>
-              <span style={{ color: "white" }}>{deleteStatus}</span>
-            </div>
-            <button className="btn btn-primary mt-2" onClick={deletePlant}>
-              Delete plant
-            </button>
-          </div>
+          ) : (
+            <>
+              <div
+                className={showDeleteStatus ? "text-center" : "hidden-field"}
+              >
+                <span style={{ color: "white" }}>{deleteStatus}</span>
+              </div>
+              <button className="btn btn-primary mt-2" onClick={deletePlant}>
+                Delete plant
+              </button>
+            </>
+          )}
+
           <form
             className={wideView ? "m-auto" : "m-auto px-2"}
             onSubmit={(e) => {
@@ -525,9 +529,13 @@ export default function PlantAdmin(props) {
                   <div className="text-end m-0 p-0">
                     <FontAwesomeIcon
                       className="gold light-gold-hover"
+                      tabIndex="0"
                       icon={faPen}
                       style={{ cursor: "pointer" }}
                       onClick={() => {
+                        setNameModifiable(true);
+                      }}
+                      onKeyPress={() => {
                         setNameModifiable(true);
                       }}
                     ></FontAwesomeIcon>
@@ -559,12 +567,18 @@ export default function PlantAdmin(props) {
                   : "hidden-field"
               }
             >
-              <button className="btn btn-primary" type="submit">
+              <button
+                className="btn btn-primary"
+                tabIndex={nameModifiable ? "0" : "-1"}
+                type="submit"
+              >
                 Apply change
               </button>
             </div>
           </form>
+
           <h1 className="text-center mb-2 p-0 gold">{email}</h1>
+
           <div className="m-auto mt-5 text-center">
             <img
               className="plant-image gold-border"
@@ -584,11 +598,16 @@ export default function PlantAdmin(props) {
                   : "hidden-field"
               }
             >
-              <button className="btn btn-primary" onClick={deleteImage}>
+              <button
+                className="btn btn-primary"
+                tabIndex={plantImage !== container_no_image ? "0" : "-1"}
+                onClick={deleteImage}
+              >
                 Delete image
               </button>
             </div>
           </div>
+
           <div className={wideView ? "w-25 m-auto mt-4" : "m-auto mt-4 px-2"}>
             <div
               className={showTokenStatus ? "text-center mt-1" : "hidden-field"}
@@ -604,6 +623,7 @@ export default function PlantAdmin(props) {
               </button>
             </div>
           </div>
+
           <h3 className="gold text-center mt-5">Sensor data</h3>
           <div
             className={
@@ -696,7 +716,11 @@ export default function PlantAdmin(props) {
                     <li className="page-item">
                       <span
                         className="page-link"
+                        tabIndex="0"
                         onClick={() => {
+                          pageNavigate(currentPageNumber - 1);
+                        }}
+                        onKeyPress={() => {
                           pageNavigate(currentPageNumber - 1);
                         }}
                       >
@@ -713,7 +737,11 @@ export default function PlantAdmin(props) {
                                     ? "page-link page-link-selected"
                                     : "page-link"
                                 }
+                                tabIndex="0"
                                 onClick={() => {
+                                  pageNavigate(paginationNumber);
+                                }}
+                                onKeyPress={() => {
                                   pageNavigate(paginationNumber);
                                 }}
                               >
@@ -735,7 +763,11 @@ export default function PlantAdmin(props) {
                                       ? "page-link page-link-selected"
                                       : "page-link"
                                   }
+                                  tabIndex="0"
                                   onClick={() => {
+                                    pageNavigate(mobilePaginationNumber);
+                                  }}
+                                  onKeyPress={() => {
                                     pageNavigate(mobilePaginationNumber);
                                   }}
                                 >
@@ -748,7 +780,11 @@ export default function PlantAdmin(props) {
                     <li className="page-item">
                       <span
                         className="page-link"
+                        tabIndex="0"
                         onClick={() => {
+                          pageNavigate(currentPageNumber + 1);
+                        }}
+                        onKeyPress={() => {
                           pageNavigate(currentPageNumber + 1);
                         }}
                       >
@@ -778,7 +814,11 @@ export default function PlantAdmin(props) {
                         ? "page-link page-link-selected"
                         : "page-link"
                     }
+                    tabIndex="0"
                     onClick={() => {
+                      updateDisplayedReadings("Hour");
+                    }}
+                    onKeyPress={() => {
                       updateDisplayedReadings("Hour");
                     }}
                   >
@@ -792,7 +832,11 @@ export default function PlantAdmin(props) {
                         ? "page-link page-link-selected"
                         : "page-link"
                     }
+                    tabIndex="0"
                     onClick={() => {
+                      updateDisplayedReadings("Day");
+                    }}
+                    onKeyPress={() => {
                       updateDisplayedReadings("Day");
                     }}
                   >
@@ -806,7 +850,11 @@ export default function PlantAdmin(props) {
                         ? "page-link page-link-selected"
                         : "page-link"
                     }
+                    tabIndex="0"
                     onClick={() => {
+                      updateDisplayedReadings("Week");
+                    }}
+                    onKeyPress={() => {
                       updateDisplayedReadings("Week");
                     }}
                   >
@@ -820,7 +868,11 @@ export default function PlantAdmin(props) {
                         ? "page-link page-link-selected"
                         : "page-link"
                     }
+                    tabIndex="0"
                     onClick={() => {
+                      updateDisplayedReadings("Month");
+                    }}
+                    onKeyPress={() => {
                       updateDisplayedReadings("Month");
                     }}
                   >
@@ -834,7 +886,11 @@ export default function PlantAdmin(props) {
                         ? "page-link page-link-selected"
                         : "page-link"
                     }
+                    tabIndex="0"
                     onClick={() => {
+                      updateDisplayedReadings("Year");
+                    }}
+                    onKeyPress={() => {
                       updateDisplayedReadings("Year");
                     }}
                   >
@@ -848,7 +904,11 @@ export default function PlantAdmin(props) {
                         ? "page-link page-link-selected"
                         : "page-link"
                     }
+                    tabIndex="0"
                     onClick={() => {
+                      updateDisplayedReadings("All time");
+                    }}
+                    onKeyPress={() => {
                       updateDisplayedReadings("All time");
                     }}
                   >

@@ -20,8 +20,8 @@ export default function RequestProcessed(props) {
           props.wideView ? "text-center mt-3" : "text-center mt-3 mb-2"
         }
       >
-        <Link key="home" to="/">
-          <button className="btn btn-primary">Home</button>
+        <Link key="home" className="btn btn-primary" to="/">
+          Home
         </Link>
       </div>
     </section>

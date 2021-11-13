@@ -1,4 +1,5 @@
-.pagination-tr:hover {
+.pagination-tr:hover,
+.pagination-tr:focus {
   background-color: rgba(0, 41, 8, 0.4);
 }
 .pagination-tr:active {
