@@ -19,7 +19,7 @@ namespace SmartPlant.Models.DataManager
         private readonly DatabaseContext _context;
 
         //Sets the maximum plants allowed per user.
-        private readonly int maxPlantsAllowed = 5;
+        private readonly int maxPlantsAllowed = 20;
 
 
         public PlantManager(DatabaseContext context)

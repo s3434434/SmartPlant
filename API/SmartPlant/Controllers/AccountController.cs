@@ -386,6 +386,11 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/Users")]
         public async Task<IActionResult> AdminGetAllUsers()
         {
+            if (!await AdminCheck())
+            {
+                return Unauthorized();
+            }
+
             var result = await _repo.AdminGetAllUsers();
 
             if (result == null)
@@ -408,6 +413,11 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/User")]
         public async Task<IActionResult> AdminGetUserDetails(string userID)
         {
+            if (!await AdminCheck())
+            {
+                return Unauthorized();
+            }
+
             var result = await _repo.AdminGetUserDetails(userID);
 
             if (result == null)
@@ -435,6 +445,11 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/User")]
         public async Task<IActionResult> AdminUpdateDetails([FromBody] AdminUpdateUserDetailsDto DetailsDto)
         {
+            if (!await AdminCheck())
+            {
+                return Unauthorized();
+            }
+
             var result = await _repo.AdminUpdateUserDetails(DetailsDto);
 
             if (result == null)
@@ -460,6 +475,11 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/User/Role")]
         public async Task<IActionResult> AdminGetRoleList()
         {
+            if (!await AdminCheck())
+            {
+                return Unauthorized();
+            }
+
             var result = await _repo.AdminGetRoleList();
             return Ok(result);
         }
@@ -478,6 +498,11 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/User/Role")]
         public async Task<IActionResult> AdminUpdateRole([FromBody] AdminUpdateUserRoleDto updateRoleDto)
         {
+            if (!await AdminCheck())
+            {
+                return Unauthorized();
+            }
+
             var result = await _repo.AdminUpdateRole(updateRoleDto);
 
             return Ok(result);
@@ -497,6 +522,11 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/User/Password")]
         public async Task<IActionResult> AdminUpdatePassword([FromBody] AdminUpdatePasswordDto passwordDto)
         {
+            if (!await AdminCheck())
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest();
@@ -524,6 +554,11 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/User")]
         public async Task<IActionResult> AdminDeleteUser(string userID)
         {
+            if (!await AdminCheck())
+            {
+                return Unauthorized();
+            }
+
             var user = await _userManager.FindByIdAsync(userID);
 
             if (user == null)
@@ -539,6 +574,19 @@ namespace SmartPlant.Controllers
             }
 
             return Ok(result);
+        }
+        
+
+        //helper methods
+        private async Task<bool> AdminCheck()
+        {
+            var userId = User?.Identity?.Name;
+            var user = await _userManager.FindByIdAsync(userId);
+            if ((await _userManager.GetRolesAsync(user))?[0] != "Admin")
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

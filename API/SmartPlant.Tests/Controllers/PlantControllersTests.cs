@@ -294,6 +294,9 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.AdminGetAll())
                 .ReturnsAsync(testValue);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
@@ -313,6 +316,9 @@ namespace SmartPlant.Tests.Controllers
             // Arrange
             mock_PlantManager.Setup(_repo => _repo.AdminGetAll())
                 .ReturnsAsync(() => null);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -338,6 +344,9 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.GetAllForUser(It.IsAny<string>()))
                 .ReturnsAsync(testValue);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
@@ -357,6 +366,9 @@ namespace SmartPlant.Tests.Controllers
             // Arrange
             mock_PlantManager.Setup(_repo => _repo.GetAllForUser(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -379,6 +391,9 @@ namespace SmartPlant.Tests.Controllers
             // Arrange
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             var test_AddPlantDto = new AdminAddPlantDto();
 
@@ -403,6 +418,9 @@ namespace SmartPlant.Tests.Controllers
 
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ApplicationUser());
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
@@ -431,6 +449,9 @@ namespace SmartPlant.Tests.Controllers
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ApplicationUser());
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
 
@@ -457,6 +478,9 @@ namespace SmartPlant.Tests.Controllers
 
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ApplicationUser());
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             mock_PlantManager.Setup(_repo => _repo.Add(It.IsAny<Plant>(), It.IsAny<PlantToken>()))
                 .ReturnsAsync(returnValue);
@@ -487,7 +511,10 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.AdminUpdate(It.IsAny<Plant>()))
                 .ReturnsAsync(returnValue);
 
-            var test_UpdatePlantDto = new UpdatePlantDto() { Name = "Name", PlantID = "1" };
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
+            var test_UpdatePlantDto = new AdminUpdatePlantDto() { Name = "Name", PlantID = "1" };
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -511,7 +538,10 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.AdminUpdate(It.IsAny<Plant>()))
                 .ReturnsAsync(returnValue);
 
-            var test_UpdatePlantDto = new UpdatePlantDto() { Name = "Name", PlantID = "1" };
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
+            var test_UpdatePlantDto = new AdminUpdatePlantDto() { Name = "Name", PlantID = "1" };
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -537,6 +567,9 @@ namespace SmartPlant.Tests.Controllers
             mock_PlantManager.Setup(_repo => _repo.AdminDelete(It.IsAny<string>()))
                 .ReturnsAsync(returnValue);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()
             {
@@ -558,6 +591,9 @@ namespace SmartPlant.Tests.Controllers
 
             mock_PlantManager.Setup(_repo => _repo.AdminDelete(It.IsAny<string>()))
                 .ReturnsAsync(returnValue);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             var plantController = new PlantController(mock_PlantManager.Object, mock_UserManager.Object, mock_Configuration.Object);
             plantController.ControllerContext.HttpContext = new DefaultHttpContext()

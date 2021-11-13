@@ -614,6 +614,12 @@ namespace SmartPlant.Tests.Controllers
             mock_AccountManager.Setup(_repo => _repo.AdminGetAllUsers())
                 .ReturnsAsync(() => null);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
@@ -637,6 +643,9 @@ namespace SmartPlant.Tests.Controllers
 
             mock_AccountManager.Setup(_repo => _repo.AdminGetUserDetails(It.IsAny<string>()))
                 .ReturnsAsync(mock_Result);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             var accountController = new AccountController(
                 mock_AccountManager.Object,
@@ -662,6 +671,9 @@ namespace SmartPlant.Tests.Controllers
             mock_AccountManager.Setup(_repo => _repo.AdminGetUserDetails(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
@@ -685,6 +697,9 @@ namespace SmartPlant.Tests.Controllers
 
             mock_AccountManager.Setup(_repo => _repo.AdminGetUserDetails(It.IsAny<string>()))
                 .ReturnsAsync(mock_Result);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             var accountController = new AccountController(
                 mock_AccountManager.Object,
@@ -711,6 +726,9 @@ namespace SmartPlant.Tests.Controllers
             mock_AccountManager.Setup(_repo => _repo.AdminUpdateUserDetails(It.IsAny<AdminUpdateUserDetailsDto>()))
                 .ReturnsAsync(() => null);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
@@ -734,6 +752,9 @@ namespace SmartPlant.Tests.Controllers
 
             mock_AccountManager.Setup(_repo => _repo.AdminUpdateUserDetails(It.IsAny<AdminUpdateUserDetailsDto>()))
                 .ReturnsAsync(mock_Result);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             var accountController = new AccountController(
                 mock_AccountManager.Object,
@@ -760,6 +781,9 @@ namespace SmartPlant.Tests.Controllers
 
             mock_AccountManager.Setup(_repo => _repo.AdminGetRoleList())
                 .ReturnsAsync(mock_Result);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             var accountController = new AccountController(
                 mock_AccountManager.Object,
@@ -788,6 +812,9 @@ namespace SmartPlant.Tests.Controllers
             mock_AccountManager.Setup(_repo => _repo.AdminUpdateRole(It.IsAny<AdminUpdateUserRoleDto>()))
                 .ReturnsAsync(mock_Result);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
@@ -811,6 +838,9 @@ namespace SmartPlant.Tests.Controllers
             mock_AccountManager.Setup(_repo => _repo.AdminUpdatePassword(It.IsAny<AdminUpdatePasswordDto>()))
                 .ReturnsAsync(IdentityResult.Failed());
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
@@ -832,6 +862,9 @@ namespace SmartPlant.Tests.Controllers
             // Arrange
             mock_AccountManager.Setup(_repo => _repo.AdminUpdatePassword(It.IsAny<AdminUpdatePasswordDto>()))
                 .ReturnsAsync(IdentityResult.Success);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             var accountController = new AccountController(
                 mock_AccountManager.Object,
@@ -857,6 +890,9 @@ namespace SmartPlant.Tests.Controllers
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
@@ -880,6 +916,9 @@ namespace SmartPlant.Tests.Controllers
 
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(mock_FindResult);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             mock_AccountManager.Setup(_repo => _repo.AdminDeleteUser(It.IsAny<ApplicationUser>()))
                 .ReturnsAsync(() => null);
@@ -907,17 +946,21 @@ namespace SmartPlant.Tests.Controllers
 
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(mock_FindResult);
+            
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string>{"Admin"});
 
             mock_AccountManager.Setup(_repo => _repo.AdminDeleteUser(It.IsAny<ApplicationUser>()))
                 .ReturnsAsync(IdentityResult.Success);
+
+            
 
             var accountController = new AccountController(
                 mock_AccountManager.Object,
                 mock_Mapper.Object,
                 mock_UserManager.Object
-
-
-                );
+            );
+            
 
             // Act
             var result = await accountController.AdminDeleteUser(It.IsAny<string>());

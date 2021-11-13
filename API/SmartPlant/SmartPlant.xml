@@ -198,22 +198,6 @@
             <response code="400">Bad Data</response>
             <response code="404">UserID Not Found</response>
         </member>
-        <member name="M:SmartPlant.Controllers.PlantController.UploadImage(SmartPlant.Models.API_Model.Plant.PlantImageDto)">
-            <summary>
-            Used for testing
-            </summary>
-            <remarks>
-            </remarks>
-            <response code="200">Success</response>
-        </member>
-        <member name="M:SmartPlant.Controllers.PlantController.DeleteImage(SmartPlant.Models.API_Model.Plant.PlantImageDto)">
-            <summary>
-            Used for testing
-            </summary>
-            <remarks>
-            </remarks>
-            <response code="200">Success</response>
-        </member>
         <member name="M:SmartPlant.Controllers.PlantController.Get">
             <summary>
             Gets all plants belonging to the current user, Returns plant Name and ID
@@ -240,7 +224,7 @@
         </member>
         <member name="M:SmartPlant.Controllers.PlantController.Update(SmartPlant.Models.API_Model.Plant.UpdatePlantDto)">
             <summary>
-            Updates a plants name
+            Updates a plants name and Image. If Image string is null, it remains the same. If a new image string is passed the old one is deleted from Imgur.
             </summary>
             <remarks>
             This takes in a plant ID and a string name.
@@ -327,7 +311,7 @@
             <response code="404">UserID Not Found</response>
             <response code="409">Max Plant Limit Hit</response>
         </member>
-        <member name="M:SmartPlant.Controllers.PlantController.AdminUpdate(SmartPlant.Models.API_Model.Plant.UpdatePlantDto)">
+        <member name="M:SmartPlant.Controllers.PlantController.AdminUpdate(SmartPlant.Models.API_Model.Admin.AdminUpdatePlantDto)">
             <summary>
             Updates a plants name
             </summary>

@@ -62,7 +62,7 @@ namespace SmartPlant.Models.DataManager
             }
 
             var data = await _context.SensorData.Where(s => s.PlantID == plantID).ToListAsync();
-
+            
             return data;
         }
 

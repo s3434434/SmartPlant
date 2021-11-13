@@ -469,6 +469,9 @@ namespace SmartPlant.Tests.Controllers
             mock_SensorDataManager.Setup(_repo => _repo.AdminGetAll())
                 .ReturnsAsync(() => null);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
 
             // Act
@@ -489,6 +492,9 @@ namespace SmartPlant.Tests.Controllers
             mock_SensorDataManager.Setup(_repo => _repo.AdminGetAll())
                 .ReturnsAsync(mock_SensorData);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
 
             // Act
@@ -507,6 +513,9 @@ namespace SmartPlant.Tests.Controllers
             // Arrange
             mock_SensorDataManager.Setup(_repo => _repo.AdminGetAllForAPlant(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
 
@@ -528,6 +537,9 @@ namespace SmartPlant.Tests.Controllers
             mock_SensorDataManager.Setup(_repo => _repo.AdminGetAllForAPlant(It.IsAny<string>()))
                 .ReturnsAsync(mock_SensorData);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
 
             // Act
@@ -546,6 +558,9 @@ namespace SmartPlant.Tests.Controllers
             // Arrange
             mock_SensorDataManager.Setup(_repo => _repo.AdminGetDaily(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
 
@@ -567,6 +582,9 @@ namespace SmartPlant.Tests.Controllers
             mock_SensorDataManager.Setup(_repo => _repo.AdminGetDaily(It.IsAny<string>()))
                 .ReturnsAsync(mock_SensorData);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
 
             // Act
@@ -585,6 +603,9 @@ namespace SmartPlant.Tests.Controllers
             // Arrange
             mock_SensorDataManager.Setup(_repo => _repo.AdminGetMonthly(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
 
@@ -606,6 +627,9 @@ namespace SmartPlant.Tests.Controllers
             mock_SensorDataManager.Setup(_repo => _repo.AdminGetMonthly(It.IsAny<string>()))
                 .ReturnsAsync(mock_SensorData);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
 
             // Act
@@ -625,6 +649,9 @@ namespace SmartPlant.Tests.Controllers
             // Arrange
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => null);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             var sensorDataController = new SensorDataController(mock_SensorDataManager.Object, mock_Mapper.Object, mock_UserManager.Object);
             sensorDataController.ControllerContext.HttpContext = new DefaultHttpContext()
@@ -650,6 +677,9 @@ namespace SmartPlant.Tests.Controllers
 
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(mock_ApplicationUser);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             mock_Mapper.Setup(_mapper => _mapper.Map<SensorData>(It.IsAny<SensorDataModel>()))
                 .Returns(mock_SensorData);
@@ -683,6 +713,9 @@ namespace SmartPlant.Tests.Controllers
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(mock_ApplicationUser);
 
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             mock_Mapper.Setup(_mapper => _mapper.Map<SensorData>(It.IsAny<SensorDataModel>()))
                 .Returns(mock_SensorData);
 
@@ -714,6 +747,9 @@ namespace SmartPlant.Tests.Controllers
 
             mock_UserManager.Setup(_userManager => _userManager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(mock_ApplicationUser);
+
+            mock_UserManager.Setup(_userManager => _userManager.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
 
             mock_Mapper.Setup(_mapper => _mapper.Map<SensorData>(It.IsAny<SensorDataModel>()))
                 .Returns(mock_SensorData);

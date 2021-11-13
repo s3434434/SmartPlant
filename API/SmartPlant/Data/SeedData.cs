@@ -8,6 +8,17 @@ namespace SmartPlant.Data
 {
     public class SeedData
     {
+        /*
+         * This is the seed data for setting up the database if it's new and has no data.
+         *
+         * This creates and adds 2 users -  [user user] and [admin admin]   --   [username password]
+         *
+         * This adds creates 2 roles - User and Admin
+         *
+         * It also populates 'user' with some plants and sensor data.
+         *
+         *
+         */
         public static void Initialize(IServiceProvider serviceProvider)
         {
             var context = serviceProvider.GetRequiredService<DatabaseContext>();
@@ -17,7 +28,7 @@ namespace SmartPlant.Data
                 return; // DB has already been seeded.
 
             //create the users here
-            var guid = Guid.NewGuid().ToString();
+           
             var pwHasher = new PasswordHasher<ApplicationUser>();
             var user = new ApplicationUser
             {
@@ -32,19 +43,6 @@ namespace SmartPlant.Data
 
             };
             user.PasswordHash = pwHasher.HashPassword(user, "user");
-
-            var testUser = new ApplicationUser
-            {
-                Id = guid,
-                FirstName = "Default Two",
-                LastName = "Default",
-                UserName = "testuser@email.com",
-                Email = "testuser@email.com",
-                NormalizedEmail = "TESTUSER@EMAIL.COM",
-                EmailConfirmed = true,
-                LockoutEnabled = false
-            };
-            testUser.PasswordHash = pwHasher.HashPassword(testUser, "user");
 
             var admin = new ApplicationUser
             {
@@ -61,7 +59,7 @@ namespace SmartPlant.Data
 
             //add the users here
             context.Users.AddRange(
-                user, testUser, admin
+                user, admin
                 );
 
             //add in the roles
@@ -91,47 +89,34 @@ namespace SmartPlant.Data
                 },
                 new IdentityUserRole<string>
                 {
-                    UserId = guid,
-                    RoleId = "user role id"
-                },
-                new IdentityUserRole<string>
-                {
                     UserId = "admin",
                     RoleId = "admin role id"
                 }
                 );
 
+            //use this to add plants to default User user for testing purposes.
             context.Plants.AddRange(
                 new Plant
                 {
 
                     UserID = "user",
-                    PlantID = "plantIdOne"
+                    PlantID = "plantIdOne",
+                    Name = "plant one",
+                    PlantType = "Default"
                 },
                 new Plant
                 {
                     UserID = "user",
-                    PlantID = "plantIdTwo"
+                    PlantID = "plantIdTwo",
+                    Name = "plant two",
+                    PlantType = "Default"
                 },
                 new Plant
                 {
                     UserID = "user",
-                    PlantID = "plantIdThree"
-                },
-                new Plant
-                {
-                    UserID = guid,
-                    PlantID = "p209"
-                },
-                new Plant
-                {
-                    UserID = guid,
-                    PlantID = "p315"
-                },
-                new Plant
-                {
-                    UserID = guid,
-                    PlantID = "p9813"
+                    PlantID = "plantIdThree",
+                    Name = "plant three",
+                    PlantType = "Default"
                 });
             context.PlantTokens.AddRange(
 
@@ -149,27 +134,12 @@ namespace SmartPlant.Data
                 {
                     PlantID = "plantIdThree",
                     Token = "token3"
-                },
-                new PlantToken
-                {
-                    PlantID = "p209",
-                    Token = "token4"
-                },
-                new PlantToken
-                {
-                    PlantID = "p315",
-                    Token = "token5"
-                },
-                new PlantToken
-                {
-                    PlantID = "p9813",
-                    Token = "token6"
                 }
             );
 
             const string format = "dd/MM/yyyy hh:mm:ss tt";
 
-            //sensor data
+            //sensor data plants for testing
             context.SensorData.AddRange(
                 new SensorData
                 {

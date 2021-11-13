@@ -115,7 +115,7 @@ namespace SmartPlant.Tests.Models.DataManager
             var existing_PlantTokens = new List<PlantToken>();
             var existing_UserID = "existing";
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 20; i++)
             {
                 Plant plant = new() { PlantID = i.ToString(), Name = i.ToString() ,UserID = existing_UserID};
                 existing_PlantTokens.Add(new() { PlantID = i.ToString(), Token = i.ToString(), Plant = plant });
