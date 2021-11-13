@@ -159,6 +159,19 @@ export default function AddPlant(props) {
             </>
           )}
         </select>
+        <div className="form-text mt-2" style={{ color: "white" }}>
+          Plant varieties courtesy of&nbsp;
+          <a
+            className="gold light-gold-hover"
+            href={
+              "https://extension.uga.edu/publications/detail.html?number=B1318&title=Growing%20Indoor%20Plants%20with%20Success"
+            }
+            style={{ textDecoration: "none" }}
+          >
+            University of Georgia
+          </a>
+          .
+        </div>
         <label className="form-label gold mt-3" htmlFor="base64ImgString">
           Image
         </label>
