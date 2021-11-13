@@ -47,7 +47,8 @@ footer * {
 .footer-link {
   user-select: none;
 }
-.footer-link:hover {
+.footer-link:hover,
+.footer-link:focus {
   color: rgb(255, 255, 255, 0.7) !important;
 }
 

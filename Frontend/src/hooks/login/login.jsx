@@ -100,12 +100,16 @@ export default function Login(props) {
         <div className="form-text mt-1">
           <span
             className="gold light-gold-hover"
+            tabIndex="0"
             style={{
               textDecoration: "none",
               cursor: "pointer",
               userSelect: "none",
             }}
             onClick={() => {
+              window.location.pathname = "/forgot-password";
+            }}
+            onKeyPress={() => {
               window.location.pathname = "/forgot-password";
             }}
           >
