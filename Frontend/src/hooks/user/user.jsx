@@ -32,15 +32,15 @@ export default function User(props) {
     [lastNameModifiable, setLastNameModifiable] = useState(false),
     [passwordModifiable, setPasswordModifiable] = useState(false),
     [showEmailStatus, setShowEmailStatus] = useState(false),
-    [emailStatus, setEmailStatus] = useState("none"),
+    [emailStatus, setEmailStatus] = useState("-"),
     [showRoleStatus, setShowRoleStatus] = useState(false),
-    [roleStatus, setRoleStatus] = useState("none"),
+    [roleStatus, setRoleStatus] = useState("-"),
     [showDetailsStatus, setShowDetailsStatus] = useState(false),
-    [detailsStatus, setDetailsStatus] = useState("none"),
+    [detailsStatus, setDetailsStatus] = useState("-"),
     [showPasswordStatus, setShowPasswordStatus] = useState(false),
-    [passwordStatus, setPasswordStatus] = useState("none"),
+    [passwordStatus, setPasswordStatus] = useState("-"),
     [showDeleteStatus, setShowDeleteStatus] = useState(false),
-    [deleteStatus, setDeleteStatus] = useState("none"),
+    [deleteStatus, setDeleteStatus] = useState("-"),
     [plants, setPlants] = useState("Loading plants...");
 
   useEffect(() => {

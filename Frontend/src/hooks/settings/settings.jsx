@@ -29,11 +29,11 @@ export default function Settings(props) {
     [lastNameModifiable, setLastNameModifiable] = useState(false),
     [passwordModifiable, setPasswordModifiable] = useState(false),
     [showEmailStatus, setShowEmailStatus] = useState(false),
-    [emailStatus, setEmailStatus] = useState("none"),
+    [emailStatus, setEmailStatus] = useState("-"),
     [showDetailsStatus, setShowDetailsStatus] = useState(false),
-    [detailsStatus, setDetailsStatus] = useState("none"),
+    [detailsStatus, setDetailsStatus] = useState("-"),
     [showPasswordStatus, setShowPasswordStatus] = useState(false),
-    [passwordStatus, setPasswordStatus] = useState("none");
+    [passwordStatus, setPasswordStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Settings | Demeter - The plant meter";

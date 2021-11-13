@@ -16,7 +16,7 @@ export default function Register(props) {
     clientURI: "https://www.demeter.onl/confirm-email",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("none");
+  const [status, setStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Register | Demeter - The plant meter";

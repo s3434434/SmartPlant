@@ -169,7 +169,7 @@ void runFourSensors() {
   delay(1000);
 
   Serial.println("------------------------------");
-  Serial.println("");
+  Serial.println("-");
 
     Serial.print("Light intensity: ");
     Serial.println(light);
@@ -182,7 +182,7 @@ void runFourSensors() {
     Serial.print(tempC);
     Serial.println("°C ~ ");
 
-  Serial.println("");
+  Serial.println("-");
   Serial.println("------------------------------");
 
   delay(3000);

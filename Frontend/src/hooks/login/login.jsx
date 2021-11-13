@@ -11,7 +11,7 @@ export default function Login(props) {
     password: "",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("none");
+  const [status, setStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Login | Demeter - The plant meter";

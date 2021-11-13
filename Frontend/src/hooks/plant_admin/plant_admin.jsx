@@ -16,15 +16,15 @@ export default function PlantAdmin(props) {
     }),
     [nameModifiable, setNameModifiable] = useState(false),
     [showNameStatus, setShowNameStatus] = useState(false),
-    [nameStatus, setNameStatus] = useState("none"),
+    [nameStatus, setNameStatus] = useState("-"),
     [showImageStatus, setShowImageStatus] = useState(false),
-    [imageStatus, setImageStatus] = useState("none"),
-    [plantType, setPlantType] = useState(""),
-    [userID, setUserID] = useState(""),
-    [email, setEmail] = useState(""),
+    [imageStatus, setImageStatus] = useState("-"),
+    [plantType, setPlantType] = useState("-"),
+    [userID, setUserID] = useState("-"),
+    [email, setEmail] = useState("-"),
     [plantImage, setPlantImage] = useState(null),
     [showTokenStatus, setShowTokenStatus] = useState(false),
-    [tokenStatus, setTokenStatus] = useState("none"),
+    [tokenStatus, setTokenStatus] = useState("-"),
     [sensorReadings, setSensorReadings] = useState(null),
     [currentTimeframe, setCurrentTimeframe] = useState("All time"),
     [displayedReadings, setDisplayedReadings] = useState(
@@ -35,7 +35,7 @@ export default function PlantAdmin(props) {
     [paginationNumbers, setPaginationNumbers] = useState([]),
     [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]),
     [showDeleteStatus, setShowDeleteStatus] = useState(false),
-    [deleteStatus, setDeleteStatus] = useState("none");
+    [deleteStatus, setDeleteStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Demeter - The plant meter";

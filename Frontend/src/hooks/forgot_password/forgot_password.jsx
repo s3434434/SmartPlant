@@ -10,7 +10,7 @@ export default function ForgotPassword(props) {
     clientURI: "https://www.demeter.onl/reset-password",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("none");
+  const [status, setStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Forgot password | Demeter - The plant meter";

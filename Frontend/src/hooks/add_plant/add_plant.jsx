@@ -12,7 +12,7 @@ export default function AddPlant(props) {
     base64ImgString: "",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("none");
+  const [status, setStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Add plant | Demeter - The plant meter";
