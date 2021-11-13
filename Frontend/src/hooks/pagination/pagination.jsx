@@ -8,7 +8,7 @@ export default function Pagination(props) {
     itemID,
     heading1,
     heading2,
-    defaultImage,
+    imageCol,
     itemTitle1,
     itemTitle2,
     path,
@@ -86,21 +86,20 @@ export default function Pagination(props) {
     <div
       className={wideView ? "w-50 mx-auto overflow-auto" : "mx-auto"}
       style={{
-        marginTop:
-          defaultImage !== null
-            ? wideView
-              ? "-6em"
-              : "-3em"
-            : wideView
-            ? "2em"
-            : "1em",
+        marginTop: imageCol
+          ? wideView
+            ? "-6em"
+            : "-3em"
+          : wideView
+          ? "2em"
+          : "1em",
       }}
     >
       <div className="overflow-auto">
         <table className="table">
           <thead>
             <tr>
-              {defaultImage !== null ? (
+              {imageCol ? (
                 <th>
                   <img
                     src={container_no_image}
@@ -109,10 +108,10 @@ export default function Pagination(props) {
                   ></img>
                 </th>
               ) : null}
-              <th className={defaultImage !== null ? "text-center" : ""}>
+              <th className={imageCol ? "text-center" : ""}>
                 {wideView ? <h3>{heading1}</h3> : <h4>{heading1}</h4>}
               </th>
-              <th className={defaultImage !== null ? "text-center" : ""}>
+              <th className={imageCol ? "text-center" : ""}>
                 {wideView ? <h3>{heading2}</h3> : <h4>{heading2}</h4>}
               </th>
             </tr>
@@ -124,7 +123,7 @@ export default function Pagination(props) {
                 const id = item[itemID],
                   title1 = item[itemTitle1],
                   title2 = item[itemTitle2];
-                let image = defaultImage;
+                let image = container_no_image;
                 if (item.imgurURL !== undefined) {
                   if (item.imgurURL !== null) {
                     image = item.imgurURL;
@@ -144,7 +143,7 @@ export default function Pagination(props) {
                     }}
                     style={{ cursor: "pointer" }}
                   >
-                    {defaultImage !== null ? (
+                    {imageCol ? (
                       <td className="align-middle">
                         <img
                           id={`${id}-image`}
@@ -158,9 +157,7 @@ export default function Pagination(props) {
                     ) : null}
                     <td
                       className={
-                        defaultImage !== null
-                          ? "align-middle text-center"
-                          : "align-middle"
+                        imageCol ? "align-middle text-center" : "align-middle"
                       }
                     >
                       {wideView ? (
@@ -171,9 +168,7 @@ export default function Pagination(props) {
                     </td>
                     <td
                       className={
-                        defaultImage !== null
-                          ? "align-middle text-center"
-                          : "align-middle"
+                        imageCol ? "align-middle text-center" : "align-middle"
                       }
                     >
                       {wideView ? (

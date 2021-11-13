@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import axios from "axios";
-import container_no_image from "../../assets/images/container_no_image.png";
 import Pagination from "../pagination/pagination";
 import "./user.css";
 
@@ -761,7 +760,7 @@ export default function User(props) {
               itemID="plantID"
               heading1="Name"
               heading2="Variety"
-              defaultImage={container_no_image}
+              imageCol={true}
               itemTitle1="name"
               itemTitle2="plantType"
               path="plant-admin"
