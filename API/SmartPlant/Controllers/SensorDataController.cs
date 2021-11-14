@@ -243,10 +243,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/SensorData")] //returns ALL sensor data for ALL plants, is this needed? maybe for extra graphs/ statistics?
         public async Task<IActionResult> AdminGetAll()
         {
-            if (!await AdminCheck())
-            {
-                return Unauthorized();
-            }
             var data = await _repo.AdminGetAll();
 
             if (data == null)
@@ -270,10 +266,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/SensorData/{plantID}")]
         public async Task<IActionResult> AdminGetAllForPlant(string plantID)
         {
-            if (!await AdminCheck())
-            {
-                return Unauthorized();
-            }
             var data = await _repo.AdminGetAllForAPlant(plantID);
             if (data == null)
             {
@@ -296,10 +288,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/SensorData/Daily/{plantID}")] //shows a plants sensor data based on current date
         public async Task<IActionResult> AdminGetDaily(string plantID)
         {
-            if (!await AdminCheck())
-            {
-                return Unauthorized();
-            }
             var data = await _repo.AdminGetDaily(plantID);
             if (data == null)
             {
@@ -323,10 +311,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/SensorData/Monthly/{plantID}")] //shows sensor data based on current month
         public async Task<IActionResult> AdminGetMonthly(string plantID)
         {
-            if (!await AdminCheck())
-            {
-                return Unauthorized();
-            }
             var data = await _repo.AdminGetMonthly(plantID);
             if (data == null)
             {
@@ -349,10 +333,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/ForTesting/SensorData")]
         public async Task<IActionResult> AdminPost([FromBody] SensorDataModel dataModel)
         {
-            if (!await AdminCheck())
-            {
-                return Unauthorized();
-            }
             //use automapper to map from DTO to Model, then add current time UTC .
             var userID = User.Identity.Name;
             var user = await _userManager.FindByIdAsync(userID);
@@ -377,19 +357,6 @@ namespace SmartPlant.Controllers
             }
 
             return Created("", result);
-        }
-
-
-        //helper methods
-        private async Task<bool> AdminCheck()
-        {
-            var userId = User?.Identity?.Name;
-            var user = await _userManager.FindByIdAsync(userId);
-            if ((await _userManager.GetRolesAsync(user))?[0] != "Admin")
-            {
-                return false;
-            }
-            return true;
         }
     }
 }

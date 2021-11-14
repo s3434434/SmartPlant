@@ -329,11 +329,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/Plants")]
         public async Task<IActionResult> AdminGetAll()
         {
-            if (!await AdminCheck())
-            {
-                return Unauthorized();
-            }
-
             var plants = await _repo.AdminGetAll();
 
             if (plants == null)
@@ -357,11 +352,6 @@ namespace SmartPlant.Controllers
         [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> AdminGet(string id)
         {
-            if (!await AdminCheck())
-            {
-                return Unauthorized();
-            }
-
             var plants = await _repo.GetAllForUser(id);
 
             if (plants == null)
@@ -388,11 +378,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/Plants")]
         public async Task<IActionResult> AdminPost([FromBody] AdminAddPlantDto plantDto)
         {
-            if (!await AdminCheck())
-            {
-                return Unauthorized();
-            }
-
             var user = await _userManager.FindByIdAsync(plantDto.UserID);
 
             var genericError = new GenericReturnMessageDto();
@@ -461,10 +446,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/Plants")]
         public async Task<IActionResult> AdminUpdate([FromBody] AdminUpdatePlantDto dto)
         {
-            if (!await AdminCheck())
-            {
-                return Unauthorized();
-            }
             //user id is not needed, since this is an admin action the userID is not relevant
             var plant = new Plant() { Name = dto.Name, PlantID = dto.PlantID };
             var result = await _repo.AdminUpdate(plant);
@@ -495,10 +476,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/Plants")]
         public async Task<IActionResult> AdminDelete(string plantID)
         {
-            if (!await AdminCheck())
-            {
-                return Unauthorized();
-            }
             var result = await _repo.AdminDelete(plantID);
 
             if (result)
@@ -528,10 +505,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/Plants/NewToken/{userID}/{plantID}")]
         public async Task<IActionResult> AdminGenerateNewPlantToken(string userID, string plantID)
         {
-            if (!await AdminCheck())
-            {
-                return Unauthorized();
-            }
             var plantToken = GeneratePlantToken(plantID);
             var result = await _repo.AdminGenerateNewPlantToken(userID, plantToken);
 
@@ -555,10 +528,6 @@ namespace SmartPlant.Controllers
         [Route("/api/Admin/Plants/Image")]
         public async Task<IActionResult> AdminDeletePlantImage(string userID, string plantID)
         {
-            if (!await AdminCheck())
-            {
-                return Unauthorized();
-            }
             var result = await _repo.DeletePlantImage(clientID, plantID, userID);
             return Ok(result);
         }
@@ -575,16 +544,6 @@ namespace SmartPlant.Controllers
                 Token = token
             };
             return plantToken;
-        }
-        private async Task<bool> AdminCheck()
-        {
-            var userId = User?.Identity?.Name;
-            var user = await _userManager.FindByIdAsync(userId);
-            if ((await _userManager.GetRolesAsync(user))?[0] != "Admin")
-            {
-                return false;
-            }
-            return true;
         }
     }
 }
