@@ -1,564 +1,437 @@
-import React, { Fragment, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import "./plant.css";
+import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
+import axios from "axios";
+import container_no_image from "../../assets/images/container_no_image.png";
+import SensorPagination from "../sensor_pagination/sensor_pagination";
+import "./plant.css";
 
 export default function Plant(props) {
-  const {
-    getCurrentUser,
-    getPlants,
-    openOverlay,
-    closeOverlay,
-    getFileInputLabel,
-  } = props;
-  const { plant_name } = useParams();
-
-  const [plant, setPlant] = useState({});
-  const [currentDependency, setCurrentDependency] = useState({
-    dependency: "",
-    version: {
-      prefix: "",
-      major: "",
-      minor: "",
-      patch: "",
-    },
-    latest_version: {
-      major: "",
-      minor: "",
-      patch: "",
-    },
-  });
-  const [currentDependencyLoading, setCurrentDependencyLoading] =
-    useState(false);
+  const { getLogin, wideView } = props;
+  const startIndex = window.location.pathname.lastIndexOf("/") + 1;
 
   const [form, setForm] = useState({
-    dependencies: "",
-  });
-  const [showStatus, setShowStatus] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
+      name: "",
+      base64ImgString: "",
+      plantID: window.location.pathname.substr(startIndex),
+    }),
+    [nameModifiable, setNameModifiable] = useState(false),
+    [imageModifiable, setImageModifiable] = useState(false),
+    [showNameStatus, setShowNameStatus] = useState(false),
+    [nameStatus, setNameStatus] = useState("-"),
+    [showImageStatus, setShowImageStatus] = useState(false),
+    [imageStatus, setImageStatus] = useState("-"),
+    [plantType, setPlantType] = useState("-"),
+    [plantImage, setPlantImage] = useState(null),
+    [arduinoToken, setArduinoToken] = useState("-"),
+    [showArduinoToken, setShowArduinoToken] = useState(false),
+    [showTokenStatus, setShowTokenStatus] = useState(false),
+    [tokenStatus, setTokenStatus] = useState("-"),
+    [sensorReadings, setSensorReadings] = useState(null),
+    [showDeleteStatus, setShowDeleteStatus] = useState(false),
+    [deleteStatus, setDeleteStatus] = useState("-");
 
   useEffect(() => {
-    const callback = (plants) => {
-      let plantFound = false;
+    document.title = "Demeter - The plant meter";
 
-      let tempPlant;
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
+      axios
+        .get("https://smart-plant.azurewebsites.net/api/Plants", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          res.data.forEach((plant) => {
+            if (plant.plantID === form.plantID) {
+              document.title = `${plant.name} | Demeter - The plant meter`;
 
-      Object.keys(plants).forEach((key) => {
-        if (key === plant_name) {
-          tempPlant = plants[key];
-          plantFound = true;
-        }
-      });
+              let tempForm = _.cloneDeep(form);
+              tempForm.name = plant.name;
+              setForm(tempForm);
 
-      if (plantFound) {
-        document.title = `${plant_name} | Dependency Tracker`;
+              let image = container_no_image;
+              if (plant.imgurURL !== null) {
+                image = plant.imgurURL;
+              }
+              setPlantImage(image);
 
-        setPlant(tempPlant);
-      } else {
-        window.location.pathname = "/notfound";
-      }
-    };
-    getPlants(callback);
+              setPlantType(plant.plantType);
+            }
+          });
+        })
+        .catch((err) => {
+          window.location.pathname = "/";
+        });
+
+      axios
+        .get(
+          `https://smart-plant.azurewebsites.net/api/SensorData/${form.plantID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          const sortedReadings = res.data.sort((a, b) => {
+            const timeA = new Date(a.timeStampUTC).getTime(),
+              timeB = new Date(b.timeStampUTC).getTime();
+            return timeA > timeB ? -1 : timeA < timeB ? 1 : 0;
+          });
+          setSensorReadings(sortedReadings);
+        })
+        .catch((err) => {
+          setSensorReadings(
+            "There was an error retrieving your sensor data. Please try again later."
+          );
+        });
+    } else {
+      window.location.pathname = "/";
+    }
+
     // eslint-disable-next-line
   }, []);
-
-  useEffect(() => {
-    if (currentDependencyLoading) {
-      closeOverlay("overlay-form");
-      openOverlay("overlay-dependency");
-    }
-  }, [currentDependencyLoading, openOverlay, closeOverlay]);
-
-  const getImage = (type) => {
-    let image;
-
-    // switch (type) {
-    //   case "npm":
-    //     image = npm;
-    //     break;
-    //   case "pypi":
-    //     image = pypi;
-    //     break;
-    //   default:
-    //     break;
-    // }
-
-    return image;
-  };
-
-  const getVersionString = (version) => {
-    let prefix = "";
-    if (version["prefix"] !== undefined) {
-      prefix = version["prefix"];
-    }
-
-    return `${prefix}${version["major"]}.${version["minor"]}.${version["patch"]}`;
-  };
-
-  const compareVersions = (version, latest_version) => {
-    let versionDifference = "none";
-
-    if (version["major"] < latest_version["major"]) {
-      versionDifference = "major";
-    } else if (
-      version["minor"] < latest_version["minor"] &&
-      version["prefix"] !== "^"
-    ) {
-      versionDifference = "minor";
-    } else if (
-      version["patch"] < latest_version["patch"] &&
-      version["prefix"] === ""
-    ) {
-      versionDifference = "patch";
-    }
-
-    return versionDifference;
-  };
-
-  const getUpdateMessage = (version, latest_version) => {
-    let updateMessage = "No updates available.";
-
-    switch (compareVersions(version, latest_version)) {
-      case "patch":
-        updateMessage =
-          "Patch update available. Check the repository for bug fixes.";
-        break;
-      case "minor":
-        updateMessage =
-          "Minor update available. Check the repository for backwards compatible changes and deprecations.";
-        break;
-      case "major":
-        updateMessage =
-          "Major update available. Check the repository for backwards incompatible changes, backwards compatible changes and deprecations.";
-        break;
-      default:
-        break;
-    }
-
-    return updateMessage;
-  };
-
-  const getUpdateIndicator = (version, latest_version) => {
-    let versionDifference = compareVersions(version, latest_version),
-      updateClass = "no-updates",
-      updateIndicator = "✓";
-
-    if (versionDifference !== "none") {
-      updateClass = versionDifference;
-    }
-
-    switch (updateClass) {
-      case "patch":
-        updateIndicator = "p";
-        break;
-      case "minor":
-        updateIndicator = "m";
-        break;
-      case "major":
-        updateIndicator = "M";
-        break;
-      default:
-        break;
-    }
-
-    return <strong className={updateClass}>{updateIndicator}</strong>;
-  };
-
-  const getLatestDependency = async (dependency, version) => {
-    setCurrentDependencyLoading(true);
-
-    getCurrentUser()
-      .then((user) => {
-        user.getSession((err, session) => {
-          if (!err) {
-            user.getUserAttributes((err, attributes) => {
-              if (!err) {
-                let email = "";
-
-                attributes.forEach((attribute) => {
-                  if (attribute.getName() === "email") {
-                    email = attribute.getValue();
-                  }
-                });
-
-                const fetchLatestDependency = async () => {
-                  const response = await fetch(
-                    `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/latest-version?email=${email}&name=${plant_name}&type=${
-                      plant["type"]
-                    }&dependency=${dependency.replace("/", "~")}`,
-                    {
-                      method: "get",
-                      headers: {
-                        Authorization: session.getIdToken().getJwtToken(),
-                      },
-                    }
-                  );
-
-                  const json = await response.json();
-
-                  setCurrentDependency({
-                    dependency: dependency,
-                    version: plant["dependencies"][dependency]["version"],
-                    latest_version: json,
-                  });
-
-                  setCurrentDependencyLoading(false);
-                };
-                fetchLatestDependency();
-              }
-            });
-          }
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        window.location.pathname = "/login";
-      });
-  };
 
   const handleChange = (e) => {
     const input = e.target;
     const tempForm = _.cloneDeep(form);
 
-    tempForm[input.name] = input.files[0];
+    if (input.name === "base64ImgString") {
+      const fileReader = new FileReader();
+      fileReader.onload = function (fileLoadedEvent) {
+        let base64 = fileLoadedEvent.target.result;
+        const startIndex = base64.indexOf(",") + 1;
+        base64 = base64.substr(startIndex);
+
+        tempForm[input.name] = base64;
+      };
+
+      fileReader.readAsDataURL(input.files[0]);
+    } else {
+      tempForm[input.name] = input.value;
+    }
 
     setForm(tempForm);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, setStatus, setShowStatus) => {
     e.preventDefault();
-    setShowStatus(false);
+    setStatus("Please wait...");
+    setShowStatus(true);
 
-    const { dependencies } = form,
-      type = plant["type"];
-
-    if (
-      (type === "npm" && dependencies.name !== "package.json") ||
-      (type === "pypi" && dependencies.name !== "requirements.txt")
-    ) {
-      setStatusMessage("Please upload the correct file format.");
-      setShowStatus(true);
-    } else {
-      setStatusMessage("Updating dependencies...");
-      setShowStatus(true);
-
-      getCurrentUser()
-        .then((user) => {
-          user.getSession((err, session) => {
-            if (!err) {
-              user.getUserAttributes((err, attributes) => {
-                if (!err) {
-                  let email = "";
-
-                  attributes.forEach((attribute) => {
-                    if (attribute.getName() === "email") {
-                      email = attribute.getValue();
-                    }
-                  });
-
-                  const updateDependencies = async () => {
-                    const response = await fetch(
-                      `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/plants?email=${email}&name=${plant_name}&type=${type}&update=true`,
-                      {
-                        method: "post",
-                        headers: {
-                          Authorization: session.getIdToken().getJwtToken(),
-                        },
-                        body: dependencies,
-                      }
-                    );
-
-                    const json = await response.json();
-
-                    if (response.ok) {
-                      setShowStatus(false);
-                      setPlant(json[plant_name]);
-
-                      closeOverlay("overlay-form");
-                    } else {
-                      setStatusMessage(json);
-                    }
-                  };
-                  updateDependencies();
-                }
-              });
-            }
-          });
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
+      axios
+        .put("https://smart-plant.azurewebsites.net/api/Plants", form, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          window.location.reload();
         })
         .catch((err) => {
-          console.log(err);
-          window.location.pathname = "/login";
+          const errors = err.response.data.messages;
+          let errorMessage = "Server error. Please try again later.";
+
+          if (errors.PlantName !== undefined) {
+            errorMessage = errors.PlantName[0];
+          } else if (errors["Name Taken"] !== undefined) {
+            errorMessage = errors["Name Taken"][0];
+          }
+
+          setStatus(errorMessage);
         });
+    } else {
+      setStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
     }
   };
 
-  const deletePlant = async () => {
-    getCurrentUser()
-      .then((user) => {
-        user.getSession((err, session) => {
-          if (!err) {
-            user.getUserAttributes((err, attributes) => {
-              if (!err) {
-                let email = "";
+  const fetchArduinoToken = () => {
+    setTokenStatus("Please wait...");
+    setShowTokenStatus(true);
 
-                attributes.forEach((attribute) => {
-                  if (attribute.getName() === "email") {
-                    email = attribute.getValue();
-                  }
-                });
-
-                const removePlant = async () => {
-                  const response = await fetch(
-                    `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/plants/delete?email=${email}&name=${plant_name}`,
-                    {
-                      method: "get",
-                      headers: {
-                        Authorization: session.getIdToken().getJwtToken(),
-                      },
-                    }
-                  );
-
-                  if (response.ok) {
-                    window.location.pathname = "/";
-                  }
-                };
-                removePlant();
-              }
-            });
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
+      axios
+        .get(
+          `https://smart-plant.azurewebsites.net/api/Plants/Token/${form.plantID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
+        )
+        .then((res) => {
+          setArduinoToken(res.data);
+          setShowArduinoToken(true);
+        })
+        .catch((err) => {
+          setTokenStatus("Server error. Please try again later.");
         });
-      })
-      .catch((err) => {
-        console.log(err);
-        window.location.pathname = "/login";
-      });
+    } else {
+      setTokenStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
+    }
+  };
+
+  const deletePlant = () => {
+    setDeleteStatus("Please wait...");
+    setShowDeleteStatus(true);
+
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
+      axios
+        .delete(
+          `https://smart-plant.azurewebsites.net/api/Plants?plantID=${form.plantID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          window.location.pathname = "/";
+        })
+        .catch((err) => {
+          setDeleteStatus("Server error. Please try again later.");
+        });
+    } else {
+      setDeleteStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
+    }
   };
 
   return (
-    <section id="plant">
-      <div id="overlay-form" className="overlay">
-        <i
-          className="fa fa-close closeBtn"
-          onClick={() => {
-            closeOverlay("overlay-form");
-          }}
-        ></i>
-        <div className="overlay-content">
-          {Object.keys(plant).length > 0 ? (
-            <form onSubmit={handleSubmit}>
-              <label htmlFor="dependencies">{`Dependencies file${getFileInputLabel(
-                plant["type"]
-              )}:`}</label>
-              <input
-                name="dependencies"
-                type="file"
-                onChange={handleChange}
-                required
-              ></input>
-              <div
-                className={showStatus ? "visible-message" : "hidden-message"}
-              >
-                <span>{statusMessage}</span>
+    <section>
+      {plantImage !== null ? (
+        <>
+          {wideView ? (
+            <div className="container m-0 p-0">
+              <div className="row">
+                <div className="col-xl-2 text-center">
+                  <div className={showDeleteStatus ? "" : "hidden-field"}>
+                    <span style={{ color: "white" }}>{deleteStatus}</span>
+                  </div>
+                  <button
+                    className="btn btn-primary mt-2"
+                    onClick={deletePlant}
+                  >
+                    Delete plant
+                  </button>
+                </div>
+                <div className="col-xl-10"></div>
               </div>
-              <button className="btn-blue" type="submit">
-                Update
-              </button>
-            </form>
-          ) : null}
-        </div>
-      </div>
-      <div
-        id="overlay-dependency"
-        className="overlay"
-        style={{ overflow: "auto" }}
-      >
-        <i
-          className="fa fa-close closeBtn"
-          onClick={() => {
-            closeOverlay("overlay-dependency");
-          }}
-        ></i>
-        <div className="overlay-content">
-          <h1
-            className="heading"
-            style={{ fontSize: "3em", marginTop: "1em", marginBottom: "0em" }}
-          >
-            {currentDependencyLoading ? (
-              "Loading dependency details..."
-            ) : (
-              <Fragment>
-                <strong>{currentDependency["dependency"]}</strong>
-                <strong
-                  className="plant-version"
-                  style={{ marginLeft: "0.5em" }}
-                >
-                  {Object.keys(plant).length > 0
-                    ? getVersionString(currentDependency["version"])
-                    : null}
-                </strong>
-                {compareVersions(
-                  currentDependency["version"],
-                  currentDependency["latest_version"]
-                ) === "none" ? (
-                  <strong className="equals" style={{ marginLeft: "0.5em" }}>
-                    ==
-                  </strong>
-                ) : (
-                  <strong className="less-than" style={{ marginLeft: "0.5em" }}>
-                    {"<"}
-                  </strong>
-                )}
-                <strong id="latest-version" style={{ marginLeft: "0.5em" }}>
-                  {Object.keys(plant).length > 0
-                    ? getVersionString(currentDependency["latest_version"])
-                    : null}
-                </strong>
-              </Fragment>
-            )}
-          </h1>
-          {currentDependencyLoading ? null : (
-            <Fragment>
-              <h3
-                style={{
-                  textAlign: "center",
-                  margin: "auto",
-                  marginTop: "1em",
-                  marginBottom: "1.4em",
-                  fontSize: "1.35em",
-                  width: "70%",
-                }}
+            </div>
+          ) : (
+            <>
+              <div
+                className={showDeleteStatus ? "text-center" : "hidden-field"}
               >
-                {getUpdateMessage(
-                  currentDependency["version"],
-                  currentDependency["latest_version"]
-                )}
-              </h3>
-              <p style={{ whiteSpace: "pre-wrap" }}>
-                {currentDependency["latest_version"]["info"]}
-              </p>
-            </Fragment>
+                <span style={{ color: "white" }}>{deleteStatus}</span>
+              </div>
+              <button className="btn btn-primary mt-2" onClick={deletePlant}>
+                Delete plant
+              </button>
+            </>
           )}
-        </div>
-      </div>
-      {Object.keys(plant).length > 0 ? (
-        <Fragment>
-          <div
-            style={{
-              width: "100%",
-              height: "10em",
-              backgroundColor: "white",
-              marginBottom: "1em",
+
+          <form
+            className={wideView ? "m-auto" : "m-auto px-2"}
+            onSubmit={(e) => {
+              handleSubmit(e, setNameStatus, setShowNameStatus);
             }}
           >
-            <img
-              src={getImage(plant["type"])}
-              alt={plant["type"]}
-              style={{ margin: "auto", display: "block", height: "inherit" }}
-            />
-          </div>
-          <h1 className="heading" style={{ marginBottom: "0em" }}>
-            <strong>{plant_name}</strong>
-          </h1>
-          <div
-            style={{
-              display: "inline-flex",
-              marginBottom: "2em",
-            }}
-          >
-            <button
-              className="btn-blue"
-              onClick={() => {
-                closeOverlay("overlay-dependency");
-                openOverlay("overlay-form");
-              }}
-              style={{ marginRight: "1em" }}
+            {nameModifiable ? (
+              <>
+                <div className={wideView ? "w-25 m-auto" : ""}>
+                  <label className="form-label gold" htmlFor="name">
+                    Name
+                  </label>
+                  <input
+                    className="form-control mb-3"
+                    name="name"
+                    type="text"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+                  {plantType}
+                </h4>
+              </>
+            ) : (
+              <>
+                <div className={wideView ? "w-25 m-auto" : ""}>
+                  <div className="text-end m-0 p-0">
+                    <FontAwesomeIcon
+                      className="gold light-gold-hover"
+                      tabIndex="0"
+                      icon={faPen}
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        setNameModifiable(true);
+                      }}
+                      onKeyPress={() => {
+                        setNameModifiable(true);
+                      }}
+                    ></FontAwesomeIcon>
+                  </div>
+                </div>
+                <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
+                <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
+                  {plantType}
+                </h4>
+              </>
+            )}
+            <div
+              className={
+                showNameStatus
+                  ? "text-center mt-3"
+                  : wideView
+                  ? "hidden-field m-0"
+                  : "hidden-field"
+              }
             >
-              Update dependencies
-            </button>
-            <button className="btn-blue" onClick={deletePlant}>
-              Delete plant
-            </button>
-          </div>
-          <div style={{ marginBottom: "2em", textAlign: "center" }}>
-            <h3 style={{ display: "inline", marginRight: "1em" }}>
-              <strong className="no-updates">✓</strong>
-              <span className="equals"> == </span>
-              <span>No updates available</span>
-            </h3>
-            <h3 style={{ display: "inline", marginRight: "1em" }}>
-              <strong className="patch">p</strong>
-              <span className="equals"> == </span>
-              <span>Patch update available</span>
-            </h3>
-            <h3 style={{ display: "inline", marginRight: "1em" }}>
-              <strong className="minor">m</strong>
-              <span className="equals"> == </span>
-              <span> Minor update available</span>
-            </h3>
-            <h3 style={{ display: "inline" }}>
-              <strong className="major">M</strong>
-              <span className="equals"> == </span>
-              <span> Major update available</span>
-            </h3>
-          </div>
-          <div className={"content-gallery cg-flex"}>
-            {Object.keys(plant["dependencies"])
-              .sort()
-              .map((dependency) => {
-                return (
-                  <div className="flex-padding" key={dependency}>
-                    <div
-                      id={dependency}
-                      className="cg-container"
-                      style={{
-                        backgroundColor: "white",
-                      }}
-                      onMouseEnter={() => {
-                        document.getElementById(
-                          dependency
-                        ).style.backgroundColor = "lightgrey";
-                      }}
-                      onMouseLeave={() => {
-                        document.getElementById(
-                          dependency
-                        ).style.backgroundColor = "white";
-                      }}
-                      onClick={(e) => {
-                        getLatestDependency(
-                          dependency,
-                          plant["dependencies"][dependency]["version"]
-                        );
-                      }}
-                    >
-                      <h2
-                        style={{
-                          textAlign: "right",
-                          width: "6em",
-                          position: "absolute",
-                          margin: "0em",
-                          marginLeft: "0.5em",
-                          padding: "0em",
-                          fontSize: "2.2em",
+              <span>{nameStatus}</span>
+            </div>
+            <div
+              className={
+                nameModifiable
+                  ? "text-center my-3"
+                  : wideView
+                  ? "hidden-field m-0"
+                  : "hidden-field"
+              }
+            >
+              <button
+                className="btn btn-primary"
+                tabIndex={nameModifiable ? "0" : "-1"}
+                type="submit"
+              >
+                Apply change
+              </button>
+            </div>
+          </form>
+
+          <form
+            className={wideView ? "w-25 m-auto" : "m-auto mt-5 px-2"}
+            onSubmit={(e) => {
+              handleSubmit(e, setImageStatus, setShowImageStatus);
+            }}
+          >
+            {imageModifiable ? (
+              <>
+                <label className="form-label gold" htmlFor="base64ImgString">
+                  Image
+                </label>
+                <input
+                  className="form-control"
+                  name="base64ImgString"
+                  type="file"
+                  required
+                  onChange={handleChange}
+                />
+              </>
+            ) : (
+              <div className="text-center">
+                <div className="container p-0">
+                  <div className="row">
+                    <div className="col-sm-10"></div>
+                    <div className="col-sm-2 text-end">
+                      <FontAwesomeIcon
+                        className="gold light-gold-hover"
+                        tabIndex="0"
+                        icon={faPen}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setImageModifiable(true);
                         }}
-                      >
-                        {getUpdateIndicator(
-                          plant["dependencies"][dependency]["version"],
-                          plant["dependencies"][dependency]["latest_version"]
-                        )}
-                      </h2>
-                      <h2>{dependency}</h2>
-                      <h2 className="plant-version">
-                        {getVersionString(
-                          plant["dependencies"][dependency]["version"]
-                        )}
-                      </h2>
+                        onKeyPress={() => {
+                          setImageModifiable(true);
+                        }}
+                      ></FontAwesomeIcon>
                     </div>
                   </div>
-                );
-              })}
-          </div>
-        </Fragment>
-      ) : null}
+                </div>
+                <img
+                  className="plant-image gold-border m-auto mt-1"
+                  src={plantImage}
+                  alt="Plant"
+                ></img>
+              </div>
+            )}
+            <div
+              className={showImageStatus ? "text-center mt-3" : "hidden-field"}
+            >
+              <span>{imageStatus}</span>
+            </div>
+            <div
+              className={
+                imageModifiable ? "text-center mt-3 mb-1" : "hidden-field"
+              }
+            >
+              <button
+                className="btn btn-primary"
+                tabIndex={imageModifiable ? "0" : "-1"}
+                type="submit"
+              >
+                Apply change
+              </button>
+            </div>
+          </form>
+
+          {showArduinoToken ? (
+            <div className={wideView ? "w-25 m-auto" : "m-auto px-2"}>
+              <h3 className="gold text-center mt-1">Arduino token</h3>
+              <div className="mt-1 py-1 overflow-hidden gold-border">
+                <span className="ms-1">{arduinoToken}</span>
+              </div>
+            </div>
+          ) : (
+            <div className={wideView ? "w-25 m-auto" : "m-auto px-2"}>
+              <div
+                className={
+                  showTokenStatus ? "text-center mt-1" : "hidden-field"
+                }
+              >
+                <span style={{ color: "white" }}>{tokenStatus}</span>
+              </div>
+              <div className="text-center mt-2">
+                <button className="btn btn-primary" onClick={fetchArduinoToken}>
+                  Show Arduino token
+                </button>
+              </div>
+            </div>
+          )}
+
+          <h3 className="gold text-center mt-5">Sensor data</h3>
+          <SensorPagination
+            sensorReadings={sensorReadings}
+            admin={false}
+            wideView={wideView}
+          ></SensorPagination>
+        </>
+      ) : (
+        <div className="text-center" style={{ color: "white" }}>
+          Loading plant...
+        </div>
+      )}
     </section>
   );
 }

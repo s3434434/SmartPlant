@@ -6,6 +6,8 @@ import axios from "axios";
 import "./settings.css";
 
 export default function Settings(props) {
+  const { getLogin, wideView } = props;
+
   const [emailForm, setEmailForm] = useState({
       email: "",
       confirmEmail: "",
@@ -27,37 +29,41 @@ export default function Settings(props) {
     [lastNameModifiable, setLastNameModifiable] = useState(false),
     [passwordModifiable, setPasswordModifiable] = useState(false),
     [showEmailStatus, setShowEmailStatus] = useState(false),
-    [emailStatus, setEmailStatus] = useState("none"),
+    [emailStatus, setEmailStatus] = useState("-"),
     [showDetailsStatus, setShowDetailsStatus] = useState(false),
-    [detailsStatus, setDetailsStatus] = useState("none"),
+    [detailsStatus, setDetailsStatus] = useState("-"),
     [showPasswordStatus, setShowPasswordStatus] = useState(false),
-    [passwordStatus, setPasswordStatus] = useState("none");
+    [passwordStatus, setPasswordStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Settings | Demeter - The plant meter";
 
-    const login = localStorage.getItem("demeter-login");
-    const { token } = JSON.parse(login);
-    axios
-      .get("https://smart-plant.azurewebsites.net/api/User", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        const settings = res.data;
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
+      axios
+        .get("https://smart-plant.azurewebsites.net/api/User", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          const settings = res.data;
 
-        setEmailForm({ email: settings.email, confirmEmail: "" });
-        setDetailsForm({
-          phoneNumber: settings.phoneNumber,
-          firstName: settings.firstName,
-          lastName: settings.lastName,
+          setEmailForm({ email: settings.email, confirmEmail: "" });
+          setDetailsForm({
+            phoneNumber: settings.phoneNumber,
+            firstName: settings.firstName,
+            lastName: settings.lastName,
+          });
+        })
+        .catch((err) => {
+          window.location.pathname = "/";
         });
-      })
-      .catch((err) => {
-        props.logOut();
-        window.location.pathname = "/";
-      });
+    } else {
+      window.location.pathname = "/";
+    }
+
     // eslint-disable-next-line
   }, []);
 
@@ -75,12 +81,11 @@ export default function Settings(props) {
     setEmailStatus("Please wait...");
     setShowEmailStatus(true);
 
+    const login = getLogin();
     if (emailForm.email !== emailForm.confirmEmail) {
-      setEmailStatus("Email do not match.");
-    } else {
-      const login = localStorage.getItem("demeter-login");
-      const { token } = JSON.parse(login);
-
+      setEmailStatus("Emails do not match.");
+    } else if (login !== null) {
+      const { token } = login;
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/User/Email",
@@ -95,8 +100,22 @@ export default function Settings(props) {
           window.location.reload();
         })
         .catch((err) => {
-          setEmailStatus(err.response.data.errors.ConfirmEmail[0]);
+          const errors = err.response.data.errors;
+          let errorMessage = "Server error. Please try again later.";
+
+          if (errors.Email !== undefined) {
+            errorMessage = errors.Email[0];
+          } else if (errors.ConfirmEmail !== undefined) {
+            errorMessage = errors.ConfirmEmail[0];
+          }
+
+          setEmailStatus(errorMessage);
         });
+    } else {
+      setEmailStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
     }
   };
 
@@ -114,35 +133,38 @@ export default function Settings(props) {
     setDetailsStatus("Please wait...");
     setShowDetailsStatus(true);
 
-    const login = localStorage.getItem("demeter-login");
-    const { token } = JSON.parse(login);
+    const login = getLogin();
+    if (login !== null) {
+      const { token } = login;
+      axios
+        .put("https://smart-plant.azurewebsites.net/api/User", detailsForm, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          window.location.reload();
+        })
+        .catch((err) => {
+          const errors = err.response.data.messages;
+          let errorMessage = "Server error. Please try again later.";
 
-    axios
-      .put("https://smart-plant.azurewebsites.net/api/User", detailsForm, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        window.location.reload();
-      })
-      .catch((err) => {
-        const data = err.response.data;
-        let errorMessage = "";
+          if (errors.Phone !== undefined) {
+            errorMessage = errors.Phone[0];
+          } else if (errors.FirstName !== undefined) {
+            errorMessage = errors.FirstName[0];
+          } else if (errors.LastName !== undefined) {
+            errorMessage = errors.LastName[0];
+          }
 
-        if (data.error !== undefined) {
-          errorMessage = data.error[0];
-        } else {
-          const errors = data.errors;
-          Object.keys(errors).forEach((error) => {
-            if (errors[error] !== undefined) {
-              errorMessage = errors[error];
-            }
-          });
-        }
-
-        setDetailsStatus(errorMessage);
-      });
+          setDetailsStatus(errorMessage);
+        });
+    } else {
+      setDetailsStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
+    }
   };
 
   const handlePasswordChange = (e) => {
@@ -159,12 +181,11 @@ export default function Settings(props) {
     setPasswordStatus("Please wait...");
     setShowPasswordStatus(true);
 
+    const login = getLogin();
     if (passwordForm.newPassword !== passwordForm.confirmNewPassword) {
-      setPasswordStatus("Passwords do not match.");
-    } else {
-      const login = localStorage.getItem("demeter-login");
-      const { token } = JSON.parse(login);
-
+      setPasswordStatus("New passwords do not match.");
+    } else if (login !== null) {
+      const { token } = login;
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/User/Password",
@@ -182,8 +203,25 @@ export default function Settings(props) {
           }, 1000);
         })
         .catch((err) => {
-          setPasswordStatus(err.response.data);
+          const errors = err.response.data.messages;
+          let errorMessage = "Server error. Please try again later.";
+
+          if (errors.PasswordMismatch !== undefined) {
+            errorMessage = errors.PasswordMismatch[0];
+          }
+          if (errors.PasswordTooShort !== undefined) {
+            errorMessage = errors.PasswordTooShort[0];
+          } else if (errors.ConfirmNewPassword !== undefined) {
+            errorMessage = errors.ConfirmNewPassword[0];
+          }
+
+          setPasswordStatus(errorMessage);
         });
+    } else {
+      setPasswordStatus("You are not logged in.");
+      setTimeout(() => {
+        window.location.pathname = "/";
+      }, 500);
     }
   };
 
@@ -192,7 +230,7 @@ export default function Settings(props) {
       <h1 className="text-center gold">Settings</h1>
 
       <form
-        className="w-25 m-auto mt-4 d-none d-lg-block"
+        className={wideView ? "w-25 m-auto mt-4" : "m-auto mt-4 px-2"}
         onSubmit={handleEmailSubmit}
       >
         {emailModifiable ? (
@@ -223,24 +261,29 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Email</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setEmailModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">Email</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  tabIndex="0"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setEmailModifiable(true);
+                  }}
+                  onKeyPress={() => {
+                    setEmailModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{emailForm.email}</span>
             </div>
           </>
@@ -249,74 +292,18 @@ export default function Settings(props) {
           <span>{emailStatus}</span>
         </div>
         <div className={emailModifiable ? "text-center mt-3" : "hidden-field"}>
-          <button className="btn btn-primary" type="submit">
-            Apply change
-          </button>
-        </div>
-      </form>
-      <form className="m-auto mt-4 px-2 d-lg-none" onSubmit={handleEmailSubmit}>
-        {emailModifiable ? (
-          <>
-            <label className="form-label gold" htmlFor="email">
-              Email
-            </label>
-            <input
-              className="form-control"
-              name="email"
-              type="text"
-              required
-              value={emailForm.email}
-              onChange={handleEmailChange}
-            />
-
-            <label className="form-label gold mt-2" htmlFor="confirmEmail">
-              Confirm email
-            </label>
-            <input
-              className="form-control"
-              name="confirmEmail"
-              type="text"
-              required
-              value={emailForm.confirmEmail}
-              onChange={handleEmailChange}
-            />
-          </>
-        ) : (
-          <>
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Email</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setEmailModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
-            </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
-              <span className="ms-1">{emailForm.email}</span>
-            </div>
-          </>
-        )}
-        <div className={showEmailStatus ? "text-center mt-3" : "hidden-field"}>
-          <span>{emailStatus}</span>
-        </div>
-        <div className={emailModifiable ? "text-center mt-3" : "hidden-field"}>
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            tabIndex={emailModifiable ? "0" : "-1"}
+            type="submit"
+          >
             Apply change
           </button>
         </div>
       </form>
 
       <form
-        className="w-25 m-auto mt-5 d-none d-lg-block"
+        className={wideView ? "w-25 m-auto mt-5" : "m-auto mt-5 px-2"}
         onSubmit={handleDetailsSubmit}
       >
         {phoneNumberModifiable ? (
@@ -334,25 +321,31 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Phone</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setPhoneNumberModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">Phone</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  tabIndex="0"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setDetailsModifiable(true);
+                    setPhoneNumberModifiable(true);
+                  }}
+                  onKeyPress={() => {
+                    setDetailsModifiable(true);
+                    setPhoneNumberModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.phoneNumber}</span>
             </div>
           </>
@@ -372,25 +365,31 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">First name</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setFirstNameModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="mt-2 p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">First name</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  tabIndex="0"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setDetailsModifiable(true);
+                    setFirstNameModifiable(true);
+                  }}
+                  onKeyPress={() => {
+                    setDetailsModifiable(true);
+                    setFirstNameModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.firstName}</span>
             </div>
           </>
@@ -410,25 +409,31 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Last name</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setLastNameModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+            <div
+              className="mt-2 p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+            >
+              <div className="text-left">
+                <span className="gold">Last name</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  tabIndex="0"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setDetailsModifiable(true);
+                    setLastNameModifiable(true);
+                  }}
+                  onKeyPress={() => {
+                    setDetailsModifiable(true);
+                    setLastNameModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">{detailsForm.lastName}</span>
             </div>
           </>
@@ -441,145 +446,18 @@ export default function Settings(props) {
         <div
           className={detailsModifiable ? "text-center mt-3" : "hidden-field"}
         >
-          <button className="btn btn-primary" type="submit">
-            Apply changes
-          </button>
-        </div>
-      </form>
-      <form
-        className="m-auto mt-5 px-2 d-lg-none"
-        onSubmit={handleDetailsSubmit}
-      >
-        {phoneNumberModifiable ? (
-          <>
-            <label className="form-label gold" htmlFor="phoneNumber">
-              Phone
-            </label>
-            <input
-              className="form-control"
-              name="phoneNumber"
-              type="text"
-              value={detailsForm.phoneNumber}
-              onChange={handleDetailsChange}
-            />
-          </>
-        ) : (
-          <>
-            <div className="container p-0">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Phone</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setPhoneNumberModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
-            </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
-              <span className="ms-1">{detailsForm.phoneNumber}</span>
-            </div>
-          </>
-        )}
-        {firstNameModifiable ? (
-          <>
-            <label className="form-label gold mt-2" htmlFor="firstName">
-              First name
-            </label>
-            <input
-              className="form-control"
-              name="firstName"
-              type="text"
-              value={detailsForm.firstName}
-              onChange={handleDetailsChange}
-            />
-          </>
-        ) : (
-          <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">First name</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setFirstNameModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
-            </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
-              <span className="ms-1">{detailsForm.firstName}</span>
-            </div>
-          </>
-        )}
-        {lastNameModifiable ? (
-          <>
-            <label className="form-label gold mt-2" htmlFor="lastName">
-              Last name
-            </label>
-            <input
-              className="form-control"
-              name="lastName"
-              type="text"
-              value={detailsForm.lastName}
-              onChange={handleDetailsChange}
-            />
-          </>
-        ) : (
-          <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Last name</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setLastNameModifiable(true);
-                      setDetailsModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
-            </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
-              <span className="ms-1">{detailsForm.lastName}</span>
-            </div>
-          </>
-        )}
-        <div
-          className={showDetailsStatus ? "text-center mt-3" : "hidden-field"}
-        >
-          <span>{detailsStatus}</span>
-        </div>
-        <div
-          className={detailsModifiable ? "text-center mt-3" : "hidden-field"}
-        >
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            tabIndex={detailsModifiable ? "0" : "-1"}
+            type="submit"
+          >
             Apply changes
           </button>
         </div>
       </form>
 
       <form
-        className="w-25 m-auto mt-5 d-none d-lg-block"
+        className={wideView ? "w-25 m-auto mt-5" : "m-auto mt-5 px-2"}
         onSubmit={handlePasswordSubmit}
       >
         {passwordModifiable ? (
@@ -623,104 +501,29 @@ export default function Settings(props) {
           </>
         ) : (
           <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Password</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setPasswordModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
-            </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
-              <span className="ms-1">••••••••</span>
-            </div>
-          </>
-        )}
-        <div
-          className={showPasswordStatus ? "text-center mt-3" : "hidden-field"}
-        >
-          <span>{passwordStatus}</span>
-        </div>
-        <div
-          className={passwordModifiable ? "text-center mt-3" : "hidden-field"}
-        >
-          <button className="btn btn-primary" type="submit">
-            Change password
-          </button>
-        </div>
-      </form>
-      <form
-        className="m-auto mt-5 px-2 d-lg-none"
-        onSubmit={handlePasswordSubmit}
-      >
-        {passwordModifiable ? (
-          <>
-            <label className="form-label gold" htmlFor="oldPassword">
-              Old password
-            </label>
-            <input
-              className="form-control"
-              name="oldPassword"
-              type="password"
-              required
-              value={passwordForm.oldPassword}
-              onChange={handlePasswordChange}
-            />
-            <label className="form-label gold mt-2" htmlFor="newPassword">
-              New password
-            </label>
-            <input
-              className="form-control"
-              name="newPassword"
-              type="password"
-              required
-              value={passwordForm.newPassword}
-              onChange={handlePasswordChange}
-            />
-            <label
-              className="form-label gold mt-2"
-              htmlFor="confirmNewPassword"
+            <div
+              className="mt-2 p-0"
+              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
             >
-              Confirm new password
-            </label>
-            <input
-              className="form-control"
-              name="confirmNewPassword"
-              type="password"
-              required
-              value={passwordForm.confirmNewPassword}
-              onChange={handlePasswordChange}
-            />
-          </>
-        ) : (
-          <>
-            <div className="container p-0 mt-2">
-              <div className="row">
-                <div className="col-sm-10">
-                  <span className="gold">Password</span>
-                </div>
-                <div className="col-sm-2 text-end">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setPasswordModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
+              <div className="text-left">
+                <span className="gold">Password</span>
+              </div>
+              <div className="text-end">
+                <FontAwesomeIcon
+                  className="gold light-gold-hover"
+                  tabIndex="0"
+                  icon={faPen}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setPasswordModifiable(true);
+                  }}
+                  onKeyPress={() => {
+                    setPasswordModifiable(true);
+                  }}
+                ></FontAwesomeIcon>
               </div>
             </div>
-            <div className="mt-1 py-1 overflow-hidden setting">
+            <div className="mt-1 py-1 overflow-hidden gold-border">
               <span className="ms-1">••••••••</span>
             </div>
           </>
@@ -731,9 +534,19 @@ export default function Settings(props) {
           <span>{passwordStatus}</span>
         </div>
         <div
-          className={passwordModifiable ? "text-center mt-3" : "hidden-field"}
+          className={
+            passwordModifiable
+              ? wideView
+                ? "text-center mt-3"
+                : "text-center mt-3 mb-2"
+              : "hidden-field"
+          }
         >
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            tabIndex={passwordModifiable ? "0" : "-1"}
+            type="submit"
+          >
             Change password
           </button>
         </div>

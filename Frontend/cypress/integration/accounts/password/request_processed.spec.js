@@ -1,0 +1,24 @@
+
+describe('Request processed page', () => {
+
+    var route = '/request-processed'
+
+    it('Renders the page', () => {
+
+        cy.visit(route)
+    })
+ 
+    it('Displays required fields', () => {
+
+        cy.visit(route)
+        cy.get('section > .gold').should('have.text', 'Request processed')
+        cy.get('.mb-2 > a > .btn').should('have.text', 'Home')
+
+    })
+
+    it('Redirects use to the landing page when home button clicked', () => {
+
+        cy.get('.mb-2 > a > .btn').click()
+        cy.url().should('be.equal', Cypress.config("baseUrl") + '/landing')
+    })
+})

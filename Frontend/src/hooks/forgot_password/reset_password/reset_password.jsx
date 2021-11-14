@@ -5,6 +5,7 @@ import axios from "axios";
 import "./reset_password.css";
 
 export default function ResetPassword(props) {
+  const { logOut, wideView } = props;
   const search = useLocation().search;
   const token = new URLSearchParams(search).get("token"),
     email = new URLSearchParams(search).get("email");
@@ -16,12 +17,12 @@ export default function ResetPassword(props) {
     confirmNewPassword: "",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("none");
+  const [status, setStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Reset password | Demeter - The plant meter";
 
-    props.logOut();
+    logOut();
     // eslint-disable-next-line
   }, []);
 
@@ -39,38 +40,37 @@ export default function ResetPassword(props) {
     setStatus("Please wait...");
     setShowStatus(true);
 
-    axios
-      .post(
-        "https://smart-plant.azurewebsites.net/api/Account/Password/Reset",
-        form
-      )
-      .then((res) => {
-        window.location.pathname = "/password-reset-successful";
-      })
-      .catch((err) => {
-        const data = err.response.data;
-        let errorMessage = "";
+    if (form.newPassword !== form.confirmNewPassword) {
+      setStatus("Passwords do not match.");
+    } else {
+      axios
+        .post(
+          "https://smart-plant.azurewebsites.net/api/Account/Password/Reset",
+          form
+        )
+        .then((res) => {
+          window.location.pathname = "/password-reset-successful";
+        })
+        .catch((err) => {
+          const errors = err.response.data.messages;
+          let errorMessage = "Server error. Please try again later.";
 
-        if (data.error !== undefined) {
-          errorMessage = data.error[0];
-        } else {
-          const errors = data.errors;
-          Object.keys(errors).forEach((error) => {
-            if (errors[error] !== undefined) {
-              errorMessage = errors[error];
-            }
-          });
-        }
+          if (errors.Passwords !== undefined) {
+            errorMessage = errors.Passwords[0];
+          } else if (errors.ConfirmNewPassword !== undefined) {
+            errorMessage = errors.ConfirmNewPassword[0];
+          }
 
-        setStatus(errorMessage);
-      });
+          setStatus(errorMessage);
+        });
+    }
   };
 
   return (
     <section>
       <h1 className="gold text-center">Reset password</h1>
       <form
-        className="w-25 m-auto mt-4 d-none d-lg-block"
+        className={wideView ? "w-25 m-auto mt-4" : "m-auto mt-4 px-2"}
         onSubmit={handleSubmit}
       >
         <label className="form-label gold" htmlFor="newPassword">
@@ -94,46 +94,18 @@ export default function ResetPassword(props) {
           value={form.confirmNewPassword}
           onChange={handleChange}
         />
-        <div className={showStatus || "hidden-field"}>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
-        <div className="text-center mt-3">
-          <button className="btn btn-primary" type="submit">
-            Reset password
-          </button>
-        </div>
-      </form>
-
-      <form className="m-auto mt-4 px-2 d-lg-none" onSubmit={handleSubmit}>
-        <label className="form-label gold" htmlFor="newPassword">
-          New password
-        </label>
-        <input
-          className="form-control"
-          name="newPassword"
-          type="password"
-          required
-          value={form.newPassword}
-          onChange={handleChange}
-        />
-        <label className="form-label gold mt-3" htmlFor="confirmNewPassword">
-          Confirm new password
-        </label>
-        <input
-          className="form-control"
-          name="confirmNewPassword"
-          type="password"
-          value={form.confirmNewPassword}
-          onChange={handleChange}
-        />
-        <div className={showStatus || "hidden-field"}>
-          <div className="text-center mt-3">
+        ) : (
+          <div className="hidden-field mt-3">
             <span>{status}</span>
           </div>
-        </div>
-        <div className="text-center mt-3">
+        )}
+        <div
+          className={wideView ? "text-center mt-3" : "text-center mt-3 mb-2"}
+        >
           <button className="btn btn-primary" type="submit">
             Reset password
           </button>

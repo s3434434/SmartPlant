@@ -4,6 +4,8 @@ import axios from "axios";
 import _ from "lodash";
 
 export default function Register(props) {
+  const { logOut, wideView } = props;
+
   const [form, setForm] = useState({
     email: "",
     phoneNumber: "",
@@ -11,15 +13,15 @@ export default function Register(props) {
     lastName: "",
     password: "",
     confirmPassword: "",
-    clientURI: "http://localhost:3000/confirm-email",
+    clientURI: "https://www.demeter.onl/confirm-email",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("none");
+  const [status, setStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Register | Demeter - The plant meter";
 
-    props.logOut();
+    logOut();
     // eslint-disable-next-line
   }, []);
 
@@ -49,22 +51,21 @@ export default function Register(props) {
           window.location.pathname = "/registration-successful";
         })
         .catch((err) => {
-          const data = err.response.data;
-          let errorMessage = "";
+          const errors = err.response.data.errors;
+          let errorMessage = "Server error. Please try again later.";
 
-          if (data.error !== undefined) {
-            errorMessage = data.error[0];
-          } else {
-            const errors = data.errors;
-            if (errors instanceof Array) {
-              errorMessage = errors[0];
-            } else {
-              Object.keys(errors).forEach((error) => {
-                if (errors[error] !== undefined) {
-                  errorMessage = errors[error];
-                }
-              });
-            }
+          if (errors.Email !== undefined) {
+            errorMessage = errors.Email[0];
+          } else if (errors.PhoneNumber !== undefined) {
+            errorMessage = errors.PhoneNumber[0];
+          } else if (errors.FirstName !== undefined) {
+            errorMessage = errors.FirstName[0];
+          } else if (errors.LastName !== undefined) {
+            errorMessage = errors.LastName[0];
+          } else if (errors.Passwords !== undefined) {
+            errorMessage = errors.Passwords[0];
+          } else if (errors.ConfirmPassword !== undefined) {
+            errorMessage = errors.ConfirmPassword[0];
           }
 
           setStatus(errorMessage);
@@ -76,7 +77,7 @@ export default function Register(props) {
     <section>
       <h1 className="gold text-center">Register</h1>
       <form
-        className="w-25 m-auto mt-4 d-none d-lg-block"
+        className={wideView ? "w-25 m-auto mt-4" : "m-auto mt-4 px-2"}
         onSubmit={handleSubmit}
       >
         <label className="form-label gold" htmlFor="email">
@@ -142,88 +143,61 @@ export default function Register(props) {
           value={form.confirmPassword}
           onChange={handleChange}
         />
-        <div className={showStatus || "hidden-field"}>
+        <div
+          className="form-text mt-2"
+          style={{ color: "white", textAlign: "justify" }}
+        >
+          By clicking Register you agree to our&nbsp;
+          <span
+            className="gold light-gold-hover"
+            tabIndex="0"
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
+            onClick={() => {
+              window.location.pathname = "/terms-of-use";
+            }}
+            onKeyPress={() => {
+              window.location.pathname = "/terms-of-use";
+            }}
+          >
+            terms of use
+          </span>
+          . For more information about our privacy practices, please see
+          our&nbsp;
+          <span
+            className="gold light-gold-hover"
+            tabIndex="0"
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
+            onClick={() => {
+              window.location.pathname = "/privacy-policy";
+            }}
+            onKeyPress={() => {
+              window.location.pathname = "/privacy-policy";
+            }}
+          >
+            privacy policy
+          </span>
+          .
+        </div>
+        {showStatus ? (
           <div className="text-center mt-3">
             <span>{status}</span>
           </div>
-        </div>
-        <div className="text-center mt-3">
-          <button className="btn btn-primary" type="submit">
-            Register
-          </button>
-        </div>
-      </form>
-
-      <form className="m-auto mt-4 d-lg-none px-2" onSubmit={handleSubmit}>
-        <label className="form-label gold" htmlFor="email">
-          Email
-        </label>
-        <input
-          className="form-control"
-          name="email"
-          type="text"
-          required
-          value={form.email}
-          onChange={handleChange}
-        />
-        <label className="form-label gold mt-3" htmlFor="phoneNumber">
-          Phone
-        </label>
-        <input
-          className="form-control"
-          name="phoneNumber"
-          type="text"
-          value={form.phoneNumber}
-          onChange={handleChange}
-        />
-        <label className="form-label gold mt-3" htmlFor="firstName">
-          First name
-        </label>
-        <input
-          className="form-control"
-          name="firstName"
-          type="text"
-          value={form.firstName}
-          onChange={handleChange}
-        />
-        <label className="form-label gold mt-3" htmlFor="lastName">
-          Last name
-        </label>
-        <input
-          className="form-control"
-          name="lastName"
-          type="text"
-          value={form.lastName}
-          onChange={handleChange}
-        />
-        <label className="form-label gold mt-3" htmlFor="password">
-          Password
-        </label>
-        <input
-          className="form-control"
-          name="password"
-          type="password"
-          required
-          value={form.password}
-          onChange={handleChange}
-        />
-        <label className="form-label gold mt-3" htmlFor="confirmPassword">
-          Confirm password
-        </label>
-        <input
-          className="form-control"
-          name="confirmPassword"
-          type="password"
-          required
-          value={form.confirmPassword}
-          onChange={handleChange}
-        />
-        <div className={showStatus || "hidden-field"}>
-          <div className="text-center mt-3">
+        ) : (
+          <div className="hidden-field mt-3">
             <span>{status}</span>
           </div>
-        </div>
-        <div className="text-center mt-3">
+        )}
+        <div
+          className={wideView ? "text-center mt-3" : "text-center mt-3 mb-2"}
+        >
           <button className="btn btn-primary" type="submit">
             Register
           </button>

@@ -3,19 +3,20 @@ import { Link } from "react-router-dom";
 import "./logout.css";
 
 export default function Logout(props) {
+  const { logOut, wideView } = props;
   useEffect(() => {
     document.title = "Logout successful | Demeter - The plant meter";
 
-    props.logOut();
+    logOut();
     // eslint-disable-next-line
   }, []);
 
   return (
     <section>
       <h1 className="gold text-center">You have been logged out.</h1>
-      <div className="text-center mt-5">
-        <Link key="home" to="/">
-          <button className="btn btn-primary">Home</button>
+      <div className={wideView ? "text-center mt-5" : "text-center mt-5 mb-2"}>
+        <Link key="home" className="btn btn-primary" to="/">
+          Home
         </Link>
       </div>
     </section>

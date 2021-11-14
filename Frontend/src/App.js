@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import Plant from "./hooks/plant/plant";
+
 import LandingPage from "./hooks/landing_page/landing_page";
 import Login from "./hooks/login/login";
 import Register from "./hooks/register/register";
@@ -15,90 +15,93 @@ import Logout from "./hooks/logout/logout";
 import Settings from "./hooks/settings/settings";
 import NotFound from "./hooks/not_found/not_found";
 import AllPlants from "./hooks/all_plants/all_plants";
+import AddPlant from "./hooks/add_plant/add_plant";
+import PlantAdded from "./hooks/add_plant/plant_added/plant_added";
+import Plant from "./hooks/plant/plant";
 import logo from "./assets/images/logo.png";
+import PrivacyPolicy from "./hooks/privacy_policy/privacy_policy";
+import TermsOfUse from "./hooks/terms_of_use/terms_of_use";
+import Support from "./hooks/support/support";
+import SupportSuccessful from "./hooks/support/support_successful/support_successful";
+import AllUsers from "./hooks/all_users/all_users";
+import User from "./hooks/user/user";
+import AllPlantsAdmin from "./hooks/all_plants_admin/all_plants_admin";
+import PlantAdmin from "./hooks/plant_admin/plant_admin";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false),
+    [isAdmin, setIsAdmin] = useState(false),
+    [wideView, setWideView] = useState(window.innerWidth > 1199);
 
-  const checkLoggedIn = () => {
-    const login = localStorage.getItem("demeter-login");
-    let loginStatus = false;
+  const getLogin = () => {
+    const loginString = localStorage.getItem("demeter-login");
+    let login = null;
 
-    if (login) {
-      const { expiry } = JSON.parse(login);
+    if (loginString !== null) {
+      const parsedLogin = JSON.parse(loginString);
 
-      if (expiry >= Date.now()) {
-        loginStatus = true;
+      if (parsedLogin.expiry >= Date.now()) {
+        login = parsedLogin;
       } else {
         localStorage.removeItem("demeter-login");
       }
     }
 
-    return loginStatus;
+    return login;
+  };
+
+  const getAdminStatus = () => {
+    const loginString = localStorage.getItem("demeter-login");
+    let adminStatus = null;
+
+    if (loginString !== null) {
+      const { expiry, admin } = JSON.parse(loginString);
+
+      if (expiry >= Date.now()) {
+        if (admin) {
+          adminStatus = true;
+        } else {
+          adminStatus = false;
+        }
+      } else {
+        localStorage.removeItem("demeter-login");
+      }
+    }
+
+    return adminStatus;
   };
 
   useEffect(() => {
-    setLoggedIn(checkLoggedIn());
+    const login = getLogin();
+    if (login !== null) {
+      setLoggedIn(true);
+      setIsAdmin(login.admin);
+    } else {
+      setLoggedIn(false);
+    }
+
+    window.addEventListener(
+      "resize",
+      function () {
+        setWideView(window.innerWidth > 1199);
+      },
+      true
+    );
+
     // eslint-disable-next-line
   }, []);
 
-  const getPlants = (callback) => {
-    // getCurrentUser()
-    //   .then((user) => {
-    //     user.getSession((err, session) => {
-    //       if (!err) {
-    //         user.getUserAttributes((err, attributes) => {
-    //           if (!err) {
-    //             let email = "";
-    //             attributes.forEach((attribute) => {
-    //               if (attribute.getName() === "email") {
-    //                 email = attribute.getValue();
-    //               }
-    //             });
-    //             const fetchPlants = async () => {
-    //               const response = await fetch(
-    //                 `https://43wwya78h8.execute-api.us-east-2.amazonaws.com/prod/plants?email=${email}`,
-    //                 {
-    //                   headers: {
-    //                     Authorization: session.getIdToken().getJwtToken(),
-    //                   },
-    //                 }
-    //               );
-    //               const json = await response.json();
-    //               callback(json);
-    //             };
-    //             fetchPlants();
-    //           }
-    //         });
-    //       }
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     window.location.pathname = "/login";
-    //   });
-    // eslint-disable-next-line
-  };
-
   const logOut = () => {
-    if (checkLoggedIn()) {
+    if (getLogin() !== null) {
       localStorage.removeItem("demeter-login");
       setLoggedIn(false);
     }
   };
 
-  const openOverlay = (id) => {
-    document.getElementById(id).style.width = "82%";
-  };
-
-  const closeOverlay = (id) => {
-    document.getElementById(id).style.width = "0%";
-  };
-
   return (
-    <>
+    <div className="bg-image">
       <nav
-        className="navbar navbar-expand-sm sticky-top navbar-dark px-2 py-0"
+        className="navbar navbar-expand-md sticky-top navbar-dark ps-2 pe-5 py-0"
         id="navbar"
       >
         <button
@@ -109,13 +112,12 @@ function App() {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-
         <div
           className="navbar-brand"
           style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
         >
-          <img className="img-fluid" src={logo} alt="Demeter logo"></img>
-          <div className="navbar-title m-auto ms-1">
+          <img id="nav-image" src={logo} alt="Demeter logo"></img>
+          <div className="navbar-title m-auto ms-0">
             <h1 className="gold">Demeter</h1>
             <h4 className="gold">The Plant Meter</h4>
           </div>
@@ -127,53 +129,122 @@ function App() {
           <ul className="navbar-nav">
             {loggedIn ? (
               <>
-                <li className="nav-item">
-                  <span
-                    className="nav-link"
-                    onClick={() => {
-                      window.location.pathname = "/";
-                    }}
-                  >
-                    <h5>Plants</h5>
-                  </span>
-                </li>
-                <li className="nav-item">
-                  <span
-                    className="nav-link"
-                    onClick={() => {
-                      window.location.pathname = "/settings";
-                    }}
-                  >
-                    <h5>Settings</h5>
-                  </span>
-                </li>
-                <li className="nav-item">
-                  <span
-                    className="nav-link"
-                    onClick={() => {
-                      window.location.pathname = "/support";
-                    }}
-                  >
-                    <h5>Support</h5>
-                  </span>
-                </li>
-                <li className="nav-item">
-                  <span
-                    className="nav-link"
-                    onClick={() => {
-                      window.location.pathname = "/logout";
-                    }}
-                  >
-                    <h5>Logout</h5>
-                  </span>
-                </li>
+                {isAdmin ? (
+                  <>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        tabIndex="0"
+                        onClick={() => {
+                          window.location.pathname = "/";
+                        }}
+                        onKeyPress={() => {
+                          window.location.pathname = "/";
+                        }}
+                      >
+                        <h5>Users</h5>
+                      </span>
+                    </li>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        tabIndex="0"
+                        onClick={() => {
+                          window.location.pathname = "/plants-admin";
+                        }}
+                        onKeyPress={() => {
+                          window.location.pathname = "/plants-admin";
+                        }}
+                      >
+                        <h5>Plants</h5>
+                      </span>
+                    </li>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        tabIndex="0"
+                        onClick={() => {
+                          window.location.pathname = "/logout";
+                        }}
+                        onKeyPress={() => {
+                          window.location.pathname = "/logout";
+                        }}
+                      >
+                        <h5>Logout</h5>
+                      </span>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        tabIndex="0"
+                        onClick={() => {
+                          window.location.pathname = "/";
+                        }}
+                        onKeyPress={() => {
+                          window.location.pathname = "/";
+                        }}
+                      >
+                        <h5>Plants</h5>
+                      </span>
+                    </li>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        tabIndex="0"
+                        onClick={() => {
+                          window.location.pathname = "/settings";
+                        }}
+                        onKeyPress={() => {
+                          window.location.pathname = "/settings";
+                        }}
+                      >
+                        <h5>Settings</h5>
+                      </span>
+                    </li>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        tabIndex="0"
+                        onClick={() => {
+                          window.location.pathname = "/support";
+                        }}
+                        onKeyPress={() => {
+                          window.location.pathname = "/support";
+                        }}
+                      >
+                        <h5>Support</h5>
+                      </span>
+                    </li>
+                    <li className="nav-item">
+                      <span
+                        className="nav-link"
+                        tabIndex="0"
+                        onClick={() => {
+                          window.location.pathname = "/logout";
+                        }}
+                        onKeyPress={() => {
+                          window.location.pathname = "/logout";
+                        }}
+                      >
+                        <h5>Logout</h5>
+                      </span>
+                    </li>
+                  </>
+                )}
               </>
             ) : (
               <>
                 <li className="nav-item">
                   <span
                     className="nav-link"
+                    tabIndex="0"
                     onClick={() => {
+                      window.location.pathname = "/";
+                    }}
+                    onKeyPress={() => {
                       window.location.pathname = "/";
                     }}
                   >
@@ -183,7 +254,11 @@ function App() {
                 <li className="nav-item">
                   <span
                     className="nav-link"
+                    tabIndex="0"
                     onClick={() => {
+                      window.location.pathname = "/login";
+                    }}
+                    onKeyPress={() => {
                       window.location.pathname = "/login";
                     }}
                   >
@@ -193,7 +268,11 @@ function App() {
                 <li className="nav-item">
                   <span
                     className="nav-link"
+                    tabIndex="0"
                     onClick={() => {
+                      window.location.pathname = "/register";
+                    }}
+                    onKeyPress={() => {
                       window.location.pathname = "/register";
                     }}
                   >
@@ -203,8 +282,16 @@ function App() {
                 <li className="nav-item">
                   <span
                     className="nav-link"
+                    tabIndex="0"
                     onClick={() => {
-                      window.location.pathname = "/support";
+                      window.open(
+                        "mailto:email@example.com?subject=Help%With%Demeter"
+                      );
+                    }}
+                    onKeyPress={() => {
+                      window.open(
+                        "mailto:email@example.com?subject=Help%With%Demeter"
+                      );
                     }}
                   >
                     <h5>Support</h5>
@@ -221,90 +308,200 @@ function App() {
             <Route
               exact
               path="/landing"
-              render={(props) => <LandingPage {...props} logOut={logOut} />}
+              render={(props) => <LandingPage {...props} wideView={wideView} />}
             />
             <Route
               exact
               path="/login"
-              render={(props) => <Login {...props} logOut={logOut} />}
+              render={(props) => (
+                <Login {...props} wideView={wideView} logOut={logOut} />
+              )}
             />
             <Route
               exact
               path="/register"
-              render={(props) => <Register {...props} logOut={logOut} />}
+              render={(props) => (
+                <Register {...props} wideView={wideView} logOut={logOut} />
+              )}
             />
             <Route
               exact
               path="/registration-successful"
-              component={RegistrationSuccessful}
+              render={(props) => (
+                <RegistrationSuccessful {...props} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/confirm-email"
-              render={(props) => <ConfirmEmail {...props} logOut={logOut} />}
+              render={(props) => (
+                <ConfirmEmail {...props} logOut={logOut} wideView={wideView} />
+              )}
             />
-            <Route exact path="/forgot-password" component={ForgotPassword} />
+            <Route
+              exact
+              path="/forgot-password"
+              render={(props) => (
+                <ForgotPassword
+                  {...props}
+                  logOut={logOut}
+                  wideView={wideView}
+                />
+              )}
+            />
             <Route
               exact
               path="/request-processed"
-              component={RequestProcessed}
+              render={(props) => (
+                <RequestProcessed {...props} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/reset-password"
-              render={(props) => <ResetPassword {...props} logOut={logOut} />}
+              render={(props) => (
+                <ResetPassword {...props} logOut={logOut} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/password-reset-successful"
-              component={PasswordResetSuccessful}
+              render={(props) => (
+                <PasswordResetSuccessful {...props} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/logout"
-              render={(props) => <Logout {...props} logOut={logOut} />}
+              render={(props) => (
+                <Logout {...props} logOut={logOut} wideView={wideView} />
+              )}
             />
             <Route
               exact
               path="/plants"
               render={(props) => (
-                <AllPlants
-                  {...props}
-                  getPlants={getPlants}
-                  openOverlay={openOverlay}
-                  closeOverlay={closeOverlay}
-                />
+                <AllPlants {...props} getLogin={getLogin} wideView={wideView} />
               )}
             />
             <Route
               exact
-              path="/plant/:plant_name"
+              path="/add-plant"
               render={(props) => (
-                <Plant
-                  {...props}
-                  getPlants={getPlants}
-                  openOverlay={openOverlay}
-                  closeOverlay={closeOverlay}
-                />
+                <AddPlant {...props} getLogin={getLogin} wideView={wideView} />
+              )}
+            />
+            <Route
+              exact
+              path="/plant-added"
+              render={(props) => <PlantAdded {...props} wideView={wideView} />}
+            />
+            <Route
+              exact
+              path="/plant/:plant_id"
+              render={(props) => (
+                <Plant {...props} getLogin={getLogin} wideView={wideView} />
               )}
             />
             <Route
               exact
               path="/settings"
-              render={(props) => <Settings {...props} logOut={logOut} />}
+              render={(props) => (
+                <Settings {...props} getLogin={getLogin} wideView={wideView} />
+              )}
+            />
+            <Route
+              exact
+              path="/support"
+              render={(props) => (
+                <Support
+                  {...props}
+                  getLogin={getLogin}
+                  logOut={logOut}
+                  wideView={wideView}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/support-successful"
+              render={(props) => (
+                <SupportSuccessful {...props} wideView={wideView} />
+              )}
+            />
+            <Route
+              exact
+              path="/privacy-policy"
+              render={(props) => (
+                <PrivacyPolicy {...props} wideView={wideView} />
+              )}
+            />
+            <Route
+              exact
+              path="/terms-of-use"
+              render={(props) => <TermsOfUse {...props} wideView={wideView} />}
             />
             <Route
               exact
               path="/"
               render={() => {
-                return checkLoggedIn() ? (
-                  <Redirect to="/plants" />
+                const adminStatus = getAdminStatus();
+                return adminStatus !== null ? (
+                  adminStatus ? (
+                    <Redirect to="/users" />
+                  ) : (
+                    <Redirect to="/plants" />
+                  )
                 ) : (
                   <Redirect to="/landing" />
                 );
               }}
             />
-            <Route path="/*" component={NotFound}></Route>
+            <Route
+              exact
+              path="/users"
+              render={(props) => (
+                <AllUsers {...props} getLogin={getLogin} wideView={wideView} />
+              )}
+            />
+            <Route
+              exact
+              path="/user/:user_ID"
+              render={(props) => (
+                <User
+                  {...props}
+                  getLogin={getLogin}
+                  logOut={logOut}
+                  wideView={wideView}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/plants-admin"
+              render={(props) => (
+                <AllPlantsAdmin
+                  {...props}
+                  getLogin={getLogin}
+                  wideView={wideView}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/plant-admin/:plant_id"
+              render={(props) => (
+                <PlantAdmin
+                  {...props}
+                  getLogin={getLogin}
+                  wideView={wideView}
+                />
+              )}
+            />
+            <Route
+              path="/*"
+              render={(props) => <NotFound {...props} wideView={wideView} />}
+            ></Route>
           </Switch>
         </BrowserRouter>
       </main>
@@ -316,7 +513,11 @@ function App() {
           <div className="col-sm-4 text-center">
             <span
               className="footer-link"
+              tabIndex="0"
               onClick={() => {
+                window.location.pathname = "/terms-of-use";
+              }}
+              onKeyPress={() => {
                 window.location.pathname = "/terms-of-use";
               }}
             >
@@ -326,7 +527,11 @@ function App() {
           <div className="col-sm-4 text-center">
             <span
               className="footer-link"
+              tabIndex="0"
               onClick={() => {
+                window.location.pathname = "/privacy-policy";
+              }}
+              onKeyPress={() => {
                 window.location.pathname = "/privacy-policy";
               }}
             >
@@ -335,7 +540,7 @@ function App() {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
 
