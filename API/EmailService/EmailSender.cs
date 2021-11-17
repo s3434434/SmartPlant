@@ -68,6 +68,8 @@ namespace EmailService
                 }
             }
         }
+
+        //async version, probably use this.
         private async Task SendAsync(MimeMessage mailMessage)
         {
             using (var client = new SmtpClient())

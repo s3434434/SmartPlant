@@ -19,6 +19,7 @@ using Microsoft.Extensions.Hosting.Internal;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Serialization.Json;
+using SmartPlant.Models.API_Model.Admin;
 
 namespace SmartPlant.Controllers
 {
@@ -44,68 +45,6 @@ namespace SmartPlant.Controllers
          *   USER ROLE REQUIRED ENDPOINTS
          *             BELOW
          */
-
-        /// <summary>
-        /// Used for testing
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        /// <response code="200">Success</response>
-        [HttpPost]
-        [AllowAnonymous]
-        [Route("/api/Plants/TEST/image")]
-        public IActionResult UploadImage([FromBody] PlantImageDto img)
-        {
-            Console.WriteLine($"ClientID : {clientID}");
-
-            var client = new RestClient("https://api.imgur.com/3/image");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("Authorization", $"Client-ID {clientID}");
-            request.AlwaysMultipartFormData = true;
-            request.AddParameter("image", img.Base64ImgString);
-            IRestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
-            Trace.WriteLine(response.Content);
-
-
-            var data = JsonConvert.DeserializeObject<ImgurApiSuccessResponse>(response.Content);
-
-            Console.WriteLine(data.Data.link);
-            Console.WriteLine(data.Data.deletehash);
-
-
-
-            Console.WriteLine(data);
-
-            return Ok(response.Content);
-
-        }
-
-        /// <summary>
-        /// Used for testing
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        /// <response code="200">Success</response>
-        [HttpDelete]
-        [AllowAnonymous]
-        [Route("/api/Plants/TEST/Image")]
-        public IActionResult DeleteImage([FromBody] PlantImageDto img)
-        {
-            Console.WriteLine(clientID);
-
-            var client = new RestClient($"https://api.imgur.com/3/image/{img.Base64ImgString}");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.DELETE);
-            request.AddHeader("Authorization", $"Client-ID {clientID}");
-            request.AlwaysMultipartFormData = true;
-            IRestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
-            Trace.WriteLine(response.Content);
-            return Ok(response.Content);
-
-        }
 
 
         /// <summary>
@@ -225,7 +164,7 @@ namespace SmartPlant.Controllers
 
 
         /// <summary>
-        /// Updates a plants name
+        /// Updates a plants name and Image. If Image string is null, it remains the same. If a new image string is passed the old one is deleted from Imgur.
         /// </summary>
         /// <remarks>
         /// This takes in a plant ID and a string name.
@@ -413,7 +352,6 @@ namespace SmartPlant.Controllers
         [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> AdminGet(string id)
         {
-
             var plants = await _repo.GetAllForUser(id);
 
             if (plants == null)
@@ -506,7 +444,7 @@ namespace SmartPlant.Controllers
         /// <response code="404">Plant Not Found</response>
         [HttpPut]
         [Route("/api/Admin/Plants")]
-        public async Task<IActionResult> AdminUpdate([FromBody] UpdatePlantDto dto)
+        public async Task<IActionResult> AdminUpdate([FromBody] AdminUpdatePlantDto dto)
         {
             //user id is not needed, since this is an admin action the userID is not relevant
             var plant = new Plant() { Name = dto.Name, PlantID = dto.PlantID };
