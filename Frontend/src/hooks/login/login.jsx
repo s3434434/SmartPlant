@@ -6,6 +6,7 @@ import "./login.css";
 export default function Login(props) {
   const { logOut, wideView } = props;
 
+  // State variables for the login form, status of the login request and whether that status is being shown.
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -13,6 +14,7 @@ export default function Login(props) {
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("-");
 
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
   useEffect(() => {
     document.title = "Login | Demeter - The plant meter";
 
@@ -20,6 +22,7 @@ export default function Login(props) {
     // eslint-disable-next-line
   }, []);
 
+  // Updates the form state variable with the appropriate input field whenever a form input field is updated.
   const handleChange = (e) => {
     const input = e.target;
     const tempForm = _.cloneDeep(form);
@@ -27,6 +30,8 @@ export default function Login(props) {
     setForm(tempForm);
   };
 
+  // Handles the submit event of the login form. Sets the request status appropriately, then performs a POST request to the backend login endpoint. If this request is unsuccessful, an appropriate error message is shown.
+  // Otherwise, a second GET request is sent to the backend endpoint responsible for the user's role. If this request is successful, the login data(the JWT, JWT expiry of the current time plus 1 hour, and whether the user is an admin) is added to localStorage and the user is redirected to the root path. Otherwise, an appropriate error message is shown.
   const handleSubmit = (e) => {
     e.preventDefault();
     setStatus("Please wait...");
