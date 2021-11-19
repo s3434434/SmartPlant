@@ -321,9 +321,11 @@ export default function PlantAdmin(props) {
               >
                 <span style={{ color: "white" }}>{deleteStatus}</span>
               </div>
-              <button className="btn btn-primary mt-2" onClick={deletePlant}>
-                Delete plant
-              </button>
+              <div className="text-center">
+                <button className="btn btn-primary mt-2" onClick={deletePlant}>
+                  Delete plant
+                </button>
+              </div>
             </>
           )}
 

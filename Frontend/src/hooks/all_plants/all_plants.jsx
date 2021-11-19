@@ -61,9 +61,15 @@ export default function AllPlants(props) {
           </div>
         </div>
       ) : (
-        <Link key="add-plant" className="btn btn-primary mt-2" to="/add-plant">
-          Add plant
-        </Link>
+        <div className="text-center">
+          <Link
+            key="add-plant"
+            className="btn btn-primary mt-2"
+            to="/add-plant"
+          >
+            Add plant
+          </Link>
+        </div>
       )}
       {typeof plants === "string" ? (
         <div className="text-center mt-3" style={{ color: "white" }}>
