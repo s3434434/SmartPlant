@@ -463,7 +463,10 @@ export default function PlantAdmin(props) {
           ></SensorPagination>
         </>
       ) : (
-        <div className="text-center" style={{ color: "white" }}>
+        <div
+          className={wideView ? "text-center mt-3" : "text-center mt-3 mb-2"}
+          style={{ color: "white" }}
+        >
           Loading plant...
         </div>
       )}
