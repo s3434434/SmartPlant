@@ -18,7 +18,7 @@ describe('Login page', () => {
 
         cy.visit(route)
         cy.get('.px-2 > .text-center > .btn').click()
-        cy.get('input:invalid').should('have.length', 4)
+        cy.get('input:invalid').should('have.length', 2)
     })
 
     it('Redirects user to the Plants page when correct credentials are entered', () => {
