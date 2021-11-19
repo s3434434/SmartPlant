@@ -15,7 +15,7 @@ export default function Pagination(props) {
     wideView,
   } = props;
 
-  // Constants for the number of items per page, and maximum number of desktop and mobile pagination numbers showing at any one time.
+  // Constants for the number of items per page, and the maximum number of desktop and mobile pagination numbers showing at any one time.
   const ITEMS_PER_PAGE = 10,
     MAX_DESKTOP_PAGINATION_NUMBERS = 10,
     MAX_MOBILE_PAGINATION_NUMBERS = 5;
