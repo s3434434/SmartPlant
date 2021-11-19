@@ -21,7 +21,7 @@ describe('Reset password page', () => {
     it('Displays displays error message when required field not entered', () => {
 
         cy.visit(route)
-        cy.get('form').first().submit()
+        cy.get('.btn').click();
         cy.get('input:invalid').should('have.length', 1)
 
     })
