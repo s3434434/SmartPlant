@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./not_found.css";
 
 export default function NotFound(props) {
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
   useEffect(() => {
     document.title = "Page not found | Demeter - The plant meter";
   }, []);
