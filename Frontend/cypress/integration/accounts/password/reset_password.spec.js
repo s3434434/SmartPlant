@@ -11,7 +11,7 @@ describe('Reset password page', () => {
 
         cy.visit(route)
         cy.get('.gold.text-center').should('have.text', 'Reset password')
-        cy.get('form').first().within(() => {
+        cy.get('form').within(() => {
             cy.get('input[name="newPassword"]')
             cy.get('input[name="confirmNewPassword"]')
             cy.get('.btn').should('have.text', 'Reset password')
@@ -22,7 +22,7 @@ describe('Reset password page', () => {
 
         cy.visit(route)
         cy.get('form').first().submit()
-        cy.get('input:invalid').should('have.length', 2)
+        cy.get('input:invalid').should('have.length', 1)
 
     })
 })
