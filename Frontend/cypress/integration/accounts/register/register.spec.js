@@ -25,7 +25,7 @@ describe('Register page', () => {
 
         cy.visit(route)
         cy.get('form').first().submit()
-        cy.get('input:invalid').should('have.length', 6)
+        cy.get('input:invalid').should('have.length', 3)
 
     })
 })
