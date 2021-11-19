@@ -66,7 +66,7 @@ export default function ResetPassword(props) {
           } else if (errors.ConfirmNewPassword !== undefined) {
             errorMessage = errors.ConfirmNewPassword[0];
           }
- 
+
           setStatus(errorMessage);
         });
     }
