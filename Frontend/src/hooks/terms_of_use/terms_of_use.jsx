@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import "./terms_of_use.css";
 
 export default function TermsOfUse(props) {
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
   useEffect(() => {
     document.title = "Terms of use | Demeter - The plant meter";
     // eslint-disable-next-line

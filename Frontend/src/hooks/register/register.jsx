@@ -6,6 +6,7 @@ import _ from "lodash";
 export default function Register(props) {
   const { logOut, wideView } = props;
 
+  // State variables for the registration form, status of the registration request and whether that status is being shown.
   const [form, setForm] = useState({
     email: "",
     phoneNumber: "",
@@ -13,11 +14,11 @@ export default function Register(props) {
     lastName: "",
     password: "",
     confirmPassword: "",
-    clientURI: "https://www.demeter.onl/confirm-email",
   });
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("-");
 
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
   useEffect(() => {
     document.title = "Register | Demeter - The plant meter";
 
@@ -25,15 +26,17 @@ export default function Register(props) {
     // eslint-disable-next-line
   }, []);
 
+  // Updates the form state variable with the appropriate input field whenever a form input field is updated.
   const handleChange = (e) => {
     const input = e.target;
     const tempForm = _.cloneDeep(form);
-
     tempForm[input.name] = input.value;
 
     setForm(tempForm);
   };
 
+  // Handles the submit event of the registration form. Sets the request status appropriately, then performs a check on whether the form's 'password' and 'confirmPassword' fields match. If not, an appropriate error message is shown.
+  // Otherwise, a POST request to the backend registration endpoint is made with the form data and the clientURI for the confirmation email to be sent by the backend. If this request is successful, the user is taken to the 'Registration successful' page. Otherwise, an appropriate error message is shown.
   const handleSubmit = (e) => {
     e.preventDefault();
     setStatus("Registering account...");
@@ -42,10 +45,13 @@ export default function Register(props) {
     if (form.password !== form.confirmPassword) {
       setStatus("Passwords do not match.");
     } else {
+      const registrationData = _.cloneDeep(form);
+      registrationData.clientURI = "https://www.demeter.onl/confirm-email";
+
       axios
         .post(
           "https://smart-plant.azurewebsites.net/api/Account/Register",
-          form
+          registrationData
         )
         .then((res) => {
           window.location.pathname = "/registration-successful";

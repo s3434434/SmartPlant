@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import "./privacy_policy.css";
 
 export default function PrivacyPolicy(props) {
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
   useEffect(() => {
     document.title = "Privacy policy | Demeter - The plant meter";
     // eslint-disable-next-line

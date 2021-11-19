@@ -4,6 +4,8 @@ import "./logout.css";
 
 export default function Logout(props) {
   const { logOut, wideView } = props;
+
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately and ensures the user is logged out on the UI.
   useEffect(() => {
     document.title = "Logout successful | Demeter - The plant meter";
 

@@ -7,9 +7,11 @@ import "./reset_password.css";
 export default function ResetPassword(props) {
   const { logOut, wideView } = props;
   const search = useLocation().search;
+  // Sets constants for the 'token' and 'email' URL parameters.
   const token = new URLSearchParams(search).get("token"),
     email = new URLSearchParams(search).get("email");
 
+  // State variables for the password reset form, status of the password reset request and whether that status is being shown.
   const [form, setForm] = useState({
     email: email,
     token: token,
@@ -19,6 +21,7 @@ export default function ResetPassword(props) {
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("-");
 
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately and ensures the user is logged out on the UI.
   useEffect(() => {
     document.title = "Reset password | Demeter - The plant meter";
 
@@ -26,6 +29,7 @@ export default function ResetPassword(props) {
     // eslint-disable-next-line
   }, []);
 
+  // Updates the form state variable with the appropriate input field whenever a form input field is updated.
   const handleChange = (e) => {
     const input = e.target;
     const tempForm = _.cloneDeep(form);
@@ -35,6 +39,8 @@ export default function ResetPassword(props) {
     setForm(tempForm);
   };
 
+  // Handles the submit event of the password reset form. Sets the request status appropriately, then performs a check on whether the form's 'newPassword' and 'confirmNewPassword' fields match. If not, an appropriate error message is shown.
+  // Otherwise, a POST request to the backend password reset endpoint is made. If this request is successful, the user is taken to the 'Password reset successful' page. Otherwise, an appropriate error message is shown.
   const handleSubmit = (e) => {
     e.preventDefault();
     setStatus("Please wait...");
@@ -52,14 +58,12 @@ export default function ResetPassword(props) {
           window.location.pathname = "/password-reset-successful";
         })
         .catch((err) => {
-          const errors = err.response.data.messages;
+          const errors = err.response.data.errors;
           let errorMessage = "Server error. Please try again later.";
-
-          if (errors.Passwords !== undefined) {
-            errorMessage = errors.Passwords[0];
-          } else if (errors.ConfirmNewPassword !== undefined) {
-            errorMessage = errors.ConfirmNewPassword[0];
-          }
+          console.log(err.response.data);
+          if (errors.NewPassword !== undefined) {
+            errorMessage = errors.NewPassword[0];
+          } 
 
           setStatus(errorMessage);
         });

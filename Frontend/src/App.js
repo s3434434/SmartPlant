@@ -29,10 +29,12 @@ import AllPlantsAdmin from "./hooks/all_plants_admin/all_plants_admin";
 import PlantAdmin from "./hooks/plant_admin/plant_admin";
 
 function App() {
+  // State variables for whether the user is logged in, whether the user is an administrator and whether the Browser's width is greater than 1199 px. These are used to determine whether certain navbar items are shown, whether particular pages are navigated to, and how the responsive UI behaves.
   const [loggedIn, setLoggedIn] = useState(false),
     [isAdmin, setIsAdmin] = useState(false),
     [wideView, setWideView] = useState(window.innerWidth > 1199);
 
+  // Attempts to retrieve the login data (JWT, admin status and JWT expiry) stored in localStorage. A check is first performed as to whether the JWT has expired - if so, the login data is removed. If the login data has expired or does not exist, null is returned.
   const getLogin = () => {
     const loginString = localStorage.getItem("demeter-login");
     let login = null;
@@ -50,34 +52,12 @@ function App() {
     return login;
   };
 
-  const getAdminStatus = () => {
-    const loginString = localStorage.getItem("demeter-login");
-    let adminStatus = null;
-
-    if (loginString !== null) {
-      const { expiry, admin } = JSON.parse(loginString);
-
-      if (expiry >= Date.now()) {
-        if (admin) {
-          adminStatus = true;
-        } else {
-          adminStatus = false;
-        }
-      } else {
-        localStorage.removeItem("demeter-login");
-      }
-    }
-
-    return adminStatus;
-  };
-
+  // useEffect hook that runs a single time when this component loads. Checks if the user is logged in, then sets the loggedIn and admin state variables appropriately. A window listener is then added to update the wideView state variable whenever the window's size is changed.
   useEffect(() => {
     const login = getLogin();
+    setLoggedIn(login !== null);
     if (login !== null) {
-      setLoggedIn(true);
       setIsAdmin(login.admin);
-    } else {
-      setLoggedIn(false);
     }
 
     window.addEventListener(
@@ -91,6 +71,7 @@ function App() {
     // eslint-disable-next-line
   }, []);
 
+  // Removes the login data from localStorage and appropriately sets the loggedIn state variable when the user logs out.
   const logOut = () => {
     if (getLogin() !== null) {
       localStorage.removeItem("demeter-login");
@@ -445,9 +426,9 @@ function App() {
               exact
               path="/"
               render={() => {
-                const adminStatus = getAdminStatus();
-                return adminStatus !== null ? (
-                  adminStatus ? (
+                const login = getLogin();
+                return login !== null ? (
+                  login.admin ? (
                     <Redirect to="/users" />
                   ) : (
                     <Redirect to="/plants" />

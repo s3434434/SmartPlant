@@ -8,6 +8,8 @@ import "./landing_page.css";
 
 export default function LandingPage(props) {
   const { wideView } = props;
+
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
   useEffect(() => {
     document.title = "Demeter - The plant meter";
     // eslint-disable-next-line
