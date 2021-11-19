@@ -10,7 +10,7 @@ export default function SensorPagination(props) {
     ),
     [averageReading, setAverageReading] = useState(null),
     [currentPageNumber, setCurrentPageNumber] = useState(1),
-    [paginationNumbers, setPaginationNumbers] = useState([]),
+    [desktopPaginationNumbers, setDesktopPaginationNumbers] = useState([]),
     [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]);
 
   useEffect(() => {
@@ -36,12 +36,12 @@ export default function SensorPagination(props) {
   const createPaginationNumbers = (numReadings) => {
     const numPages = getNumPages(numReadings);
 
-    let numbers = [...Array(numPages).keys()];
-    numbers.forEach((number) => {
-      numbers[number]++;
+    let paginationNumbers = [...Array(numPages).keys()];
+    paginationNumbers.forEach((paginationNumber) => {
+      paginationNumbers[paginationNumber]++;
     });
 
-    return numbers;
+    return paginationNumbers;
   };
 
   const updateDisplayedReadings = (timeframe) => {
@@ -121,7 +121,7 @@ export default function SensorPagination(props) {
       setDisplayedReadings(readings);
 
       const numbers = createPaginationNumbers(readings.length);
-      setPaginationNumbers(numbers.slice(0, 10));
+      setDesktopPaginationNumbers(numbers.slice(0, 10));
       setMobilePaginationNumbers(numbers.slice(0, 5));
 
       setCurrentPageNumber(1);
@@ -162,17 +162,17 @@ export default function SensorPagination(props) {
     ) {
       const numbers = createPaginationNumbers(displayedReadings.length);
 
-      if (pageNumber < paginationNumbers[0]) {
+      if (pageNumber < desktopPaginationNumbers[0]) {
         const desktopNumbers = numbers.slice(pageNumber - 1, pageNumber + 9);
 
-        if (desktopNumbers.length >= paginationNumbers.length) {
-          setPaginationNumbers(desktopNumbers);
+        if (desktopNumbers.length >= desktopPaginationNumbers.length) {
+          setDesktopPaginationNumbers(desktopNumbers);
         }
-      } else if (pageNumber > paginationNumbers[9]) {
+      } else if (pageNumber > desktopPaginationNumbers[9]) {
         const desktopNumbers = numbers.slice(pageNumber - 10, pageNumber);
 
-        if (desktopNumbers.length >= paginationNumbers.length) {
-          setPaginationNumbers(desktopNumbers);
+        if (desktopNumbers.length >= desktopPaginationNumbers.length) {
+          setDesktopPaginationNumbers(desktopNumbers);
         }
       }
 
@@ -294,24 +294,24 @@ export default function SensorPagination(props) {
                 </span>
               </li>
               {wideView
-                ? paginationNumbers.map((paginationNumber) => {
+                ? desktopPaginationNumbers.map((desktopPaginationNumber) => {
                     return (
-                      <li className="page-item" key={paginationNumber}>
+                      <li className="page-item" key={desktopPaginationNumber}>
                         <span
                           className={
-                            currentPageNumber === paginationNumber
+                            currentPageNumber === desktopPaginationNumber
                               ? "page-link page-link-selected"
                               : "page-link"
                           }
                           tabIndex="0"
                           onClick={() => {
-                            pageNavigate(paginationNumber);
+                            pageNavigate(desktopPaginationNumber);
                           }}
                           onKeyPress={() => {
-                            pageNavigate(paginationNumber);
+                            pageNavigate(desktopPaginationNumber);
                           }}
                         >
-                          {paginationNumber}
+                          {desktopPaginationNumber}
                         </span>
                       </li>
                     );

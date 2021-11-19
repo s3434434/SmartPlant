@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./registration_successful.css";
 
 export default function RegistrationSuccessful(props) {
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
   useEffect(() => {
     document.title = "Registration successful | Demeter - The plant meter";
     // eslint-disable-next-line

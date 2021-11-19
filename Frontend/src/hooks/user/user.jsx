@@ -349,9 +349,11 @@ export default function User(props) {
               >
                 <span style={{ color: "white" }}>{deleteStatus}</span>
               </div>
-              <button className="btn btn-primary mt-2" onClick={deleteUser}>
-                Delete user
-              </button>
+              <div className="text-center">
+                <button className="btn btn-primary mt-2" onClick={deleteUser}>
+                  Delete user
+                </button>
+              </div>
             </>
           )}
 
@@ -751,7 +753,12 @@ export default function User(props) {
 
           <h1 className="text-center gold mt-4">Plants</h1>
           {typeof plants === "string" ? (
-            <div className="text-center mt-3" style={{ color: "white" }}>
+            <div
+              className={
+                wideView ? "text-center mt-3" : "text-center mt-3 mb-2"
+              }
+              style={{ color: "white" }}
+            >
               {plants}
             </div>
           ) : (
@@ -769,7 +776,10 @@ export default function User(props) {
           )}
         </>
       ) : (
-        <div className="text-center" style={{ color: "white" }}>
+        <div
+          className={wideView ? "text-center mt-3" : "text-center mt-3 mb-2"}
+          style={{ color: "white" }}
+        >
           Loading user...
         </div>
       )}

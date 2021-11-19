@@ -77,7 +77,10 @@ export default function AllPlantsAdmin(props) {
     <section>
       <h1 className="text-center gold">Plants</h1>
       {typeof plants === "string" ? (
-        <div className="text-center mt-3" style={{ color: "white" }}>
+        <div
+          className={wideView ? "text-center mt-3" : "text-center mt-3 mb-2"}
+          style={{ color: "white" }}
+        >
           {plants}
         </div>
       ) : (

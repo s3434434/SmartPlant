@@ -244,9 +244,11 @@ export default function Plant(props) {
               >
                 <span style={{ color: "white" }}>{deleteStatus}</span>
               </div>
-              <button className="btn btn-primary mt-2" onClick={deletePlant}>
-                Delete plant
-              </button>
+              <div className="text-center">
+                <button className="btn btn-primary mt-2" onClick={deletePlant}>
+                  Delete plant
+                </button>
+              </div>
             </>
           )}
 
@@ -428,7 +430,10 @@ export default function Plant(props) {
           ></SensorPagination>
         </>
       ) : (
-        <div className="text-center" style={{ color: "white" }}>
+        <div
+          className={wideView ? "text-center mt-3" : "text-center mt-3 mb-2"}
+          style={{ color: "white" }}
+        >
           Loading plant...
         </div>
       )}
