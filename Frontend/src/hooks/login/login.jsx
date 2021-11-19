@@ -58,6 +58,8 @@ export default function Login(props) {
         let errorMessage = "Server error. Please try again later.";
         const errors = err.response.data.errors;
         
+        console.log(err.response);
+
         if (errors["Email"] !== undefined) {
           errorMessage = errors["Email"][0];
         }
@@ -65,7 +67,7 @@ export default function Login(props) {
         if (errors["Password"] !== undefined) {
           errorMessage = errors["Password"][0];
         }
-
+        
         setStatus(errorMessage);
       });
   };
