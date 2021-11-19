@@ -4,14 +4,19 @@ import "./sensor_pagination.css";
 export default function SensorPagination(props) {
   const { sensorReadings, admin, wideView } = props;
 
+  // Constants for the maximum number of desktop and mobile pagination numbers showing at any one time.
+  const MAX_DESKTOP_PAGINATION_NUMBERS = 10,
+    MAX_MOBILE_PAGINATION_NUMBERS = 5;
+
   const [currentTimeframe, setCurrentTimeframe] = useState("All time"),
     [displayedReadings, setDisplayedReadings] = useState(
       "Loading sensor data..."
     ),
     [averageReading, setAverageReading] = useState(null),
-    [currentPageNumber, setCurrentPageNumber] = useState(1),
+    [allPaginationNumbers, setAllPaginationNumbers] = useState([]),
     [desktopPaginationNumbers, setDesktopPaginationNumbers] = useState([]),
-    [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]);
+    [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]),
+    [currentPageNumber, setCurrentPageNumber] = useState(1);
 
   useEffect(() => {
     if (sensorReadings !== null) {
@@ -23,26 +28,6 @@ export default function SensorPagination(props) {
     }
     // eslint-disable-next-line
   }, [sensorReadings]);
-
-  const getNumPages = (numReadings) => {
-    let numPages = Math.floor(numReadings / 9);
-    if (numReadings % 9 !== 0) {
-      numPages++;
-    }
-
-    return numPages;
-  };
-
-  const createPaginationNumbers = (numReadings) => {
-    const numPages = getNumPages(numReadings);
-
-    let paginationNumbers = [...Array(numPages).keys()];
-    paginationNumbers.forEach((paginationNumber) => {
-      paginationNumbers[paginationNumber]++;
-    });
-
-    return paginationNumbers;
-  };
 
   const updateDisplayedReadings = (timeframe) => {
     let readings = [];
@@ -120,9 +105,24 @@ export default function SensorPagination(props) {
 
       setDisplayedReadings(readings);
 
-      const numbers = createPaginationNumbers(readings.length);
-      setDesktopPaginationNumbers(numbers.slice(0, 10));
-      setMobilePaginationNumbers(numbers.slice(0, 5));
+      const itemsPerPage = 9;
+      let numPages = Math.floor(readings.length / itemsPerPage);
+      if (readings.length % itemsPerPage !== 0) {
+        numPages++;
+      }
+
+      let paginationNumbers = [...Array(numPages).keys()];
+      paginationNumbers.forEach((paginationNumber) => {
+        paginationNumbers[paginationNumber]++;
+      });
+
+      setAllPaginationNumbers(paginationNumbers);
+      setDesktopPaginationNumbers(
+        paginationNumbers.slice(0, MAX_DESKTOP_PAGINATION_NUMBERS)
+      );
+      setMobilePaginationNumbers(
+        paginationNumbers.slice(0, MAX_MOBILE_PAGINATION_NUMBERS)
+      );
 
       setCurrentPageNumber(1);
     } else {
@@ -156,39 +156,59 @@ export default function SensorPagination(props) {
   };
 
   const pageNavigate = (pageNumber) => {
-    if (
-      pageNumber >= 1 &&
-      pageNumber <= getNumPages(displayedReadings.length)
-    ) {
-      const numbers = createPaginationNumbers(displayedReadings.length);
-
-      if (pageNumber < desktopPaginationNumbers[0]) {
-        const desktopNumbers = numbers.slice(pageNumber - 1, pageNumber + 9);
-
-        if (desktopNumbers.length >= desktopPaginationNumbers.length) {
-          setDesktopPaginationNumbers(desktopNumbers);
+    if (pageNumber >= 1 && pageNumber <= allPaginationNumbers.length) {
+      if (
+        pageNumber === desktopPaginationNumbers[0] - 1 ||
+        pageNumber ===
+          desktopPaginationNumbers[desktopPaginationNumbers.length - 1] + 1
+      ) {
+        let startIndex, finishIndex;
+        if (pageNumber === desktopPaginationNumbers[0] - 1) {
+          startIndex = pageNumber - 1;
+          finishIndex = pageNumber + MAX_DESKTOP_PAGINATION_NUMBERS - 1;
+        } else if (
+          pageNumber ===
+          desktopPaginationNumbers[desktopPaginationNumbers.length - 1] + 1
+        ) {
+          startIndex = pageNumber - MAX_DESKTOP_PAGINATION_NUMBERS;
+          finishIndex = pageNumber;
         }
-      } else if (pageNumber > desktopPaginationNumbers[9]) {
-        const desktopNumbers = numbers.slice(pageNumber - 10, pageNumber);
 
+        const desktopNumbers = allPaginationNumbers.slice(
+          startIndex,
+          finishIndex
+        );
         if (desktopNumbers.length >= desktopPaginationNumbers.length) {
           setDesktopPaginationNumbers(desktopNumbers);
         }
       }
 
-      if (pageNumber < mobilePaginationNumbers[0]) {
-        const mobileNumbers = numbers.slice(pageNumber - 1, pageNumber + 4);
-
-        if (mobileNumbers.length >= mobilePaginationNumbers.length) {
-          setMobilePaginationNumbers(mobileNumbers);
+      if (
+        pageNumber === mobilePaginationNumbers[0] - 1 ||
+        pageNumber ===
+          mobilePaginationNumbers[mobilePaginationNumbers.length - 1] + 1
+      ) {
+        let startIndex, finishIndex;
+        if (pageNumber === mobilePaginationNumbers[0] - 1) {
+          startIndex = pageNumber - 1;
+          finishIndex = pageNumber + MAX_MOBILE_PAGINATION_NUMBERS - 1;
+        } else if (
+          pageNumber ===
+          mobilePaginationNumbers[mobilePaginationNumbers.length - 1] + 1
+        ) {
+          startIndex = pageNumber - MAX_MOBILE_PAGINATION_NUMBERS;
+          finishIndex = pageNumber;
         }
-      } else if (pageNumber > mobilePaginationNumbers[4]) {
-        const mobileNumbers = numbers.slice(pageNumber - 5, pageNumber);
 
+        const mobileNumbers = allPaginationNumbers.slice(
+          startIndex,
+          finishIndex
+        );
         if (mobileNumbers.length >= mobilePaginationNumbers.length) {
           setMobilePaginationNumbers(mobileNumbers);
         }
       }
+
       setCurrentPageNumber(pageNumber);
     }
   };
