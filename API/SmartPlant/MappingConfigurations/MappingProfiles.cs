@@ -26,11 +26,6 @@ namespace SmartPlant.MappingConfigurations
 
             CreateMap<ApplicationUser, UserDetailsDto>();
 
-            /* CreateMap<AdminUpdateUserDetailsDto, ApplicationUser>()
-                 .ForMember(u => u.UserName, opt => opt.MapFrom(x => x.Email))
-                 .ForMember(u => u.Email, opt => opt.MapFrom(x => x.Email))
-                 .ForSourceMember(x => x.ID, opt => opt.DoNotValidate());*/
-
         }
 
     }

@@ -64,10 +64,6 @@ namespace SmartPlant.Controllers
             //this should only work with a logged in user, using their own id's
             var userID = User.Identity.Name;
 
-            /*//this gets the users Role (user or admin)
-            var role = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
-            Console.WriteLine($"userid : {userID}\nRole : {role.ElementAt(0)}");*/
-
             var plants = await _repo.GetAllForUser(userID);
 
             if (plants == null)
@@ -138,9 +134,6 @@ namespace SmartPlant.Controllers
                 var genericError = new GenericReturnMessageDto { Messages = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
                 return Conflict(genericError);
             }
-            //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
-
-            //else result == 1
 
             Console.WriteLine(dto.Base64ImgString != null);
             if (dto.Base64ImgString != null)
@@ -427,10 +420,7 @@ namespace SmartPlant.Controllers
                 genericError = new GenericReturnMessageDto { Messages = new Dictionary<string, List<string>> { { "Name Taken", new List<String> { "You are already using this name." } } } };
                 return Conflict(genericError);
             }
-            //return Created(new Uri(Request.GetEncodedUrl()+ "/" + plant.PlantID), result);
-
-            //else result == 1
-            //return Created("", $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}\nPlant Name: {plant.Name}");
+            
             return Created("", $"Success\n{plant}\nToken: {plantToken.Token}");
         }
 

@@ -191,10 +191,6 @@ namespace SmartPlant.Controllers
             {
                 return NotFound("Plant ID does not exist in the user's list of plants.");
             }
-            if (result == "")
-            {
-                return StatusCode(429, "Please wait 5 minutes between updates");
-            }
 
             return Created("", result);
         }
@@ -218,7 +214,7 @@ namespace SmartPlant.Controllers
         {
             if (!await _repo.AddWithToken(dto))
             {
-                return Unauthorized();
+                return BadRequest("Incorrect token or Updating too frequently, please wait at least 5 minutes between updates.");
             }
 
             return Created("", dto);
@@ -353,7 +349,7 @@ namespace SmartPlant.Controllers
             }
             if (result == "")
             {
-                return StatusCode(429, "Please wait 5 minutes between updates");
+                return StatusCode(429, "Please wait 5 minutes between updates"); //this wait time is set in the SensorDataManager
             }
 
             return Created("", result);

@@ -67,6 +67,7 @@ namespace SmartPlant.Models.DataManager
                 { "email", user.Email }
             };
 
+            //setting the emails message
             var content = $"Thank you for registering for Demeter!\n\n\n" +
                           $"Please click on the following link to confirm your email and activate your account.\n\n{QueryHelpers.AddQueryString(userRegDto.ClientURI, queryString)}";
             var message = new Message(new string[] { user.Email }, "Demeter SmartPlant - Confirm Your Email", content);
@@ -141,6 +142,7 @@ namespace SmartPlant.Models.DataManager
                 { "email", user.Email }
             };
 
+            //setting email message
             var content = $"Hello {user.Email}!\n\n" +
                           $"Please click on the following link to reset your password\n\n" +
                           $"{QueryHelpers.AddQueryString(passwordDto.ClientURI, queryString)}\n\n" +
@@ -176,10 +178,10 @@ namespace SmartPlant.Models.DataManager
             {
                 return false;
             }
-            //var name = user.FirstName ?? "";
 
             var subject = $"{user.FirstName}  | {user.Email} | {user.Id} -- {dto.EmailSubject} ";
 
+            //email message
             var content = $"=================================================================\n\n" +
                           $"Name:\t\t {user.FirstName ?? "N/A"}\n" +
                           $"Email:\t\t {user.Email},\n" +

@@ -18,7 +18,9 @@ namespace SmartPlant
             {
                 var services = scope.ServiceProvider;
                 var db = services.GetService<DatabaseContext>();
-                db.Database.Migrate();
+
+                //on startup, first run any new migrations
+                db?.Database.Migrate();
 
                 try
                 {

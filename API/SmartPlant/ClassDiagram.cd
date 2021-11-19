@@ -3,28 +3,28 @@
   <Class Name="SmartPlant.Controllers.AccountController">
     <Position X="0.5" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAABAABACAACQAAgAABQAAAAEABAIEAAAkZQAIAAAA=</HashCode>
+      <HashCode>AAABBAABACAACQAAgAABQAAAAEABAIEAAAkZQAIQAAA=</HashCode>
       <FileName>Controllers\AccountController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SmartPlant.Controllers.PlantController" Collapsed="true">
     <Position X="5.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQABAAABAAAAgBAAIACQAAACAEAAAAAAAAAAEAAAAA=</HashCode>
+      <HashCode>ACQABQAABAAAAgBAAKACQAAACAEAACQAAAEAIkAAAAA=</HashCode>
       <FileName>Controllers\PlantController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SmartPlant.Controllers.SensorDataController" Collapsed="true">
     <Position X="9.25" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAARAAABAAAAgACAAARQAAACAAAAAAAAgQAAAQAAAg=</HashCode>
+      <HashCode>AAAARAAABAAAAgACAAARQAAACAAAAAAAAgQAAAQEAAg=</HashCode>
       <FileName>Controllers\SensorDataController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SmartPlant.Data.DatabaseContext" Collapsed="true">
     <Position X="5.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>QAAQAAAAAAAAAAAAAAAAAAAAEEAAAAgAAAAAAAAAAAA=</HashCode>
       <FileName>Data\DatabaseContext.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -157,14 +157,14 @@
   <Class Name="SmartPlant.Models.API_Model.Account.UpdateUserDetailsDto" Collapsed="true">
     <Position X="9.25" Y="5.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAEAAAAAAAAAAAAAAQAAAAAAAAAACAAAAAAAAAAg=</HashCode>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Models\API Model\Account\UpdateUserDetailsDto.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SmartPlant.Models.API_Model.Account.UserDetailsDto" Collapsed="true">
     <Position X="12.75" Y="5.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAEAAACAAAAAAAAAAQAAAAAAAAAACAAAAAAAAAAg=</HashCode>
+      <HashCode>AAAAAEAAACAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Models\API Model\Account\UserDetailsDto.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -178,7 +178,7 @@
   <Class Name="SmartPlant.Models.API_Model.Account.AuthResponseDto" Collapsed="true">
     <Position X="2.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <HashCode>QAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
       <FileName>Models\API Model\Account\UserForAuthenticationDto.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -199,15 +199,15 @@
   <Class Name="SmartPlant.Models.API_Model.AdminAddPlantDto" Collapsed="true">
     <Position X="2.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAQAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAIAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\API Model\Admin\AdminAddPlantDto.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SmartPlant.Models.API_Model.SensorDataModel" Collapsed="true">
     <Position X="12.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAACAAAgAQAAAAAAAAAAgAAAAQA=</HashCode>
-      <FileName>Models\API Model\SensorDataModel.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAgAQAAAAAAAAAAgAABAQA=</HashCode>
+      <FileName>Models\API Model\SensorData\SensorDataModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SmartPlant.Models.API_Model.Admin.AdminGetAllUsersDto" Collapsed="true">
@@ -234,7 +234,7 @@
   <Class Name="SmartPlant.Models.API_Model.Admin.AdminUpdateUserDetailsDto" Collapsed="true">
     <Position X="9.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAEAAACAAgAAAAAAAQAAAAAAAAAACAAAAAAAAAAg=</HashCode>
+      <HashCode>AAAAAEAAACAAgAAAAAAAQAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Models\API Model\Admin\AdminUpdateUserDetailsDto.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -248,21 +248,21 @@
   <Class Name="SmartPlant.Models.API_Model.Plant.AddPlantDto" Collapsed="true">
     <Position X="12.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAIAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\API Model\Plant\AddPlantDto.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SmartPlant.Models.API_Model.Plant.UpdatePlantDto" Collapsed="true">
     <Position X="7.5" Y="5.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAQAAAAAAAAAAAAAAAAQA=</HashCode>
       <FileName>Models\API Model\Plant\UpdatePlantDto.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SmartPlant.Models.DataManager.AccountManager" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="4" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAABAABACAADQAAwAABAAAAAECBgIEAAAkRQAIAAAA=</HashCode>
+      <HashCode>AAABBAABACAADQAAwAABAAAAAECBgIEAAAkRQAIQAAA=</HashCode>
       <FileName>Models\DataManager\AccountManager.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -270,7 +270,7 @@
   <Class Name="SmartPlant.Models.DataManager.PlantManager" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="7.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAYEAAAAAAAABgAAAAACAAAAAAECAAAAAAAAAEAAAAA=</HashCode>
+      <HashCode>ACYEAQAAAAAABgAAACASAAAAgAECACAAAAAAAEAAAAA=</HashCode>
       <FileName>Models\DataManager\PlantManager.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -278,7 +278,7 @@
   <Class Name="SmartPlant.Models.DataManager.SensorDataManager" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="11" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAIAAAAAAABgCEAAQQAAAAAAAAAAAAAgQAAAUAAAg=</HashCode>
+      <HashCode>AAIAIAAAAAAABgCEAAQQAAAAAAAAIAAAAgQAAAUAAAg=</HashCode>
       <FileName>Models\DataManager\SensorDataManager.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -286,14 +286,14 @@
   <Class Name="SmartPlant.Models.ApplicationUser" Collapsed="true">
     <Position X="12.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAQAEAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAg=</HashCode>
+      <HashCode>AAAQAEAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Models\ApplicationUser.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SmartPlant.Models.Plant" Collapsed="true">
     <Position X="4" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAABAAAAAAAAAAAEAAAAAAwAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <HashCode>AAABAAAAAAAAAAAEAAAAIAwAAAAAABAAAAAAAAABAQA=</HashCode>
       <FileName>Models\Plant.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -321,21 +321,21 @@
   <Interface Name="SmartPlant.Models.Repository.IAccountManager" Collapsed="true">
     <Position X="2.25" Y="7.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAABACAACQAAgAAAAAAAAEABgIEAAAkRQAIAAAA=</HashCode>
+      <HashCode>AAABAAABACAACQAAgAAAAAAAAEABgIEAAAkRQAIQAAA=</HashCode>
       <FileName>Models\Repository\IAccountManager.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="SmartPlant.Models.Repository.IPlantManager" Collapsed="true">
     <Position X="4" Y="7.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAYEAAAAAAAAAgAAAAACAAAAAAEAAAAAAAAAAEAAAAA=</HashCode>
+      <HashCode>ACYEAQAAAAAAAgAAACASAAAAAAEAACAAAAAAAEAAAAA=</HashCode>
       <FileName>Models\Repository\IPlantManager.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="SmartPlant.Models.Repository.ISensorDataManager" Collapsed="true">
     <Position X="5.75" Y="7.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAAAAAAAAAgAEAAQQAAAAAAAAAAAAAgQAAAUAAAg=</HashCode>
+      <HashCode>AAIAAAAAAAAAAgAEAAQQAAAAAAAAIAAAAgQAAAUAAAg=</HashCode>
       <FileName>Models\Repository\ISensorDataManager.cs</FileName>
     </TypeIdentifier>
   </Interface>

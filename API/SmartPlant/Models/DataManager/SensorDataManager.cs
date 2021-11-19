@@ -119,21 +119,9 @@ namespace SmartPlant.Models.DataManager
                 return null;
             }
 
-            //If the last update for the specific plant was less than 5 minutes ago, don't update.
-            //stops database being spammed ? , but not webserver
-            /* var last = await _context.SensorData.OrderBy(p => p.TimeStampUTC).LastOrDefaultAsync(p => p.PlantID == data.PlantID);
-             var timeCheck = last.TimeStampUTC.AddMinutes(5);
-
-             Console.WriteLine($"timeCHeck: {timeCheck}\nTIme Now: {DateTime.UtcNow}");
-             if (timeCheck > DateTime.UtcNow)
-             {
-                 return "";
-             }
-            */
             _context.Add(data);
             await _context.SaveChangesAsync();
-
-            //var msg = "";
+            
             return "added";
         }
 
@@ -148,17 +136,17 @@ namespace SmartPlant.Models.DataManager
             }
 
             //check for time of last update to stop spam
-            /*var last = await _context.SensorData.OrderBy(p => p.TimeStampUTC).LastOrDefaultAsync(p => p.PlantID == existingPlantToken.PlantID);
+            var last = await _context.SensorData.OrderBy(p => p.TimeStampUTC).LastOrDefaultAsync(p => p.PlantID == existingPlantToken.PlantID);
             if (last != null)
             {
-                var timeCheck = last.TimeStampUTC.AddMinutes(5);
+                var timeCheck = last.TimeStampUTC.AddMinutes(5); //if last update was within 5 mins.
 
                 Console.WriteLine($"timeCHeck: {timeCheck}\nTIme Now: {DateTime.UtcNow}");
                 if (timeCheck > DateTime.UtcNow)
                 {
                     return false;
                 }
-            }*/
+            }
 
             var sensorData = new SensorData
             {

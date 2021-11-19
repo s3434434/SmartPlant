@@ -22,7 +22,7 @@ namespace SmartPlant.Data
         {
             base.OnModelCreating(builder);
 
-            //
+            //setting CHECK Constraints
             builder.Entity<ApplicationUser>()
                 .HasCheckConstraint("CH_User_PhoneNumber", "len(PhoneNumber) = 10")
                 .HasCheckConstraint("CH_User_FirstName", "len(FirstName) <= 50")
@@ -35,7 +35,7 @@ namespace SmartPlant.Data
                 .HasCheckConstraint("CH_SensorData_LightIntensity", "(LightIntensity >= 0 and LightIntensity <= 100.00)")
                 .HasCheckConstraint("CH_SensorData_Temperature", "(Temperature >= -30 and Temperature <= 50.00)");
 
-            // decimal stuff
+            //setting decimal stuff
             builder.Entity<SensorData>()
                 .Property(s => s.Temp)
                 .HasPrecision(5, 2);

@@ -24,6 +24,7 @@ namespace SmartPlant.JwtFeatures
             _userManager = userManager;
         }
 
+        //generates the signingcredential, using the secret key stored in appsettings.json
         public virtual SigningCredentials GetSigningCredentials()
         {
             var key = Encoding.UTF8.GetBytes(_jwtSettings.GetSection("securityKey").Value);

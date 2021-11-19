@@ -31,7 +31,6 @@ namespace SmartPlant.Models.DataManager
         //returns all plants belonging to a specific user (userID, plantID)
         public async Task<IEnumerable<UserGetPlantDto>> GetAllForUser(string userID)
         {
-            //if user doesn't exist return error?
             var userExists = await _context.Plants.FirstOrDefaultAsync(p => p.UserID == userID);
             if (userExists is null)
             {
@@ -82,7 +81,6 @@ namespace SmartPlant.Models.DataManager
 
             var msg = $"Success\nPlant ID: {plant.PlantID}\nuserID: {plant.UserID}";
             return 1;
-            //return plant.PlantID;
         }
 
         public async Task<int> Update(Plant plant)
@@ -173,6 +171,7 @@ namespace SmartPlant.Models.DataManager
                 return false;
             }
 
+            //uploading image to Imgur's service 
             var client = new RestClient("https://api.imgur.com/3/image");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
@@ -182,13 +181,12 @@ namespace SmartPlant.Models.DataManager
             IRestResponse response = client.Execute(request);
 
             Console.WriteLine($"Content: {response.Content}");
+
             if (!response.IsSuccessful)
             {
                 return false;
             }
-
-            /*var imageLink = response.Content
-            var plantImage = new PlantImage{}*/
+            
             var data = JsonConvert.DeserializeObject<ImgurApiSuccessResponse>(response.Content);
             var url = data?.Data.link;
             var deleteHash = data?.Data.deletehash;
@@ -231,6 +229,7 @@ namespace SmartPlant.Models.DataManager
 
             if (plantImage != null)
             {
+                //calling Imgur's API with delete hash to delete image from their servers
                 var client = new RestClient($"https://api.imgur.com/3/image/{plantImage.DeleteHash}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.DELETE);
