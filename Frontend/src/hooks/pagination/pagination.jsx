@@ -15,8 +15,9 @@ export default function Pagination(props) {
     wideView,
   } = props;
 
-  // Constants for the maximum number of desktop and mobile pagination numbers showing at any one time.
-  const MAX_DESKTOP_PAGINATION_NUMBERS = 10,
+  // Constants for the number of items per page, and maximum number of desktop and mobile pagination numbers showing at any one time.
+  const ITEMS_PER_PAGE = 10,
+    MAX_DESKTOP_PAGINATION_NUMBERS = 10,
     MAX_MOBILE_PAGINATION_NUMBERS = 5;
 
   // State variables for all pagination numbers, the current pagination numbers for desktop and mobile, and the current page number.
@@ -31,10 +32,8 @@ export default function Pagination(props) {
   // The allPaginationNumbers state variable is then set to the pagination numbers array, and the desktopPaginationNumbers and mobilePaginationNumbers state variables are set to appropriate slices of the pagination number array.
   useEffect(() => {
     if (items.length > 0) {
-      const itemsPerPage = 10;
-
-      let numPages = Math.floor(items.length / itemsPerPage);
-      if (items.length % itemsPerPage !== 0) {
+      let numPages = Math.floor(items.length / ITEMS_PER_PAGE);
+      if (items.length % ITEMS_PER_PAGE !== 0) {
         numPages++;
       }
 
@@ -150,7 +149,10 @@ export default function Pagination(props) {
           </thead>
           <tbody>
             {items
-              .slice(10 * (currentPageNumber - 1), 10 * currentPageNumber)
+              .slice(
+                ITEMS_PER_PAGE * (currentPageNumber - 1),
+                ITEMS_PER_PAGE * currentPageNumber
+              )
               .map((item) => {
                 const id = item[itemID],
                   title1 = item[itemTitle1],

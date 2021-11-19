@@ -4,8 +4,9 @@ import "./sensor_pagination.css";
 export default function SensorPagination(props) {
   const { sensorReadings, admin, wideView } = props;
 
-  // Constants for the maximum number of desktop and mobile pagination numbers showing at any one time.
-  const MAX_DESKTOP_PAGINATION_NUMBERS = 10,
+  // Constants for the number of items per page, and the maximum number of desktop and mobile pagination numbers showing at any one time. The items per page is set to 9 to account for the 'average' row at the top of each page.
+  const ITEMS_PER_PAGE = 9,
+    MAX_DESKTOP_PAGINATION_NUMBERS = 10,
     MAX_MOBILE_PAGINATION_NUMBERS = 5;
 
   const [currentTimeframe, setCurrentTimeframe] = useState("All time"),
@@ -105,9 +106,8 @@ export default function SensorPagination(props) {
 
       setDisplayedReadings(readings);
 
-      const itemsPerPage = 9;
-      let numPages = Math.floor(readings.length / itemsPerPage);
-      if (readings.length % itemsPerPage !== 0) {
+      let numPages = Math.floor(readings.length / ITEMS_PER_PAGE);
+      if (readings.length % ITEMS_PER_PAGE !== 0) {
         numPages++;
       }
 
@@ -259,18 +259,18 @@ export default function SensorPagination(props) {
                       </tr>
                     );
                   })}
-                {9 -
+                {ITEMS_PER_PAGE -
                   displayedReadings.slice(
-                    9 * (currentPageNumber - 1),
-                    9 * currentPageNumber
+                    ITEMS_PER_PAGE * (currentPageNumber - 1),
+                    ITEMS_PER_PAGE * currentPageNumber
                   ).length >
                 0
                   ? [
                       ...Array(
-                        9 -
+                        ITEMS_PER_PAGE -
                           displayedReadings.slice(
-                            9 * (currentPageNumber - 1),
-                            9 * currentPageNumber
+                            ITEMS_PER_PAGE * (currentPageNumber - 1),
+                            ITEMS_PER_PAGE * currentPageNumber
                           ).length
                       ).keys(),
                     ].map((key) => {
