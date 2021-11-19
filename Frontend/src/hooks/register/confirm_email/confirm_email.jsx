@@ -46,7 +46,7 @@ export default function ConfirmEmail(props) {
               ? "Email confirmation successful"
               : "Server error"}
           </h1>
-          <div className="text-center mt-3">
+          <div className="text-center mt-3" style={{ color: "white" }}>
             {confirmationSuccessful ? (
               <span>Your email has been confirmed successfully.</span>
             ) : (
