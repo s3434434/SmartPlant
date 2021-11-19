@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./not_found.css";
 
-export default function NotFound() {
+export default function NotFound(props) {
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
   useEffect(() => {
     document.title = "Page not found | Demeter - The plant meter";
   }, []);
@@ -10,14 +11,13 @@ export default function NotFound() {
   return (
     <section className="text-center gold">
       <h1 className="gold text-center">Page not found</h1>
-      <div className="text-center mt-5 d-none d-xl-block">
-        <Link key="home" to="/">
-          <button className="btn btn-primary">Home</button>
-        </Link>
-      </div>
-      <div className="text-center mt-5 mb-2 d-xl-none">
-        <Link key="home" to="/">
-          <button className="btn btn-primary">Home</button>
+      <div
+        className={
+          props.wideView ? "text-center mt-5" : "text-center mt-5 mb-2"
+        }
+      >
+        <Link key="home" className="btn btn-primary" to="/">
+          Home
         </Link>
       </div>
     </section>

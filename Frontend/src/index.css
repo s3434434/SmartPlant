@@ -11,7 +11,8 @@ div {
   color: rgb(243, 202, 0);
 }
 
-.light-gold-hover:hover {
+.light-gold-hover:hover,
+.light-gold-hover:focus {
   color: rgb(247, 215, 59);
 }
 
@@ -72,6 +73,10 @@ p {
 }
 form span {
   color: white;
+}
+input,
+textarea {
+  color: rgb(0, 53, 11) !important;
 }
 
 .hidden-field {

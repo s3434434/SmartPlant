@@ -6,7 +6,7 @@ import axios from "axios";
 import "./settings.css";
 
 export default function Settings(props) {
-  const { getLogin } = props;
+  const { getLogin, wideView } = props;
 
   const [emailForm, setEmailForm] = useState({
       email: "",
@@ -29,11 +29,11 @@ export default function Settings(props) {
     [lastNameModifiable, setLastNameModifiable] = useState(false),
     [passwordModifiable, setPasswordModifiable] = useState(false),
     [showEmailStatus, setShowEmailStatus] = useState(false),
-    [emailStatus, setEmailStatus] = useState("none"),
+    [emailStatus, setEmailStatus] = useState("-"),
     [showDetailsStatus, setShowDetailsStatus] = useState(false),
-    [detailsStatus, setDetailsStatus] = useState("none"),
+    [detailsStatus, setDetailsStatus] = useState("-"),
     [showPasswordStatus, setShowPasswordStatus] = useState(false),
-    [passwordStatus, setPasswordStatus] = useState("none");
+    [passwordStatus, setPasswordStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Settings | Demeter - The plant meter";
@@ -230,7 +230,7 @@ export default function Settings(props) {
       <h1 className="text-center gold">Settings</h1>
 
       <form
-        className="w-25 m-auto mt-4 d-none d-xl-block"
+        className={wideView ? "w-25 m-auto mt-4" : "m-auto mt-4 px-2"}
         onSubmit={handleEmailSubmit}
       >
         {emailModifiable ? (
@@ -271,9 +271,13 @@ export default function Settings(props) {
               <div className="text-end">
                 <FontAwesomeIcon
                   className="gold light-gold-hover"
+                  tabIndex="0"
                   icon={faPen}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
+                    setEmailModifiable(true);
+                  }}
+                  onKeyPress={() => {
                     setEmailModifiable(true);
                   }}
                 ></FontAwesomeIcon>
@@ -288,75 +292,18 @@ export default function Settings(props) {
           <span>{emailStatus}</span>
         </div>
         <div className={emailModifiable ? "text-center mt-3" : "hidden-field"}>
-          <button className="btn btn-primary" type="submit">
-            Apply change
-          </button>
-        </div>
-      </form>
-      <form className="m-auto mt-4 px-2 d-xl-none" onSubmit={handleEmailSubmit}>
-        {emailModifiable ? (
-          <>
-            <label className="form-label gold" htmlFor="email">
-              Email
-            </label>
-            <input
-              className="form-control"
-              name="email"
-              type="text"
-              required
-              value={emailForm.email}
-              onChange={handleEmailChange}
-            />
-
-            <label className="form-label gold mt-2" htmlFor="confirmEmail">
-              Confirm email
-            </label>
-            <input
-              className="form-control"
-              name="confirmEmail"
-              type="text"
-              required
-              value={emailForm.confirmEmail}
-              onChange={handleEmailChange}
-            />
-          </>
-        ) : (
-          <>
-            <div
-              className="p-0"
-              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
-            >
-              <div className="text-left">
-                <span className="gold">Email</span>
-              </div>
-              <div className="text-end">
-                <FontAwesomeIcon
-                  className="gold light-gold-hover"
-                  icon={faPen}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setEmailModifiable(true);
-                  }}
-                ></FontAwesomeIcon>
-              </div>
-            </div>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{emailForm.email}</span>
-            </div>
-          </>
-        )}
-        <div className={showEmailStatus ? "text-center mt-3" : "hidden-field"}>
-          <span>{emailStatus}</span>
-        </div>
-        <div className={emailModifiable ? "text-center mt-3" : "hidden-field"}>
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            tabIndex={emailModifiable ? "0" : "-1"}
+            type="submit"
+          >
             Apply change
           </button>
         </div>
       </form>
 
       <form
-        className="w-25 m-auto mt-5 d-none d-xl-block"
+        className={wideView ? "w-25 m-auto mt-5" : "m-auto mt-5 px-2"}
         onSubmit={handleDetailsSubmit}
       >
         {phoneNumberModifiable ? (
@@ -384,9 +331,14 @@ export default function Settings(props) {
               <div className="text-end">
                 <FontAwesomeIcon
                   className="gold light-gold-hover"
+                  tabIndex="0"
                   icon={faPen}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
+                    setDetailsModifiable(true);
+                    setPhoneNumberModifiable(true);
+                  }}
+                  onKeyPress={() => {
                     setDetailsModifiable(true);
                     setPhoneNumberModifiable(true);
                   }}
@@ -423,9 +375,14 @@ export default function Settings(props) {
               <div className="text-end">
                 <FontAwesomeIcon
                   className="gold light-gold-hover"
+                  tabIndex="0"
                   icon={faPen}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
+                    setDetailsModifiable(true);
+                    setFirstNameModifiable(true);
+                  }}
+                  onKeyPress={() => {
                     setDetailsModifiable(true);
                     setFirstNameModifiable(true);
                   }}
@@ -462,9 +419,14 @@ export default function Settings(props) {
               <div className="text-end">
                 <FontAwesomeIcon
                   className="gold light-gold-hover"
+                  tabIndex="0"
                   icon={faPen}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
+                    setDetailsModifiable(true);
+                    setLastNameModifiable(true);
+                  }}
+                  onKeyPress={() => {
                     setDetailsModifiable(true);
                     setLastNameModifiable(true);
                   }}
@@ -484,148 +446,18 @@ export default function Settings(props) {
         <div
           className={detailsModifiable ? "text-center mt-3" : "hidden-field"}
         >
-          <button className="btn btn-primary" type="submit">
-            Apply changes
-          </button>
-        </div>
-      </form>
-      <form
-        className="m-auto mt-5 px-2 d-xl-none"
-        onSubmit={handleDetailsSubmit}
-      >
-        {phoneNumberModifiable ? (
-          <>
-            <label className="form-label gold" htmlFor="phoneNumber">
-              Phone
-            </label>
-            <input
-              className="form-control"
-              name="phoneNumber"
-              type="text"
-              value={detailsForm.phoneNumber}
-              onChange={handleDetailsChange}
-            />
-          </>
-        ) : (
-          <>
-            <div
-              className="p-0"
-              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
-            >
-              <div className="text-left">
-                <span className="gold">Phone</span>
-              </div>
-              <div className="text-end">
-                <FontAwesomeIcon
-                  className="gold light-gold-hover"
-                  icon={faPen}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setDetailsModifiable(true);
-                    setPhoneNumberModifiable(true);
-                  }}
-                ></FontAwesomeIcon>
-              </div>
-            </div>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{detailsForm.phoneNumber}</span>
-            </div>
-          </>
-        )}
-        {firstNameModifiable ? (
-          <>
-            <label className="form-label gold mt-2" htmlFor="firstName">
-              First name
-            </label>
-            <input
-              className="form-control"
-              name="firstName"
-              type="text"
-              value={detailsForm.firstName}
-              onChange={handleDetailsChange}
-            />
-          </>
-        ) : (
-          <>
-            <div
-              className="mt-2 p-0"
-              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
-            >
-              <div className="text-left">
-                <span className="gold">First name</span>
-              </div>
-              <div className="text-end">
-                <FontAwesomeIcon
-                  className="gold light-gold-hover"
-                  icon={faPen}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setDetailsModifiable(true);
-                    setFirstNameModifiable(true);
-                  }}
-                ></FontAwesomeIcon>
-              </div>
-            </div>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{detailsForm.firstName}</span>
-            </div>
-          </>
-        )}
-        {lastNameModifiable ? (
-          <>
-            <label className="form-label gold mt-2" htmlFor="lastName">
-              Last name
-            </label>
-            <input
-              className="form-control"
-              name="lastName"
-              type="text"
-              value={detailsForm.lastName}
-              onChange={handleDetailsChange}
-            />
-          </>
-        ) : (
-          <>
-            <div
-              className="mt-2 p-0"
-              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
-            >
-              <div className="text-left">
-                <span className="gold">Last name</span>
-              </div>
-              <div className="text-end">
-                <FontAwesomeIcon
-                  className="gold light-gold-hover"
-                  icon={faPen}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setDetailsModifiable(true);
-                    setLastNameModifiable(true);
-                  }}
-                ></FontAwesomeIcon>
-              </div>
-            </div>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">{detailsForm.lastName}</span>
-            </div>
-          </>
-        )}
-        <div
-          className={showDetailsStatus ? "text-center mt-3" : "hidden-field"}
-        >
-          <span>{detailsStatus}</span>
-        </div>
-        <div
-          className={detailsModifiable ? "text-center mt-3" : "hidden-field"}
-        >
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            tabIndex={detailsModifiable ? "0" : "-1"}
+            type="submit"
+          >
             Apply changes
           </button>
         </div>
       </form>
 
       <form
-        className="w-25 m-auto mt-5 d-none d-xl-block"
+        className={wideView ? "w-25 m-auto mt-5" : "m-auto mt-5 px-2"}
         onSubmit={handlePasswordSubmit}
       >
         {passwordModifiable ? (
@@ -679,90 +511,13 @@ export default function Settings(props) {
               <div className="text-end">
                 <FontAwesomeIcon
                   className="gold light-gold-hover"
+                  tabIndex="0"
                   icon={faPen}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     setPasswordModifiable(true);
                   }}
-                ></FontAwesomeIcon>
-              </div>
-            </div>
-            <div className="mt-1 py-1 overflow-hidden gold-border">
-              <span className="ms-1">••••••••</span>
-            </div>
-          </>
-        )}
-        <div
-          className={showPasswordStatus ? "text-center mt-3" : "hidden-field"}
-        >
-          <span>{passwordStatus}</span>
-        </div>
-        <div
-          className={passwordModifiable ? "text-center mt-3" : "hidden-field"}
-        >
-          <button className="btn btn-primary" type="submit">
-            Change password
-          </button>
-        </div>
-      </form>
-      <form
-        className="m-auto mt-5 px-2 d-xl-none"
-        onSubmit={handlePasswordSubmit}
-      >
-        {passwordModifiable ? (
-          <>
-            <label className="form-label gold" htmlFor="oldPassword">
-              Old password
-            </label>
-            <input
-              className="form-control"
-              name="oldPassword"
-              type="password"
-              required
-              value={passwordForm.oldPassword}
-              onChange={handlePasswordChange}
-            />
-            <label className="form-label gold mt-2" htmlFor="newPassword">
-              New password
-            </label>
-            <input
-              className="form-control"
-              name="newPassword"
-              type="password"
-              required
-              value={passwordForm.newPassword}
-              onChange={handlePasswordChange}
-            />
-            <label
-              className="form-label gold mt-2"
-              htmlFor="confirmNewPassword"
-            >
-              Confirm new password
-            </label>
-            <input
-              className="form-control"
-              name="confirmNewPassword"
-              type="password"
-              required
-              value={passwordForm.confirmNewPassword}
-              onChange={handlePasswordChange}
-            />
-          </>
-        ) : (
-          <>
-            <div
-              className="mt-2 p-0"
-              style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
-            >
-              <div className="text-left">
-                <span className="gold">Password</span>
-              </div>
-              <div className="text-end">
-                <FontAwesomeIcon
-                  className="gold light-gold-hover"
-                  icon={faPen}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
+                  onKeyPress={() => {
                     setPasswordModifiable(true);
                   }}
                 ></FontAwesomeIcon>
@@ -780,10 +535,18 @@ export default function Settings(props) {
         </div>
         <div
           className={
-            passwordModifiable ? "text-center mt-3 mb-2" : "hidden-field"
+            passwordModifiable
+              ? wideView
+                ? "text-center mt-3"
+                : "text-center mt-3 mb-2"
+              : "hidden-field"
           }
         >
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            tabIndex={passwordModifiable ? "0" : "-1"}
+            type="submit"
+          >
             Change password
           </button>
         </div>

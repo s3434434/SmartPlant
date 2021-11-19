@@ -4,7 +4,7 @@ import _ from "lodash";
 import axios from "axios";
 
 export default function AddPlant(props) {
-  const { getLogin } = props;
+  const { getLogin, wideView } = props;
   const [plantTypes, setPlantTypes] = useState([]);
   const [form, setForm] = useState({
     plantName: "",
@@ -12,7 +12,7 @@ export default function AddPlant(props) {
     base64ImgString: "",
   });
   const [showStatus, setShowStatus] = useState(false);
-  const [status, setStatus] = useState("none");
+  const [status, setStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Add plant | Demeter - The plant meter";
@@ -117,7 +117,7 @@ export default function AddPlant(props) {
     <section>
       <h1 className="gold text-center">Add plant</h1>
       <form
-        className="w-25 m-auto mt-4 d-none d-xl-block"
+        className={wideView ? "w-25 m-auto mt-4" : "m-auto mt-4 px-2"}
         onSubmit={handleSubmit}
       >
         <label className="form-label gold" htmlFor="plantName">
@@ -159,6 +159,19 @@ export default function AddPlant(props) {
             </>
           )}
         </select>
+        <div className="form-text mt-2" style={{ color: "white" }}>
+          Plant varieties courtesy of&nbsp;
+          <a
+            className="gold light-gold-hover"
+            href={
+              "https://extension.uga.edu/publications/detail.html?number=B1318&title=Growing%20Indoor%20Plants%20with%20Success"
+            }
+            style={{ textDecoration: "none" }}
+          >
+            University of Georgia
+          </a>
+          .
+        </div>
         <label className="form-label gold mt-3" htmlFor="base64ImgString">
           Image
         </label>
@@ -177,72 +190,9 @@ export default function AddPlant(props) {
             <span>{status}</span>
           </div>
         )}
-        <div className="text-center mt-3">
-          <button className="btn btn-primary" type="submit">
-            Add plant
-          </button>
-        </div>
-      </form>
-
-      <form className="m-auto mt-4 d-xl-none px-2" onSubmit={handleSubmit}>
-        <label className="form-label gold" htmlFor="plantName">
-          Name
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          name="plantName"
-          value={form.plantName}
-          onChange={handleChange}
-          required
-        />
-        <label className="form-label gold mt-3" htmlFor="plantType">
-          Variety
-        </label>
-        <select
-          className="form-control"
-          name="plantType"
-          onChange={handleChange}
-          required
+        <div
+          className={wideView ? "text-center mt-3" : "text-center mt-3 mb-2"}
         >
-          {plantTypes.length === 0 ? (
-            <option key="default" value="">
-              Loading plant varieties...
-            </option>
-          ) : (
-            <>
-              <option key="default" value="">
-                Please select a plant
-              </option>
-              {plantTypes.sort().map((plantType) => {
-                return (
-                  <option key={plantType} value={plantType}>
-                    {plantType}
-                  </option>
-                );
-              })}
-            </>
-          )}
-        </select>
-        <label className="form-label gold mt-3" htmlFor="plantImage">
-          Image
-        </label>
-        <input
-          className="form-control"
-          name="plantImage"
-          onChange={handleChange}
-          type="file"
-        ></input>
-        {showStatus ? (
-          <div className="text-center mt-3">
-            <span>{status}</span>
-          </div>
-        ) : (
-          <div className="hidden-field mt-3">
-            <span>{status}</span>
-          </div>
-        )}
-        <div className="text-center mt-3 mb-2">
           <button className="btn btn-primary" type="submit">
             Add plant
           </button>

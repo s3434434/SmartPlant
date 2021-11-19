@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./registration_successful.css";
 
 export default function RegistrationSuccessful(props) {
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
   useEffect(() => {
     document.title = "Registration successful | Demeter - The plant meter";
     // eslint-disable-next-line
@@ -14,14 +15,13 @@ export default function RegistrationSuccessful(props) {
       <div className="text-center mt-3" style={{ color: "white" }}>
         Be sure to check your email and verify your account.
       </div>
-      <div className="text-center mt-3 d-none d-xl-block">
-        <Link key="home" to="/">
-          <button className="btn btn-primary">Home</button>
-        </Link>
-      </div>
-      <div className="text-center mt-3 mb-2 d-xl-none">
-        <Link key="home" to="/">
-          <button className="btn btn-primary">Home</button>
+      <div
+        className={
+          props.wideView ? "text-center mt-3" : "text-center mt-3 mb-2"
+        }
+      >
+        <Link key="home" className="btn btn-primary" to="/">
+          Home
         </Link>
       </div>
     </section>

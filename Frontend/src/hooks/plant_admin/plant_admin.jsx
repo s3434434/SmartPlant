@@ -4,10 +4,11 @@ import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import axios from "axios";
 import container_no_image from "../../assets/images/container_no_image.png";
+import SensorPagination from "../sensor_pagination/sensor_pagination";
 import "./plant_admin.css";
 
 export default function PlantAdmin(props) {
-  const { getLogin } = props;
+  const { getLogin, wideView } = props;
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
 
   const [form, setForm] = useState({
@@ -16,26 +17,18 @@ export default function PlantAdmin(props) {
     }),
     [nameModifiable, setNameModifiable] = useState(false),
     [showNameStatus, setShowNameStatus] = useState(false),
-    [nameStatus, setNameStatus] = useState("none"),
+    [nameStatus, setNameStatus] = useState("-"),
     [showImageStatus, setShowImageStatus] = useState(false),
-    [imageStatus, setImageStatus] = useState("none"),
+    [imageStatus, setImageStatus] = useState("-"),
     [plantType, setPlantType] = useState(""),
     [userID, setUserID] = useState(""),
     [email, setEmail] = useState(""),
     [plantImage, setPlantImage] = useState(null),
     [showTokenStatus, setShowTokenStatus] = useState(false),
-    [tokenStatus, setTokenStatus] = useState("none"),
+    [tokenStatus, setTokenStatus] = useState("-"),
     [sensorReadings, setSensorReadings] = useState(null),
-    [currentTimeframe, setCurrentTimeframe] = useState("All time"),
-    [displayedReadings, setDisplayedReadings] = useState(
-      "Loading sensor data..."
-    ),
-    [averageReading, setAverageReading] = useState(null),
-    [currentPageNumber, setCurrentPageNumber] = useState(1),
-    [paginationNumbers, setPaginationNumbers] = useState([]),
-    [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]),
     [showDeleteStatus, setShowDeleteStatus] = useState(false),
-    [deleteStatus, setDeleteStatus] = useState("none");
+    [deleteStatus, setDeleteStatus] = useState("-");
 
   useEffect(() => {
     document.title = "Demeter - The plant meter";
@@ -113,7 +106,7 @@ export default function PlantAdmin(props) {
             setSensorReadings(sortedReadings);
           })
           .catch((err) => {
-            setDisplayedReadings(
+            setSensorReadings(
               "There was an error retrieving your sensor data. Please try again later."
             );
           });
@@ -126,13 +119,6 @@ export default function PlantAdmin(props) {
 
     // eslint-disable-next-line
   }, []);
-
-  useEffect(() => {
-    if (sensorReadings !== null) {
-      updateDisplayedReadings("All time");
-    }
-    // eslint-disable-next-line
-  }, [sensorReadings]);
 
   const handleChange = (e) => {
     const input = e.target;
@@ -277,163 +263,6 @@ export default function PlantAdmin(props) {
     }
   };
 
-  const getNumPages = (numReadings) => {
-    let numPages = Math.floor(numReadings / 9);
-    if (numReadings % 9 !== 0) {
-      numPages++;
-    }
-
-    return numPages;
-  };
-
-  const createPaginationNumbers = (numReadings) => {
-    const numPages = getNumPages(numReadings);
-
-    let numbers = [...Array(numPages).keys()];
-    numbers.forEach((number) => {
-      numbers[number]++;
-    });
-
-    return numbers;
-  };
-
-  const updateDisplayedReadings = (timeframe) => {
-    let readings = [];
-    if (timeframe === "All time") {
-      readings = sensorReadings;
-    } else {
-      const now = new Date().getTime();
-      let endTime = null;
-
-      switch (timeframe) {
-        case "Hour":
-          endTime = now - 3600000;
-          break;
-        case "Day":
-          endTime = now - 86400000;
-          break;
-        case "Week":
-          endTime = now - 604800000;
-          break;
-        case "Month":
-          endTime = new Date();
-          const currentMonth = endTime.getMonth();
-          endTime.setMonth(endTime.getMonth() - 1);
-          if (endTime.getMonth() === currentMonth) {
-            endTime.setDate(0);
-          }
-          endTime = endTime.getTime();
-
-          break;
-        case "Year":
-          endTime = new Date();
-          const current_month = endTime.getMonth();
-          endTime.setMonth(endTime.getMonth() - 12);
-          if (endTime.getMonth() === current_month) {
-            endTime.setDate(0);
-          }
-          endTime = endTime.getTime();
-
-          break;
-        default:
-          break;
-      }
-
-      sensorReadings.forEach((sensorReading) => {
-        const readingTime = new Date(
-          sensorReading.timeStampUTC + "Z"
-        ).getTime();
-        if (readingTime <= now && readingTime >= endTime) {
-          readings.push(sensorReading);
-        }
-      });
-    }
-
-    if (readings.length > 0) {
-      let averageTemp = null,
-        averageLightIntensity = null,
-        averageMoisture = null,
-        averageHumidity = null;
-      readings.forEach((reading) => {
-        averageTemp += reading.temp;
-        averageLightIntensity += reading.lightIntensity;
-        averageMoisture += reading.moisture;
-        averageHumidity += reading.humidity;
-      });
-      averageTemp /= readings.length;
-      averageLightIntensity /= readings.length;
-      averageMoisture /= readings.length;
-      averageHumidity /= readings.length;
-      setAverageReading({
-        temp: averageTemp,
-        lightIntensity: averageLightIntensity,
-        moisture: averageMoisture,
-        humidity: averageHumidity,
-      });
-
-      setDisplayedReadings(readings);
-
-      const numbers = createPaginationNumbers(readings.length);
-      setPaginationNumbers(numbers.slice(0, 10));
-      setMobilePaginationNumbers(numbers.slice(0, 5));
-
-      setCurrentPageNumber(1);
-    } else {
-      if (timeframe === "All time") {
-        setDisplayedReadings("No sensor data available.");
-      } else {
-        setDisplayedReadings(
-          "No sensor data available. The sensors may not have collected enough data for this timeframe."
-        );
-      }
-    }
-
-    setCurrentTimeframe(timeframe);
-  };
-
-  const getDate = (isoDate) => {
-    const date = new Date(isoDate + "Z");
-    return date.toLocaleString("en-AU", { timeZone: "Australia/Melbourne" });
-  };
-
-  const pageNavigate = (pageNumber) => {
-    if (
-      pageNumber >= 1 &&
-      pageNumber <= getNumPages(displayedReadings.length)
-    ) {
-      const numbers = createPaginationNumbers(displayedReadings.length);
-
-      if (pageNumber < paginationNumbers[0]) {
-        const desktopNumbers = numbers.slice(pageNumber - 1, pageNumber + 9);
-
-        if (desktopNumbers.length >= paginationNumbers.length) {
-          setPaginationNumbers(desktopNumbers);
-        }
-      } else if (pageNumber > paginationNumbers[9]) {
-        const desktopNumbers = numbers.slice(pageNumber - 10, pageNumber);
-
-        if (desktopNumbers.length >= paginationNumbers.length) {
-          setPaginationNumbers(desktopNumbers);
-        }
-      }
-
-      if (pageNumber < mobilePaginationNumbers[0]) {
-        const mobileNumbers = numbers.slice(pageNumber - 1, pageNumber + 4);
-
-        if (mobileNumbers.length >= mobilePaginationNumbers.length) {
-          setMobilePaginationNumbers(mobileNumbers);
-        }
-      } else if (pageNumber > mobilePaginationNumbers[4]) {
-        const mobileNumbers = numbers.slice(pageNumber - 5, pageNumber);
-
-        if (mobileNumbers.length >= mobilePaginationNumbers.length) {
-          setMobilePaginationNumbers(mobileNumbers);
-        }
-      }
-      setCurrentPageNumber(pageNumber);
-    }
-  };
-
   const deletePlant = () => {
     setDeleteStatus("Please wait...");
     setShowDeleteStatus(true);
@@ -468,8 +297,7 @@ export default function PlantAdmin(props) {
     <section>
       {plantImage !== null ? (
         <>
-          {" "}
-          <div className="d-none d-xl-block">
+          {wideView ? (
             <div className="container m-0 p-0">
               <div className="row">
                 <div className="col-xl-2 text-center">
@@ -486,24 +314,30 @@ export default function PlantAdmin(props) {
                 <div className="col-xl-10"></div>
               </div>
             </div>
-          </div>
-          <div className="text-center d-xl-none">
-            <div className={showDeleteStatus ? "text-center" : "hidden-field"}>
-              <span style={{ color: "white" }}>{deleteStatus}</span>
-            </div>
-            <button className="btn btn-primary mt-2" onClick={deletePlant}>
-              Delete plant
-            </button>
-          </div>
+          ) : (
+            <>
+              <div
+                className={showDeleteStatus ? "text-center" : "hidden-field"}
+              >
+                <span style={{ color: "white" }}>{deleteStatus}</span>
+              </div>
+              <div className="text-center">
+                <button className="btn btn-primary mt-2" onClick={deletePlant}>
+                  Delete plant
+                </button>
+              </div>
+            </>
+          )}
+
           <form
-            className="m-auto d-none d-xl-block"
+            className={wideView ? "m-auto" : "m-auto px-2"}
             onSubmit={(e) => {
               handleSubmit(e, setNameStatus, setShowNameStatus);
             }}
           >
             {nameModifiable ? (
               <>
-                <div className="w-25 m-auto">
+                <div className={wideView ? "w-25 m-auto" : ""}>
                   <label className="form-label gold" htmlFor="name">
                     Name
                   </label>
@@ -522,19 +356,23 @@ export default function PlantAdmin(props) {
               </>
             ) : (
               <>
-                <div className="w-25 m-auto">
+                <div className={wideView ? "w-25 m-auto" : ""}>
                   <div className="text-end m-0 p-0">
                     <FontAwesomeIcon
                       className="gold light-gold-hover"
+                      tabIndex="0"
                       icon={faPen}
                       style={{ cursor: "pointer" }}
                       onClick={() => {
                         setNameModifiable(true);
                       }}
+                      onKeyPress={() => {
+                        setNameModifiable(true);
+                      }}
                     ></FontAwesomeIcon>
                   </div>
                 </div>
-                <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>{" "}
+                <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
                 <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
                   {plantType}
                 </h4>
@@ -542,76 +380,36 @@ export default function PlantAdmin(props) {
             )}
             <div
               className={
-                showNameStatus ? "text-center mt-3" : "hidden-field m-0"
+                showNameStatus
+                  ? "text-center mt-3"
+                  : wideView
+                  ? "hidden-field m-0"
+                  : "hidden-field"
               }
             >
               <span>{nameStatus}</span>
             </div>
             <div
               className={
-                nameModifiable ? "text-center my-3" : "hidden-field m-0"
+                nameModifiable
+                  ? "text-center my-3"
+                  : wideView
+                  ? "hidden-field m-0"
+                  : "hidden-field"
               }
             >
-              <button className="btn btn-primary" type="submit">
+              <button
+                className="btn btn-primary"
+                tabIndex={nameModifiable ? "0" : "-1"}
+                type="submit"
+              >
                 Apply change
               </button>
             </div>
           </form>
-          <form
-            className="m-auto px-2 d-xl-none"
-            onSubmit={(e) => {
-              handleSubmit(e, setNameStatus, setShowNameStatus);
-            }}
-          >
-            {nameModifiable ? (
-              <>
-                <label className="form-label gold" htmlFor="name">
-                  Name
-                </label>
-                <input
-                  className="form-control mb-3"
-                  name="name"
-                  type="text"
-                  value={form.name}
-                  onChange={handleChange}
-                  required
-                />
-                <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-                  {plantType}
-                </h4>
-              </>
-            ) : (
-              <>
-                <div className="text-end m-0 p-0">
-                  <FontAwesomeIcon
-                    className="gold light-gold-hover"
-                    icon={faPen}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setNameModifiable(true);
-                    }}
-                  ></FontAwesomeIcon>
-                </div>
-                <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>{" "}
-                <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
-                  {plantType}
-                </h4>
-              </>
-            )}
-            <div
-              className={showNameStatus ? "text-center mt-3" : "hidden-field"}
-            >
-              <span>{nameStatus}</span>
-            </div>
-            <div
-              className={nameModifiable ? "text-center my-3" : "hidden-field"}
-            >
-              <button className="btn btn-primary" type="submit">
-                Apply change
-              </button>
-            </div>
-          </form>
+
           <h1 className="text-center mb-2 p-0 gold">{email}</h1>
+
           <div className="m-auto mt-5 text-center">
             <img
               className="plant-image gold-border"
@@ -631,12 +429,17 @@ export default function PlantAdmin(props) {
                   : "hidden-field"
               }
             >
-              <button className="btn btn-primary" onClick={deleteImage}>
+              <button
+                className="btn btn-primary"
+                tabIndex={plantImage !== container_no_image ? "0" : "-1"}
+                onClick={deleteImage}
+              >
                 Delete image
               </button>
             </div>
           </div>
-          <div className="w-25 m-auto mt-4 d-none d-xl-block">
+
+          <div className={wideView ? "w-25 m-auto mt-4" : "m-auto mt-4 px-2"}>
             <div
               className={showTokenStatus ? "text-center mt-1" : "hidden-field"}
             >
@@ -651,444 +454,13 @@ export default function PlantAdmin(props) {
               </button>
             </div>
           </div>
-          <div className="m-auto mt-4 px-2 d-xl-none">
-            <div
-              className={showTokenStatus ? "text-center mt-1" : "hidden-field"}
-            >
-              <span style={{ color: "white" }}>{tokenStatus}</span>
-            </div>
-            <div className="text-center mt-2">
-              <button
-                className="btn btn-primary"
-                onClick={regenerateArduinoToken}
-              >
-                Regenerate Arduino token
-              </button>
-            </div>
-          </div>
+
           <h3 className="gold text-center mt-5">Sensor data</h3>
-          <div className="w-50 text-center m-auto d-none d-xl-block gold-border">
-            {typeof displayedReadings === "string" ? (
-              <span style={{ color: "white" }}>{displayedReadings}</span>
-            ) : (
-              <>
-                <div className="overflow-auto">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Time</th>
-                        <th>Temperature</th>
-                        <th>Light intensity</th>
-                        <th>Moisture</th>
-                        <th>Humidity</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {averageReading !== null ? (
-                        <tr key="average">
-                          <td>Average</td>
-                          <td>{averageReading.temp.toFixed(1)} °C</td>
-                          <td>{averageReading.lightIntensity.toFixed(1)}%</td>
-                          <td>{averageReading.moisture.toFixed(1)}%</td>
-                          <td>{averageReading.humidity.toFixed(1)}%</td>
-                        </tr>
-                      ) : null}
-                      {displayedReadings
-                        .slice(
-                          9 * (currentPageNumber - 1),
-                          9 * currentPageNumber
-                        )
-                        .map((row) => {
-                          return (
-                            <tr key={row.timeStampUTC}>
-                              <td>{getDate(row.timeStampUTC)}</td>
-                              <td>{row.temp.toFixed(1)} °C</td>
-                              <td>{row.lightIntensity.toFixed(1)}%</td>
-                              <td>{row.moisture.toFixed(1)}%</td>
-                              <td>{row.humidity.toFixed(1)}%</td>
-                            </tr>
-                          );
-                        })}
-                      {9 -
-                        displayedReadings.slice(
-                          9 * (currentPageNumber - 1),
-                          9 * currentPageNumber
-                        ).length >
-                      0
-                        ? [
-                            ...Array(
-                              9 -
-                                displayedReadings.slice(
-                                  9 * (currentPageNumber - 1),
-                                  9 * currentPageNumber
-                                ).length
-                            ).keys(),
-                          ].map((key) => {
-                            return (
-                              <tr key={key}>
-                                <td className="hidden-field">-</td>
-                                <td className="hidden-field">-</td>
-                                <td className="hidden-field">-</td>
-                                <td className="hidden-field">-</td>
-                                <td className="hidden-field">-</td>
-                              </tr>
-                            );
-                          })
-                        : null}
-                    </tbody>
-                  </table>
-                </div>
-                <nav
-                  className="overflow-auto"
-                  style={{ backgroundColor: "transparent" }}
-                >
-                  <ul className="pagination justify-content-center">
-                    <li className="page-item">
-                      <span
-                        className="page-link"
-                        onClick={() => {
-                          pageNavigate(currentPageNumber - 1);
-                        }}
-                      >
-                        Previous
-                      </span>
-                    </li>
-                    {paginationNumbers.map((paginationNumber) => {
-                      return (
-                        <li className="page-item" key={paginationNumber}>
-                          <span
-                            className={
-                              currentPageNumber === paginationNumber
-                                ? "page-link page-link-selected"
-                                : "page-link"
-                            }
-                            onClick={() => {
-                              pageNavigate(paginationNumber);
-                            }}
-                          >
-                            {paginationNumber}
-                          </span>
-                        </li>
-                      );
-                    })}
-                    <li className="page-item">
-                      <span
-                        className="page-link"
-                        onClick={() => {
-                          pageNavigate(currentPageNumber + 1);
-                        }}
-                      >
-                        Next
-                      </span>
-                    </li>
-                  </ul>
-                </nav>
-              </>
-            )}
-            <nav
-              className="mt-4 overflow-auto"
-              style={{ backgroundColor: "transparent" }}
-            >
-              <h4 className="text-center gold">Sample timeframe</h4>
-              <ul className="pagination justify-content-center">
-                <li className="page-item">
-                  <span
-                    className={
-                      currentTimeframe === "Hour"
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      updateDisplayedReadings("Hour");
-                    }}
-                  >
-                    Hour
-                  </span>
-                </li>
-                <li className="page-item">
-                  <span
-                    className={
-                      currentTimeframe === "Day"
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      updateDisplayedReadings("Day");
-                    }}
-                  >
-                    Day
-                  </span>
-                </li>
-                <li className="page-item">
-                  <span
-                    className={
-                      currentTimeframe === "Week"
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      updateDisplayedReadings("Week");
-                    }}
-                  >
-                    Week
-                  </span>
-                </li>
-                <li className="page-item">
-                  <span
-                    className={
-                      currentTimeframe === "Month"
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      updateDisplayedReadings("Month");
-                    }}
-                  >
-                    Month
-                  </span>
-                </li>
-                <li className="page-item">
-                  <span
-                    className={
-                      currentTimeframe === "Year"
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      updateDisplayedReadings("Year");
-                    }}
-                  >
-                    Year
-                  </span>
-                </li>
-                <li className="page-item">
-                  <span
-                    className={
-                      currentTimeframe === "All time"
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      updateDisplayedReadings("All time");
-                    }}
-                  >
-                    All time
-                  </span>
-                </li>
-              </ul>
-            </nav>
-          </div>
-          <div className="m-auto px-2 d-xl-none gold-border">
-            {typeof displayedReadings === "string" ? (
-              <span style={{ color: "white" }}>{displayedReadings}</span>
-            ) : (
-              <>
-                <div className="overflow-auto">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Time</th>
-                        <th>Temperature</th>
-                        <th>Light intensity</th>
-                        <th>Moisture</th>
-                        <th>Humidity</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {averageReading !== null ? (
-                        <tr key="average">
-                          <td>Average</td>
-                          <td>{averageReading.temp.toFixed(1)} °C</td>
-                          <td>{averageReading.lightIntensity.toFixed(1)}%</td>
-                          <td>{averageReading.moisture.toFixed(1)}%</td>
-                          <td>{averageReading.humidity.toFixed(1)}%</td>
-                        </tr>
-                      ) : null}
-                      {displayedReadings
-                        .slice(
-                          9 * (currentPageNumber - 1),
-                          9 * currentPageNumber
-                        )
-                        .map((row) => {
-                          return (
-                            <tr key={row.timeStampUTC}>
-                              <td>{getDate(row.timeStampUTC)}</td>
-                              <td>{row.temp.toFixed(1)} °C</td>
-                              <td>{row.lightIntensity.toFixed(1)}%</td>
-                              <td>{row.moisture.toFixed(1)}%</td>
-                              <td>{row.humidity.toFixed(1)}%</td>
-                            </tr>
-                          );
-                        })}
-                      {9 -
-                        displayedReadings.slice(
-                          9 * (currentPageNumber - 1),
-                          9 * currentPageNumber
-                        ).length >
-                      0
-                        ? [
-                            ...Array(
-                              9 -
-                                displayedReadings.slice(
-                                  9 * (currentPageNumber - 1),
-                                  9 * currentPageNumber
-                                ).length
-                            ).keys(),
-                          ].map((key) => {
-                            return (
-                              <tr key={key}>
-                                <td className="hidden-field">-</td>
-                                <td className="hidden-field">-</td>
-                                <td className="hidden-field">-</td>
-                                <td className="hidden-field">-</td>
-                                <td className="hidden-field">-</td>
-                              </tr>
-                            );
-                          })
-                        : null}
-                    </tbody>
-                  </table>
-                </div>
-                <nav
-                  className="overflow-auto"
-                  style={{ backgroundColor: "transparent" }}
-                >
-                  <ul className="pagination pagination-sm justify-content-center">
-                    <li className="page-item">
-                      <span
-                        className="page-link"
-                        onClick={() => {
-                          pageNavigate(currentPageNumber - 1);
-                        }}
-                      >
-                        Previous
-                      </span>
-                    </li>
-                    {mobilePaginationNumbers.map((mobilePaginationNumber) => {
-                      return (
-                        <li className="page-item" key={mobilePaginationNumber}>
-                          <span
-                            className={
-                              currentPageNumber === mobilePaginationNumber
-                                ? "page-link page-link-selected"
-                                : "page-link"
-                            }
-                            onClick={() => {
-                              pageNavigate(mobilePaginationNumber);
-                            }}
-                          >
-                            {mobilePaginationNumber}
-                          </span>
-                        </li>
-                      );
-                    })}
-                    <li className="page-item">
-                      <span
-                        className="page-link"
-                        onClick={() => {
-                          pageNavigate(currentPageNumber + 1);
-                        }}
-                      >
-                        Next
-                      </span>
-                    </li>
-                  </ul>
-                </nav>
-              </>
-            )}
-            <nav
-              className="mt-4 overflow-auto"
-              style={{ backgroundColor: "transparent" }}
-            >
-              <h4 className="text-center gold">Sample timeframe</h4>
-              <ul className="pagination pagination-sm justify-content-center">
-                <li className="page-item">
-                  <span
-                    className={
-                      currentTimeframe === "Hour"
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      updateDisplayedReadings("Hour");
-                    }}
-                  >
-                    Hour
-                  </span>
-                </li>
-                <li className="page-item">
-                  <span
-                    className={
-                      currentTimeframe === "Day"
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      updateDisplayedReadings("Day");
-                    }}
-                  >
-                    Day
-                  </span>
-                </li>
-                <li className="page-item">
-                  <span
-                    className={
-                      currentTimeframe === "Week"
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      updateDisplayedReadings("Week");
-                    }}
-                  >
-                    Week
-                  </span>
-                </li>
-                <li className="page-item">
-                  <span
-                    className={
-                      currentTimeframe === "Month"
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      updateDisplayedReadings("Month");
-                    }}
-                  >
-                    Month
-                  </span>
-                </li>
-                <li className="page-item">
-                  <span
-                    className={
-                      currentTimeframe === "Year"
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      updateDisplayedReadings("Year");
-                    }}
-                  >
-                    Year
-                  </span>
-                </li>
-                <li className="page-item">
-                  <span
-                    className={
-                      currentTimeframe === "All time"
-                        ? "page-link page-link-selected"
-                        : "page-link"
-                    }
-                    onClick={() => {
-                      updateDisplayedReadings("All time");
-                    }}
-                  >
-                    All time
-                  </span>
-                </li>
-              </ul>
-            </nav>
-          </div>
+          <SensorPagination
+            sensorReadings={sensorReadings}
+            admin={true}
+            wideView={wideView}
+          ></SensorPagination>
         </>
       ) : (
         <div className="text-center" style={{ color: "white" }}>

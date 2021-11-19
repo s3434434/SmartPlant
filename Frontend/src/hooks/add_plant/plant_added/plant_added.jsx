@@ -18,14 +18,13 @@ export default function PlantAdded(props) {
         Your plant has been added successfully. Your Arduino token is
         <span className="gold"> {decodeURIComponent(token)}</span>.
       </div>
-      <div className="text-center mt-3 d-none d-xl-block">
-        <Link key="plants" to="/plants">
-          <button className="btn btn-primary">Plants</button>
-        </Link>
-      </div>
-      <div className="text-center mt-3 mb-2 d-xl-none">
-        <Link key="plants" to="/plants">
-          <button className="btn btn-primary">Plants</button>
+      <div
+        className={
+          props.wideView ? "text-center mt-3" : "text-center mt-3 mb-2"
+        }
+      >
+        <Link key="plants" className="btn btn-primary" to="/plants">
+          Plants
         </Link>
       </div>
     </section>

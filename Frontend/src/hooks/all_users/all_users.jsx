@@ -4,12 +4,13 @@ import Pagination from "../pagination/pagination";
 import "./all_users.css";
 
 export default function AllUsers(props) {
+  const { getLogin, wideView } = props;
   const [users, setUsers] = useState("Loading users...");
 
   useEffect(() => {
     document.title = "Users | Demeter - The plant meter";
 
-    const login = props.getLogin();
+    const login = getLogin();
     if (login !== null) {
       const { token, admin } = login;
 
@@ -62,10 +63,11 @@ export default function AllUsers(props) {
           itemID="id"
           heading1="Email"
           heading2="Role"
-          defaultImage={null}
+          imageCol={false}
           itemTitle1="email"
           itemTitle2="role"
           path="user"
+          wideView={wideView}
         ></Pagination>
       )}
     </section>
