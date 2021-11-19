@@ -14,70 +14,101 @@ export default function Pagination(props) {
     path,
     wideView,
   } = props;
-  const [currentPageNumber, setCurrentPageNumber] = useState(1),
-    [paginationNumbers, setPaginationNumbers] = useState([]),
-    [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]);
 
+  // Constants for the number of items per page, and maximum number of desktop and mobile pagination numbers showing at any one time.
+  const ITEMS_PER_PAGE = 10,
+    MAX_DESKTOP_PAGINATION_NUMBERS = 10,
+    MAX_MOBILE_PAGINATION_NUMBERS = 5;
+
+  // State variables for all pagination numbers, the current pagination numbers for desktop and mobile, and the current page number.
+  const [allPaginationNumbers, setAllPaginationNumbers] = useState([]),
+    [desktopPaginationNumbers, setDesktopPaginationNumbers] = useState([]),
+    [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]),
+    [currentPageNumber, setCurrentPageNumber] = useState(1);
+
+  // useEffect hook called whenever a change is made to the 'items' array prop. A check is performed on whether the length of the array is greater than 0. If not, the function returns.
+  // Otherwise, the number of pages for the 'items' array prop is calculated. This is done by first determining the number of times the length of the array is divisible by the number of items per page (without a remainder), and then adding an additional page if a remainder exists.
+  // An array of pagination numbers is then created. This is done by constructing an empty array with a length of the number of pages, then spreading the keys of the empty array into a second empty array.The values of the pagination number array are then all incremented by 1.
+  // The allPaginationNumbers state variable is then set to the pagination numbers array, and the desktopPaginationNumbers and mobilePaginationNumbers state variables are set to appropriate slices of the pagination number array.
   useEffect(() => {
     if (items.length > 0) {
-      const numbers = createPaginationNumbers();
-      setPaginationNumbers(numbers.slice(0, 10));
-      setMobilePaginationNumbers(numbers.slice(0, 5));
+      let numPages = Math.floor(items.length / ITEMS_PER_PAGE);
+      if (items.length % ITEMS_PER_PAGE !== 0) {
+        numPages++;
+      }
+
+      let paginationNumbers = [...Array(numPages).keys()];
+      paginationNumbers.forEach((paginationNumber) => {
+        paginationNumbers[paginationNumber]++;
+      });
+
+      setAllPaginationNumbers(paginationNumbers);
+      setDesktopPaginationNumbers(
+        paginationNumbers.slice(0, MAX_DESKTOP_PAGINATION_NUMBERS)
+      );
+      setMobilePaginationNumbers(
+        paginationNumbers.slice(0, MAX_MOBILE_PAGINATION_NUMBERS)
+      );
     }
     // eslint-disable-next-line
   }, [items]);
 
-  const getNumPages = () => {
-    let numPages = Math.floor(items.length / 10);
-    if (items.length % 10 !== 0) {
-      numPages++;
-    }
-
-    return numPages;
-  };
-
-  const createPaginationNumbers = () => {
-    const numPages = getNumPages();
-
-    let numbers = [...Array(numPages).keys()];
-    numbers.forEach((number) => {
-      numbers[number]++;
-    });
-
-    return numbers;
-  };
-
+  // Navigates to the page specified by the pageNumber parameter. A check is first performed on whether the parameter is greater to or equal than 1, and less than or equal to the length of the allPaginationNumbers state variable. If not, the function returns.
+  // Otherwise, an array of potential desktop pagination numbers and an array of potential mobile pagination numbers are declared. A check is then performed on whether the pageNumber parameter is smaller than the smallest page number in the desktopPaginationNumbers state variable. If so, the array of potential desktop pagination numbers is set to a slice of thesliced from the allPaginationNumbers state variable with a start index . If the length of this array is greater than or equal to that of the current desktopPaginationNumbers state variable array, then the new array will replace it.
   const pageNavigate = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= getNumPages()) {
-      const numbers = createPaginationNumbers();
-
-      if (pageNumber < paginationNumbers[0]) {
-        const desktopNumbers = numbers.slice(pageNumber - 1, pageNumber + 9);
-
-        if (desktopNumbers.length >= paginationNumbers.length) {
-          setPaginationNumbers(desktopNumbers);
+    if (pageNumber >= 1 && pageNumber <= allPaginationNumbers.length) {
+      if (
+        pageNumber === desktopPaginationNumbers[0] - 1 ||
+        pageNumber ===
+          desktopPaginationNumbers[desktopPaginationNumbers.length - 1] + 1
+      ) {
+        let startIndex, finishIndex;
+        if (pageNumber === desktopPaginationNumbers[0] - 1) {
+          startIndex = pageNumber - 1;
+          finishIndex = pageNumber + MAX_DESKTOP_PAGINATION_NUMBERS - 1;
+        } else if (
+          pageNumber ===
+          desktopPaginationNumbers[desktopPaginationNumbers.length - 1] + 1
+        ) {
+          startIndex = pageNumber - MAX_DESKTOP_PAGINATION_NUMBERS;
+          finishIndex = pageNumber;
         }
-      } else if (pageNumber > paginationNumbers[9]) {
-        const desktopNumbers = numbers.slice(pageNumber - 10, pageNumber);
 
-        if (desktopNumbers.length >= paginationNumbers.length) {
-          setPaginationNumbers(desktopNumbers);
+        const desktopNumbers = allPaginationNumbers.slice(
+          startIndex,
+          finishIndex
+        );
+        if (desktopNumbers.length >= desktopPaginationNumbers.length) {
+          setDesktopPaginationNumbers(desktopNumbers);
         }
       }
 
-      if (pageNumber < mobilePaginationNumbers[0]) {
-        const mobileNumbers = numbers.slice(pageNumber - 1, pageNumber + 4);
+      if (
+        pageNumber === mobilePaginationNumbers[0] - 1 ||
+        pageNumber ===
+          mobilePaginationNumbers[mobilePaginationNumbers.length - 1] + 1
+      ) {
+        let startIndex, finishIndex;
+        if (pageNumber === mobilePaginationNumbers[0] - 1) {
+          startIndex = pageNumber - 1;
+          finishIndex = pageNumber + MAX_MOBILE_PAGINATION_NUMBERS - 1;
+        } else if (
+          pageNumber ===
+          mobilePaginationNumbers[mobilePaginationNumbers.length - 1] + 1
+        ) {
+          startIndex = pageNumber - MAX_MOBILE_PAGINATION_NUMBERS;
+          finishIndex = pageNumber;
+        }
 
+        const mobileNumbers = allPaginationNumbers.slice(
+          startIndex,
+          finishIndex
+        );
         if (mobileNumbers.length >= mobilePaginationNumbers.length) {
           setMobilePaginationNumbers(mobileNumbers);
         }
-      } else if (pageNumber > mobilePaginationNumbers[4]) {
-        const mobileNumbers = numbers.slice(pageNumber - 5, pageNumber);
-
-        if (mobileNumbers.length >= mobilePaginationNumbers.length) {
-          setMobilePaginationNumbers(mobileNumbers);
-        }
       }
+
       setCurrentPageNumber(pageNumber);
     }
   };
@@ -118,7 +149,10 @@ export default function Pagination(props) {
           </thead>
           <tbody>
             {items
-              .slice(10 * (currentPageNumber - 1), 10 * currentPageNumber)
+              .slice(
+                ITEMS_PER_PAGE * (currentPageNumber - 1),
+                ITEMS_PER_PAGE * currentPageNumber
+              )
               .map((item) => {
                 const id = item[itemID],
                   title1 = item[itemTitle1],
@@ -183,12 +217,7 @@ export default function Pagination(props) {
           </tbody>
         </table>
       </div>
-      <nav
-        className={
-          wideView ? "w-50 m-auto overflow-auto" : "m-auto overflow-auto"
-        }
-        style={{ backgroundColor: "transparent" }}
-      >
+      <nav className="overflow-auto" style={{ backgroundColor: "transparent" }}>
         <ul
           className={
             wideView
@@ -211,24 +240,24 @@ export default function Pagination(props) {
             </span>
           </li>
           {wideView
-            ? paginationNumbers.map((paginationNumber) => {
+            ? desktopPaginationNumbers.map((desktopPaginationNumber) => {
                 return (
-                  <li className="page-item" key={paginationNumber}>
+                  <li className="page-item" key={desktopPaginationNumber}>
                     <span
                       className={
-                        currentPageNumber === paginationNumber
+                        currentPageNumber === desktopPaginationNumber
                           ? "page-link page-link-selected"
                           : "page-link"
                       }
                       tabIndex="0"
                       onClick={() => {
-                        pageNavigate(paginationNumber);
+                        pageNavigate(desktopPaginationNumber);
                       }}
                       onKeyPress={() => {
-                        pageNavigate(paginationNumber);
+                        pageNavigate(desktopPaginationNumber);
                       }}
                     >
-                      {paginationNumber}
+                      {desktopPaginationNumber}
                     </span>
                   </li>
                 );

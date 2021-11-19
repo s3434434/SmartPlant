@@ -48,9 +48,10 @@ export default function Login(props) {
             },
           })
           .then((res) => {
+            const msPerHour = 3600000;
             const login = JSON.stringify({
               token: token,
-              expiry: Date.now() + 3600000,
+              expiry: Date.now() + msPerHour,
               admin: res.data === "Admin",
             });
 
@@ -68,7 +69,7 @@ export default function Login(props) {
         if (errors["Login Details"] !== undefined) {
           errorMessage = errors["Login Details"][0];
         }
-        
+
         setStatus(errorMessage);
       });
   };

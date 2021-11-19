@@ -68,7 +68,10 @@ export default function ConfirmEmail(props) {
           </div>
         </>
       ) : (
-        <div className="text-center mt-3" style={{ color: "white" }}>
+        <div
+          className={wideView ? "text-center mt-3" : "text-center mt-3 mb-2"}
+          style={{ color: "white" }}
+        >
           Confirming email...
         </div>
       )}

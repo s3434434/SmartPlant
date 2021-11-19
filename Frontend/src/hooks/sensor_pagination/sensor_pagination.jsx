@@ -4,14 +4,20 @@ import "./sensor_pagination.css";
 export default function SensorPagination(props) {
   const { sensorReadings, admin, wideView } = props;
 
+  // Constants for the number of items per page, and the maximum number of desktop and mobile pagination numbers showing at any one time. The items per page is set to 9 to account for the 'average' row at the top of each page.
+  const ITEMS_PER_PAGE = 9,
+    MAX_DESKTOP_PAGINATION_NUMBERS = 10,
+    MAX_MOBILE_PAGINATION_NUMBERS = 5;
+
   const [currentTimeframe, setCurrentTimeframe] = useState("All time"),
     [displayedReadings, setDisplayedReadings] = useState(
       "Loading sensor data..."
     ),
     [averageReading, setAverageReading] = useState(null),
-    [currentPageNumber, setCurrentPageNumber] = useState(1),
-    [paginationNumbers, setPaginationNumbers] = useState([]),
-    [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]);
+    [allPaginationNumbers, setAllPaginationNumbers] = useState([]),
+    [desktopPaginationNumbers, setDesktopPaginationNumbers] = useState([]),
+    [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]),
+    [currentPageNumber, setCurrentPageNumber] = useState(1);
 
   useEffect(() => {
     if (sensorReadings !== null) {
@@ -23,26 +29,6 @@ export default function SensorPagination(props) {
     }
     // eslint-disable-next-line
   }, [sensorReadings]);
-
-  const getNumPages = (numReadings) => {
-    let numPages = Math.floor(numReadings / 9);
-    if (numReadings % 9 !== 0) {
-      numPages++;
-    }
-
-    return numPages;
-  };
-
-  const createPaginationNumbers = (numReadings) => {
-    const numPages = getNumPages(numReadings);
-
-    let numbers = [...Array(numPages).keys()];
-    numbers.forEach((number) => {
-      numbers[number]++;
-    });
-
-    return numbers;
-  };
 
   const updateDisplayedReadings = (timeframe) => {
     let readings = [];
@@ -120,9 +106,23 @@ export default function SensorPagination(props) {
 
       setDisplayedReadings(readings);
 
-      const numbers = createPaginationNumbers(readings.length);
-      setPaginationNumbers(numbers.slice(0, 10));
-      setMobilePaginationNumbers(numbers.slice(0, 5));
+      let numPages = Math.floor(readings.length / ITEMS_PER_PAGE);
+      if (readings.length % ITEMS_PER_PAGE !== 0) {
+        numPages++;
+      }
+
+      let paginationNumbers = [...Array(numPages).keys()];
+      paginationNumbers.forEach((paginationNumber) => {
+        paginationNumbers[paginationNumber]++;
+      });
+
+      setAllPaginationNumbers(paginationNumbers);
+      setDesktopPaginationNumbers(
+        paginationNumbers.slice(0, MAX_DESKTOP_PAGINATION_NUMBERS)
+      );
+      setMobilePaginationNumbers(
+        paginationNumbers.slice(0, MAX_MOBILE_PAGINATION_NUMBERS)
+      );
 
       setCurrentPageNumber(1);
     } else {
@@ -156,39 +156,59 @@ export default function SensorPagination(props) {
   };
 
   const pageNavigate = (pageNumber) => {
-    if (
-      pageNumber >= 1 &&
-      pageNumber <= getNumPages(displayedReadings.length)
-    ) {
-      const numbers = createPaginationNumbers(displayedReadings.length);
-
-      if (pageNumber < paginationNumbers[0]) {
-        const desktopNumbers = numbers.slice(pageNumber - 1, pageNumber + 9);
-
-        if (desktopNumbers.length >= paginationNumbers.length) {
-          setPaginationNumbers(desktopNumbers);
+    if (pageNumber >= 1 && pageNumber <= allPaginationNumbers.length) {
+      if (
+        pageNumber === desktopPaginationNumbers[0] - 1 ||
+        pageNumber ===
+          desktopPaginationNumbers[desktopPaginationNumbers.length - 1] + 1
+      ) {
+        let startIndex, finishIndex;
+        if (pageNumber === desktopPaginationNumbers[0] - 1) {
+          startIndex = pageNumber - 1;
+          finishIndex = pageNumber + MAX_DESKTOP_PAGINATION_NUMBERS - 1;
+        } else if (
+          pageNumber ===
+          desktopPaginationNumbers[desktopPaginationNumbers.length - 1] + 1
+        ) {
+          startIndex = pageNumber - MAX_DESKTOP_PAGINATION_NUMBERS;
+          finishIndex = pageNumber;
         }
-      } else if (pageNumber > paginationNumbers[9]) {
-        const desktopNumbers = numbers.slice(pageNumber - 10, pageNumber);
 
-        if (desktopNumbers.length >= paginationNumbers.length) {
-          setPaginationNumbers(desktopNumbers);
+        const desktopNumbers = allPaginationNumbers.slice(
+          startIndex,
+          finishIndex
+        );
+        if (desktopNumbers.length >= desktopPaginationNumbers.length) {
+          setDesktopPaginationNumbers(desktopNumbers);
         }
       }
 
-      if (pageNumber < mobilePaginationNumbers[0]) {
-        const mobileNumbers = numbers.slice(pageNumber - 1, pageNumber + 4);
+      if (
+        pageNumber === mobilePaginationNumbers[0] - 1 ||
+        pageNumber ===
+          mobilePaginationNumbers[mobilePaginationNumbers.length - 1] + 1
+      ) {
+        let startIndex, finishIndex;
+        if (pageNumber === mobilePaginationNumbers[0] - 1) {
+          startIndex = pageNumber - 1;
+          finishIndex = pageNumber + MAX_MOBILE_PAGINATION_NUMBERS - 1;
+        } else if (
+          pageNumber ===
+          mobilePaginationNumbers[mobilePaginationNumbers.length - 1] + 1
+        ) {
+          startIndex = pageNumber - MAX_MOBILE_PAGINATION_NUMBERS;
+          finishIndex = pageNumber;
+        }
 
+        const mobileNumbers = allPaginationNumbers.slice(
+          startIndex,
+          finishIndex
+        );
         if (mobileNumbers.length >= mobilePaginationNumbers.length) {
           setMobilePaginationNumbers(mobileNumbers);
         }
-      } else if (pageNumber > mobilePaginationNumbers[4]) {
-        const mobileNumbers = numbers.slice(pageNumber - 5, pageNumber);
-
-        if (mobileNumbers.length >= mobilePaginationNumbers.length) {
-          setMobilePaginationNumbers(mobileNumbers);
-        }
       }
+
       setCurrentPageNumber(pageNumber);
     }
   };
@@ -239,18 +259,18 @@ export default function SensorPagination(props) {
                       </tr>
                     );
                   })}
-                {9 -
+                {ITEMS_PER_PAGE -
                   displayedReadings.slice(
-                    9 * (currentPageNumber - 1),
-                    9 * currentPageNumber
+                    ITEMS_PER_PAGE * (currentPageNumber - 1),
+                    ITEMS_PER_PAGE * currentPageNumber
                   ).length >
                 0
                   ? [
                       ...Array(
-                        9 -
+                        ITEMS_PER_PAGE -
                           displayedReadings.slice(
-                            9 * (currentPageNumber - 1),
-                            9 * currentPageNumber
+                            ITEMS_PER_PAGE * (currentPageNumber - 1),
+                            ITEMS_PER_PAGE * currentPageNumber
                           ).length
                       ).keys(),
                     ].map((key) => {
@@ -294,24 +314,24 @@ export default function SensorPagination(props) {
                 </span>
               </li>
               {wideView
-                ? paginationNumbers.map((paginationNumber) => {
+                ? desktopPaginationNumbers.map((desktopPaginationNumber) => {
                     return (
-                      <li className="page-item" key={paginationNumber}>
+                      <li className="page-item" key={desktopPaginationNumber}>
                         <span
                           className={
-                            currentPageNumber === paginationNumber
+                            currentPageNumber === desktopPaginationNumber
                               ? "page-link page-link-selected"
                               : "page-link"
                           }
                           tabIndex="0"
                           onClick={() => {
-                            pageNavigate(paginationNumber);
+                            pageNavigate(desktopPaginationNumber);
                           }}
                           onKeyPress={() => {
-                            pageNavigate(paginationNumber);
+                            pageNavigate(desktopPaginationNumber);
                           }}
                         >
-                          {paginationNumber}
+                          {desktopPaginationNumber}
                         </span>
                       </li>
                     );

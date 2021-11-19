@@ -54,7 +54,10 @@ export default function AllUsers(props) {
     <section>
       <h1 className="text-center gold">Users</h1>
       {typeof users === "string" ? (
-        <div className="text-center mt-3" style={{ color: "white" }}>
+        <div
+          className={wideView ? "text-center mt-3" : "text-center mt-3 mb-2"}
+          style={{ color: "white" }}
+        >
           {users}
         </div>
       ) : (
