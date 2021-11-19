@@ -68,7 +68,7 @@ export default function Login(props) {
         if (errors["Login Details"] !== undefined) {
           errorMessage = errors["Login Details"][0];
         }
-
+        
         setStatus(errorMessage);
       });
   };

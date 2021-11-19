@@ -12,13 +12,13 @@ describe('Password reset successful page', () => {
 
         cy.visit(route)
         cy.get('section > .gold').should('have.text', 'Password reset successfully')
-        cy.get('.mb-2 > a > .btn').should('have.text', 'Login')
+        cy.get('.btn').should('have.text', 'Login')
 
     })
 
     it('Redirects use to the login page when login button clicked', () => {
 
-        cy.get('.mb-2 > a > .btn').click()
+        cy.get('.btn').click()
         cy.url().should('be.equal', Cypress.config("baseUrl") + '/login')
     })
 })

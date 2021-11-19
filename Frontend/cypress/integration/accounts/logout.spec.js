@@ -14,7 +14,7 @@ describe('Logout page', () => {
     })
 
     it('Redirects you home when Home button clicked', () => {
-        cy.get('.mb-2 > a > .btn').click()
+        cy.get('.btn').click()
         cy.url().should('be.equal', Cypress.config("baseUrl") + '/landing')
     })
 })

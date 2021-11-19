@@ -22,8 +22,8 @@ describe('Forgot password page', () => {
     it('Displays displays error message when required field not entered', () => {
 
         cy.visit(route)
-        cy.get('form').first().submit()
-        cy.get('input:invalid').should('have.length', 2)
+        cy.get('.btn').click()
+        cy.get('input:invalid').should('have.length', 1)
     })
 
     it('Redirects use to the request processed page when reset password button clicked', () => {
