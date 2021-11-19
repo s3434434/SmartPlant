@@ -215,12 +215,7 @@ export default function Pagination(props) {
           </tbody>
         </table>
       </div>
-      <nav
-        className={
-          wideView ? "w-50 m-auto overflow-auto" : "m-auto overflow-auto"
-        }
-        style={{ backgroundColor: "transparent" }}
-      >
+      <nav className="overflow-auto" style={{ backgroundColor: "transparent" }}>
         <ul
           className={
             wideView
