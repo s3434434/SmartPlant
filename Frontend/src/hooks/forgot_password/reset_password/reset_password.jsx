@@ -58,12 +58,14 @@ export default function ResetPassword(props) {
           window.location.pathname = "/password-reset-successful";
         })
         .catch((err) => {
-          const errors = err.response.data.errors;
+          const errors = err.response.data.messages;
           let errorMessage = "Server error. Please try again later.";
-          console.log(err.response.data);
-          if (errors.NewPassword !== undefined) {
-            errorMessage = errors.NewPassword[0];
-          } 
+
+          if (errors.Passwords !== undefined) {
+            errorMessage = errors.Passwords[0];
+          } else if (errors.ConfirmNewPassword !== undefined) {
+            errorMessage = errors.ConfirmNewPassword[0];
+          }
 
           setStatus(errorMessage);
         });

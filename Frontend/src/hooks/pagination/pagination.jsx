@@ -14,19 +14,22 @@ export default function Pagination(props) {
     path,
     wideView,
   } = props;
+  // State variables for the current page number, and for the current pagination numbers for desktop and mobile.
   const [currentPageNumber, setCurrentPageNumber] = useState(1),
-    [paginationNumbers, setPaginationNumbers] = useState([]),
+    [desktopPaginationNumbers, setDesktopPaginationNumbers] = useState([]),
     [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]);
 
+  // useEffect hook called whenever a change is made to the 'items' array prop. A check is performed on whether the length of the array is greater than 0. If so, an array of pagination numbers is created using createPaginationNumbers. The desktopPaginationNumbers and mobilePaginationNumbers state variables are then set to appropriate slices of the pagination number array.
   useEffect(() => {
     if (items.length > 0) {
       const numbers = createPaginationNumbers();
-      setPaginationNumbers(numbers.slice(0, 10));
+      setDesktopPaginationNumbers(numbers.slice(0, 10));
       setMobilePaginationNumbers(numbers.slice(0, 5));
     }
     // eslint-disable-next-line
   }, [items]);
 
+  // Calculates and returns the number of pages for the 'items' array prop. This is done by first calculating the number of times the length of the array is divisible by 10 (without a remainder), and then adding an additional page if a remainder exists.
   const getNumPages = () => {
     let numPages = Math.floor(items.length / 10);
     if (items.length % 10 !== 0) {
@@ -36,32 +39,34 @@ export default function Pagination(props) {
     return numPages;
   };
 
+  // Creates and returns an array of pagination numbers. This is done by first getting the correct number of pages using getNumPages. The array is then created by constructing an empty array with the length of the number of pages, then spreading the keys of the empty array into a second empty array. The values of the pagination numbers array are then all incremented by 1.
   const createPaginationNumbers = () => {
     const numPages = getNumPages();
 
-    let numbers = [...Array(numPages).keys()];
-    numbers.forEach((number) => {
-      numbers[number]++;
+    let paginationNumbers = [...Array(numPages).keys()];
+    paginationNumbers.forEach((paginationNumber) => {
+      paginationNumbers[paginationNumber]++;
     });
 
-    return numbers;
+    return paginationNumbers;
   };
 
+  // Navigates to the page specified by the pageNumber parameter. A check is first performed on whether the parameter is greater to or equal than 1, and less than or equal to the number of pages for the 'items' array prop.
   const pageNavigate = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= getNumPages()) {
       const numbers = createPaginationNumbers();
 
-      if (pageNumber < paginationNumbers[0]) {
+      if (pageNumber < desktopPaginationNumbers[0]) {
         const desktopNumbers = numbers.slice(pageNumber - 1, pageNumber + 9);
 
-        if (desktopNumbers.length >= paginationNumbers.length) {
-          setPaginationNumbers(desktopNumbers);
+        if (desktopNumbers.length >= desktopPaginationNumbers.length) {
+          setDesktopPaginationNumbers(desktopNumbers);
         }
-      } else if (pageNumber > paginationNumbers[9]) {
+      } else if (pageNumber > desktopPaginationNumbers[9]) {
         const desktopNumbers = numbers.slice(pageNumber - 10, pageNumber);
 
-        if (desktopNumbers.length >= paginationNumbers.length) {
-          setPaginationNumbers(desktopNumbers);
+        if (desktopNumbers.length >= desktopPaginationNumbers.length) {
+          setDesktopPaginationNumbers(desktopNumbers);
         }
       }
 
@@ -211,24 +216,24 @@ export default function Pagination(props) {
             </span>
           </li>
           {wideView
-            ? paginationNumbers.map((paginationNumber) => {
+            ? desktopPaginationNumbers.map((desktopPaginationNumber) => {
                 return (
-                  <li className="page-item" key={paginationNumber}>
+                  <li className="page-item" key={desktopPaginationNumber}>
                     <span
                       className={
-                        currentPageNumber === paginationNumber
+                        currentPageNumber === desktopPaginationNumber
                           ? "page-link page-link-selected"
                           : "page-link"
                       }
                       tabIndex="0"
                       onClick={() => {
-                        pageNavigate(paginationNumber);
+                        pageNavigate(desktopPaginationNumber);
                       }}
                       onKeyPress={() => {
-                        pageNavigate(paginationNumber);
+                        pageNavigate(desktopPaginationNumber);
                       }}
                     >
-                      {paginationNumber}
+                      {desktopPaginationNumber}
                     </span>
                   </li>
                 );
