@@ -11,6 +11,6 @@ describe('Landing page', () => {
     it('Displays the title',() => {
 
         cy.visit(route).debug()
-        cy.get('section > .gold').should('have.text', 'Welcome to Demeter... The plant meter!')
+        cy.get('section > .gold').should('have.text', 'Demeter - The plant meter')
     })
 })
