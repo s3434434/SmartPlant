@@ -6,8 +6,13 @@ import "./all_plants.css";
 
 export default function AllPlants(props) {
   const { wideView } = props;
+
+  // State variable for the user's plants. Initially set to 'Loading plants...' while the plants are being fetched from the backend.
   const [plants, setPlants] = useState("Loading plants...");
 
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately, then performs a check on whether the user is logged in on the UI. If not, the user is returned to the root path.
+  // Otherwise, a GET request is made to Plants endpoint of the backend. If this request is unsuccessful, the plants state variable is set to an appropriate error message.
+  // Otherwise, a check is performed on whether the returned plants array has a length greater than 0. If so, the plants state variable is updated with the array's sorted contents. Otherwise, the plants state variable is updated with an appropriate message.
   useEffect(() => {
     document.title = "Plants | Demeter - The plant meter";
 
