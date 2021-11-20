@@ -154,10 +154,14 @@ export default function User(props) {
     // eslint-disable-next-line
   }, []);
 
+  // Updates the role state variable whenever the role input field is updated.
   const handleRoleChange = (e) => {
     setRole(e.target.value);
   };
 
+  // Handles the submit event of the role form. The role status is set appropriately, then a check is performed on whether a role has been selected. If not, an appropriate error message is shown.
+  // Otherwise, a second check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a PUT request is made to the backend update role admin endpoint. If this request is unsuccessful, an appropriate error message is shown. Otherwise, the page is reloaded.
   const handleRoleSubmit = (e) => {
     e.preventDefault();
     setRoleStatus("Please wait...");
@@ -193,6 +197,7 @@ export default function User(props) {
     }
   };
 
+  // Updates the user details form state variable with the appropriate input field whenever a user details form input field is updated.
   const handleDetailsChange = (e) => {
     const input = e.target;
     const tempDetailsForm = _.cloneDeep(detailsForm);
@@ -202,6 +207,8 @@ export default function User(props) {
     setDetailsForm(tempDetailsForm);
   };
 
+  // Handles the submit event of the user details form. The user details status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a PUT request is made to the backend update user details admin endpoint. If this request is unsuccessful, an appropriate error message is shown. Otherwise, the page is reloaded.
   const handleDetailsSubmit = (e, setStatus, setShowStatus) => {
     e.preventDefault();
     setStatus("Please wait...");
@@ -249,6 +256,7 @@ export default function User(props) {
     }
   };
 
+  // Updates the password form state variable with the appropriate input field whenever a password form input field is updated.
   const handlePasswordChange = (e) => {
     const input = e.target;
     const tempPasswordForm = _.cloneDeep(passwordForm);
@@ -258,6 +266,9 @@ export default function User(props) {
     setPasswordForm(tempPasswordForm);
   };
 
+  // Handles the submit event of the password form. The password form request status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a check is performed on whether the form's 'newPassword' and 'confirmNewPassword' fields match. If not, an appropriate error message is shown.
+  // Otherwise, a PUT request is made to the backend change password admin endpoint. If this request is successful, an appropriate message is shown and the page is reloaded. Otherwise, an appropriate error message is shown.
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
     setPasswordStatus("Please wait...");
@@ -295,6 +306,10 @@ export default function User(props) {
     }
   };
 
+  // Attempts to delete the user. The delete user status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a DELETE request is made to the backend delete user admin endpoint. If this request is unsuccessful, an appropriate error message is shown.
+  // Otherwise, a check is performed on whether the deleted user has the same user ID as the currently logged in user. If so, the user is logged out on the UI and returned to the root path.
+  // Otherwise, the page is reloaded.
   const deleteUser = () => {
     setDeleteStatus("Please wait...");
     setShowDeleteStatus(true);

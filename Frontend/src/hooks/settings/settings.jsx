@@ -189,7 +189,8 @@ export default function Settings(props) {
   };
 
   // Handles the submit event of the password form. The password form request status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
-  // Otherwise, a check is performed on whether the form's 'password' and 'confirmPassword' fields match. If not, an appropriate error message is shown.//Otherwise, a PUT request is made to the backend change password endpoint. If this request is successful, an appropriate message is shown and the page is reloaded. Otherwise, an appropriate error message is shown.
+  // Otherwise, a check is performed on whether the form's 'newPassword' and 'confirmNewPassword' fields match. If not, an appropriate error message is shown.
+  // Otherwise, a PUT request is made to the backend change password endpoint. If this request is successful, an appropriate message is shown and the page is reloaded. Otherwise, an appropriate error message is shown.
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
     setPasswordStatus("Please wait...");
