@@ -5,6 +5,21 @@ import axios from "axios";
 
 export default function AddPlant(props) {
   const { getLogin, wideView } = props;
+
+  // Constant for a file reader used for the upload of image files. The FileReader's onload function is set to parse the file into base 64, then update the base64ImgString of the form state variable.
+  const fileReader = new FileReader();
+  fileReader.onload = function (fileLoadedEvent) {
+    const tempForm = _.cloneDeep(form);
+
+    let base64_img_string = fileLoadedEvent.target.result;
+    const startIndex = base64_img_string.indexOf(",") + 1;
+    base64_img_string = base64_img_string.substr(startIndex);
+    tempForm.base64ImgString = base64_img_string;
+
+    setForm(tempForm);
+  };
+
+  // State variables for the plant types, Add plant form, status of the Add plant request and whether that status is being shown.
   const [plantTypes, setPlantTypes] = useState([]);
   const [form, setForm] = useState({
     plantName: "",
@@ -14,28 +29,24 @@ export default function AddPlant(props) {
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("-");
 
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately, then performs a check on whether the user is logged in on the UI. If not, the user is returned to the root path.
+  // Otherwise, a GET request is made to the Plant types endpoint of the backend. If this request is unsuccessful, the user is returned to the root path.
+  // Otherwise, the plantTypes state variable is set to the returned plant types array.
   useEffect(() => {
     document.title = "Add plant | Demeter - The plant meter";
 
     const login = getLogin();
     if (login !== null) {
       const { token } = login;
+
       axios
-        .get("https://smart-plant.azurewebsites.net/api/Plants", {
+        .get("https://smart-plant.azurewebsites.net/api/Plants/List", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
-          axios
-            .get("https://smart-plant.azurewebsites.net/api/Plants/List", {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            })
-            .then((res) => {
-              setPlantTypes(res.data);
-            });
+          setPlantTypes(res.data);
         })
         .catch((err) => {
           window.location.pathname = "/";
@@ -47,28 +58,22 @@ export default function AddPlant(props) {
     // eslint-disable-next-line
   }, []);
 
+  // Updates the form state variable with the appropriate input field whenever a form input field is updated. If the input field is the file upload input for the image, the FileReader's readAsDataURL method is called.
   const handleChange = (e) => {
     const input = e.target;
-    const tempForm = _.cloneDeep(form);
 
     if (input.name === "base64ImgString") {
-      const fileReader = new FileReader();
-      fileReader.onload = function (fileLoadedEvent) {
-        let base64 = fileLoadedEvent.target.result;
-        const startIndex = base64.indexOf(",") + 1;
-        base64 = base64.substr(startIndex);
-
-        tempForm[input.name] = base64;
-      };
-
       fileReader.readAsDataURL(input.files[0]);
     } else {
+      const tempForm = _.cloneDeep(form);
       tempForm[input.name] = input.value;
-    }
 
-    setForm(tempForm);
+      setForm(tempForm);
+    }
   };
 
+  // Handles the submit event of the Add plant form. The request status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a POST request is made to the backend Add plant endpoint.If this request is successful, the user is taken to the 'Plant added' page, with a URL parameter of the Arduino token in the response.Otherwise, an appropriate error message is shown.
   const handleSubmit = (e) => {
     e.preventDefault();
     setStatus("Please wait...");
