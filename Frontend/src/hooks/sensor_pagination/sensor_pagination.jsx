@@ -9,8 +9,9 @@ export default function SensorPagination(props) {
     MAX_DESKTOP_PAGINATION_NUMBERS = 10,
     MAX_MOBILE_PAGINATION_NUMBERS = 5;
 
+  // State variables for the current timeframe, the sensor readings in the current timeframe, all pagination numbers, the current pagination numbers for desktop and mobile, and the current page number.
   const [currentTimeframe, setCurrentTimeframe] = useState("All time"),
-    [displayedReadings, setDisplayedReadings] = useState(
+    [timeframeReadings, setTimeframeReadings] = useState(
       "Loading sensor data..."
     ),
     [averageReading, setAverageReading] = useState(null),
@@ -19,34 +20,48 @@ export default function SensorPagination(props) {
     [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]),
     [currentPageNumber, setCurrentPageNumber] = useState(1);
 
+  // useEffect hook called whenever a change is made to the 'sensorReadings' prop array. A check is first performed on whether this prop is null. If not, a second check is performed on whether the type of this prop is a string.
+  // If not, the timeframeReadings state variable is calculated and updated by passing the sensorReadings prop to updateTimeframeReadings.
+  // If the type of the sensorReadings prop is a string, the timeframeReadings state variable is updated directly with the value of the prop.
   useEffect(() => {
     if (sensorReadings !== null) {
       if (typeof sensorReadings !== "string") {
-        updateDisplayedReadings("All time");
+        updateTimeframeReadings("All time");
       } else {
-        setDisplayedReadings(sensorReadings);
+        setTimeframeReadings(sensorReadings);
       }
     }
     // eslint-disable-next-line
   }, [sensorReadings]);
 
-  const updateDisplayedReadings = (timeframe) => {
-    let readings = [];
+  // Calculates and updates the timeframeReadings state variable based on the value of the timeframe parameter. This is done by updating the currentTimeframe state variable with the parameter's value. A check is then performed on whether the timeframe parameter refers to all sensor data. If so, all sensor data is used for the rest of this function's execution. If not, a subset of the sensor data is used based on whether each sensor reading has a timestamp within the specified timeframe.
+  // A check is then performed on whether the array of the selected sensor data has a length greater than 0. If not, a check is performed on whether the 'admin' prop is true. Based on the result, the timeframeReadings state variable is updated with an appropriate message.
+  // If the selected sensor data array has a length greater than 0, the timeframeReadings state variable is update to the array's value. The average temperature, light intensity, moisture and humidity values of the selected sensor data are then calculated by iterating through the values of the array.The averageReading state variable is then set with the results.
+  // The number of pages for the timeframeReadings array is calculated. This is done by first determining the number of times the length of the array is divisible by the number of readings per page (without a remainder), and then adding an additional page if a remainder exists.
+  // An array of pagination numbers is then created. This is done by constructing an empty array with a length of the number of pages, then spreading the keys of the empty array into a second empty array.The values of the pagination number array are then all incremented by 1.
+  // The allPaginationNumbers state variable is then set to the pagination numbers array, and the desktopPaginationNumbers and mobilePaginationNumbers state variables are set to appropriate slices of the pagination number array.
+  const updateTimeframeReadings = (timeframe) => {
+    setCurrentTimeframe(timeframe);
+
+    let timeframe_readings = [];
     if (timeframe === "All time") {
-      readings = sensorReadings;
+      timeframe_readings = sensorReadings;
     } else {
-      const now = new Date().getTime();
-      let endTime = null;
+      const now = new Date().getTime(),
+        msPerHour = 3600000,
+        msPerDay = 86400000,
+        msPerWeek = 604800000;
+      let endTime;
 
       switch (timeframe) {
         case "Hour":
-          endTime = now - 3600000;
+          endTime = now - msPerHour;
           break;
         case "Day":
-          endTime = now - 86400000;
+          endTime = now - msPerDay;
           break;
         case "Week":
-          endTime = now - 604800000;
+          endTime = now - msPerWeek;
           break;
         case "Month":
           endTime = new Date();
@@ -77,40 +92,39 @@ export default function SensorPagination(props) {
           sensorReading.timeStampUTC + "Z"
         ).getTime();
         if (readingTime <= now && readingTime >= endTime) {
-          readings.push(sensorReading);
+          timeframe_readings.push(sensorReading);
         }
       });
     }
 
-    if (readings.length > 0) {
-      let averageTemp = null,
-        averageLightIntensity = null,
-        averageMoisture = null,
-        averageHumidity = null;
-      readings.forEach((reading) => {
-        averageTemp += reading.temp;
-        averageLightIntensity += reading.lightIntensity;
-        averageMoisture += reading.moisture;
-        averageHumidity += reading.humidity;
+    if (timeframe_readings.length > 0) {
+      setTimeframeReadings(timeframe_readings);
+
+      let averageTemperature,
+        averageLightIntensity,
+        averageMoisture,
+        averageHumidity;
+      timeframe_readings.forEach((timeframe_reading) => {
+        averageTemperature += timeframe_reading.temp;
+        averageLightIntensity += timeframe_reading.lightIntensity;
+        averageMoisture += timeframe_reading.moisture;
+        averageHumidity += timeframe_reading.humidity;
       });
-      averageTemp /= readings.length;
-      averageLightIntensity /= readings.length;
-      averageMoisture /= readings.length;
-      averageHumidity /= readings.length;
+      averageTemperature /= timeframe_readings.length;
+      averageLightIntensity /= timeframe_readings.length;
+      averageMoisture /= timeframe_readings.length;
+      averageHumidity /= timeframe_readings.length;
       setAverageReading({
-        temp: averageTemp,
+        temperature: averageTemperature,
         lightIntensity: averageLightIntensity,
         moisture: averageMoisture,
         humidity: averageHumidity,
       });
 
-      setDisplayedReadings(readings);
-
-      let numPages = Math.floor(readings.length / ITEMS_PER_PAGE);
-      if (readings.length % ITEMS_PER_PAGE !== 0) {
+      let numPages = Math.floor(timeframe_readings.length / ITEMS_PER_PAGE);
+      if (timeframe_readings.length % ITEMS_PER_PAGE !== 0) {
         numPages++;
       }
-
       let paginationNumbers = [...Array(numPages).keys()];
       paginationNumbers.forEach((paginationNumber) => {
         paginationNumbers[paginationNumber]++;
@@ -126,28 +140,26 @@ export default function SensorPagination(props) {
 
       setCurrentPageNumber(1);
     } else {
+      let message;
       if (timeframe === "All time") {
         if (admin) {
-          setDisplayedReadings("No sensor data available.");
+          message = "No sensor data available.";
         } else {
-          setDisplayedReadings(
-            "No sensor data available. Please make sure you have correctly input your token into the Arduino."
-          );
+          message =
+            "No sensor data available. Please make sure you have correctly input your token into the Arduino.";
         }
       } else {
         if (admin) {
-          setDisplayedReadings(
-            "No sensor data available. The sensors may not have collected enough data for this timeframe."
-          );
+          message =
+            "No sensor data available. The sensors may not have collected enough data for this timeframe.";
         } else {
-          setDisplayedReadings(
-            "No sensor data available. Your sensors may not have collected enough data for this timeframe. Otherwise, please make sure you have correctly input your token into the Arduino."
-          );
+          message =
+            "No sensor data available. Your sensors may not have collected enough data for this timeframe. Otherwise, please make sure you have correctly input your token into the Arduino.";
         }
       }
-    }
 
-    setCurrentTimeframe(timeframe);
+      setTimeframeReadings(message);
+    }
   };
 
   const getDate = (isoDate) => {
@@ -221,8 +233,8 @@ export default function SensorPagination(props) {
           : "m-auto text-center px-2 mb-2 gold-border"
       }
     >
-      {typeof displayedReadings === "string" ? (
-        <span style={{ color: "white" }}>{displayedReadings}</span>
+      {typeof timeframeReadings === "string" ? (
+        <span style={{ color: "white" }}>{timeframeReadings}</span>
       ) : (
         <>
           <div className="overflow-auto">
@@ -246,7 +258,7 @@ export default function SensorPagination(props) {
                     <td>{averageReading.humidity.toFixed(1)}%</td>
                   </tr>
                 ) : null}
-                {displayedReadings
+                {timeframeReadings
                   .slice(9 * (currentPageNumber - 1), 9 * currentPageNumber)
                   .map((row) => {
                     return (
@@ -260,7 +272,7 @@ export default function SensorPagination(props) {
                     );
                   })}
                 {ITEMS_PER_PAGE -
-                  displayedReadings.slice(
+                  timeframeReadings.slice(
                     ITEMS_PER_PAGE * (currentPageNumber - 1),
                     ITEMS_PER_PAGE * currentPageNumber
                   ).length >
@@ -268,7 +280,7 @@ export default function SensorPagination(props) {
                   ? [
                       ...Array(
                         ITEMS_PER_PAGE -
-                          displayedReadings.slice(
+                          timeframeReadings.slice(
                             ITEMS_PER_PAGE * (currentPageNumber - 1),
                             ITEMS_PER_PAGE * currentPageNumber
                           ).length
@@ -397,10 +409,10 @@ export default function SensorPagination(props) {
               }
               tabIndex="0"
               onClick={() => {
-                updateDisplayedReadings("Hour");
+                updateTimeframeReadings("Hour");
               }}
               onKeyPress={() => {
-                updateDisplayedReadings("Hour");
+                updateTimeframeReadings("Hour");
               }}
             >
               Hour
@@ -415,10 +427,10 @@ export default function SensorPagination(props) {
               }
               tabIndex="0"
               onClick={() => {
-                updateDisplayedReadings("Day");
+                updateTimeframeReadings("Day");
               }}
               onKeyPress={() => {
-                updateDisplayedReadings("Day");
+                updateTimeframeReadings("Day");
               }}
             >
               Day
@@ -433,10 +445,10 @@ export default function SensorPagination(props) {
               }
               tabIndex="0"
               onClick={() => {
-                updateDisplayedReadings("Week");
+                updateTimeframeReadings("Week");
               }}
               onKeyPress={() => {
-                updateDisplayedReadings("Week");
+                updateTimeframeReadings("Week");
               }}
             >
               Week
@@ -451,10 +463,10 @@ export default function SensorPagination(props) {
               }
               tabIndex="0"
               onClick={() => {
-                updateDisplayedReadings("Month");
+                updateTimeframeReadings("Month");
               }}
               onKeyPress={() => {
-                updateDisplayedReadings("Month");
+                updateTimeframeReadings("Month");
               }}
             >
               Month
@@ -469,10 +481,10 @@ export default function SensorPagination(props) {
               }
               tabIndex="0"
               onClick={() => {
-                updateDisplayedReadings("Year");
+                updateTimeframeReadings("Year");
               }}
               onKeyPress={() => {
-                updateDisplayedReadings("Year");
+                updateTimeframeReadings("Year");
               }}
             >
               Year
@@ -487,10 +499,10 @@ export default function SensorPagination(props) {
               }
               tabIndex="0"
               onClick={() => {
-                updateDisplayedReadings("All time");
+                updateTimeframeReadings("All time");
               }}
               onKeyPress={() => {
-                updateDisplayedReadings("All time");
+                updateTimeframeReadings("All time");
               }}
             >
               All time

@@ -45,6 +45,8 @@ export default function PlantAdmin(props) {
             },
           })
           .then((res) => {
+            let plantFound = false;
+
             res.data.forEach((plant) => {
               if (plant.plantID === form.plantID) {
                 axios
@@ -57,11 +59,17 @@ export default function PlantAdmin(props) {
                     }
                   )
                   .then((res) => {
+                    let userFound = false;
                     res.data.forEach((user) => {
                       if (user.id === plant.userID) {
                         setEmail(user.email);
+                        userFound = true;
                       }
                     });
+
+                    if (!userFound) {
+                      window.location.pathname = "/";
+                    }
 
                     document.title = `${plant.name} | Demeter - The plant meter`;
 
@@ -81,8 +89,14 @@ export default function PlantAdmin(props) {
                   .catch((err) => {
                     window.location.pathname = "/";
                   });
+
+                plantFound = true;
               }
             });
+
+            if (!plantFound) {
+              window.location.pathname = "/";
+            }
           })
           .catch((err) => {
             window.location.pathname = "/";

@@ -26,8 +26,8 @@ export default function Pagination(props) {
     [mobilePaginationNumbers, setMobilePaginationNumbers] = useState([]),
     [currentPageNumber, setCurrentPageNumber] = useState(1);
 
-  // useEffect hook called whenever a change is made to the 'items' array prop. A check is performed on whether the length of the array is greater than 0. If not, the function returns.
-  // Otherwise, the number of pages for the 'items' array prop is calculated. This is done by first determining the number of times the length of the array is divisible by the number of items per page (without a remainder), and then adding an additional page if a remainder exists.
+  // useEffect hook called whenever a change is made to the 'items' prop array. A check is performed on whether the length of the array is greater than 0. If not, the function returns.
+  // Otherwise, the number of pages for the 'items' prop array is calculated. This is done by first determining the number of times the length of the array is divisible by the number of items per page (without a remainder), and then adding an additional page if a remainder exists.
   // An array of pagination numbers is then created. This is done by constructing an empty array with a length of the number of pages, then spreading the keys of the empty array into a second empty array.The values of the pagination number array are then all incremented by 1.
   // The allPaginationNumbers state variable is then set to the pagination numbers array, and the desktopPaginationNumbers and mobilePaginationNumbers state variables are set to appropriate slices of the pagination number array.
   useEffect(() => {
