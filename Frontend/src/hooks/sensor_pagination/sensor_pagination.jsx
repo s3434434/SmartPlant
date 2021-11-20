@@ -162,11 +162,16 @@ export default function SensorPagination(props) {
     }
   };
 
+  // Returns a formatted string based on the value of the isoDate parameter. This is done by creating a new Date object, specifying that the parameter refers to UTC, then returning a formatted string adjusted to the Australia/Melbourne timezone.
   const getDate = (isoDate) => {
     const date = new Date(isoDate + "Z");
     return date.toLocaleString("en-AU", { timeZone: "Australia/Melbourne" });
   };
 
+  // Navigates to the page specified by the pageNumber parameter. A check is first performed on whether the parameter is greater to or equal than 1, and less than or equal to the length of the allPaginationNumbers state variable. If not, the function returns.
+  // Otherwise, a check is performed on whether the pageNumber parameter is equal to 1 less than the number at the start of the desktopPaginationNumbers state variable, or 1 greater than the number at end of the desktopPaginationNumbers array. If so, a further check is done on which of these 2 cases has occurred. If it is the former, a new potential desktop pagination number array is created from a slice of the allPaginationNumbers so that the pageNumber parameter occurs at the start of the slice. If it is the latter, the potential pagination number array is created so that the pageNumber parameter occurs at the end of the slice. Finally, a check is performed on whether the potential new desktop pagination number array has a length greater than or equal to the desktopPaginationNumbers state variable. If so, desktopPaginationNumbers is updated with the value of the new array.
+  // The actions described in the previous paragraph are then repeated for the mobilePaginationNumbers state variable.
+  // Finally, the currentPageNumber state variable is updated with the pageNumber parameter.
   const pageNavigate = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= allPaginationNumbers.length) {
       if (
