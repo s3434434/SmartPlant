@@ -45,16 +45,19 @@ export default function User(props) {
     [plants, setPlants] = useState("Loading plants...");
 
   // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately, then performs a check on whether the user is logged in and an administrator on the UI. If not, the user is returned to the root path.
-  // Otherwise, two GET requests are made - one to the backend Plants admin endpoint and one to the backend SensorData admin endpoint.
+  // Otherwise, two GET requests are made - one to the backend individual user admin endpoint and one to the Plants admin endpoint.
+
+  // The GET request to the individual user endpoint proceeds as follows:
+  // If the request is unsuccessful, the user is returned to the root path Otherwise, the response array is iterated through to find a plant with a matching plant ID. If no such plant is found, the user is returned to the root path.
+  // Otherwise, the user details form state variable is updated with the response data. A GET request is then performed to the backend User roles admin endpoint. If this request is unsuccessful, the user is returned to the root path.
+  // Otherwise, the response user roles array is iterated through to find a user with a user ID matching that of user ID in the user details form state variable. If no such user is found, the user is returned to the root path.
+  // Otherwise, the role state variable is updated with the value of the role of the found user.
 
   // The GET request to the Plants admin endpoint proceeds as follows:
-  // If the request is unsuccessful, the user is returned to the root path Otherwise, the response array is iterated through to find a plant with a matching plant ID. If no such plant is found, the user is returned to the root path.
-  // Otherwise, a GET request is performed to the backend Users admin endpoint. If this request is unsuccessful, the user is returned to the root path.
-  // Otherwise, the response users array is iterated through to find a user with a user ID matching that of the matching plant ID. If no such user is found, the user is returned to the root path.
-  // Otherwise, title of the web page is updated appropriately, the 'email' state variable is set to that of the found user, the 'name' field of the form state variable is set to the plant's name, the plantImage state variable is set to either the found plant's image or a default one depending if it exists, the plantType state variable is set to the plant's type, and the userID state variable is set to that of the found user.
-
-  // The GET request to the SensorData admin endpoint proceeds as follows:
-  // If the request is unsuccessful, an appropriate error message is shown in the sensor data table. Otherwise, the sensor readings response data array is sorted according to the timestamp of each reading, then the array is assigned to the sensorReadings state variable.
+  // If the request is unsuccessful, the user is returned to the root path.
+  // Otherwise, an empty 'user plants' array is created. The returned plants array is iterated through, and all plants that have a user ID matching that of the user details form state variable are added to the 'user plants' array. The 'user' plants array is then sorted.
+  // Finally, a check is done on whether the 'user plants' array has a length greater than 0. If so, the plants state variable is updated with the value of the 'user plants' array.
+  // Otherwise, the plants state variable is updated with an appropriate message.
   useEffect(() => {
     document.title = "Demeter - The plant meter";
 
@@ -93,16 +96,15 @@ export default function User(props) {
                 }
               )
               .then((res) => {
-                let userRole = "";
+                let roleFound = false;
                 res.data.forEach((foundUser) => {
                   if (foundUser.id === detailsForm.id) {
-                    userRole = foundUser.role;
+                    setRole(foundUser.role);
+                    roleFound = true;
                   }
                 });
 
-                if (userRole !== "") {
-                  setRole(userRole);
-                } else {
+                if (!roleFound) {
                   window.location.pathname = "/";
                 }
               })
@@ -121,15 +123,20 @@ export default function User(props) {
             },
           })
           .then((res) => {
-            let foundPlants = [];
+            let userPlants = [];
             res.data.forEach((plant) => {
               if (plant.userID === detailsForm.id) {
-                foundPlants.push(plant);
+                userPlants.push(plant);
               }
             });
+            userPlants = userPlants.sort((a, b) => {
+              const nameA = a.name,
+                nameB = b.name;
+              return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+            });
 
-            if (foundPlants.length > 0) {
-              setPlants(foundPlants);
+            if (userPlants.length > 0) {
+              setPlants(userPlants);
             } else {
               setPlants("No current plants.");
             }

@@ -29,7 +29,6 @@ export default function AllUsers(props) {
                   emailB = b.email;
                 return emailA < emailB ? -1 : emailA > emailB ? 1 : 0;
               });
-              console.log(sortedUsers);
               setUsers(sortedUsers);
             } else {
               setUsers("No current users.");
