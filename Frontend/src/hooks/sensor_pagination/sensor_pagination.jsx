@@ -100,10 +100,10 @@ export default function SensorPagination(props) {
     if (timeframe_readings.length > 0) {
       setTimeframeReadings(timeframe_readings);
 
-      let averageTemperature,
-        averageLightIntensity,
-        averageMoisture,
-        averageHumidity;
+      let averageTemperature = 0,
+        averageLightIntensity = 0,
+        averageMoisture = 0,
+        averageHumidity = 0;
       timeframe_readings.forEach((timeframe_reading) => {
         averageTemperature += timeframe_reading.temp;
         averageLightIntensity += timeframe_reading.lightIntensity;
@@ -257,7 +257,7 @@ export default function SensorPagination(props) {
                 {averageReading !== null ? (
                   <tr key="average">
                     <td>Average</td>
-                    <td>{averageReading.temp.toFixed(1)} °C</td>
+                    <td>{averageReading.temperature.toFixed(1)} °C</td>
                     <td>{averageReading.lightIntensity.toFixed(1)}%</td>
                     <td>{averageReading.moisture.toFixed(1)}%</td>
                     <td>{averageReading.humidity.toFixed(1)}%</td>
