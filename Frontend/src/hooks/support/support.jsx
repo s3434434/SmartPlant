@@ -5,6 +5,8 @@ import "./support.css";
 
 export default function Support(props) {
   const { getLogin, wideView } = props;
+
+  // State variables for the support form, status of the support request and whether that status is being shown.
   const [form, setForm] = useState({
     EmailSubject: "",
     EmailBody: "",
@@ -12,12 +14,14 @@ export default function Support(props) {
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("-");
 
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
   useEffect(() => {
     document.title = "Support | Demeter - The plant meter";
 
     // eslint-disable-next-line
   }, []);
 
+  // Updates the form state variable with the appropriate input field whenever a form input field is updated.
   const handleChange = (e) => {
     const input = e.target;
     const tempForm = _.cloneDeep(form);
@@ -25,6 +29,7 @@ export default function Support(props) {
     setForm(tempForm);
   };
 
+  // Handles the submit event of the support form. Sets the request status appropriately, then performs a POST request to the backend support endpoint. If this request is successful, the user is taken to the 'Support successful' page. Otherwise, an appropriate error message is shown.
   const handleSubmit = (e) => {
     e.preventDefault();
     setStatus("Please wait...");

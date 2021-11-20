@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./support_successful.css";
 
 export default function SupportSuccessful(props) {
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
   useEffect(() => {
     document.title = "Support email sent | Demeter - The plant meter";
     // eslint-disable-next-line
