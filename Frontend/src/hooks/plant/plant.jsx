@@ -11,6 +11,21 @@ export default function Plant(props) {
   const { getLogin, wideView } = props;
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
 
+  // Constant for a file reader used for the upload of image files. The FileReader's onload function is set to parse the file into base 64, then update the base64ImgString of the form state variable.
+  const fileReader = new FileReader();
+  fileReader.onload = function (fileLoadedEvent) {
+    const tempForm = _.cloneDeep(form);
+
+    let base64_img_string = fileLoadedEvent.target.result;
+    const startIndex = base64_img_string.indexOf(",") + 1;
+    base64_img_string = base64_img_string.substr(startIndex);
+    tempForm.base64ImgString = base64_img_string;
+
+    setForm(tempForm);
+  };
+
+  // State variables for the plant details form, whether or not the fields of this form are modifiable, the statuses of these fields' associated requests, and whether these statuses are being shown.
+  //State variables are also created for the plant type, plant image, Arduino token, Arduino token loading status and whether that status is being shown, sensor data readings, and plant delete status and whether that status is being shown.
   const [form, setForm] = useState({
       name: "",
       base64ImgString: "",
@@ -32,6 +47,15 @@ export default function Plant(props) {
     [showDeleteStatus, setShowDeleteStatus] = useState(false),
     [deleteStatus, setDeleteStatus] = useState("-");
 
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately, then performs a check on whether the user is logged in on the UI. If not, the user is returned to the root path.
+  // Otherwise, two GET requests are made - one to the backend Plants endpoint and one to the backend SensorData endpoint.
+
+  // The GET request to the Plants endpoint proceeds as follows:
+  // If the request is unsuccessful, the user is returned to the root path Otherwise, the response array is iterated through to find a plant with a matching plant ID. If no such plant is found, the user is returned to the root path.
+  // Otherwise, the title of the web page is updated appropriately, the 'name' field of the form state variable is set to the plant's name, the plantImage state variable is set to either the found plant's image or a default one depending if it exists, and the plantType state variable is set to the plant's type.
+
+  // The GET request to the SensorData endpoint proceeds as follows:
+  // If the request is unsuccessful, an appropriate error message is shown in the sensor data table. Otherwise, the sensor readings response data array is sorted according to the timestamp of each reading, then the array is assigned to the sensorReadings state variable.
   useEffect(() => {
     document.title = "Demeter - The plant meter";
 
@@ -45,6 +69,8 @@ export default function Plant(props) {
           },
         })
         .then((res) => {
+          let plantFound = false;
+
           res.data.forEach((plant) => {
             if (plant.plantID === form.plantID) {
               document.title = `${plant.name} | Demeter - The plant meter`;
@@ -60,8 +86,14 @@ export default function Plant(props) {
               setPlantImage(image);
 
               setPlantType(plant.plantType);
+
+              plantFound = true;
             }
           });
+
+          if (!plantFound) {
+            window.location.pathname = "/";
+          }
         })
         .catch((err) => {
           window.location.pathname = "/";
@@ -96,28 +128,23 @@ export default function Plant(props) {
     // eslint-disable-next-line
   }, []);
 
+  // Updates the form state variable with the appropriate input field whenever a form input field is updated. If the input field is the file upload input for the image, the FileReader's readAsDataURL method is called.
   const handleChange = (e) => {
     const input = e.target;
-    const tempForm = _.cloneDeep(form);
 
     if (input.name === "base64ImgString") {
-      const fileReader = new FileReader();
-      fileReader.onload = function (fileLoadedEvent) {
-        let base64 = fileLoadedEvent.target.result;
-        const startIndex = base64.indexOf(",") + 1;
-        base64 = base64.substr(startIndex);
-
-        tempForm[input.name] = base64;
-      };
-
       fileReader.readAsDataURL(input.files[0]);
     } else {
+      const tempForm = _.cloneDeep(form);
       tempForm[input.name] = input.value;
-    }
 
-    setForm(tempForm);
+      setForm(tempForm);
+    }
   };
 
+  // Handles the submit event of the plant details form. This is called whenever a field of this page is edited and updated. In addition to the event parameter, the status and setStatus state variables of the field in question are passed in, allowing this function to be used in multiple parts of the page.
+  // The status parameter is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a PUT request is made to the backend update plant endpoint. If this request is successful, the page is reloaded. Otherwise, an appropriate error message is shown.
   const handleSubmit = (e, setStatus, setShowStatus) => {
     e.preventDefault();
     setStatus("Please wait...");
@@ -155,6 +182,8 @@ export default function Plant(props) {
     }
   };
 
+  // Fetches the Arduino token from the backend and shows it to the user. The Arduino token status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a GET request is made to the plant token endpoint.  If this request is successful, the arduinoToken state variable is updated and shown. Otherwise, an appropriate error message is shown.
   const fetchArduinoToken = () => {
     setTokenStatus("Please wait...");
     setShowTokenStatus(true);
@@ -186,6 +215,8 @@ export default function Plant(props) {
     }
   };
 
+  // Attempts to delete the plant. The delete plant status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a DELETE request is made to the backend delete plant endpoint.  If this request is successful, the user is navigated to the root path. Otherwise, an appropriate error message is shown.
   const deletePlant = () => {
     setDeleteStatus("Please wait...");
     setShowDeleteStatus(true);

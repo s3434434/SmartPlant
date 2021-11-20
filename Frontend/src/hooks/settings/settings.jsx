@@ -8,6 +8,7 @@ import "./settings.css";
 export default function Settings(props) {
   const { getLogin, wideView } = props;
 
+  // State variables for the email, account details and password forms, whether or not these forms are modifiable, the statuses of these forms' associated requests, and whether these statuses are being shown.
   const [emailForm, setEmailForm] = useState({
       email: "",
       confirmEmail: "",
@@ -35,6 +36,9 @@ export default function Settings(props) {
     [showPasswordStatus, setShowPasswordStatus] = useState(false),
     [passwordStatus, setPasswordStatus] = useState("-");
 
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately, then performs a check on whether the user is logged in on the UI. If not, the user is returned to the root path.
+  // Otherwise, a GET request is made to the User endpoint of the backend. If this request is unsuccessful, the user is returned to the root path.
+  // Otherwise, the email and account details forms are updated with the response data.
   useEffect(() => {
     document.title = "Settings | Demeter - The plant meter";
 
@@ -67,6 +71,7 @@ export default function Settings(props) {
     // eslint-disable-next-line
   }, []);
 
+  // Updates the emailForm state variable with the appropriate input field whenever a email form input field is updated.
   const handleEmailChange = (e) => {
     const input = e.target;
     const tempEmailForm = _.cloneDeep(emailForm);
@@ -76,6 +81,9 @@ export default function Settings(props) {
     setEmailForm(tempEmailForm);
   };
 
+  // Handles the submit event of the email form. The email request status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a check is performed on whether the form's 'email' and 'confirmEmail' fields match. If not, an appropriate error message is shown.
+  // Otherwise, a PUT request is made to the backend change email endpoint. If this request is successful, the page is reloaded. Otherwise, an appropriate error message is shown.
   const handleEmailSubmit = (e) => {
     e.preventDefault();
     setEmailStatus("Please wait...");
@@ -119,6 +127,7 @@ export default function Settings(props) {
     }
   };
 
+  // Updates the detailsForm state variable with the appropriate input field whenever an account details form input field is updated.
   const handleDetailsChange = (e) => {
     const input = e.target;
     const tempDetailsForm = _.cloneDeep(detailsForm);
@@ -128,6 +137,8 @@ export default function Settings(props) {
     setDetailsForm(tempDetailsForm);
   };
 
+  // Handles the submit event of the account details form. The details form request status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a PUT request is made to the backend change account details endpoint. If this request is successful, the page is reloaded. Otherwise, an appropriate error message is shown.
   const handleDetailsSubmit = (e) => {
     e.preventDefault();
     setDetailsStatus("Please wait...");
@@ -167,6 +178,7 @@ export default function Settings(props) {
     }
   };
 
+  // Updates the passwordForm state variable with the appropriate input field whenever a password form input field is updated.
   const handlePasswordChange = (e) => {
     const input = e.target;
     const tempPasswordForm = _.cloneDeep(passwordForm);
@@ -176,6 +188,9 @@ export default function Settings(props) {
     setPasswordForm(tempPasswordForm);
   };
 
+  // Handles the submit event of the password form. The password form request status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a check is performed on whether the form's 'newPassword' and 'confirmNewPassword' fields match. If not, an appropriate error message is shown.
+  // Otherwise, a PUT request is made to the backend change password endpoint. If this request is successful, an appropriate message is shown and the page is reloaded. Otherwise, an appropriate error message is shown.
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
     setPasswordStatus("Please wait...");

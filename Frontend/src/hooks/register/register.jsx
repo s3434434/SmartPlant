@@ -18,7 +18,7 @@ export default function Register(props) {
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("-");
 
-  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately and ensures the user is logged out on the UI.
   useEffect(() => {
     document.title = "Register | Demeter - The plant meter";
 

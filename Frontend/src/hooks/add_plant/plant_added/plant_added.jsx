@@ -4,8 +4,10 @@ import "./plant_added.css";
 
 export default function PlantAdded(props) {
   const search = useLocation().search;
+  // Sets a constant for the 'token' URL parameter.
   const token = new URLSearchParams(search).get("token");
 
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
   useEffect(() => {
     document.title = "Plant added successfully | Demeter - The plant meter";
     // eslint-disable-next-line

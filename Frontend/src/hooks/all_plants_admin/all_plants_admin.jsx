@@ -6,8 +6,17 @@ import "./all_plants_admin.css";
 
 export default function AllPlantsAdmin(props) {
   const { getLogin, wideView } = props;
+
+  // State variable for Demeter's plants. Initially set to 'Loading plants...' while the plants are being fetched from the backend.
   const [plants, setPlants] = useState("Loading plants...");
 
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately, then performs a check on whether the user is logged in and an administrator on the UI. If not, the user is returned to the root path.
+  // Otherwise, a GET request is made to Plants admin endpoint of the backend. If this request is unsuccessful, the plants state variable is set to an appropriate error message.
+  // Otherwise, a check is performed on whether the returned plants array has a length greater than 0. If not, the plants state variable is updated with an appropriate message.
+  // Otherwise, a GET request is made to the Users admin endpoint of the backend. If this request fails, the plants state variable is updated with an appropriate message.
+  // Otherwise, a sorted copy is created of the plants array returned from the Plants admin endpoint. The user array returned from the Users admin endpoint is iterated through, and for each user the copied plants array is iterated through.
+  // For each plant in the copied plants array, a check is performed on whether that plant's userID matches the userID of user of the current iteration of the users array. If so, that user's email is added to the plant as an 'email' property.
+  // Finally, the plants state variable is updated with the value of the copied plants array.
   useEffect(() => {
     document.title = "Plants | Demeter - The plant meter";
 
@@ -51,7 +60,7 @@ export default function AllPlantsAdmin(props) {
                 })
                 .catch((err) => {
                   setPlants(
-                    "There was an error retrieving your plant data. Please try again later."
+                    "There was an error retrieving the plant data. Please try again later."
                   );
                 });
             } else {
@@ -60,7 +69,7 @@ export default function AllPlantsAdmin(props) {
           })
           .catch((err) => {
             setPlants(
-              "There was an error retrieving your plant data. Please try again later."
+              "There was an error retrieving the plant data. Please try again later."
             );
           });
       } else {

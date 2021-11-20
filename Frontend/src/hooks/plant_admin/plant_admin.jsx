@@ -11,6 +11,8 @@ export default function PlantAdmin(props) {
   const { getLogin, wideView } = props;
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
 
+  // State variables for the plant details form, whether or not the fields of this form are modifiable, the statuses of these fields' associated requests, and whether these statuses are being shown.
+  //State variables are also created for the plant type, plant image, user ID, user email, Arduino token regeneration status and whether that status is being shown, sensor data readings, and plant delete status and whether that status is being shown.
   const [form, setForm] = useState({
       name: "",
       plantID: window.location.pathname.substr(startIndex),
@@ -30,6 +32,17 @@ export default function PlantAdmin(props) {
     [showDeleteStatus, setShowDeleteStatus] = useState(false),
     [deleteStatus, setDeleteStatus] = useState("-");
 
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately, then performs a check on whether the user is logged in and an administrator on the UI. If not, the user is returned to the root path.
+  // Otherwise, two GET requests are made - one to the backend Plants admin endpoint and one to the backend SensorData admin endpoint.
+
+  // The GET request to the Plants admin endpoint proceeds as follows:
+  // If the request is unsuccessful, the user is returned to the root path Otherwise, the response array is iterated through to find a plant with a matching plant ID. If no such plant is found, the user is returned to the root path.
+  // Otherwise, a GET request is performed to the backend Users admin endpoint. If this request is unsuccessful, the user is returned to the root path.
+  // Otherwise, the response users array is iterated through to find a user with a user ID matching that of the matching plant ID. If no such user is found, the user is returned to the root path.
+  // Otherwise, title of the web page is updated appropriately, the 'email' state variable is set to that of the found user, the 'name' field of the form state variable is set to the plant's name, the plantImage state variable is set to either the found plant's image or a default one depending if it exists, the plantType state variable is set to the plant's type, and the userID state variable is set to that of the found user.
+
+  // The GET request to the SensorData admin endpoint proceeds as follows:
+  // If the request is unsuccessful, an appropriate error message is shown in the sensor data table. Otherwise, the sensor readings response data array is sorted according to the timestamp of each reading, then the array is assigned to the sensorReadings state variable.
   useEffect(() => {
     document.title = "Demeter - The plant meter";
 
@@ -45,6 +58,8 @@ export default function PlantAdmin(props) {
             },
           })
           .then((res) => {
+            let plantFound = false;
+
             res.data.forEach((plant) => {
               if (plant.plantID === form.plantID) {
                 axios
@@ -57,11 +72,17 @@ export default function PlantAdmin(props) {
                     }
                   )
                   .then((res) => {
+                    let userFound = false;
                     res.data.forEach((user) => {
                       if (user.id === plant.userID) {
                         setEmail(user.email);
+                        userFound = true;
                       }
                     });
+
+                    if (!userFound) {
+                      window.location.pathname = "/";
+                    }
 
                     document.title = `${plant.name} | Demeter - The plant meter`;
 
@@ -81,8 +102,14 @@ export default function PlantAdmin(props) {
                   .catch((err) => {
                     window.location.pathname = "/";
                   });
+
+                plantFound = true;
               }
             });
+
+            if (!plantFound) {
+              window.location.pathname = "/";
+            }
           })
           .catch((err) => {
             window.location.pathname = "/";
@@ -107,7 +134,7 @@ export default function PlantAdmin(props) {
           })
           .catch((err) => {
             setSensorReadings(
-              "There was an error retrieving your sensor data. Please try again later."
+              "There was an error retrieving the sensor data. Please try again later."
             );
           });
       } else {
@@ -120,6 +147,7 @@ export default function PlantAdmin(props) {
     // eslint-disable-next-line
   }, []);
 
+  // Updates the form state variable with the appropriate input field whenever a form input field is updated.
   const handleChange = (e) => {
     const input = e.target;
     const tempForm = _.cloneDeep(form);
@@ -129,6 +157,11 @@ export default function PlantAdmin(props) {
     setForm(tempForm);
   };
 
+  // Handles the submit event of the plant details form. This is called whenever a field of this page is edited and updated. In addition to the event parameter, the status and setStatus state variables of the field in question are passed in, allowing this function to be used in multiple parts of the page.
+  // The status parameter is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a GET request is made to the backend individual user plants admin endpoint using the userID state variable. If this request is unsuccessful, an appropriate error message is shown.
+  // Otherwise, the returned individual user plants array is iterated through, with a check being done on each plant to determine whether the new plant name matches that of any of the user's existing plants. If a match is found an appropriate error message is shown.
+  // Otherwise, a PUT request is made to the backend update plant admin endpoint. If this request is successful the page is reloaded. Otherwise, an appropriate error message is shown.
   const handleSubmit = (e, setStatus, setShowStatus) => {
     e.preventDefault();
     setStatus("Please wait...");
@@ -198,6 +231,8 @@ export default function PlantAdmin(props) {
     }
   };
 
+  // Attempts to delete the plant's image. The delete image status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a DELETE request is made to the backend delete plant image admin endpoint. If this request is successful, the page is reloaded. Otherwise, an appropriate error message is shown.
   const deleteImage = () => {
     setImageStatus("Please wait...");
     setShowImageStatus(true);
@@ -228,6 +263,8 @@ export default function PlantAdmin(props) {
     }
   };
 
+  // Attempts to regenerate the plant's Arduino token. The token regeneration status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a POST request is made to the backend Plant new token admin endpoint. If this request is successful, an appropriate message is shown. Otherwise, an appropriate error message is shown.
   const regenerateArduinoToken = () => {
     setTokenStatus("Please wait...");
     setShowTokenStatus(true);
@@ -263,6 +300,8 @@ export default function PlantAdmin(props) {
     }
   };
 
+  // Attempts to delete the plant. The delete plant status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Otherwise, a DELETE request is made to the backend delete plant admin endpoint. If this request is successful, the user is navigated back to the previous page. Otherwise, an appropriate error message is shown.
   const deletePlant = () => {
     setDeleteStatus("Please wait...");
     setShowDeleteStatus(true);

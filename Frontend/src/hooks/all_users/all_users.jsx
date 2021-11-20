@@ -5,8 +5,13 @@ import "./all_users.css";
 
 export default function AllUsers(props) {
   const { getLogin, wideView } = props;
+
+  // State variable for Demeter's users. Initially set to 'Loading users...' while the users are being fetched from the backend.
   const [users, setUsers] = useState("Loading users...");
 
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately, then performs a check on whether the user is logged in and an administrator on the UI. If not, the user is returned to the root path.
+  // Otherwise, a GET request is made to Users admin endpoint of the backend. If this request is unsuccessful, the users state variable is set to an appropriate error message.
+  // Otherwise, the users state variable is updated with the sorted value of the returned users array.
   useEffect(() => {
     document.title = "Users | Demeter - The plant meter";
 
@@ -29,7 +34,6 @@ export default function AllUsers(props) {
                   emailB = b.email;
                 return emailA < emailB ? -1 : emailA > emailB ? 1 : 0;
               });
-              console.log(sortedUsers);
               setUsers(sortedUsers);
             } else {
               setUsers("No current users.");
