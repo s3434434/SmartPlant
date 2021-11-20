@@ -10,6 +10,8 @@ export default function User(props) {
   const { getLogin, logOut, wideView } = props;
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
 
+  // State variables for the user role, user details form and user password form. State variables are also created for whether or not these forms and state variables are currently modifiable, the statuses of their associated requests, and whether these statuses are being shown.
+  // A state variable is also created for the user's plants.
   const [role, setRole] = useState("Loading..."),
     [detailsForm, setDetailsForm] = useState({
       id: window.location.pathname.substr(startIndex),
@@ -42,6 +44,17 @@ export default function User(props) {
     [deleteStatus, setDeleteStatus] = useState("-"),
     [plants, setPlants] = useState("Loading plants...");
 
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately, then performs a check on whether the user is logged in and an administrator on the UI. If not, the user is returned to the root path.
+  // Otherwise, two GET requests are made - one to the backend Plants admin endpoint and one to the backend SensorData admin endpoint.
+
+  // The GET request to the Plants admin endpoint proceeds as follows:
+  // If the request is unsuccessful, the user is returned to the root path Otherwise, the response array is iterated through to find a plant with a matching plant ID. If no such plant is found, the user is returned to the root path.
+  // Otherwise, a GET request is performed to the backend Users admin endpoint. If this request is unsuccessful, the user is returned to the root path.
+  // Otherwise, the response users array is iterated through to find a user with a user ID matching that of the matching plant ID. If no such user is found, the user is returned to the root path.
+  // Otherwise, title of the web page is updated appropriately, the 'email' state variable is set to that of the found user, the 'name' field of the form state variable is set to the plant's name, the plantImage state variable is set to either the found plant's image or a default one depending if it exists, the plantType state variable is set to the plant's type, and the userID state variable is set to that of the found user.
+
+  // The GET request to the SensorData admin endpoint proceeds as follows:
+  // If the request is unsuccessful, an appropriate error message is shown in the sensor data table. Otherwise, the sensor readings response data array is sorted according to the timestamp of each reading, then the array is assigned to the sensorReadings state variable.
   useEffect(() => {
     document.title = "Demeter - The plant meter";
 

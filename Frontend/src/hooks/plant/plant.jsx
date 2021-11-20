@@ -52,10 +52,10 @@ export default function Plant(props) {
 
   // The GET request to the Plants endpoint proceeds as follows:
   // If the request is unsuccessful, the user is returned to the root path Otherwise, the response array is iterated through to find a plant with a matching plant ID. If no such plant is found, the user is returned to the root path.
-  // Otherwise, the title of the web page is set appropriately, the 'name' field of the form state variable is set to the plant's name, the plantImage state variable is set to either the found plant's image or a default one depending if it exists, and the plantType state is set appropriately.
+  // Otherwise, the title of the web page is updated appropriately, the 'name' field of the form state variable is set to the plant's name, the plantImage state variable is set to either the found plant's image or a default one depending if it exists, and the plantType state variable is set to the plant's type.
 
   // The GET request to the SensorData endpoint proceeds as follows:
-  // If the request is unsuccessful, an appropriate error message is show in the sensor data table. Otherwise, the sensor readings response data array is sorted according to the timestamp of each reading, then the array is assigned to the sensorReadings state variable.
+  // If the request is unsuccessful, an appropriate error message is shown in the sensor data table. Otherwise, the sensor readings response data array is sorted according to the timestamp of each reading, then the array is assigned to the sensorReadings state variable.
   useEffect(() => {
     document.title = "Demeter - The plant meter";
 
@@ -182,7 +182,7 @@ export default function Plant(props) {
     }
   };
 
-  // Fetches the Arduino token from the backend and shows it to the user. This is done by first checking if the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Fetches the Arduino token from the backend and shows it to the user. The Arduino token status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
   // Otherwise, a GET request is made to the plant token endpoint.  If this request is successful, the arduinoToken state variable is updated and shown. Otherwise, an appropriate error message is shown.
   const fetchArduinoToken = () => {
     setTokenStatus("Please wait...");
@@ -215,7 +215,7 @@ export default function Plant(props) {
     }
   };
 
-  // Attempts to delete the plant.  This is done by first checking if the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Attempts to delete the plant. The delete plant status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
   // Otherwise, a DELETE request is made to the backend delete plant endpoint.  If this request is successful, the user is navigated to the root path. Otherwise, an appropriate error message is shown.
   const deletePlant = () => {
     setDeleteStatus("Please wait...");
