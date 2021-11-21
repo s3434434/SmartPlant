@@ -9,7 +9,10 @@ import "./plant.css";
 
 export default function Plant(props) {
   const { getLogin, wideView } = props;
+
+  // Constant for the plant ID from the URL path.
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
+  const plantID = window.location.pathname.substr(startIndex);
 
   // Constant for a file reader used for the upload of image files. The FileReader's onload function is set to parse the file into base 64, then update the base64ImgString of the form state variable.
   const fileReader = new FileReader();
@@ -29,7 +32,6 @@ export default function Plant(props) {
   const [form, setForm] = useState({
       name: "",
       base64ImgString: "",
-      plantID: window.location.pathname.substr(startIndex),
     }),
     [nameModifiable, setNameModifiable] = useState(false),
     [imageModifiable, setImageModifiable] = useState(false),
@@ -72,7 +74,7 @@ export default function Plant(props) {
           let plantFound = false;
 
           res.data.forEach((plant) => {
-            if (plant.plantID === form.plantID) {
+            if (plant.plantID === plantID) {
               document.title = `${plant.name} | Demeter - The plant meter`;
 
               let tempForm = _.cloneDeep(form);
@@ -101,7 +103,7 @@ export default function Plant(props) {
 
       axios
         .get(
-          `https://smart-plant.azurewebsites.net/api/SensorData/${form.plantID}`,
+          `https://smart-plant.azurewebsites.net/api/SensorData/${plantID}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -144,7 +146,7 @@ export default function Plant(props) {
 
   // Handles the submit event of the plant details form. This is called whenever a field of this page is edited and updated. In addition to the event parameter, the status and setStatus state variables of the field in question are passed in, allowing this function to be used in multiple parts of the page.
   // The status parameter is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
-  // Otherwise, a PUT request is made to the backend update plant endpoint. If this request is successful, the page is reloaded. Otherwise, an appropriate error message is shown.
+  // Otherwise, a PUT request is made to the backend update plant endpoint using the plant details form state variable and the plant ID from the URL path. If this request is successful, the page is reloaded. Otherwise, an appropriate error message is shown.
   const handleSubmit = (e, setStatus, setShowStatus) => {
     e.preventDefault();
     setStatus("Please wait...");
@@ -153,8 +155,11 @@ export default function Plant(props) {
     const login = getLogin();
     if (login !== null) {
       const { token } = login;
+      const formData = _.cloneDeep(form);
+      formData.plantID = plantID;
+
       axios
-        .put("https://smart-plant.azurewebsites.net/api/Plants", form, {
+        .put("https://smart-plant.azurewebsites.net/api/Plants", formData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -193,7 +198,7 @@ export default function Plant(props) {
       const { token } = login;
       axios
         .get(
-          `https://smart-plant.azurewebsites.net/api/Plants/Token/${form.plantID}`,
+          `https://smart-plant.azurewebsites.net/api/Plants/Token/${plantID}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -226,7 +231,7 @@ export default function Plant(props) {
       const { token } = login;
       axios
         .delete(
-          `https://smart-plant.azurewebsites.net/api/Plants?plantID=${form.plantID}`,
+          `https://smart-plant.azurewebsites.net/api/Plants?plantID=${plantID}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

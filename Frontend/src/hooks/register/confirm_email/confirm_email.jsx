@@ -13,27 +13,32 @@ export default function ConfirmEmail(props) {
   // State variable for whether the email was confirmed successfully. Initially set to null while the backend request is made.
   const [confirmationSuccessful, setConfirmationSuccessful] = useState(null);
 
-  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately, ensures the user is logged out on the UI, and then makes a PUT request to the backend's ConfirmEmail endpoint.
-  // If this request is successful, the web page title is updated appropriately and the confirmationSuccessful state variable is set to true. Otherwise, the confirmationSuccessful state variable is set to false.
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately and ensures the user is logged out on the UI. A check is then performed on whether the 'email' and 'token' URL parameters are set. If not, the user is returned to the root path.
+  // Otherwise, a PUT request is made to the backend's ConfirmEmail endpoint. If this request is successful, the web page title is updated appropriately and the confirmationSuccessful state variable is set to true. Otherwise, the confirmationSuccessful state variable is set to false.
   useEffect(() => {
     document.title = "Demeter - The plant meter";
 
     logOut();
 
-    axios
-      .put("https://smart-plant.azurewebsites.net/api/Account/ConfirmEmail", {
-        email: email,
-        token: token,
-      })
-      .then((res) => {
-        document.title =
-          "Email confirmation successful | Demeter - The plant meter";
+    if (email !== null && token !== null) {
+      axios
+        .put("https://smart-plant.azurewebsites.net/api/Account/ConfirmEmail", {
+          email: email,
+          token: token,
+        })
+        .then((res) => {
+          document.title =
+            "Email confirmation successful | Demeter - The plant meter";
 
-        setConfirmationSuccessful(true);
-      })
-      .catch((err) => {
-        setConfirmationSuccessful(false);
-      });
+          setConfirmationSuccessful(true);
+        })
+        .catch((err) => {
+          setConfirmationSuccessful(false);
+        });
+    } else {
+      window.location.pathname = "/";
+    }
+
     // eslint-disable-next-line
   }, []);
 

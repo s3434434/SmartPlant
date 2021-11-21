@@ -7,9 +7,13 @@ export default function PlantAdded(props) {
   // Sets a constant for the 'token' URL parameter.
   const token = new URLSearchParams(search).get("token");
 
-  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately. A check is performed on whether the 'token' URL parameter is set. If not, the user is returned to the root path.
   useEffect(() => {
     document.title = "Plant added successfully | Demeter - The plant meter";
+
+    if (token === null) {
+      window.location.pathname = "/";
+    }
     // eslint-disable-next-line
   }, []);
 

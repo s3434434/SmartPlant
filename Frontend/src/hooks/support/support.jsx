@@ -14,9 +14,13 @@ export default function Support(props) {
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("-");
 
-  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately. A check is then performed on whether the user is logged in on the UI. If not, the user is returned to the root path.
   useEffect(() => {
     document.title = "Support | Demeter - The plant meter";
+
+    if (getLogin() === null) {
+      window.location.pathname = "/";
+    }
 
     // eslint-disable-next-line
   }, []);

@@ -355,7 +355,12 @@ function App() {
               exact
               path="/logout"
               render={(props) => (
-                <Logout {...props} logOut={logOut} wideView={wideView} />
+                <Logout
+                  {...props}
+                  getLogin={getLogin}
+                  logOut={logOut}
+                  wideView={wideView}
+                />
               )}
             />
             <Route
