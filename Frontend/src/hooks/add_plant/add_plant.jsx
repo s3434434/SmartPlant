@@ -58,7 +58,7 @@ export default function AddPlant(props) {
     // eslint-disable-next-line
   }, []);
 
-  // Updates the form state variable with the appropriate input field whenever a form input field is updated. If the input field is the file upload input for the image, the FileReader's readAsDataURL method is called.
+  // Updates the form state variable with the appropriate input field whenever a form input field is updated. If the input field is the file upload input for the image, the FileReader's readAsDataURL function is called.
   const handleChange = (e) => {
     const input = e.target;
 
