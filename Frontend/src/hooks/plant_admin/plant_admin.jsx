@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
-import _ from "lodash";
 import axios from "axios";
 import container_no_image from "../../assets/images/container_no_image.png";
 import SensorPagination from "../sensor_pagination/sensor_pagination";
@@ -9,14 +8,14 @@ import "./plant_admin.css";
 
 export default function PlantAdmin(props) {
   const { getLogin, wideView } = props;
-  const startIndex = window.location.pathname.lastIndexOf("/") + 1;
 
-  // State variables for the plant details form, whether or not the fields of this form are modifiable, the statuses of these fields' associated requests, and whether these statuses are being shown.
-  //State variables are also created for the plant type, plant image, user ID, user email, Arduino token regeneration status and whether that status is being shown, sensor data readings, and plant delete status and whether that status is being shown.
-  const [form, setForm] = useState({
-      name: "",
-      plantID: window.location.pathname.substr(startIndex),
-    }),
+  // Constant for the plant ID from the URL path.
+  const startIndex = window.location.pathname.lastIndexOf("/") + 1;
+  const plantID = window.location.pathname.substr(startIndex);
+
+  // State variables for the plant name, whether or not the name is modifiable, the status of the associated request, and whether the status is being shown. State variables are also created for the plant image, the status of the associated delete request, and whether the status is being shown.
+  //State variables are also created for the plant type, user ID, user email, Arduino token regeneration status and whether that status is being shown, sensor data readings, and plant delete status and whether that status is being shown.
+  const [name, setName] = useState(""),
     [nameModifiable, setNameModifiable] = useState(false),
     [showNameStatus, setShowNameStatus] = useState(false),
     [nameStatus, setNameStatus] = useState("-"),
@@ -39,7 +38,7 @@ export default function PlantAdmin(props) {
   // If the request is unsuccessful, the user is returned to the root path Otherwise, the response array is iterated through to find a plant with a matching plant ID. If no such plant is found, the user is returned to the root path.
   // Otherwise, a GET request is performed to the backend Users admin endpoint. If this request is unsuccessful, the user is returned to the root path.
   // Otherwise, the response users array is iterated through to find a user with a user ID matching that of the matching plant ID. If no such user is found, the user is returned to the root path.
-  // Otherwise, title of the web page is updated appropriately, the 'email' state variable is set to that of the found user, the 'name' field of the form state variable is set to the plant's name, the plantImage state variable is set to either the found plant's image or a default one depending if it exists, the plantType state variable is set to the plant's type, and the userID state variable is set to that of the found user.
+  // Otherwise, title of the web page is updated appropriately, the 'email' state variable is set to that of the found user, the 'name' state variable is set to the plant's name, the plantImage state variable is set to either the found plant's image or a default one depending if it exists, the plantType state variable is set to the plant's type, and the userID state variable is set to that of the found user.
 
   // The GET request to the SensorData admin endpoint proceeds as follows:
   // If the request is unsuccessful, an appropriate error message is shown in the sensor data table. Otherwise, the sensor readings response data array is sorted according to the timestamp of each reading, then the array is assigned to the sensorReadings state variable.
@@ -61,7 +60,7 @@ export default function PlantAdmin(props) {
             let plantFound = false;
 
             res.data.forEach((plant) => {
-              if (plant.plantID === form.plantID) {
+              if (plant.plantID === plantID) {
                 axios
                   .get(
                     "https://smart-plant.azurewebsites.net/api/Admin/Users",
@@ -86,9 +85,7 @@ export default function PlantAdmin(props) {
 
                     document.title = `${plant.name} | Demeter - The plant meter`;
 
-                    let tempForm = _.cloneDeep(form);
-                    tempForm.name = plant.name;
-                    setForm(tempForm);
+                    setName(plant.name);
 
                     let image = container_no_image;
                     if (plant.imgurURL !== null) {
@@ -117,7 +114,7 @@ export default function PlantAdmin(props) {
 
         axios
           .get(
-            `https://smart-plant.azurewebsites.net/api/Admin/SensorData/${form.plantID}`,
+            `https://smart-plant.azurewebsites.net/api/Admin/SensorData/${plantID}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -147,25 +144,19 @@ export default function PlantAdmin(props) {
     // eslint-disable-next-line
   }, []);
 
-  // Updates the form state variable with the appropriate input field whenever a form input field is updated.
-  const handleChange = (e) => {
-    const input = e.target;
-    const tempForm = _.cloneDeep(form);
-
-    tempForm[input.name] = input.value;
-
-    setForm(tempForm);
+  // Updates the name state variable  whenever the name input field is updated.
+  const handleNameChange = (e) => {
+    setName(e.target.value);
   };
 
-  // Handles the submit event of the plant details form. This is called whenever a field of this page is edited and updated. In addition to the event parameter, the status and setStatus state variables of the field in question are passed in, allowing this function to be used in multiple parts of the page.
-  // The status parameter is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
+  // Handles the submit event of the plant name form. The status parameter is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
   // Otherwise, a GET request is made to the backend individual user plants admin endpoint using the userID state variable. If this request is unsuccessful, an appropriate error message is shown.
   // Otherwise, the returned individual user plants array is iterated through, with a check being done on each plant to determine whether the new plant name matches that of any of the user's existing plants. If a match is found an appropriate error message is shown.
-  // Otherwise, a PUT request is made to the backend update plant admin endpoint. If this request is successful the page is reloaded. Otherwise, an appropriate error message is shown.
-  const handleSubmit = (e, setStatus, setShowStatus) => {
+  // Otherwise, a PUT request is made to the backend update plant admin endpoint using the name state variable and the plant ID from the URL path. If this request is successful the page is reloaded. Otherwise, an appropriate error message is shown.
+  const handleNameSubmit = (e) => {
     e.preventDefault();
-    setStatus("Please wait...");
-    setShowStatus(true);
+    setNameStatus("Please wait...");
+    setShowNameStatus(true);
 
     const login = getLogin();
     if (login !== null) {
@@ -183,7 +174,7 @@ export default function PlantAdmin(props) {
         .then((res) => {
           let nameExists = false;
           res.data.forEach((plant) => {
-            if (plant.name === form.name) {
+            if (plant.name === name) {
               nameExists = true;
             }
           });
@@ -192,7 +183,7 @@ export default function PlantAdmin(props) {
             axios
               .put(
                 "https://smart-plant.azurewebsites.net/api/Admin/Plants",
-                form,
+                { name: name, plantID: plantID },
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,
@@ -214,17 +205,19 @@ export default function PlantAdmin(props) {
                   errorMessage = errors["Name Taken"][0];
                 }
 
-                setStatus(errorMessage);
+                setNameStatus(errorMessage);
               });
           } else {
-            setStatus(`A plant with this name already exists for ${email}.`);
+            setNameStatus(
+              `A plant with this name already exists for ${email}.`
+            );
           }
         })
         .catch((err) => {
-          setStatus("Server error. Please try again later.");
+          setNameStatus("Server error. Please try again later.");
         });
     } else {
-      setStatus("You are not logged in.");
+      setNameStatus("You are not logged in.");
       setTimeout(() => {
         window.location.pathname = "/";
       }, 500);
@@ -242,7 +235,7 @@ export default function PlantAdmin(props) {
       const { token } = login;
       axios
         .delete(
-          `https://smart-plant.azurewebsites.net/api/Admin/Plants/Image?userID=${userID}&plantID=${form.plantID}`,
+          `https://smart-plant.azurewebsites.net/api/Admin/Plants/Image?userID=${userID}&plantID=${plantID}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -271,8 +264,8 @@ export default function PlantAdmin(props) {
 
     const login = getLogin();
     if (login !== null) {
-      const { token } = login,
-        plantID = form.plantID;
+      const { token } = login;
+
       axios
         .post(
           `https://smart-plant.azurewebsites.net/api/Admin/Plants/NewToken/${userID}/${plantID}`,
@@ -311,7 +304,7 @@ export default function PlantAdmin(props) {
       const { token } = login;
       axios
         .delete(
-          `https://smart-plant.azurewebsites.net/api/Admin/Plants?plantID=${form.plantID}`,
+          `https://smart-plant.azurewebsites.net/api/Admin/Plants?plantID=${plantID}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -370,9 +363,7 @@ export default function PlantAdmin(props) {
 
           <form
             className={wideView ? "m-auto" : "m-auto px-2"}
-            onSubmit={(e) => {
-              handleSubmit(e, setNameStatus, setShowNameStatus);
-            }}
+            onSubmit={handleNameSubmit}
           >
             {nameModifiable ? (
               <>
@@ -384,8 +375,8 @@ export default function PlantAdmin(props) {
                     className="form-control mb-3"
                     name="name"
                     type="text"
-                    value={form.name}
-                    onChange={handleChange}
+                    value={name}
+                    onChange={handleNameChange}
                     required
                   />
                 </div>
@@ -411,7 +402,7 @@ export default function PlantAdmin(props) {
                     ></FontAwesomeIcon>
                   </div>
                 </div>
-                <h1 className="text-center gold m-0 mb-2 p-0">{form.name}</h1>
+                <h1 className="text-center gold m-0 mb-2 p-0">{name}</h1>
                 <h4 className="text-center m-0 p-0" style={{ color: "white" }}>
                   {plantType}
                 </h4>

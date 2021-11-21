@@ -29,10 +29,13 @@ import AllPlantsAdmin from "./hooks/all_plants_admin/all_plants_admin";
 import PlantAdmin from "./hooks/plant_admin/plant_admin";
 
 function App() {
-  // State variables for whether the user is logged in, whether the user is an administrator and whether the Browser's width is greater than 1199 px. These are used to determine whether certain navbar items are shown, whether particular pages are navigated to, and how the responsive UI behaves.
+  // Constant for the width of a 'wide' screen in pixels.
+  const WIDE_SCREEN_PX = 1200;
+
+  // State variables for whether the user is logged in, whether the user is an administrator and whether the Browser's width is 'wide'. These are used to determine whether certain navbar items are shown, whether particular pages are navigated to, and how the responsive UI behaves.
   const [loggedIn, setLoggedIn] = useState(false),
     [isAdmin, setIsAdmin] = useState(false),
-    [wideView, setWideView] = useState(window.innerWidth > 1199);
+    [wideView, setWideView] = useState(window.innerWidth >= WIDE_SCREEN_PX);
 
   // Attempts to retrieve the login data (JWT, admin status and JWT expiry) stored in localStorage. A check is first performed as to whether the JWT has expired - if so, the login data is removed. If the login data has expired or does not exist, null is returned.
   const getLogin = () => {
@@ -52,7 +55,7 @@ function App() {
     return login;
   };
 
-  // useEffect hook that runs a single time when this component loads. Checks if the user is logged in, then sets the loggedIn and admin state variables appropriately. A window listener is then added to update the wideView state variable whenever the window's size is changed.
+  // useEffect hook that runs a single time when this component loads. Checks if the user is logged in, then sets the loggedIn and admin state variables appropriately. A window listener is then added to update the wideView state variable whenever the window's size is changed, based on whether the window's width is 'wide'.
   useEffect(() => {
     const login = getLogin();
     setLoggedIn(login !== null);
@@ -63,7 +66,7 @@ function App() {
     window.addEventListener(
       "resize",
       function () {
-        setWideView(window.innerWidth > 1199);
+        setWideView(window.innerWidth >= WIDE_SCREEN_PX);
       },
       true
     );
@@ -355,7 +358,12 @@ function App() {
               exact
               path="/logout"
               render={(props) => (
-                <Logout {...props} logOut={logOut} wideView={wideView} />
+                <Logout
+                  {...props}
+                  getLogin={getLogin}
+                  logOut={logOut}
+                  wideView={wideView}
+                />
               )}
             />
             <Route

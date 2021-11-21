@@ -8,20 +8,21 @@ import "./user.css";
 
 export default function User(props) {
   const { getLogin, logOut, wideView } = props;
+
+  // Constant for the user ID from the URL path.
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
+  const userID = window.location.pathname.substr(startIndex);
 
   // State variables for the user role, user details form and user password form. State variables are also created for whether or not these forms and state variables are currently modifiable, the statuses of their associated requests, and whether these statuses are being shown.
   // A state variable is also created for the user's plants.
   const [role, setRole] = useState("Loading..."),
     [detailsForm, setDetailsForm] = useState({
-      id: window.location.pathname.substr(startIndex),
       email: "",
       phoneNumber: "",
       firstName: "",
       lastName: "",
     }),
     [passwordForm, setPasswordForm] = useState({
-      id: window.location.pathname.substr(startIndex),
       newPassword: "",
       confirmNewPassword: "",
     }),
@@ -68,7 +69,7 @@ export default function User(props) {
       if (admin) {
         axios
           .get(
-            `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.id}`,
+            `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${userID}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -98,7 +99,7 @@ export default function User(props) {
               .then((res) => {
                 let roleFound = false;
                 res.data.forEach((foundUser) => {
-                  if (foundUser.id === detailsForm.id) {
+                  if (foundUser.id === userID) {
                     setRole(foundUser.role);
                     roleFound = true;
                   }
@@ -125,7 +126,7 @@ export default function User(props) {
           .then((res) => {
             let userPlants = [];
             res.data.forEach((plant) => {
-              if (plant.userID === detailsForm.id) {
+              if (plant.userID === userID) {
                 userPlants.push(plant);
               }
             });
@@ -176,7 +177,7 @@ export default function User(props) {
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/Admin/User/Role",
-          { id: detailsForm.id, role: role },
+          { id: userID, role: role },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -208,7 +209,7 @@ export default function User(props) {
   };
 
   // Handles the submit event of the user details form. The user details status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
-  // Otherwise, a PUT request is made to the backend update user details admin endpoint. If this request is unsuccessful, an appropriate error message is shown. Otherwise, the page is reloaded.
+  // Otherwise, a PUT request is made to the backend update user details admin endpoint with the user details form state variable and the user ID from the URL path. If this request is unsuccessful, an appropriate error message is shown. Otherwise, the page is reloaded.
   const handleDetailsSubmit = (e, setStatus, setShowStatus) => {
     e.preventDefault();
     setStatus("Please wait...");
@@ -217,10 +218,12 @@ export default function User(props) {
     const login = getLogin();
     if (login !== null) {
       const { token } = login;
+      const detailsFormData = _.cloneDeep(detailsForm);
+      detailsFormData.id = userID;
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/Admin/User",
-          detailsForm,
+          detailsFormData,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -268,7 +271,7 @@ export default function User(props) {
 
   // Handles the submit event of the password form. The password form request status is set appropriately, then a check is performed on whether the user is logged in. If not, an appropriate error message is shown and the user is returned to the root path.
   // Otherwise, a check is performed on whether the form's 'newPassword' and 'confirmNewPassword' fields match. If not, an appropriate error message is shown.
-  // Otherwise, a PUT request is made to the backend change password admin endpoint. If this request is successful, an appropriate message is shown and the page is reloaded. Otherwise, an appropriate error message is shown.
+  // Otherwise, a PUT request is made to the backend change password admin endpoint with the password form state variable and the user ID from the URL path. If this request is successful, an appropriate message is shown and the page is reloaded. Otherwise, an appropriate error message is shown.
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
     setPasswordStatus("Please wait...");
@@ -279,10 +282,12 @@ export default function User(props) {
       setPasswordStatus("New passwords do not match.");
     } else if (login !== null) {
       const { token } = login;
+      const passwordFormData = _.cloneDeep(passwordForm);
+      passwordFormData.id = userID;
       axios
         .put(
           "https://smart-plant.azurewebsites.net/api/Admin/User/Password",
-          passwordForm,
+          passwordFormData,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -329,7 +334,7 @@ export default function User(props) {
 
           axios
             .delete(
-              `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${detailsForm.id}`,
+              `https://smart-plant.azurewebsites.net/api/Admin/User?userID=${userID}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,

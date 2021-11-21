@@ -3,13 +3,17 @@ import { Link } from "react-router-dom";
 import "./logout.css";
 
 export default function Logout(props) {
-  const { logOut, wideView } = props;
+  const { getLogin, logOut, wideView } = props;
 
-  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately and ensures the user is logged out on the UI.
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately, then performs a check on whether the user in logged in. If so, the user is logged out on the UI. Otherwise, the user is returned to the root path.
   useEffect(() => {
     document.title = "Logout successful | Demeter - The plant meter";
 
-    logOut();
+    if (getLogin() !== null) {
+      logOut();
+    } else {
+      window.location.pathname = "/";
+    }
     // eslint-disable-next-line
   }, []);
 

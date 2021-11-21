@@ -21,11 +21,16 @@ export default function ResetPassword(props) {
   const [showStatus, setShowStatus] = useState(false);
   const [status, setStatus] = useState("-");
 
-  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately and ensures the user is logged out on the UI.
+  // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately and ensures the user is logged out on the UI. A check is performed on whether the 'token' and 'email' URL parameters are set. If not, the user is returned to the root path.
   useEffect(() => {
     document.title = "Reset password | Demeter - The plant meter";
 
     logOut();
+
+    if (token === null || email === null) {
+      window.location.pathname = "/";
+    }
+
     // eslint-disable-next-line
   }, []);
 
