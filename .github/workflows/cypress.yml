@@ -1,4 +1,4 @@
-name: Cypress Tests
+name: Web Application Integration Tests
 
 on:
   push:

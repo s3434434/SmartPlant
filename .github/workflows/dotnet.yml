@@ -1,8 +1,8 @@
-name: .NET
+name: API Unit Tests
 
 on:
   push:
-    branches: [ API ]
+    branches: [ API, master ]
 
 jobs:
   build:
