@@ -30,13 +30,15 @@ import AllPlantsAdmin from "./hooks/all_plants_admin/all_plants_admin";
 import PlantAdmin from "./hooks/plant_admin/plant_admin";
 
 function App() {
-  // Constant for the width of a 'wide' screen in pixels.
-  const WIDE_SCREEN_PX = 1200;
+  // Constant for the width of a 'wide' screen in pixels, and the width of a screen where the full navbar is showing.
+  const WIDE_SCREEN_PX = 1200,
+    FULL_NAV_PX = 768;
 
-  // State variables for whether the user is logged in, whether the user is an administrator and whether the Browser's width is 'wide'. These are used to determine whether certain navbar items are shown, whether particular pages are navigated to, and how the responsive UI behaves.
+  // State variables for whether the user is logged in, whether the user is an administrator, whether the Browser's window's width is 'wide', and whether the it is a width where the full navbar is showing. These are used to determine whether certain navbar items are shown, whether particular pages are navigated to, and how the responsive UI behaves.
   const [loggedIn, setLoggedIn] = useState(false),
     [isAdmin, setIsAdmin] = useState(false),
-    [wideView, setWideView] = useState(window.innerWidth >= WIDE_SCREEN_PX);
+    [wideView, setWideView] = useState(window.innerWidth >= WIDE_SCREEN_PX),
+    [fullNav, setFullNav] = useState(window.innerWidth >= FULL_NAV_PX);
 
   // Attempts to retrieve the login data (JWT, admin status and JWT expiry) stored in localStorage. A check is first performed as to whether the JWT has expired - if so, the login data is removed. If the login data has expired or does not exist, null is returned.
   const getLogin = () => {
@@ -56,7 +58,7 @@ function App() {
     return login;
   };
 
-  // useEffect hook that runs a single time when this component loads. Checks if the user is logged in, then sets the loggedIn and admin state variables appropriately. A window listener is then added to update the wideView state variable whenever the window's size is changed, based on whether the window's width is 'wide'.
+  // useEffect hook that runs a single time when this component loads. Checks if the user is logged in, then sets the loggedIn and admin state variables appropriately. A window listener is then added to update the wideView and fullNav state variables whenever the window's size is changed, based on whether the window's width is 'wide', and whether window's width is such that the full navbar is showing.
   useEffect(() => {
     const login = getLogin();
     setLoggedIn(login !== null);
@@ -68,6 +70,7 @@ function App() {
       "resize",
       function () {
         setWideView(window.innerWidth >= WIDE_SCREEN_PX);
+        setFullNav(window.innerWidth >= FULL_NAV_PX);
       },
       true
     );
@@ -86,11 +89,15 @@ function App() {
   return (
     <div className="bg-image">
       <nav
-        className="navbar navbar-expand-md sticky-top navbar-dark ps-2 pe-5 py-0"
+        className={
+          fullNav
+            ? "navbar navbar-expand-md sticky-top navbar-dark py-0 ps-4 overflow-hidden"
+            : "navbar navbar-expand-md sticky-top navbar-dark py-0 overflow-hidden"
+        }
         id="navbar"
       >
         <button
-          className="navbar-toggler"
+          className="navbar-toggler ms-2"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#nav-options"
@@ -99,16 +106,23 @@ function App() {
         </button>
         <div
           className="navbar-brand"
-          style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: fullNav ? "50% 50%" : "40% 60%",
+          }}
         >
-          <img id="nav-image" src={logo} alt="Demeter logo"></img>
-          <div className="navbar-title m-auto ms-0">
+          <img id="brand-image" src={logo} alt="Demeter logo"></img>
+          <div id="brand-title" className="m-auto ms-0">
             <h1 className="gold">Demeter</h1>
             <h4 className="gold">The Plant Meter</h4>
           </div>
         </div>
         <div
-          className="collapse navbar-collapse justify-content-start align-center ms-4"
+          className={
+            fullNav
+              ? "collapse navbar-collapse justify-content-start align-center ms-4"
+              : "collapse navbar-collapse justify-content-start align-center"
+          }
           id="nav-options"
         >
           <ul className="navbar-nav">
