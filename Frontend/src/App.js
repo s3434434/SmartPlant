@@ -112,7 +112,10 @@ function App() {
           }}
         >
           <img id="brand-image" src={logo} alt="Demeter logo"></img>
-          <div id="brand-title" className="m-auto ms-0">
+          <div
+            id="brand-title"
+            className={fullNav ? "m-auto ms-0" : "m-auto ms-0 me-3"}
+          >
             <h1 className="gold">Demeter</h1>
             <h4 className="gold">The Plant Meter</h4>
           </div>
