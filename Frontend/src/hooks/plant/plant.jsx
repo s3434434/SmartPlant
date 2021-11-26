@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import axios from "axios";
-import container_no_image from "../../assets/images/container_no_image.png";
 import SensorPagination from "../sensor_pagination/sensor_pagination";
 import "./plant.css";
 
@@ -81,7 +80,8 @@ export default function Plant(props) {
               tempForm.name = plant.name;
               setForm(tempForm);
 
-              let image = container_no_image;
+              let image =
+                "https://d3utxwpu6rqzip.cloudfront.net/container_no_image.png";
               if (plant.imgurURL !== null) {
                 image = plant.imgurURL;
               }

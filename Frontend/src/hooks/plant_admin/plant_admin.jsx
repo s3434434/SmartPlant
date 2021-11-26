@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import container_no_image from "../../assets/images/container_no_image.png";
 import SensorPagination from "../sensor_pagination/sensor_pagination";
 import "./plant_admin.css";
 
@@ -87,7 +86,8 @@ export default function PlantAdmin(props) {
 
                     setName(plant.name);
 
-                    let image = container_no_image;
+                    let image =
+                      "https://d3utxwpu6rqzip.cloudfront.net/container_no_image.png";
                     if (plant.imgurURL !== null) {
                       image = plant.imgurURL;
                     }
@@ -454,14 +454,20 @@ export default function PlantAdmin(props) {
             </div>
             <div
               className={
-                plantImage !== container_no_image
+                plantImage !==
+                "https://d3utxwpu6rqzip.cloudfront.net/container_no_image.png"
                   ? "text-center mt-3"
                   : "hidden-field"
               }
             >
               <button
                 className="btn btn-primary"
-                tabIndex={plantImage !== container_no_image ? "0" : "-1"}
+                tabIndex={
+                  plantImage !==
+                  "https://d3utxwpu6rqzip.cloudfront.net/container_no_image.png"
+                    ? "0"
+                    : "-1"
+                }
                 onClick={deleteImage}
               >
                 Delete image

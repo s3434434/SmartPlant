@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import container_no_image from "../../assets/images/container_no_image.png";
 import Pagination from "../pagination/pagination";
 import "./all_plants_admin.css";
 
@@ -98,7 +97,6 @@ export default function AllPlantsAdmin(props) {
           itemID="plantID"
           heading1="Name"
           heading2="Email"
-          defaultImage={container_no_image}
           itemTitle1="name"
           itemTitle2="email"
           path="plant-admin"

@@ -1,9 +1,5 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import office_plants from "../../assets/images/office_plants.webp";
-import plants_page from "../../assets/images/plants_page.png";
-import sensor_data from "../../assets/images/sensor_data.png";
-import support_page from "../../assets/images/support_page.png";
 import "./landing_page.css";
 
 export default function LandingPage(props) {
@@ -32,7 +28,7 @@ export default function LandingPage(props) {
         </p>
         <img
           className="landing-image m-auto mb-3"
-          src={office_plants}
+          src="https://d3utxwpu6rqzip.cloudfront.net/office_plants.webp"
           alt="Office plants"
         />
         <p>
@@ -45,7 +41,7 @@ export default function LandingPage(props) {
         </p>
         <img
           className="landing-image m-auto mb-3"
-          src={plants_page}
+          src="https://d3utxwpu6rqzip.cloudfront.net/plants_page.png"
           alt="Plants page"
         />
         <p>
@@ -56,7 +52,7 @@ export default function LandingPage(props) {
         </p>
         <img
           className="landing-image m-auto mb-3"
-          src={sensor_data}
+          src="https://d3utxwpu6rqzip.cloudfront.net/sensor_data.png"
           alt="Sensor data"
         />
         <p>
@@ -65,7 +61,7 @@ export default function LandingPage(props) {
         </p>
         <img
           className="landing-image m-auto mb-3"
-          src={support_page}
+          src="https://d3utxwpu6rqzip.cloudfront.net/support_page.png"
           alt="Support page"
         />
         <p className="text-center">

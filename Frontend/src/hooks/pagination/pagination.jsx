@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import container_no_image from "../../assets/images/container_no_image.png";
 import "./pagination.css";
 
 export default function Pagination(props) {
@@ -135,7 +134,7 @@ export default function Pagination(props) {
               {imageCol ? (
                 <th>
                   <img
-                    src={container_no_image}
+                    src="https://d3utxwpu6rqzip.cloudfront.net/container_no_image.png"
                     alt="Header spacer"
                     style={{ opacity: 0 }}
                   ></img>
@@ -159,7 +158,8 @@ export default function Pagination(props) {
                 const id = item[itemID],
                   title1 = item[itemTitle1],
                   title2 = item[itemTitle2];
-                let image = container_no_image;
+                let image =
+                  "https://d3utxwpu6rqzip.cloudfront.net/container_no_image.png";
                 if (item.imgurURL !== undefined) {
                   if (item.imgurURL !== null) {
                     image = item.imgurURL;

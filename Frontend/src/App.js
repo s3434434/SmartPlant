@@ -19,7 +19,6 @@ import AllPlants from "./hooks/all_plants/all_plants";
 import AddPlant from "./hooks/add_plant/add_plant";
 import PlantAdded from "./hooks/add_plant/plant_added/plant_added";
 import Plant from "./hooks/plant/plant";
-import logo from "./assets/images/logo.png";
 import PrivacyPolicy from "./hooks/privacy_policy/privacy_policy";
 import TermsOfUse from "./hooks/terms_of_use/terms_of_use";
 import Support from "./hooks/support/support";
@@ -111,7 +110,11 @@ function App() {
             gridTemplateColumns: fullNav ? "50% 50%" : "40% 60%",
           }}
         >
-          <img id="brand-image" src={logo} alt="Demeter logo"></img>
+          <img
+            id="brand-image"
+            src="https://d3utxwpu6rqzip.cloudfront.net/logo.png"
+            alt="Demeter logo"
+          ></img>
           <div
             id="brand-title"
             className={fullNav ? "m-auto ms-0" : "m-auto ms-0 me-3"}
