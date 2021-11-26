@@ -1,13 +1,16 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import office_plants from "../../assets/images/office_plants.webp";
-import plants_page from "../../assets/images/plants_page.png";
-import sensor_data from "../../assets/images/sensor_data.png";
-import support_page from "../../assets/images/support_page.png";
 import "./landing_page.css";
 
 export default function LandingPage(props) {
   const { wideView } = props;
+
+  // Defines constants for the CDN URLs for the images shown on this page.
+  const officePlants =
+      "https://d3utxwpu6rqzip.cloudfront.net/office_plants.webp",
+    plantsPage = "https://d3utxwpu6rqzip.cloudfront.net/plants_page.png",
+    sensorData = "https://d3utxwpu6rqzip.cloudfront.net/sensor_data.png",
+    supportPage = "https://d3utxwpu6rqzip.cloudfront.net/support_page.png";
 
   // useEffect hook that runs a single time when this component loads. Sets the title of the web page appropriately.
   useEffect(() => {
@@ -32,7 +35,7 @@ export default function LandingPage(props) {
         </p>
         <img
           className="landing-image m-auto mb-3"
-          src={office_plants}
+          src={officePlants}
           alt="Office plants"
         />
         <p>
@@ -45,7 +48,7 @@ export default function LandingPage(props) {
         </p>
         <img
           className="landing-image m-auto mb-3"
-          src={plants_page}
+          src={plantsPage}
           alt="Plants page"
         />
         <p>
@@ -56,7 +59,7 @@ export default function LandingPage(props) {
         </p>
         <img
           className="landing-image m-auto mb-3"
-          src={sensor_data}
+          src={sensorData}
           alt="Sensor data"
         />
         <p>
@@ -65,7 +68,7 @@ export default function LandingPage(props) {
         </p>
         <img
           className="landing-image m-auto mb-3"
-          src={support_page}
+          src={supportPage}
           alt="Support page"
         />
         <p className="text-center">

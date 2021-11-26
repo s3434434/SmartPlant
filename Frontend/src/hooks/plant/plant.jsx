@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import axios from "axios";
-import container_no_image from "../../assets/images/container_no_image.png";
 import SensorPagination from "../sensor_pagination/sensor_pagination";
 import "./plant.css";
 
@@ -26,6 +25,9 @@ export default function Plant(props) {
 
     setForm(tempForm);
   };
+
+  // Constant for the CDN URL for the 'image' for a plant with no image.
+  const noImage = "https://d3utxwpu6rqzip.cloudfront.net/no_image.png";
 
   // State variables for the plant details form, whether or not the fields of this form are modifiable, the statuses of these fields' associated requests, and whether these statuses are being shown.
   //State variables are also created for the plant type, plant image, Arduino token, Arduino token loading status and whether that status is being shown, sensor data readings, and plant delete status and whether that status is being shown.
@@ -81,7 +83,7 @@ export default function Plant(props) {
               tempForm.name = plant.name;
               setForm(tempForm);
 
-              let image = container_no_image;
+              let image = noImage;
               if (plant.imgurURL !== null) {
                 image = plant.imgurURL;
               }

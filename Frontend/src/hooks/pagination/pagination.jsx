@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import container_no_image from "../../assets/images/container_no_image.png";
 import "./pagination.css";
 
 export default function Pagination(props) {
@@ -15,10 +14,11 @@ export default function Pagination(props) {
     wideView,
   } = props;
 
-  // Constants for the number of items per page, and the maximum number of desktop and mobile pagination numbers showing at any one time.
+  // Constants for the number of items per page, the maximum number of desktop and mobile pagination numbers showing at any one time and the CDN URL for the 'image' for an item with no image.
   const ITEMS_PER_PAGE = 10,
     MAX_DESKTOP_PAGINATION_NUMBERS = 10,
-    MAX_MOBILE_PAGINATION_NUMBERS = 5;
+    MAX_MOBILE_PAGINATION_NUMBERS = 5,
+    noImage = "https://d3utxwpu6rqzip.cloudfront.net/no_image.png";
 
   // State variables for all pagination numbers, the current pagination numbers for desktop and mobile, and the current page number.
   const [allPaginationNumbers, setAllPaginationNumbers] = useState([]),
@@ -135,7 +135,7 @@ export default function Pagination(props) {
               {imageCol ? (
                 <th>
                   <img
-                    src={container_no_image}
+                    src={noImage}
                     alt="Header spacer"
                     style={{ opacity: 0 }}
                   ></img>
@@ -159,7 +159,7 @@ export default function Pagination(props) {
                 const id = item[itemID],
                   title1 = item[itemTitle1],
                   title2 = item[itemTitle2];
-                let image = container_no_image;
+                let image = { noImage };
                 if (item.imgurURL !== undefined) {
                   if (item.imgurURL !== null) {
                     image = item.imgurURL;

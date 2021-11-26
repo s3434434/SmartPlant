@@ -19,7 +19,6 @@ import AllPlants from "./hooks/all_plants/all_plants";
 import AddPlant from "./hooks/add_plant/add_plant";
 import PlantAdded from "./hooks/add_plant/plant_added/plant_added";
 import Plant from "./hooks/plant/plant";
-import logo from "./assets/images/logo.png";
 import PrivacyPolicy from "./hooks/privacy_policy/privacy_policy";
 import TermsOfUse from "./hooks/terms_of_use/terms_of_use";
 import Support from "./hooks/support/support";
@@ -30,9 +29,11 @@ import AllPlantsAdmin from "./hooks/all_plants_admin/all_plants_admin";
 import PlantAdmin from "./hooks/plant_admin/plant_admin";
 
 function App() {
-  // Constant for the width of a 'wide' screen in pixels, and the width of a screen where the full navbar is showing.
+  // Constant for the width of a 'wide' screen in pixels, the width of a screen where the full navbar is showing, the CDN URL for Demeter's logo and the support email for users who are not logged in.
   const WIDE_SCREEN_PX = 1200,
-    FULL_NAV_PX = 768;
+    FULL_NAV_PX = 768,
+    logo = "https://d3utxwpu6rqzip.cloudfront.net/logo.png",
+    supportEmail = "mailto:email@example.com?subject=Help%With%Demeter";
 
   // State variables for whether the user is logged in, whether the user is an administrator, whether the Browser's window's width is 'wide', and whether the it is a width where the full navbar is showing. These are used to determine whether certain navbar items are shown, whether particular pages are navigated to, and how the responsive UI behaves.
   const [loggedIn, setLoggedIn] = useState(false),
@@ -112,7 +113,10 @@ function App() {
           }}
         >
           <img id="brand-image" src={logo} alt="Demeter logo"></img>
-          <div id="brand-title" className="m-auto ms-0">
+          <div
+            id="brand-title"
+            className={fullNav ? "m-auto ms-0" : "m-auto ms-0 me-3"}
+          >
             <h1 className="gold">Demeter</h1>
             <h4 className="gold">The Plant Meter</h4>
           </div>
@@ -283,14 +287,10 @@ function App() {
                     className="nav-link"
                     tabIndex="0"
                     onClick={() => {
-                      window.open(
-                        "mailto:email@example.com?subject=Help%With%Demeter"
-                      );
+                      window.open(supportEmail);
                     }}
                     onKeyPress={() => {
-                      window.open(
-                        "mailto:email@example.com?subject=Help%With%Demeter"
-                      );
+                      window.open(supportEmail);
                     }}
                   >
                     <h5>Support</h5>
