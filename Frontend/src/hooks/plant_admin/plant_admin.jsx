@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import SensorPagination from "../sensor_pagination/sensor_pagination";
 import "./plant_admin.css";
 
 export default function PlantAdmin(props) {
   const { getLogin, wideView } = props;
+
+  // Constant for the lazy-loaded dynamic import of the SensorPagination hook. This enables good code-splitting and faster page loading.
+  const SensorPagination = lazy(() =>
+    import("../sensor_pagination/sensor_pagination")
+  );
 
   // Constant for the plant ID from the URL path.
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
@@ -492,11 +496,13 @@ export default function PlantAdmin(props) {
           </div>
 
           <h3 className="gold text-center mt-5">Sensor data</h3>
-          <SensorPagination
-            sensorReadings={sensorReadings}
-            admin={true}
-            wideView={wideView}
-          ></SensorPagination>
+          <Suspense fallback={<div></div>}>
+            <SensorPagination
+              sensorReadings={sensorReadings}
+              admin={true}
+              wideView={wideView}
+            ></SensorPagination>
+          </Suspense>
         </>
       ) : (
         <div

@@ -1,34 +1,55 @@
-import React, { useState, useEffect } from "react";
+import React, { lazy, Suspense, useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from "./hooks/home/home";
-import LandingPage from "./hooks/landing_page/landing_page";
-import Login from "./hooks/login/login";
-import Register from "./hooks/register/register";
-import RegistrationSuccessful from "./hooks/register/registration_successful/registration_successful";
-import ConfirmEmail from "./hooks/register/confirm_email/confirm_email";
-import ForgotPassword from "./hooks/forgot_password/forgot_password";
-import RequestProcessed from "./hooks/forgot_password/request_processed/request_processed";
-import ResetPassword from "./hooks/forgot_password/reset_password/reset_password";
-import PasswordResetSuccessful from "./hooks/forgot_password/password_reset_successful/password_reset_successful";
-import Logout from "./hooks/logout/logout";
-import Settings from "./hooks/settings/settings";
-import NotFound from "./hooks/not_found/not_found";
-import AllPlants from "./hooks/all_plants/all_plants";
-import AddPlant from "./hooks/add_plant/add_plant";
-import PlantAdded from "./hooks/add_plant/plant_added/plant_added";
-import Plant from "./hooks/plant/plant";
-import PrivacyPolicy from "./hooks/privacy_policy/privacy_policy";
-import TermsOfUse from "./hooks/terms_of_use/terms_of_use";
-import Support from "./hooks/support/support";
-import SupportSuccessful from "./hooks/support/support_successful/support_successful";
-import AllUsers from "./hooks/all_users/all_users";
-import User from "./hooks/user/user";
-import AllPlantsAdmin from "./hooks/all_plants_admin/all_plants_admin";
-import PlantAdmin from "./hooks/plant_admin/plant_admin";
-
 function App() {
+  // Defines constants for the lazy-loaded dynamic imports of the hooks for the app's routes. This enables good code-splitting and faster page loading.
+  const Home = lazy(() => import("./hooks/home/home")),
+    LandingPage = lazy(() => import("./hooks/landing_page/landing_page")),
+    Login = lazy(() => import("./hooks/login/login")),
+    Register = lazy(() => import("./hooks/register/register")),
+    RegistrationSuccessful = lazy(() =>
+      import("./hooks/register/registration_successful/registration_successful")
+    ),
+    ConfirmEmail = lazy(() =>
+      import("./hooks/register/confirm_email/confirm_email")
+    ),
+    ForgotPassword = lazy(() =>
+      import("./hooks/forgot_password/forgot_password")
+    ),
+    RequestProcessed = lazy(() =>
+      import("./hooks/forgot_password/request_processed/request_processed")
+    ),
+    ResetPassword = lazy(() =>
+      import("./hooks/forgot_password/reset_password/reset_password")
+    ),
+    PasswordResetSuccessful = lazy(() =>
+      import(
+        "./hooks/forgot_password/password_reset_successful/password_reset_successful"
+      )
+    ),
+    Logout = lazy(() => import("./hooks/logout/logout")),
+    Settings = lazy(() => import("./hooks/settings/settings")),
+    NotFound = lazy(() => import("./hooks/not_found/not_found")),
+    AllPlants = lazy(() => import("./hooks/all_plants/all_plants")),
+    AddPlant = lazy(() => import("./hooks/add_plant/add_plant")),
+    PlantAdded = lazy(() =>
+      import("./hooks/add_plant/plant_added/plant_added")
+    ),
+    Plant = lazy(() => import("./hooks/plant/plant")),
+    PrivacyPolicy = lazy(() => import("./hooks/privacy_policy/privacy_policy")),
+    TermsOfUse = lazy(() => import("./hooks/terms_of_use/terms_of_use")),
+    Support = lazy(() => import("./hooks/support/support")),
+    SupportSuccessful = lazy(() =>
+      import("./hooks/support/support_successful/support_successful")
+    ),
+    AllUsers = lazy(() => import("./hooks/all_users/all_users")),
+    User = lazy(() => import("./hooks/user/user")),
+    AllPlantsAdmin = lazy(() =>
+      import("./hooks/all_plants_admin/all_plants_admin")
+    ),
+    PlantAdmin = lazy(() => import("./hooks/plant_admin/plant_admin"));
+
   // Constant for the width of a 'wide' screen in pixels, and the width of a screen where the full navbar is showing.
   const WIDE_SCREEN_PX = 1200,
     FULL_NAV_PX = 768;
@@ -309,141 +330,151 @@ function App() {
       </nav>
       <main>
         <BrowserRouter>
-          <Routes>
-            <Route
-              exact
-              path="/landing"
-              element={<LandingPage wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/login"
-              element={<Login wideView={wideView} logOut={logOut} />}
-            />
-            <Route
-              exact
-              path="/register"
-              element={<Register wideView={wideView} logOut={logOut} />}
-            />
-            <Route
-              exact
-              path="/registration-successful"
-              element={<RegistrationSuccessful wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/confirm-email"
-              element={<ConfirmEmail logOut={logOut} wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/forgot-password"
-              element={<ForgotPassword logOut={logOut} wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/request-processed"
-              element={<RequestProcessed wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/reset-password"
-              element={<ResetPassword logOut={logOut} wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/password-reset-successful"
-              element={<PasswordResetSuccessful wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/logout"
-              element={
-                <Logout
-                  getLogin={getLogin}
-                  logOut={logOut}
-                  wideView={wideView}
-                />
-              }
-            />
-            <Route
-              exact
-              path="/plants"
-              element={<AllPlants getLogin={getLogin} wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/add-plant"
-              element={<AddPlant getLogin={getLogin} wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/plant-added"
-              element={<PlantAdded wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/plant/:plant_id"
-              element={<Plant getLogin={getLogin} wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/settings"
-              element={<Settings getLogin={getLogin} wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/support"
-              element={
-                <Support
-                  getLogin={getLogin}
-                  logOut={logOut}
-                  wideView={wideView}
-                />
-              }
-            />
-            <Route
-              exact
-              path="/support-successful"
-              element={<SupportSuccessful wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/privacy-policy"
-              element={<PrivacyPolicy wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/terms-of-use"
-              element={<TermsOfUse wideView={wideView} />}
-            />
-            <Route exact path="/" element={<Home getLogin={getLogin}></Home>} />
-            <Route
-              exact
-              path="/users"
-              element={<AllUsers getLogin={getLogin} wideView={wideView} />}
-            />
-            <Route
-              exact
-              path="/user/:user_ID"
-              element={
-                <User getLogin={getLogin} logOut={logOut} wideView={wideView} />
-              }
-            />
-            <Route
-              exact
-              path="/plants-admin"
-              element={
-                <AllPlantsAdmin getLogin={getLogin} wideView={wideView} />
-              }
-            />
-            <Route
-              exact
-              path="/plant-admin/:plant_id"
-              element={<PlantAdmin getLogin={getLogin} wideView={wideView} />}
-            />
-            <Route path="/*" element={<NotFound wideView={wideView} />}></Route>
-          </Routes>
+          <Suspense fallback={<div></div>}>
+            {" "}
+            <Routes>
+              <Route
+                exact
+                path="/landing"
+                element={<LandingPage wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/login"
+                element={<Login wideView={wideView} logOut={logOut} />}
+              />
+              <Route
+                exact
+                path="/register"
+                element={<Register wideView={wideView} logOut={logOut} />}
+              />
+              <Route
+                exact
+                path="/registration-successful"
+                element={<RegistrationSuccessful wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/confirm-email"
+                element={<ConfirmEmail logOut={logOut} wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/forgot-password"
+                element={<ForgotPassword logOut={logOut} wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/request-processed"
+                element={<RequestProcessed wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/reset-password"
+                element={<ResetPassword logOut={logOut} wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/password-reset-successful"
+                element={<PasswordResetSuccessful wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/logout"
+                element={
+                  <Logout
+                    getLogin={getLogin}
+                    logOut={logOut}
+                    wideView={wideView}
+                  />
+                }
+              />
+              <Route
+                exact
+                path="/plants"
+                element={<AllPlants getLogin={getLogin} wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/add-plant"
+                element={<AddPlant getLogin={getLogin} wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/plant-added"
+                element={<PlantAdded wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/plant/:plant_id"
+                element={<Plant getLogin={getLogin} wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/settings"
+                element={<Settings getLogin={getLogin} wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/support"
+                element={
+                  <Support
+                    getLogin={getLogin}
+                    logOut={logOut}
+                    wideView={wideView}
+                  />
+                }
+              />
+              <Route
+                exact
+                path="/support-successful"
+                element={<SupportSuccessful wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/privacy-policy"
+                element={<PrivacyPolicy wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/terms-of-use"
+                element={<TermsOfUse wideView={wideView} />}
+              />
+              <Route exact path="/" element={<Home getLogin={getLogin} />} />
+              <Route
+                exact
+                path="/users"
+                element={<AllUsers getLogin={getLogin} wideView={wideView} />}
+              />
+              <Route
+                exact
+                path="/user/:user_ID"
+                element={
+                  <User
+                    getLogin={getLogin}
+                    logOut={logOut}
+                    wideView={wideView}
+                  />
+                }
+              />
+              <Route
+                exact
+                path="/plants-admin"
+                element={
+                  <AllPlantsAdmin getLogin={getLogin} wideView={wideView} />
+                }
+              />
+              <Route
+                exact
+                path="/plant-admin/:plant_id"
+                element={<PlantAdmin getLogin={getLogin} wideView={wideView} />}
+              />
+              <Route
+                path="/*"
+                element={<NotFound wideView={wideView} />}
+              ></Route>
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </main>
       <footer className="container-fluid justify-content-center">

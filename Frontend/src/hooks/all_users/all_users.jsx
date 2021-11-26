@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import axios from "axios";
-import Pagination from "../pagination/pagination";
 import "./all_users.css";
 
 export default function AllUsers(props) {
   const { getLogin, wideView } = props;
+
+  // Constant for the lazy-loaded dynamic import of the Pagination hook. This enables good code-splitting and faster page loading.
+  const Pagination = lazy(() => import("../pagination/pagination"));
 
   // State variable for Demeter's users. Initially set to 'Loading users...' while the users are being fetched from the backend.
   const [users, setUsers] = useState("Loading users...");
@@ -65,17 +67,19 @@ export default function AllUsers(props) {
           {users}
         </div>
       ) : (
-        <Pagination
-          items={users}
-          itemID="id"
-          heading1="Email"
-          heading2="Role"
-          imageCol={false}
-          itemTitle1="email"
-          itemTitle2="role"
-          path="user"
-          wideView={wideView}
-        ></Pagination>
+        <Suspense fallback={<div></div>}>
+          <Pagination
+            items={users}
+            itemID="id"
+            heading1="Email"
+            heading2="Role"
+            imageCol={false}
+            itemTitle1="email"
+            itemTitle2="role"
+            path="user"
+            wideView={wideView}
+          ></Pagination>
+        </Suspense>
       )}
     </section>
   );

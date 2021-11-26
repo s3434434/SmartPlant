@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/hooks/landing_page/landing_page.css"],"names":[],"mappings":"AAAA,eACE,WACF,CACA,0BACE,eACE,WACF,CACF","file":"19.6c0839d4.chunk.css","sourcesContent":[".landing-image {\n  height: 14em;\n}\n@media (max-width: 1199px) {\n  .landing-image {\n    height: 10em;\n  }\n}\n"]}

@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import axios from "axios";
-import Pagination from "../pagination/pagination";
 import "./all_plants_admin.css";
 
 export default function AllPlantsAdmin(props) {
   const { getLogin, wideView } = props;
+
+  // Constant for the lazy-loaded dynamic import of the Pagination hook. This enables good code-splitting and faster page loading.
+  const Pagination = lazy(() => import("../pagination/pagination"));
 
   // State variable for Demeter's plants. Initially set to 'Loading plants...' while the plants are being fetched from the backend.
   const [plants, setPlants] = useState("Loading plants...");
@@ -92,16 +94,18 @@ export default function AllPlantsAdmin(props) {
           {plants}
         </div>
       ) : (
-        <Pagination
-          items={plants}
-          itemID="plantID"
-          heading1="Name"
-          heading2="Email"
-          itemTitle1="name"
-          itemTitle2="email"
-          path="plant-admin"
-          wideView={wideView}
-        ></Pagination>
+        <Suspense fallback={<div></div>}>
+          <Pagination
+            items={plants}
+            itemID="plantID"
+            heading1="Name"
+            heading2="Email"
+            itemTitle1="name"
+            itemTitle2="email"
+            path="plant-admin"
+            wideView={wideView}
+          ></Pagination>
+        </Suspense>
       )}
     </section>
   );
