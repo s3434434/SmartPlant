@@ -1,14 +1,12 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import axios from "axios";
+import Pagination from "../pagination/pagination";
 import "./user.css";
 
 export default function User(props) {
-  const Pagination = lazy(() => import("../pagination/pagination"));
-
-  // Constant for the lazy-loaded dynamic import of the Pagination hook. This enables good code-splitting and faster page loading.
   const { getLogin, logOut, wideView } = props;
 
   // Constant for the user ID from the URL path.
@@ -804,19 +802,17 @@ export default function User(props) {
               {plants}
             </div>
           ) : (
-            <Suspense fallback={<div></div>}>
-              <Pagination
-                items={plants}
-                itemID="plantID"
-                heading1="Name"
-                heading2="Variety"
-                imageCol={true}
-                itemTitle1="name"
-                itemTitle2="plantType"
-                path="plant-admin"
-                wideView={wideView}
-              ></Pagination>
-            </Suspense>
+            <Pagination
+              items={plants}
+              itemID="plantID"
+              heading1="Name"
+              heading2="Variety"
+              imageCol={true}
+              itemTitle1="name"
+              itemTitle2="plantType"
+              path="plant-admin"
+              wideView={wideView}
+            ></Pagination>
           )}
         </>
       ) : (
