@@ -12,6 +12,9 @@ export default function PlantAdmin(props) {
   const startIndex = window.location.pathname.lastIndexOf("/") + 1;
   const plantID = window.location.pathname.substr(startIndex);
 
+  // Constant for the CDN URL for the 'image' for a plant with no image.
+  const noImage = "https://d3utxwpu6rqzip.cloudfront.net/no_image.png";
+
   // State variables for the plant name, whether or not the name is modifiable, the status of the associated request, and whether the status is being shown. State variables are also created for the plant image, the status of the associated delete request, and whether the status is being shown.
   //State variables are also created for the plant type, user ID, user email, Arduino token regeneration status and whether that status is being shown, sensor data readings, and plant delete status and whether that status is being shown.
   const [name, setName] = useState(""),
@@ -86,8 +89,7 @@ export default function PlantAdmin(props) {
 
                     setName(plant.name);
 
-                    let image =
-                      "https://d3utxwpu6rqzip.cloudfront.net/container_no_image.png";
+                    let image = noImage;
                     if (plant.imgurURL !== null) {
                       image = plant.imgurURL;
                     }
@@ -454,20 +456,12 @@ export default function PlantAdmin(props) {
             </div>
             <div
               className={
-                plantImage !==
-                "https://d3utxwpu6rqzip.cloudfront.net/container_no_image.png"
-                  ? "text-center mt-3"
-                  : "hidden-field"
+                plantImage !== noImage ? "text-center mt-3" : "hidden-field"
               }
             >
               <button
                 className="btn btn-primary"
-                tabIndex={
-                  plantImage !==
-                  "https://d3utxwpu6rqzip.cloudfront.net/container_no_image.png"
-                    ? "0"
-                    : "-1"
-                }
+                tabIndex={plantImage !== noImage ? "0" : "-1"}
                 onClick={deleteImage}
               >
                 Delete image

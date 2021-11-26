@@ -26,6 +26,9 @@ export default function Plant(props) {
     setForm(tempForm);
   };
 
+  // Constant for the CDN URL for the 'image' for a plant with no image.
+  const noImage = "https://d3utxwpu6rqzip.cloudfront.net/no_image.png";
+
   // State variables for the plant details form, whether or not the fields of this form are modifiable, the statuses of these fields' associated requests, and whether these statuses are being shown.
   //State variables are also created for the plant type, plant image, Arduino token, Arduino token loading status and whether that status is being shown, sensor data readings, and plant delete status and whether that status is being shown.
   const [form, setForm] = useState({
@@ -80,8 +83,7 @@ export default function Plant(props) {
               tempForm.name = plant.name;
               setForm(tempForm);
 
-              let image =
-                "https://d3utxwpu6rqzip.cloudfront.net/container_no_image.png";
+              let image = noImage;
               if (plant.imgurURL !== null) {
                 image = plant.imgurURL;
               }
