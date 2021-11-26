@@ -1,2 +1,0 @@
-(this.webpackJsonpdemeter=this.webpackJsonpdemeter||[]).push([[18],{115:function(t,n,e){"use strict";e.r(n),e.d(n,"default",(function(){return r}));e(1);var s=e(2),a=(e(64),e(0));function r(t){var n=t.getLogin();return null!==n?n.admin?Object(a.jsx)(s.a,{to:"/users"}):Object(a.jsx)(s.a,{to:"/plants"}):Object(a.jsx)(s.a,{to:"/landing"})}},64:function(t,n,e){}}]);
-//# sourceMappingURL=18.12b9e889.chunk.js.map
