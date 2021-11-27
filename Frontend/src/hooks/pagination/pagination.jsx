@@ -159,7 +159,7 @@ export default function Pagination(props) {
                 const id = item[itemID],
                   title1 = item[itemTitle1],
                   title2 = item[itemTitle2];
-                let image = { noImage };
+                let image = noImage;
                 if (item.imgurURL !== undefined) {
                   if (item.imgurURL !== null) {
                     image = item.imgurURL;
