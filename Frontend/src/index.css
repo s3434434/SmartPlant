@@ -85,8 +85,9 @@ textarea {
   user-select: none;
 }
 
+table,
 th {
-  color: rgb(243, 202, 0);
+  color: rgb(243, 202, 0) !important;
 }
 td {
   color: white;
